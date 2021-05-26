@@ -1,0 +1,158 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless Express User Info REST APIs powered by API Gateway and Lambda
+Parameters:
+  Environment:
+    Description: Environment tier
+    Type: String
+    AllowedValues:
+      - dev
+      - test
+      - qa
+      - stage
+      - prod
+  LambdaRoleArn:
+    Description: ARN of lambda function role user api web service
+    Type: String
+  VpcEndpointId:
+    Description: VPC Endpoint to traffic from VPC to API Gateway
+    Type: String
+  VpcSubnetId1:
+    Description: First VPC subnet ID of corresponding EC2 instance
+    Type: String
+  VpcSubnetId2:
+    Description: Second VPC subnet ID of corresponding EC2 instance
+    Type: String
+  SgId:
+    Description: Default Secirity Group ID for VPC
+    Type: String
+
+Resources:
+  NedOrgsApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref Environment
+      Auth:
+        DefaultAuthorizer: TokenAuthorizer
+        Authorizers:
+          TokenAuthorizer:
+            FunctionArn: !GetAtt AuthFunction.Arn
+        ResourcePolicy:
+          CustomStatements:
+            -
+              Effect: "Allow"
+              Principal: "*"
+              Action: "execute-api:Invoke"
+              Resource:
+                - "execute-api:/*/*/*"
+            -
+              Effect: "Deny"
+              Principal: "*"
+              Action: "execute-api:Invoke"
+              Resource:
+                - "execute-api:/*/*/*"
+              Condition:
+                NotIpAddress:
+                  aws:SourceIp:
+                    - 128.231.0.0/16
+      EndpointConfiguration:
+        Type: REGIONAL
+      MethodSettings:
+        - ResourcePath: "/*"
+          HttpMethod: "*"
+          MetricsEnabled: true
+          DataTraceEnabled: true
+          LoggingLevel: INFO
+  NedOrgsLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: >-
+        Lambda function contains User Info REST APIs implementation.
+        Connected to VPC to access applications running within VPC
+      FunctionName: !Join
+        - '-'
+        - - lambda-user-api
+          - !Ref Environment
+      InlineCode: |
+        module.exports.handler = async function(event, context)
+        {
+          console.log(JSON.stringify(event))
+          var response = {
+          "statusCode": 200,
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "isBase64Encoded": false,
+          "multiValueHeaders": {
+            "X-Custom-Header": ["My value", "My other value"],
+          },
+          "body": 'This is body'
+        }
+          return response
+        }
+      Handler: src/lambda.handler
+      Runtime: nodejs12.x
+      Timeout: 30
+      Tracing: Active
+      Environment:
+        Variables:
+          LOG_LEVEL: info
+      Tags:
+        app : userinfoapi
+      Role: !Ref LambdaRoleArn
+      Events:
+        ProxyNedOrgsApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref NedOrgsApi
+            Path: /orgapi/{proxy+}
+            Method: GET
+
+  AuthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: >-
+        Lambda function with basic authorization.
+      FunctionName: !Join
+        - '-'
+        - - lambda-auth
+          - !Ref Environment
+      InlineCode: |
+        module.exports.handler = async function(event, context)
+        {
+          console.log(JSON.stringify(event))
+          return {}
+        }
+      Handler: src/lambda.handler
+      Runtime: nodejs12.x
+      Timeout: 30
+      Tracing: Active
+      Tags:
+        app : userinfoapi
+      Role: !Ref LambdaRoleArn
+
+Outputs:
+  LambdaFunctionConsoleUrl:
+    Description: Console URL for the Lambda Function.
+    Value: !Sub https://${AWS::Region}.console.aws.amazon.com/lambda/home?region=${AWS::Region}#/functions/${NedOrgsLambdaFunction}
+
+  ApiGatewayApiConsoleUrl:
+    Description: Console URL for the API Gateway API's Stage.
+    Value: !Sub https://${AWS::Region}.console.aws.amazon.com/apigateway/home?region=${AWS::Region}#/apis/${NedOrgsApi}/stages/${Environment}
+
+  ApiUrl:
+    Description: Invoke URL for your API. Clicking this link will perform a GET request
+      on the root resource of your API.
+    Value: !Sub https://${NedOrgsApi}.execute-api.${AWS::Region}.amazonaws.com/${Environment}/
+
+  LambdaFunctionName:
+    Description: Name of the Serverless Express Lambda Function
+    Value: !Ref NedOrgsLambdaFunction
+
+  AuthFunctionName:
+    Description: Name of the Authorizer Lambda Function
+    Value: !Ref AuthFunction
+
+  ApiHostName:
+    Description: Host name with root folder to create URL for your API.
+    Value: !Sub ${NedOrgsApi}.execute-api.${AWS::Region}.amazonaws.com

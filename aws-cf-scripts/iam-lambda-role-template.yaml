@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Creates a role for Lambda funtion User Api Web Service.
+Parameters:
+  Environment:
+    Description: Environment tier
+    Type: String
+    AllowedValues:
+      - dev
+      - test
+      - qa
+      - stage
+      - prod
+Resources:
+  lambdaOrgapiRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Join
+        - '-'
+        - - lambda-userapi-api
+          - !Ref Environment
+          - role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+      Path: /
+Outputs:
+  LambdaOrgapiRoleName:
+    Description: Name of Lambda Orgapi role.
+    Value:
+      Ref: lambdaOrgapiRole
+  LambdaOrgapiRoleArn:
+    Description: ARN of Lambda Orgapi role.
+    Value:
+      Fn::GetAtt:
+      - lambdaOrgapiRole
+      - Arn
+

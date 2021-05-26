@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Creates a role for API Gateway User Api Web Service.
+Parameters:
+  Environment:
+    Description: Environment tier
+    Type: String
+    AllowedValues:
+      - dev
+      - test
+      - qa
+      - stage
+      - prod
+Resources:
+  apiOrgapiRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Join
+        - '-'
+        - - apigateway-userapi
+          - !Ref Environment
+          - role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service:
+                - apigateway.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+      Path: /
+  account:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn:
+        Fn::GetAtt:
+          - apiOrgapiRole
+          - Arn
+Outputs:
+  ApiGatewayOrgapiRoleName:
+    Description: Name of API Gateway Orgapi role.
+    Value:
+      Ref: apiOrgapiRole
+  ApiGatewayOrgapiRoleArn:
+    Description: ARN of API Gateway Orgapi role.
+    Value:
+      Fn::GetAtt:
+      - apiOrgapiRole
+      - Arn
+  ApiGatewayAccount:
+    Description: AWS Account that is associated with API Gateway
+    Value: !Ref account
+
+

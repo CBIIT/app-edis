@@ -1,0 +1,2450 @@
+[
+ {
+   "sac": "HNC",
+   "parent_sac": "HN",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI",
+   "ou_acr": "NCI",
+   "ou_name": "National Cancer Institute"
+ },
+ {
+   "sac": "HNC1",
+   "parent_sac": "HNC",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD",
+   "ou_acr": "OD",
+   "ou_name": "Office Of The Director"
+ },
+ {
+   "sac": "HNC14",
+   "parent_sac": "HNC1",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OCPL",
+   "ou_acr": "OCPL",
+   "ou_name": "Office Of Communications & Public Liaison"
+ },
+ {
+   "sac": "HNC141",
+   "parent_sac": "HNC14",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OCPL OD",
+   "ou_acr": "OD",
+   "ou_name": "Office Of The Director"
+ },
+ {
+   "sac": "HNC14P",
+   "parent_sac": "HNC14",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OCPL OPA",
+   "ou_acr": "OPA",
+   "ou_name": "Office Of Public Affairs"
+ },
+ {
+   "sac": "HNC14P2",
+   "parent_sac": "HNC14P",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OCPL OPA MRB",
+   "ou_acr": "MRB",
+   "ou_name": "Media Relations Branch"
+ },
+ {
+   "sac": "HNC14P3",
+   "parent_sac": "HNC14P",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OCPL OPA ICB",
+   "ou_acr": "ICB",
+   "ou_name": "Internal Communications Branch"
+ },
+ {
+   "sac": "HNC14P4",
+   "parent_sac": "HNC14P",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OCPL OPA ERB",
+   "ou_acr": "ERB",
+   "ou_name": "External Relations Branch"
+ },
+ {
+   "sac": "HNC14Q",
+   "parent_sac": "HNC14",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OCPL ODDC",
+   "ou_acr": "ODDC",
+   "ou_name": "Office Of Dissemination & Digital Communications"
+ },
+ {
+   "sac": "HNC14Q2",
+   "parent_sac": "HNC14Q",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OCPL ODDC WSMB",
+   "ou_acr": "WSMB",
+   "ou_name": "Web & Social Media Branch"
+ },
+ {
+   "sac": "HNC14Q3",
+   "parent_sac": "HNC14Q",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OCPL ODDC CPSB",
+   "ou_acr": "CPSB",
+   "ou_name": "Communications Platforms & Systems Branch"
+ },
+ {
+   "sac": "HNC14Q4",
+   "parent_sac": "HNC14Q",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OCPL ODDC CCPIB",
+   "ou_acr": "CCPIB",
+   "ou_name": "Contact Center & Patient Inquiries Branch"
+ },
+ {
+   "sac": "HNC14Q5",
+   "parent_sac": "HNC14Q",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OCPL ODDC AARB",
+   "ou_acr": "AARB",
+   "ou_name": "Analytics & Audience Research Branch"
+ },
+ {
+   "sac": "HNC14T",
+   "parent_sac": "HNC14",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OCPL OCC",
+   "ou_acr": "OCC",
+   "ou_name": "Office Of Cancer Content"
+ },
+ {
+   "sac": "HNC14T2",
+   "parent_sac": "HNC14T",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OCPL OCC PCIB",
+   "ou_acr": "PCIB",
+   "ou_name": "Pdq Cancer Information Branch"
+ },
+ {
+   "sac": "HNC14T3",
+   "parent_sac": "HNC14T",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OCPL OCC SWRB",
+   "ou_acr": "SWRB",
+   "ou_name": "Science Writing & Review Branch"
+ },
+ {
+   "sac": "HNC14T4",
+   "parent_sac": "HNC14T",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OCPL OCC CCB",
+   "ou_acr": "CCB",
+   "ou_name": "Correspondence & Clearance Branch"
+ },
+ {
+   "sac": "HNC17",
+   "parent_sac": "HNC1",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM",
+   "ou_acr": "OM",
+   "ou_name": "Office Of Management"
+ },
+ {
+   "sac": "HNC177",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OMPC",
+   "ou_acr": "OMPC",
+   "ou_name": "Office Of Management Policy & Compliance"
+ },
+ {
+   "sac": "HNC178",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OSFM",
+   "ou_acr": "OSFM",
+   "ou_name": "Office Of Space & Facility Management"
+ },
+ {
+   "sac": "HNC1782",
+   "parent_sac": "HNC178",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OSFM PMB",
+   "ou_acr": "PMB",
+   "ou_name": "Project Management Branch"
+ },
+ {
+   "sac": "HNC1784",
+   "parent_sac": "HNC178",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OSFM EMPSB",
+   "ou_acr": "EMPSB",
+   "ou_name": "Emergency Management & Physical Security Branch"
+ },
+ {
+   "sac": "HNC1785",
+   "parent_sac": "HNC178",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OSFM BOB",
+   "ou_acr": "BOB",
+   "ou_name": "Business Operations Branch"
+ },
+ {
+   "sac": "HNC1786",
+   "parent_sac": "HNC178",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OSFM FPB",
+   "ou_acr": "FPB",
+   "ou_name": "Facilities Planning Branch"
+ },
+ {
+   "sac": "HNC17B",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OA",
+   "ou_acr": "OA",
+   "ou_name": "Office Of Acquisitions"
+ },
+ {
+   "sac": "HNC17B1",
+   "parent_sac": "HNC17B",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OA AOPOB",
+   "ou_acr": "AOPOB",
+   "ou_name": "Acquisition Oversight, Policy & Operations Branch"
+ },
+ {
+   "sac": "HNC17B2",
+   "parent_sac": "HNC17B",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OA TSB",
+   "ou_acr": "TSB",
+   "ou_name": "Treatment & Support Branch"
+ },
+ {
+   "sac": "HNC17B3",
+   "parent_sac": "HNC17B",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OA SAB",
+   "ou_acr": "SAB",
+   "ou_name": "Strategic Acquisition Branch"
+ },
+ {
+   "sac": "HNC17B4",
+   "parent_sac": "HNC17B",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OA PCPSB",
+   "ou_acr": "PCPSB",
+   "ou_name": "Prevention, Control & Population Sciences Branch"
+ },
+ {
+   "sac": "HNC17B5",
+   "parent_sac": "HNC17B",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OA ETSB",
+   "ou_acr": "ETSB",
+   "ou_name": "Epidemiology, Therapeutics & Sciences Branch"
+ },
+ {
+   "sac": "HNC17B6",
+   "parent_sac": "HNC17B",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OA MOSB",
+   "ou_acr": "MOSB",
+   "ou_name": "Management Operations & Support Branch"
+ },
+ {
+   "sac": "HNC17C",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OGA",
+   "ou_acr": "OGA",
+   "ou_name": "Office Of Grants Administration"
+ },
+ {
+   "sac": "HNC17C2",
+   "parent_sac": "HNC17C",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OGA BOB",
+   "ou_acr": "BOB",
+   "ou_name": "Business Operations Branch"
+ },
+ {
+   "sac": "HNC17C3",
+   "parent_sac": "HNC17C",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OGA GPMBA",
+   "ou_acr": "GPMBA",
+   "ou_name": "Grants Portfolio Management Branch A"
+ },
+ {
+   "sac": "HNC17C4",
+   "parent_sac": "HNC17C",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OGA GPMBB",
+   "ou_acr": "GPMBB",
+   "ou_name": "Grants Portfolio Management Branch B"
+ },
+ {
+   "sac": "HNC17C5",
+   "parent_sac": "HNC17C",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OGA GPMBC",
+   "ou_acr": "GPMBC",
+   "ou_name": "Grants Portfolio Management Branch C"
+ },
+ {
+   "sac": "HNC17C6",
+   "parent_sac": "HNC17C",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OGA GPMBD",
+   "ou_acr": "GPMBD",
+   "ou_name": "Grants Portfolio Management Branch D"
+ },
+ {
+   "sac": "HNC17F",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM DCCPS",
+   "ou_acr": "DCCPS",
+   "ou_name": "Admin Resource Ctr - Div Of Cancer Control & Poplulation Science"
+ },
+ {
+   "sac": "HNC17G",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OBF",
+   "ou_acr": "OBF",
+   "ou_name": "Office Of Budget & Finance"
+ },
+ {
+   "sac": "HNC17H",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OEFIA",
+   "ou_acr": "OEFIA",
+   "ou_name": "Office Of Extramural Finance & Information Analysis"
+ },
+ {
+   "sac": "HNC17H2",
+   "parent_sac": "HNC17H",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OEFIA FAB",
+   "ou_acr": "FAB",
+   "ou_name": "Financial Analysis Branch"
+ },
+ {
+   "sac": "HNC17H3",
+   "parent_sac": "HNC17H",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OEFIA IAAB",
+   "ou_acr": "IAAB",
+   "ou_name": "Information Analysis & Applications Branch"
+ },
+ {
+   "sac": "HNC17J",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OGCR",
+   "ou_acr": "OGCR",
+   "ou_name": "Office Of Government & Congressional Relations"
+ },
+ {
+   "sac": "HNC17K",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OM",
+   "ou_acr": "OM",
+   "ou_name": "Admin Resource Ctr - Office Of Management"
+ },
+ {
+   "sac": "HNC17K2",
+   "parent_sac": "HNC17K",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OM SSB",
+   "ou_acr": "SSB",
+   "ou_name": "Support Services Branch"
+ },
+ {
+   "sac": "HNC17L",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM DCP",
+   "ou_acr": "DCP",
+   "ou_name": "Admin Resource Ctr - Division Of Cancer Prevention"
+ },
+ {
+   "sac": "HNC17M",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM DEA",
+   "ou_acr": "DEA",
+   "ou_name": "Admin Resource Ctr - Div Of Cancer Biolgy & Div Of Extrmrl Activ"
+ },
+ {
+   "sac": "HNC17N",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OWPD",
+   "ou_acr": "OWPD",
+   "ou_name": "Office Of Workforce Planning & Development"
+ },
+ {
+   "sac": "HNC17N3",
+   "parent_sac": "HNC17N",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OWPD WDB",
+   "ou_acr": "WDB",
+   "ou_name": "Workforce Development Branch"
+ },
+ {
+   "sac": "HNC17N4",
+   "parent_sac": "HNC17N",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OWPD WPB",
+   "ou_acr": "WPB",
+   "ou_name": "Workforce Planning Branch"
+ },
+ {
+   "sac": "HNC17P",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM TTC",
+   "ou_acr": "TTC",
+   "ou_name": "Technology Transfer Center"
+ },
+ {
+   "sac": "HNC17Q",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM EO",
+   "ou_acr": "EO",
+   "ou_name": "Ethics Office"
+ },
+ {
+   "sac": "HNC17S",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OD",
+   "ou_acr": "OD",
+   "ou_name": "Admin Resource Ctr - Office Of The Director"
+ },
+ {
+   "sac": "HNC17T",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM CCR",
+   "ou_acr": "CCR",
+   "ou_name": "Admin Resource Ctr - Center For Cancer Research"
+ },
+ {
+   "sac": "HNC17U",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM DCEG",
+   "ou_acr": "DCEG",
+   "ou_name": "Admin Resource Ctr - Division Of Cancer Epidemiology & Genetics"
+ },
+ {
+   "sac": "HNC17V",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM DCTD",
+   "ou_acr": "DCTD",
+   "ou_name": "Admin Resource Ctr - Division Of Cancer Treatment & Diagnosis"
+ },
+ {
+   "sac": "HNC17W",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM ITRC",
+   "ou_acr": "ITRC",
+   "ou_name": "Information Technology Resource Center"
+ },
+ {
+   "sac": "HNC17X",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OWM",
+   "ou_acr": "OWM",
+   "ou_name": "Office Of Workforce Management"
+ },
+ {
+   "sac": "HNC17Y",
+   "parent_sac": "HNC17",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OM OWR",
+   "ou_acr": "OWR",
+   "ou_name": "Office Of Workforce Relations"
+ },
+ {
+   "sac": "HNC1D",
+   "parent_sac": "HNC1",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CBIIT",
+   "ou_acr": "CBIIT",
+   "ou_name": "Center For Biomedical Informatics & Information Technology"
+ },
+ {
+   "sac": "HNC1D2",
+   "parent_sac": "HNC1D",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CBIIT IIOB",
+   "ou_acr": "IIOB",
+   "ou_name": "Infrastructure & It Operations Branch"
+ },
+ {
+   "sac": "HNC1D3",
+   "parent_sac": "HNC1D",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CBIIT BOB",
+   "ou_acr": "BOB",
+   "ou_name": "Business Operations Branch"
+ },
+ {
+   "sac": "HNC1D4",
+   "parent_sac": "HNC1D",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CBIIT CIB",
+   "ou_acr": "CIB",
+   "ou_name": "Cancer Informatics Branch"
+ },
+ {
+   "sac": "HNC1D5",
+   "parent_sac": "HNC1D",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CBIIT ESIB",
+   "ou_acr": "ESIB",
+   "ou_name": "Evaluation & Strategic Initiatives Branch"
+ },
+ {
+   "sac": "HNC1D6",
+   "parent_sac": "HNC1D",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CBIIT ODS",
+   "ou_acr": "ODS",
+   "ou_name": "Office Of Data Sharing"
+ },
+ {
+   "sac": "HNC1E",
+   "parent_sac": "HNC1",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CRCHD",
+   "ou_acr": "CRCHD",
+   "ou_name": "Center To Reduce Cancer Health Disparities"
+ },
+ {
+   "sac": "HNC1E2",
+   "parent_sac": "HNC1E",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CRCHD INB",
+   "ou_acr": "INB",
+   "ou_name": "Integrated Networks Branch"
+ },
+ {
+   "sac": "HNC1E4",
+   "parent_sac": "HNC1E",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CRCHD DTB",
+   "ou_acr": "DTB",
+   "ou_name": "Diversity Training Branch"
+ },
+ {
+   "sac": "HNC1H",
+   "parent_sac": "HNC1",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD NCIFOSO",
+   "ou_acr": "NCIFOSO",
+   "ou_name": "Nci Frederick Office Of Scientific Operations"
+ },
+ {
+   "sac": "HNC1J",
+   "parent_sac": "HNC1",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD SBIR",
+   "ou_acr": "SBIR",
+   "ou_name": "Small Business Innovation Research (Sbir) Development Center"
+ },
+ {
+   "sac": "HNC1K",
+   "parent_sac": "HNC1",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OHAM",
+   "ou_acr": "OHAM",
+   "ou_name": "Office Of Hiv & Aids Malignancy"
+ },
+ {
+   "sac": "HNC1L",
+   "parent_sac": "HNC1",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CSSI",
+   "ou_acr": "CSSI",
+   "ou_name": "Center For Strategic Scientific Initiatives"
+ },
+ {
+   "sac": "HNC1L3",
+   "parent_sac": "HNC1L",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CSSI OCNR",
+   "ou_acr": "OCNR",
+   "ou_name": "Office Of Cancer Nanotechnology Research"
+ },
+ {
+   "sac": "HNC1L4",
+   "parent_sac": "HNC1L",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CSSI OCCPR",
+   "ou_acr": "OCCPR",
+   "ou_name": "Office Of Cancer Clinical Proteomics Research"
+ },
+ {
+   "sac": "HNC1M",
+   "parent_sac": "HNC1",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD OCC",
+   "ou_acr": "OCC",
+   "ou_name": "Office Of Cancer Centers"
+ },
+ {
+   "sac": "HNC1N",
+   "parent_sac": "HNC1",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CGH",
+   "ou_acr": "CGH",
+   "ou_name": "Center For Global Health"
+ },
+ {
+   "sac": "HNC1N2",
+   "parent_sac": "HNC1N",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CGH POEB",
+   "ou_acr": "POEB",
+   "ou_name": "Planning, Operations, & Evaluation Branch"
+ },
+ {
+   "sac": "HNC1N3",
+   "parent_sac": "HNC1N",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CGH PHNRB",
+   "ou_acr": "PHNRB",
+   "ou_name": "Public Health, Networks, & Research Branch"
+ },
+ {
+   "sac": "HNC1P",
+   "parent_sac": "HNC1",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CCG",
+   "ou_acr": "CCG",
+   "ou_name": "Center For Cancer Genomics"
+ },
+ {
+   "sac": "HNC1P2",
+   "parent_sac": "HNC1P",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CCG OCG",
+   "ou_acr": "OCG",
+   "ou_name": "Office Of Cancer Genomics"
+ },
+ {
+   "sac": "HNC1P3",
+   "parent_sac": "HNC1P",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CCG CCGPO",
+   "ou_acr": "CCGPO",
+   "ou_name": "Center For Cancer Genomics Programs Office"
+ },
+ {
+   "sac": "HNC1Q",
+   "parent_sac": "HNC1",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CCT",
+   "ou_acr": "CCT",
+   "ou_name": "Center For Cancer Training"
+ },
+ {
+   "sac": "HNC1Q2",
+   "parent_sac": "HNC1Q",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CCT CTB",
+   "ou_acr": "CTB",
+   "ou_name": "Cancer Training Branch"
+ },
+ {
+   "sac": "HNC1Q3",
+   "parent_sac": "HNC1Q",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CCT IDWB",
+   "ou_acr": "IDWB",
+   "ou_name": "Intramural Diversity Workforce Branch"
+ },
+ {
+   "sac": "HNC1Q4",
+   "parent_sac": "HNC1Q",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CCT OTE",
+   "ou_acr": "OTE",
+   "ou_name": "Office Of Training & Education"
+ },
+ {
+   "sac": "HNC1R",
+   "parent_sac": "HNC1",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI OD CRS",
+   "ou_acr": "CRS",
+   "ou_name": "Center For Research Strategy"
+ },
+ {
+   "sac": "HNC4",
+   "parent_sac": "HNC",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCP",
+   "ou_acr": "DCP",
+   "ou_name": "Division Of Cancer Prevention"
+ },
+ {
+   "sac": "HNC41",
+   "parent_sac": "HNC4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCP OD",
+   "ou_acr": "OD",
+   "ou_name": "Office Of The Director"
+ },
+ {
+   "sac": "HNC413",
+   "parent_sac": "HNC41",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCP OD PIO",
+   "ou_acr": "PIO",
+   "ou_name": "Protocol Information Office"
+ },
+ {
+   "sac": "HNC414",
+   "parent_sac": "HNC41",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCP OD CPFP",
+   "ou_acr": "CPFP",
+   "ou_name": "Cancer Prevention Fellowship Program"
+ },
+ {
+   "sac": "HNC42",
+   "parent_sac": "HNC4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCP BGCRG",
+   "ou_acr": "BGCRG",
+   "ou_name": "Breast & Gynecologic Cancer Research Group"
+ },
+ {
+   "sac": "HNC43",
+   "parent_sac": "HNC4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCP PUCRG",
+   "ou_acr": "PUCRG",
+   "ou_name": "Prostate & Urologic Cancer Research Group"
+ },
+ {
+   "sac": "HNC44",
+   "parent_sac": "HNC4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCP LUACRG",
+   "ou_acr": "LUACRG",
+   "ou_name": "Lung & Upper Aerodigestive Cancer Research Group"
+ },
+ {
+   "sac": "HNC49",
+   "parent_sac": "HNC4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCP GOCRG",
+   "ou_acr": "GOCRG",
+   "ou_name": "Gastrointestinal & Other Cancer Research Group"
+ },
+ {
+   "sac": "HNC4B",
+   "parent_sac": "HNC4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCP CADRG",
+   "ou_acr": "CADRG",
+   "ou_name": "Chemopreventive Agent Development Research Group"
+ },
+ {
+   "sac": "HNC4C",
+   "parent_sac": "HNC4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCP COPTRG",
+   "ou_acr": "COPTRG",
+   "ou_name": "Community Oncology & Prevention Trials Research Group"
+ },
+ {
+   "sac": "HNC4D",
+   "parent_sac": "HNC4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCP NSRG",
+   "ou_acr": "NSRG",
+   "ou_name": "Nutritional Science Research Group"
+ },
+ {
+   "sac": "HNC4G",
+   "parent_sac": "HNC4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCP CBRG",
+   "ou_acr": "CBRG",
+   "ou_name": "Cancer Biomarkers Research Group"
+ },
+ {
+   "sac": "HNC4H",
+   "parent_sac": "HNC4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCP EDRG",
+   "ou_acr": "EDRG",
+   "ou_name": "Early Detection Research Group"
+ },
+ {
+   "sac": "HNC4J",
+   "parent_sac": "HNC4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCP BRG",
+   "ou_acr": "BRG",
+   "ou_name": "Biometry Research Group"
+ },
+ {
+   "sac": "HNC5",
+   "parent_sac": "HNC",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DEA",
+   "ou_acr": "DEA",
+   "ou_name": "Division Of Extramural Activities"
+ },
+ {
+   "sac": "HNC51",
+   "parent_sac": "HNC5",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DEA OD",
+   "ou_acr": "OD",
+   "ou_name": "Office Of The Director"
+ },
+ {
+   "sac": "HNC519",
+   "parent_sac": "HNC51",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DEA OD PRESTO",
+   "ou_acr": "PRESTO",
+   "ou_name": "Program & Review Extramural Staff Training Office"
+ },
+ {
+   "sac": "HNC51A",
+   "parent_sac": "HNC51",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DEA OD CMO",
+   "ou_acr": "CMO",
+   "ou_name": "Committee Management Office"
+ },
+ {
+   "sac": "HNC52",
+   "parent_sac": "HNC5",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DEA OEA",
+   "ou_acr": "OEA",
+   "ou_name": "Office Of Extramural Applications"
+ },
+ {
+   "sac": "HNC522",
+   "parent_sac": "HNC52",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DEA OEA AISB",
+   "ou_acr": "AISB",
+   "ou_name": "Applied Information Systems Branch"
+ },
+ {
+   "sac": "HNC523",
+   "parent_sac": "HNC52",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DEA OEA RAEB",
+   "ou_acr": "RAEB",
+   "ou_name": "Research Analysis & Evaluation Branch"
+ },
+ {
+   "sac": "HNC53",
+   "parent_sac": "HNC5",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DEA ORRPC",
+   "ou_acr": "ORRPC",
+   "ou_name": "Office Of Referral, Review, & Program Coordination"
+ },
+ {
+   "sac": "HNC535",
+   "parent_sac": "HNC53",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DEA ORRPC PCRB",
+   "ou_acr": "PCRB",
+   "ou_name": "Program Coordination & Referral Branch"
+ },
+ {
+   "sac": "HNC536",
+   "parent_sac": "HNC53",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DEA ORRPC RTRB",
+   "ou_acr": "RTRB",
+   "ou_name": "Resources & Training Review Branch"
+ },
+ {
+   "sac": "HNC537",
+   "parent_sac": "HNC53",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DEA ORRPC RPRB",
+   "ou_acr": "RPRB",
+   "ou_name": "Research Programs Review Branch"
+ },
+ {
+   "sac": "HNC538",
+   "parent_sac": "HNC53",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DEA ORRPC RTB",
+   "ou_acr": "RTB",
+   "ou_name": "Research & Technology Branch"
+ },
+ {
+   "sac": "HNC539",
+   "parent_sac": "HNC53",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DEA ORRPC SRB",
+   "ou_acr": "SRB",
+   "ou_name": "Special Review Branch"
+ },
+ {
+   "sac": "HNC53A",
+   "parent_sac": "HNC53",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DEA ORRPC DPDU",
+   "ou_acr": "DPDU",
+   "ou_name": "Dea Processing & Distribution Unit"
+ },
+ {
+   "sac": "HNC7",
+   "parent_sac": "HNC",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR",
+   "ou_acr": "CCR",
+   "ou_name": "Center For Cancer Research"
+ },
+ {
+   "sac": "HNC71",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR OD",
+   "ou_acr": "OD",
+   "ou_name": "Office Of The Director"
+ },
+ {
+   "sac": "HNC71-2",
+   "parent_sac": "HNC71",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR OD BDMS",
+   "ou_acr": "BDMS",
+   "ou_name": "Biostatistics & Data Management Section"
+ },
+ {
+   "sac": "HNC713",
+   "parent_sac": "HNC71",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR OD BRL",
+   "ou_acr": "BRL",
+   "ou_name": "Basic Research Laboratory"
+ },
+ {
+   "sac": "HNC716",
+   "parent_sac": "HNC71",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR OD CSB",
+   "ou_acr": "CSB",
+   "ou_name": "Center For Structural Biology"
+ },
+ {
+   "sac": "HNC717",
+   "parent_sac": "HNC71",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR OD MTP",
+   "ou_acr": "MTP",
+   "ou_name": "Molecular Targets Program"
+ },
+ {
+   "sac": "HNC718",
+   "parent_sac": "HNC71",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR OD CBL",
+   "ou_acr": "CBL",
+   "ou_name": "Chemical Biology Laboratory"
+ },
+ {
+   "sac": "HNC719",
+   "parent_sac": "HNC71",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR OD OCD",
+   "ou_acr": "OCD",
+   "ou_name": "Office Of The Clinical Director"
+ },
+ {
+   "sac": "HNC71A",
+   "parent_sac": "HNC71",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR OD RNABL",
+   "ou_acr": "RNABL",
+   "ou_name": "Rna Biology Laboratory"
+ },
+ {
+   "sac": "HNC71B",
+   "parent_sac": "HNC71",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR OD CDSL",
+   "ou_acr": "CDSL",
+   "ou_name": "Cancer Data Science Laboratory"
+ },
+ {
+   "sac": "HNC72",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR EIB",
+   "ou_acr": "EIB",
+   "ou_name": "Experimental Immunology Branch"
+ },
+ {
+   "sac": "HNC723",
+   "parent_sac": "HNC72",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR EIB LCS",
+   "ou_acr": "LCS",
+   "ou_name": "Lymphocyte Cytotoxicity Section"
+ },
+ {
+   "sac": "HNC724",
+   "parent_sac": "HNC72",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR EIB ITS",
+   "ou_acr": "ITS",
+   "ou_name": "Immune Targeting Section"
+ },
+ {
+   "sac": "HNC725",
+   "parent_sac": "HNC72",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR EIB HIS",
+   "ou_acr": "HIS",
+   "ou_name": "Human Immunology Section"
+ },
+ {
+   "sac": "HNC726",
+   "parent_sac": "HNC72",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR EIB CMIS",
+   "ou_acr": "CMIS",
+   "ou_name": "Cell Mediated Immunity Section"
+ },
+ {
+   "sac": "HNC727",
+   "parent_sac": "HNC72",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR EIB MRS",
+   "ou_acr": "MRS",
+   "ou_name": "Molecular Regulation Section"
+ },
+ {
+   "sac": "HNC728",
+   "parent_sac": "HNC72",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR EIB IRS",
+   "ou_acr": "IRS",
+   "ou_name": "Immune Regulation Section"
+ },
+ {
+   "sac": "HNC729",
+   "parent_sac": "HNC72",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR EIB LDS",
+   "ou_acr": "LDS",
+   "ou_name": "Lymphocyte Development Section"
+ },
+ {
+   "sac": "HNC74",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LTIB",
+   "ou_acr": "LTIB",
+   "ou_name": "Laboratory Of Tumor Immunology & Biology"
+ },
+ {
+   "sac": "HNC76",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LB",
+   "ou_acr": "LB",
+   "ou_name": "Laboratory Biochemistry"
+ },
+ {
+   "sac": "HNC763",
+   "parent_sac": "HNC76",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LB BGES",
+   "ou_acr": "BGES",
+   "ou_name": "Biochemistry Gene Expression Se"
+ },
+ {
+   "sac": "HNC766",
+   "parent_sac": "HNC76",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LB PBS",
+   "ou_acr": "PBS",
+   "ou_name": "Protein Biochemistry Section"
+ },
+ {
+   "sac": "HNC78",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LCO",
+   "ou_acr": "LCO",
+   "ou_name": "Laboratory Of Cellular Oncology"
+ },
+ {
+   "sac": "HNC79",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LCB",
+   "ou_acr": "LCB",
+   "ou_name": "Laboratory Of Cell Biology"
+ },
+ {
+   "sac": "HNC794",
+   "parent_sac": "HNC79",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LCB PCBS",
+   "ou_acr": "PCBS",
+   "ou_name": "Pigment Cell Biology Section"
+ },
+ {
+   "sac": "HNC795",
+   "parent_sac": "HNC79",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LCB BPS",
+   "ou_acr": "BPS",
+   "ou_name": "Biochemistry Of Proteins Section"
+ },
+ {
+   "sac": "HNC796",
+   "parent_sac": "HNC79",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LCB MRS",
+   "ou_acr": "MRS",
+   "ou_name": "Multidrug Resistance Section"
+ },
+ {
+   "sac": "HNC797",
+   "parent_sac": "HNC79",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LCB TBS",
+   "ou_acr": "TBS",
+   "ou_name": "Transport Biochemistry Section"
+ },
+ {
+   "sac": "HNC799",
+   "parent_sac": "HNC79",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LCB CS",
+   "ou_acr": "CS",
+   "ou_name": "Crystallography Section"
+ },
+ {
+   "sac": "HNC79B",
+   "parent_sac": "HNC79",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LCB CIS",
+   "ou_acr": "CIS",
+   "ou_name": "Chemical Immunology Section"
+ },
+ {
+   "sac": "HNC7B",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LMB",
+   "ou_acr": "LMB",
+   "ou_name": "Laboratory Of Molecular Biology"
+ },
+ {
+   "sac": "HNC7B2",
+   "parent_sac": "HNC7B",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LMB BGS",
+   "ou_acr": "BGS",
+   "ou_name": "Biochemical Genetics Section"
+ },
+ {
+   "sac": "HNC7B4",
+   "parent_sac": "HNC7B",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LMB GRS",
+   "ou_acr": "GRS",
+   "ou_name": "Gene Regulation Section"
+ },
+ {
+   "sac": "HNC7B5",
+   "parent_sac": "HNC7B",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LMB BS",
+   "ou_acr": "BS",
+   "ou_name": "Biotherapy Section"
+ },
+ {
+   "sac": "HNC7B6",
+   "parent_sac": "HNC7B",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LMB CIS",
+   "ou_acr": "CIS",
+   "ou_name": "Clinical Immunotherapy Section"
+ },
+ {
+   "sac": "HNC7B7",
+   "parent_sac": "HNC7B",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LMB DGS",
+   "ou_acr": "DGS",
+   "ou_name": "Developmental Genetics Section"
+ },
+ {
+   "sac": "HNC7B9",
+   "parent_sac": "HNC7B",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LMB MBS",
+   "ou_acr": "MBS",
+   "ou_name": "Molecular Biology Section"
+ },
+ {
+   "sac": "HNC7BA",
+   "parent_sac": "HNC7B",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LMB DMBS",
+   "ou_acr": "DMBS",
+   "ou_name": "Dna Molecular Biology Section"
+ },
+ {
+   "sac": "HNC7J",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LCMB",
+   "ou_acr": "LCMB",
+   "ou_name": "Laboratory Of Cellular & Molecular Biology"
+ },
+ {
+   "sac": "HNC7K",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LHC",
+   "ou_acr": "LHC",
+   "ou_name": "Laboratory Of Human Carcinogenesis"
+ },
+ {
+   "sac": "HNC7K4",
+   "parent_sac": "HNC7K",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LHC MGCS",
+   "ou_acr": "MGCS",
+   "ou_name": "Molecular Genetics & Carcinogenesis Section"
+ },
+ {
+   "sac": "HNC7L",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LGD",
+   "ou_acr": "LGD",
+   "ou_name": "Laboratory Of Genomic Diversity"
+ },
+ {
+   "sac": "HNC7L4",
+   "parent_sac": "HNC7L",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LGD GS",
+   "ou_acr": "GS",
+   "ou_name": "Genetics Section"
+ },
+ {
+   "sac": "HNC7Q",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LCCTP",
+   "ou_acr": "LCCTP",
+   "ou_name": "Laboratory Cellular Carcinogenesis &"
+ },
+ {
+   "sac": "HNC7Q2",
+   "parent_sac": "HNC7Q",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LCCTP VPS",
+   "ou_acr": "VPS",
+   "ou_name": "In Vitro Pathogenesis Section"
+ },
+ {
+   "sac": "HNC7R",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LEC",
+   "ou_acr": "LEC",
+   "ou_name": "Laboratory Of Experimental Carcinogenesis"
+ },
+ {
+   "sac": "HNC7Y",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LICB",
+   "ou_acr": "LICB",
+   "ou_name": "Laboratory Of Immune Cell Biology"
+ },
+ {
+   "sac": "HNC7Z02",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR DTB",
+   "ou_acr": "DTB",
+   "ou_name": "Developmental Therapeutics Branch"
+ },
+ {
+   "sac": "HNC7Z04",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LBMB",
+   "ou_acr": "LBMB",
+   "ou_name": "Laboratory Of Biochemistry & Molecular Biology"
+ },
+ {
+   "sac": "HNC7Z05",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LM",
+   "ou_acr": "LM",
+   "ou_name": "Laboratory Of Metabolism"
+ },
+ {
+   "sac": "HNC7Z052",
+   "parent_sac": "HNC7Z05",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LM ES",
+   "ou_acr": "ES",
+   "ou_name": "Endocrinology Section"
+ },
+ {
+   "sac": "HNC7Z053",
+   "parent_sac": "HNC7Z05",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LM CS",
+   "ou_acr": "CS",
+   "ou_name": "Chemistry Section"
+ },
+ {
+   "sac": "HNC7Z054",
+   "parent_sac": "HNC7Z05",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LM NAS",
+   "ou_acr": "NAS",
+   "ou_name": "Nucleic Acids Section"
+ },
+ {
+   "sac": "HNC7Z055",
+   "parent_sac": "HNC7Z05",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LM PS",
+   "ou_acr": "PS",
+   "ou_name": "Protein Section"
+ },
+ {
+   "sac": "HNC7Z06",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LRBGE",
+   "ou_acr": "LRBGE",
+   "ou_name": "Laboratory Of Receptor Biology & Gene Expression"
+ },
+ {
+   "sac": "HNC7Z063",
+   "parent_sac": "HNC7Z06",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LRBGE HAOS",
+   "ou_acr": "HAOS",
+   "ou_name": "Hormone Action & Oncogenesis Section"
+ },
+ {
+   "sac": "HNC7Z07",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR HIVDRP",
+   "ou_acr": "HIVDRP",
+   "ou_name": "Hiv Dynamics & Replication Program"
+ },
+ {
+   "sac": "HNC7Z073",
+   "parent_sac": "HNC7Z07",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR HIVDRP HVIB",
+   "ou_acr": "HVIB",
+   "ou_name": "Host Virus Interaction Branch"
+ },
+ {
+   "sac": "HNC7Z075",
+   "parent_sac": "HNC7Z07",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR HIVDRP RRL",
+   "ou_acr": "RRL",
+   "ou_name": "Retroviral Replication Laboratory"
+ },
+ {
+   "sac": "HNC7Z11",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR MCGP",
+   "ou_acr": "MCGP",
+   "ou_name": "Mouse Cancer Genetics Program"
+ },
+ {
+   "sac": "HNC7Z114",
+   "parent_sac": "HNC7Z11",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR MCGP GCSS",
+   "ou_acr": "GCSS",
+   "ou_name": "Genetics Of Cancer Susceptibility Section"
+ },
+ {
+   "sac": "HNC7Z115",
+   "parent_sac": "HNC7Z11",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR MCGP NDS",
+   "ou_acr": "NDS",
+   "ou_name": "Neural Development Section"
+ },
+ {
+   "sac": "HNC7Z12",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR CDBL",
+   "ou_acr": "CDBL",
+   "ou_name": "Cancer & Developmental Biology Laboratory"
+ },
+ {
+   "sac": "HNC7Z123",
+   "parent_sac": "HNC7Z12",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR CDBL GVDS",
+   "ou_acr": "GVDS",
+   "ou_name": "Genetics Of Vertebrate Development Section"
+ },
+ {
+   "sac": "HNC7Z124",
+   "parent_sac": "HNC7Z12",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR CDBL CSVDS",
+   "ou_acr": "CSVDS",
+   "ou_name": "Cell Signaling In Vertebrate Development Section"
+ },
+ {
+   "sac": "HNC7Z15",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR DB",
+   "ou_acr": "DB",
+   "ou_name": "Dermatology Branch"
+ },
+ {
+   "sac": "HNC7Z16",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LYMB",
+   "ou_acr": "LYMB",
+   "ou_name": "Lymphoid Malignancies Branch"
+ },
+ {
+   "sac": "HNC7Z17",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR SB",
+   "ou_acr": "SB",
+   "ou_name": "Surgery Branch"
+ },
+ {
+   "sac": "HNC7Z18",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LP",
+   "ou_acr": "LP",
+   "ou_name": "Laboratory Of Pathology"
+ },
+ {
+   "sac": "HNC7Z19",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR POB",
+   "ou_acr": "POB",
+   "ou_name": "Pediatric Oncology Branch"
+ },
+ {
+   "sac": "HNC7Z20",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR ROB",
+   "ou_acr": "ROB",
+   "ou_name": "Radiation Oncology Branch"
+ },
+ {
+   "sac": "HNC7Z23",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR ETIB",
+   "ou_acr": "ETIB",
+   "ou_name": "Experimental Transplantation & Immunotherapy Branch"
+ },
+ {
+   "sac": "HNC7Z24",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR CGB",
+   "ou_acr": "CGB",
+   "ou_name": "Cancer Genetics Branch"
+ },
+ {
+   "sac": "HNC7Z25",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LGCP",
+   "ou_acr": "LGCP",
+   "ou_name": "Laboratory Of Genitourinary Cancer Pathogenesis"
+ },
+ {
+   "sac": "HNC7Z26",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR RBB",
+   "ou_acr": "RBB",
+   "ou_name": "Radiation Biology Branch"
+ },
+ {
+   "sac": "HNC7Z27",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR HAMB",
+   "ou_acr": "HAMB",
+   "ou_name": "Hiv & Aids Malignancy Branch"
+ },
+ {
+   "sac": "HNC7Z28",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR UOB",
+   "ou_acr": "UOB",
+   "ou_name": "Urologic Oncology Branch"
+ },
+ {
+   "sac": "HNC7Z29",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR CPSB",
+   "ou_acr": "CPSB",
+   "ou_name": "Cancer Prevention Studies Branch"
+ },
+ {
+   "sac": "HNC7Z30",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR NOB",
+   "ou_acr": "NOB",
+   "ou_name": "Neuro-Oncology Branch"
+ },
+ {
+   "sac": "HNC7Z32",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR MCL",
+   "ou_acr": "MCL",
+   "ou_name": "Macromolecular Crystallography Laboratory"
+ },
+ {
+   "sac": "HNC7Z322",
+   "parent_sac": "HNC7Z32",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR MCL PSS",
+   "ou_acr": "PSS",
+   "ou_name": "Protein Structure Section"
+ },
+ {
+   "sac": "HNC7Z323",
+   "parent_sac": "HNC7Z32",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR MCL BSS",
+   "ou_acr": "BSS",
+   "ou_name": "Bimolecular Structure Section"
+ },
+ {
+   "sac": "HNC7Z324",
+   "parent_sac": "HNC7Z32",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR MCL SRRS",
+   "ou_acr": "SRRS",
+   "ou_name": "Synchrotron Radiation Research Section"
+ },
+ {
+   "sac": "HNC7Z325",
+   "parent_sac": "HNC7Z32",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR MCL PES",
+   "ou_acr": "PES",
+   "ou_name": "Protein Engineering Section"
+ },
+ {
+   "sac": "HNC7Z36",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LPDS",
+   "ou_acr": "LPDS",
+   "ou_name": "Laboratory Of Protein Dynamics & Signaling"
+ },
+ {
+   "sac": "HNC7Z37",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR MIB",
+   "ou_acr": "MIB",
+   "ou_name": "Molecular Imaging Branch"
+ },
+ {
+   "sac": "HNC7Z38",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR VB",
+   "ou_acr": "VB",
+   "ou_name": "Vaccine Branch"
+ },
+ {
+   "sac": "HNC7Z41",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LCDS",
+   "ou_acr": "LCDS",
+   "ou_name": "Laboratory Of Cell & Developmental Signaling"
+ },
+ {
+   "sac": "HNC7Z42",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LICI",
+   "ou_acr": "LICI",
+   "ou_name": "Laboratory Of Integrative Cancer Immunology"
+ },
+ {
+   "sac": "HNC7Z43",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LCBG",
+   "ou_acr": "LCBG",
+   "ou_name": "Laboratory Of Cancer Biology & Genetics"
+ },
+ {
+   "sac": "HNC7Z50",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LGI",
+   "ou_acr": "LGI",
+   "ou_name": "Laboratory Of Genome Integrity"
+ },
+ {
+   "sac": "HNC7Z52",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR SOP",
+   "ou_acr": "SOP",
+   "ou_name": "Surgical Oncology Program"
+ },
+ {
+   "sac": "HNC7Z53",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR TSB",
+   "ou_acr": "TSB",
+   "ou_name": "Thoracic Surgery Branch"
+ },
+ {
+   "sac": "HNC7Z54",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR WMB",
+   "ou_acr": "WMB",
+   "ou_name": "Womens Malignancies Branch"
+ },
+ {
+   "sac": "HNC7Z55",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR GMB",
+   "ou_acr": "GMB",
+   "ou_name": "Genitourinary Malignancies Branch"
+ },
+ {
+   "sac": "HNC7Z56",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR TGMB",
+   "ou_acr": "TGMB",
+   "ou_name": "Thoracic & Gi Malignancies Branch"
+ },
+ {
+   "sac": "HNC7Z57",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR IDCTP",
+   "ou_acr": "IDCTP",
+   "ou_name": "Immune Deficiency Cellular Therapy Program"
+ },
+ {
+   "sac": "HNC7Z58",
+   "parent_sac": "HNC7",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI CCR LCIM",
+   "ou_acr": "LCIM",
+   "ou_name": "Laboratory Of Cancer Immunometabolism"
+ },
+ {
+   "sac": "HNC9",
+   "parent_sac": "HNC",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCEG",
+   "ou_acr": "DCEG",
+   "ou_name": "Division Of Cancer Epidemiology & Genetics"
+ },
+ {
+   "sac": "HNC91",
+   "parent_sac": "HNC9",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCEG OD",
+   "ou_acr": "OD",
+   "ou_name": "Office Of The Director"
+ },
+ {
+   "sac": "HNC912",
+   "parent_sac": "HNC91",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCEG OD ODOA",
+   "ou_acr": "ODOA",
+   "ou_name": "Office Of Division Operations & Analysis"
+ },
+ {
+   "sac": "HNC913",
+   "parent_sac": "HNC91",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCEG OD OE",
+   "ou_acr": "OE",
+   "ou_name": "Office Of Education"
+ },
+ {
+   "sac": "HNC914",
+   "parent_sac": "HNC91",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCEG OD LGS",
+   "ou_acr": "LGS",
+   "ou_name": "Laboratory Of Genetic Susceptibility"
+ },
+ {
+   "sac": "HNC9B",
+   "parent_sac": "HNC9",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCEG HGP",
+   "ou_acr": "HGP",
+   "ou_name": "Human Genetics Program"
+ },
+ {
+   "sac": "HNC9B2",
+   "parent_sac": "HNC9B",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCEG HGP CGB",
+   "ou_acr": "CGB",
+   "ou_name": "Clinical Genetics Branch"
+ },
+ {
+   "sac": "HNC9B4",
+   "parent_sac": "HNC9B",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCEG HGP ITEB",
+   "ou_acr": "ITEB",
+   "ou_name": "Integrative Tumor Epidemiology Branch"
+ },
+ {
+   "sac": "HNC9B5",
+   "parent_sac": "HNC9B",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCEG HGP LTG",
+   "ou_acr": "LTG",
+   "ou_name": "Laboratory Of Translational Genomics"
+ },
+ {
+   "sac": "HNC9C",
+   "parent_sac": "HNC9",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCEG TDRP",
+   "ou_acr": "TDRP",
+   "ou_name": "Trans-Divisional Research Program"
+ },
+ {
+   "sac": "HNC9C2",
+   "parent_sac": "HNC9C",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCEG TDRP MEB",
+   "ou_acr": "MEB",
+   "ou_name": "Metabolic Epidemiology Branch"
+ },
+ {
+   "sac": "HNC9C3",
+   "parent_sac": "HNC9C",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCEG TDRP BB",
+   "ou_acr": "BB",
+   "ou_name": "Biostatistics Branch"
+ },
+ {
+   "sac": "HNC9C5",
+   "parent_sac": "HNC9C",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCEG TDRP REB",
+   "ou_acr": "REB",
+   "ou_name": "Radiation Epidemiology Branch"
+ },
+ {
+   "sac": "HNC9C6",
+   "parent_sac": "HNC9C",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCEG TDRP OEEB",
+   "ou_acr": "OEEB",
+   "ou_name": "Occupational & Environmental Epidemiology Branch"
+ },
+ {
+   "sac": "HNC9C7",
+   "parent_sac": "HNC9C",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCEG TDRP IIB",
+   "ou_acr": "IIB",
+   "ou_name": "Infection & Immunoepidemiology Branch"
+ },
+ {
+   "sac": "HNC9C8",
+   "parent_sac": "HNC9C",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCEG TDRP CGB",
+   "ou_acr": "CGB",
+   "ou_name": "Clinical Genetics Branch"
+ },
+ {
+   "sac": "HNC9C9",
+   "parent_sac": "HNC9C",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCEG TDRP ITEB",
+   "ou_acr": "ITEB",
+   "ou_name": "Integrative Tumor Epidemiology Branch"
+ },
+ {
+   "sac": "HNC9CA",
+   "parent_sac": "HNC9C",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCEG TDRP LTG",
+   "ou_acr": "LTG",
+   "ou_name": "Laboratory Of Translational Genomics"
+ },
+ {
+   "sac": "HNCB",
+   "parent_sac": "HNC",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD",
+   "ou_acr": "DCTD",
+   "ou_name": "Division Of Cancer Treatment & Diagnosis"
+ },
+ {
+   "sac": "HNCB1",
+   "parent_sac": "HNCB",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD OD",
+   "ou_acr": "OD",
+   "ou_name": "Office Of The Director"
+ },
+ {
+   "sac": "HNCB13",
+   "parent_sac": "HNCB1",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD OD OCCAM",
+   "ou_acr": "OCCAM",
+   "ou_name": "Office Of Cancer Complementary & Alternative Medicine"
+ },
+ {
+   "sac": "HNCB14",
+   "parent_sac": "HNCB1",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD OD OCCPR",
+   "ou_acr": "OCCPR",
+   "ou_name": "Cancer Clinical Proteomics Research"
+ },
+ {
+   "sac": "HNCB2",
+   "parent_sac": "HNCB",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD RRP",
+   "ou_acr": "RRP",
+   "ou_name": "Radiation Research Program"
+ },
+ {
+   "sac": "HNCB22",
+   "parent_sac": "HNCB2",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD RRP RDB",
+   "ou_acr": "RDB",
+   "ou_name": "Radiotherapy Development Branch"
+ },
+ {
+   "sac": "HNCB24",
+   "parent_sac": "HNCB2",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD RRP MRTB",
+   "ou_acr": "MRTB",
+   "ou_name": "Molecular Radiation Therapeutics Branch"
+ },
+ {
+   "sac": "HNCB25",
+   "parent_sac": "HNCB2",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD RRP CROB",
+   "ou_acr": "CROB",
+   "ou_name": "Clinical Radiation Oncology Branch"
+ },
+ {
+   "sac": "HNCB3",
+   "parent_sac": "HNCB",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD CTEP",
+   "ou_acr": "CTEP",
+   "ou_name": "Cancer Therapy Evaluation Program"
+ },
+ {
+   "sac": "HNCB32",
+   "parent_sac": "HNCB3",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD CTEP IDB",
+   "ou_acr": "IDB",
+   "ou_name": "Investigational Drug Branch"
+ },
+ {
+   "sac": "HNCB33",
+   "parent_sac": "HNCB3",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD CTEP PMB",
+   "ou_acr": "PMB",
+   "ou_name": "Pharmaceutical Management Branch"
+ },
+ {
+   "sac": "HNCB35",
+   "parent_sac": "HNCB3",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD CTEP RAB",
+   "ou_acr": "RAB",
+   "ou_name": "Regulatory Affairs Branch"
+ },
+ {
+   "sac": "HNCB36",
+   "parent_sac": "HNCB3",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD CTEP CIB",
+   "ou_acr": "CIB",
+   "ou_name": "Clinical Investigations Branch"
+ },
+ {
+   "sac": "HNCB37",
+   "parent_sac": "HNCB3",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD CTEP CTMB",
+   "ou_acr": "CTMB",
+   "ou_name": "Clinical Trials Monitoring Branch"
+ },
+ {
+   "sac": "HNCB38",
+   "parent_sac": "HNCB3",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD CTEP CGCB",
+   "ou_acr": "CGCB",
+   "ou_name": "Clinical Grants & Contracts Branch"
+ },
+ {
+   "sac": "HNCB39",
+   "parent_sac": "HNCB3",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD CTEP CTOIB",
+   "ou_acr": "CTOIB",
+   "ou_name": "Clinical Trials Operations & Informatics Branch"
+ },
+ {
+   "sac": "HNCB4",
+   "parent_sac": "HNCB",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD DTP",
+   "ou_acr": "DTP",
+   "ou_name": "Developmental Therapeutics Program"
+ },
+ {
+   "sac": "HNCB42",
+   "parent_sac": "HNCB4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD DTP ITB",
+   "ou_acr": "ITB",
+   "ou_name": "Information Technology Branch"
+ },
+ {
+   "sac": "HNCB44",
+   "parent_sac": "HNCB4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD DTP BTB",
+   "ou_acr": "BTB",
+   "ou_name": "Biological Testing Branch"
+ },
+ {
+   "sac": "HNCB45",
+   "parent_sac": "HNCB4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD DTP NPB",
+   "ou_acr": "NPB",
+   "ou_name": "Natural Products Branch"
+ },
+ {
+   "sac": "HNCB46",
+   "parent_sac": "HNCB4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD DTP PTGB",
+   "ou_acr": "PTGB",
+   "ou_name": "Preclinical Therapeutics Grants Branch"
+ },
+ {
+   "sac": "HNCB47",
+   "parent_sac": "HNCB4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD DTP DSCB",
+   "ou_acr": "DSCB",
+   "ou_name": "Drug Synthesis & Chemistry Branch"
+ },
+ {
+   "sac": "HNCB48",
+   "parent_sac": "HNCB4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD DTP TPB",
+   "ou_acr": "TPB",
+   "ou_name": "Toxicology & Pharmacology Branch"
+ },
+ {
+   "sac": "HNCB49",
+   "parent_sac": "HNCB4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD DTP PRB",
+   "ou_acr": "PRB",
+   "ou_name": "Pharmaceutical Resources Branch"
+ },
+ {
+   "sac": "HNCB4C",
+   "parent_sac": "HNCB4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD DTP BRB",
+   "ou_acr": "BRB",
+   "ou_name": "Biological Resources Branch"
+ },
+ {
+   "sac": "HNCB4D",
+   "parent_sac": "HNCB4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD DTP STB",
+   "ou_acr": "STB",
+   "ou_name": "Screening Technologies Branch"
+ },
+ {
+   "sac": "HNCB4E",
+   "parent_sac": "HNCB4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD DTP MPB",
+   "ou_acr": "MPB",
+   "ou_name": "Molecular Pharmacology Branch"
+ },
+ {
+   "sac": "HNCB4F",
+   "parent_sac": "HNCB4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD DTP IB",
+   "ou_acr": "IB",
+   "ou_name": "Immunooncology Branch"
+ },
+ {
+   "sac": "HNCB6",
+   "parent_sac": "HNCB",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD CDP",
+   "ou_acr": "CDP",
+   "ou_name": "Cancer Diagnosis Program"
+ },
+ {
+   "sac": "HNCB62",
+   "parent_sac": "HNCB6",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD CDP DEB",
+   "ou_acr": "DEB",
+   "ou_name": "Diagnostics Evaluation Branch"
+ },
+ {
+   "sac": "HNCB63",
+   "parent_sac": "HNCB6",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD CDP PIRB",
+   "ou_acr": "PIRB",
+   "ou_name": "Pathology Investigation & Resources Branch"
+ },
+ {
+   "sac": "HNCB64",
+   "parent_sac": "HNCB6",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD CDP DBTB",
+   "ou_acr": "DBTB",
+   "ou_name": "Diagnostic Biomarkers & Technology Branch"
+ },
+ {
+   "sac": "HNCB65",
+   "parent_sac": "HNCB6",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD CDP BBRB",
+   "ou_acr": "BBRB",
+   "ou_name": "Biorepositories & Biospecimen Research Branch"
+ },
+ {
+   "sac": "HNCB8",
+   "parent_sac": "HNCB",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD CIP",
+   "ou_acr": "CIP",
+   "ou_name": "Cancer Imaging Program"
+ },
+ {
+   "sac": "HNCB82",
+   "parent_sac": "HNCB8",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD CIP ITDB",
+   "ou_acr": "ITDB",
+   "ou_name": "Imaging Technology Development Branch"
+ },
+ {
+   "sac": "HNCB83",
+   "parent_sac": "HNCB8",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD CIP CTB",
+   "ou_acr": "CTB",
+   "ou_name": "Clinical Trials Branch"
+ },
+ {
+   "sac": "HNCB84",
+   "parent_sac": "HNCB8",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD CIP MIB",
+   "ou_acr": "MIB",
+   "ou_name": "Molecular Imaging Branch"
+ },
+ {
+   "sac": "HNCB85",
+   "parent_sac": "HNCB8",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD CIP IGIB",
+   "ou_acr": "IGIB",
+   "ou_name": "Image-Guided Intervention Branch"
+ },
+ {
+   "sac": "HNCB86",
+   "parent_sac": "HNCB8",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD CIP NSDB",
+   "ou_acr": "NSDB",
+   "ou_name": "Nanodelivery Systems & Devices Branch"
+ },
+ {
+   "sac": "HNCB9",
+   "parent_sac": "HNCB",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD TRP",
+   "ou_acr": "TRP",
+   "ou_name": "Translational Research Program"
+ },
+ {
+   "sac": "HNCBA",
+   "parent_sac": "HNCB",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD BRP",
+   "ou_acr": "BRP",
+   "ou_name": "Biometric Research Program"
+ },
+ {
+   "sac": "HNCBA2",
+   "parent_sac": "HNCBA",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD BRP BB",
+   "ou_acr": "BB",
+   "ou_name": "Biostatistics Branch"
+ },
+ {
+   "sac": "HNCBA3",
+   "parent_sac": "HNCBA",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCTD BRP CSBB",
+   "ou_acr": "CSBB",
+   "ou_name": "Computational & Systems Biology Branch"
+ },
+ {
+   "sac": "HNCC",
+   "parent_sac": "HNC",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCB",
+   "ou_acr": "DCB",
+   "ou_name": "Division Of Cancer Biology"
+ },
+ {
+   "sac": "HNCC1",
+   "parent_sac": "HNCC",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCB OD",
+   "ou_acr": "OD",
+   "ou_name": "Office Of The Director"
+ },
+ {
+   "sac": "HNCC6",
+   "parent_sac": "HNCC",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCB DCAB",
+   "ou_acr": "DCAB",
+   "ou_name": "Dna & Chromosome Aberrations Branch"
+ },
+ {
+   "sac": "HNCCA",
+   "parent_sac": "HNCC",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCB TBMB",
+   "ou_acr": "TBMB",
+   "ou_name": "Tumor Biology & Microenvironment Branch"
+ },
+ {
+   "sac": "HNCCB",
+   "parent_sac": "HNCC",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCB CCBB",
+   "ou_acr": "CCBB",
+   "ou_name": "Cancer Cell Biology Branch"
+ },
+ {
+   "sac": "HNCCC",
+   "parent_sac": "HNCC",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCB SBMAB",
+   "ou_acr": "SBMAB",
+   "ou_name": "Structural Biology & Molecular Applications Branch"
+ },
+ {
+   "sac": "HNCCD",
+   "parent_sac": "HNCC",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCB CIHEB",
+   "ou_acr": "CIHEB",
+   "ou_name": "Cancer Immunology, Hematology & Etiology Branch"
+ },
+ {
+   "sac": "HNCCE",
+   "parent_sac": "HNCC",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCB TMB",
+   "ou_acr": "TMB",
+   "ou_name": "Tumor Metastasis Branch"
+ },
+ {
+   "sac": "HNCD",
+   "parent_sac": "HNC",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS",
+   "ou_acr": "DCCPS",
+   "ou_name": "Division Of Cancer Control & Population Sciences"
+ },
+ {
+   "sac": "HNCD1",
+   "parent_sac": "HNCD",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS OD",
+   "ou_acr": "OD",
+   "ou_name": "Office Of The Director"
+ },
+ {
+   "sac": "HNCD2",
+   "parent_sac": "HNCD",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS EGRP",
+   "ou_acr": "EGRP",
+   "ou_name": "Epidemiology & Genomics Research Program"
+ },
+ {
+   "sac": "HNCD22",
+   "parent_sac": "HNCD2",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS EGRP EEB",
+   "ou_acr": "EEB",
+   "ou_name": "Environmental Epidemiology Branch"
+ },
+ {
+   "sac": "HNCD23",
+   "parent_sac": "HNCD2",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS EGRP GEB",
+   "ou_acr": "GEB",
+   "ou_name": "Genomic Epidemiology Branch"
+ },
+ {
+   "sac": "HNCD24",
+   "parent_sac": "HNCD2",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS EGRP MTB",
+   "ou_acr": "MTB",
+   "ou_name": "Methods & Technologies Branch"
+ },
+ {
+   "sac": "HNCD25",
+   "parent_sac": "HNCD2",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS EGRP CTEB",
+   "ou_acr": "CTEB",
+   "ou_name": "Clinical & Translational Epidemiology Branch"
+ },
+ {
+   "sac": "HNCD26",
+   "parent_sac": "HNCD2",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS EGRP RFAB",
+   "ou_acr": "RFAB",
+   "ou_name": "Risk Factor Assessment Branch"
+ },
+ {
+   "sac": "HNCD3",
+   "parent_sac": "HNCD",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS BRP",
+   "ou_acr": "BRP",
+   "ou_name": "Behavioral Research Program"
+ },
+ {
+   "sac": "HNCD36",
+   "parent_sac": "HNCD3",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS BRP TCRB",
+   "ou_acr": "TCRB",
+   "ou_name": "Tobacco Control Research Branch"
+ },
+ {
+   "sac": "HNCD38",
+   "parent_sac": "HNCD3",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS BRP HCIRB",
+   "ou_acr": "HCIRB",
+   "ou_name": "Health Communication & Informatics Research Branch"
+ },
+ {
+   "sac": "HNCD39",
+   "parent_sac": "HNCD3",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS BRP HBRB",
+   "ou_acr": "HBRB",
+   "ou_name": "Health Behaviors Research Branch"
+ },
+ {
+   "sac": "HNCD3A",
+   "parent_sac": "HNCD3",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS BRP BBPSB",
+   "ou_acr": "BBPSB",
+   "ou_name": "Basic Biobehavioral & Psychological Sciences Branch"
+ },
+ {
+   "sac": "HNCD3B",
+   "parent_sac": "HNCD3",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS BRP SRTB",
+   "ou_acr": "SRTB",
+   "ou_name": "Science Of Research & Technology Branch"
+ },
+ {
+   "sac": "HNCD4",
+   "parent_sac": "HNCD",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS SRP",
+   "ou_acr": "SRP",
+   "ou_name": "Surveillance Research Program"
+ },
+ {
+   "sac": "HNCD43",
+   "parent_sac": "HNCD4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS SRP CSB",
+   "ou_acr": "CSB",
+   "ou_name": "Cancer Statistics Branch"
+ },
+ {
+   "sac": "HNCD45",
+   "parent_sac": "HNCD4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS SRP SIB",
+   "ou_acr": "SIB",
+   "ou_name": "Surveillance Informatics Branch"
+ },
+ {
+   "sac": "HNCD46",
+   "parent_sac": "HNCD4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS SRP DQAIB",
+   "ou_acr": "DQAIB",
+   "ou_name": "Data Quality, Analysis, & Interpretation Branch"
+ },
+ {
+   "sac": "HNCD48",
+   "parent_sac": "HNCD4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS SRP SRAB",
+   "ou_acr": "SRAB",
+   "ou_name": "Statistical Research & Applications Branch"
+ },
+ {
+   "sac": "HNCD49",
+   "parent_sac": "HNCD4",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS SRP DAB",
+   "ou_acr": "DAB",
+   "ou_name": "Data Analytics Branch"
+ },
+ {
+   "sac": "HNCD5",
+   "parent_sac": "HNCD",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS HDRP",
+   "ou_acr": "HDRP",
+   "ou_name": "Healthcare Delivery Research Program"
+ },
+ {
+   "sac": "HNCD52",
+   "parent_sac": "HNCD5",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS HDRP HARB",
+   "ou_acr": "HARB",
+   "ou_name": "Healthcare Assessment Research Branch"
+ },
+ {
+   "sac": "HNCD53",
+   "parent_sac": "HNCD5",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS HDRP RFMMB",
+   "ou_acr": "RFMMB",
+   "ou_name": "Risk Factor Monitoring & Methods Branch"
+ },
+ {
+   "sac": "HNCD54",
+   "parent_sac": "HNCD5",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS HDRP ORB",
+   "ou_acr": "ORB",
+   "ou_name": "Outcomes Research Branch"
+ },
+ {
+   "sac": "HNCD55",
+   "parent_sac": "HNCD5",
+   "inst": "National Cancer Institute",
+   "org_path": "NCI DCCPS HDRP HSIRB",
+   "ou_acr": "HSIRB",
+   "ou_name": "Health Systems & Interventions Research Branch"
+ }
+]

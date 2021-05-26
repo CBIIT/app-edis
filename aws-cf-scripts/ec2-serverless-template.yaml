@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Create a web server ec2 instance with security group
+Parameters:
+  VpcId:
+    Description: Current VPC Id
+    Type: String
+  SubnetId:
+    Description: Subnet ID for EC2 instance
+    Type: String
+  WebSGId:
+    Description: Web Security Group ID
+    Type: String
+
+Resources:
+  WebServer:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      InstanceType: "t2.micro"
+      ImageId: "ami-0be2609ba883822ec"
+      KeyName: "pgmSSHKey"
+      SubnetId: !Ref SubnetId
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/bin/bash
+            # Install Apache Web Server
+            yum install -y httpd
+            yum install -y mod_ssl
+            # Turn on web server
+            chkconfig httpd on
+            service httpd start
+            yum install unzip
+      BlockDeviceMappings:
+        - DeviceName: "/dev/xvda"
+          Ebs:
+            VolumeType: "gp2"
+            VolumeSize: "8"
+            SnapshotId: "snap-019159f1e06f32720"
+      SecurityGroupIds:
+        - !Ref WebSGId
+Outputs:
+  WebServer:
+    Description: dns name of EC2 instance
+    Value:
+      Fn::GetAtt:
+        - WebServer
+        - PublicDnsName

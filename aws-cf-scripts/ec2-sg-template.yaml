@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Create Security Groups for Lambda Function and VPC Endpoints
+Parameters:
+  VpcId:
+    Description: Current VPC Id
+    Type: String
+  SubnetId:
+    Description: Subnet ID for EC2 instance
+    Type: String
+  VpcDefaultSgId:
+    Description: Current VPC default security group id
+    Type: String
+
+Resources:
+  WebSG:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: Allow Http and Ssh to web server
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: "tcp"
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: "tcp"
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+
+  VPCEndpointLambdaOutSG:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: Allow access from VPC connected Lambda to AWS services outside VPC
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: -1
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+          SourceSecurityGroupId: !Ref VpcDefaultSgId
+
+  VPCEndpointApiGatewaySG:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: Allow HTTPS access to API Gateway through VPC Endpoint
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: "tcp"
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+
+Outputs:
+  WebSGId:
+    Description: Web Security Group Id
+    Value: !Ref WebSG
+  VPCEndpointApiGatewaySGId:
+    Description: VPC Endpoint Security Group Id
+    Value: !Ref VPCEndpointApiGatewaySG
+  VPCEndpointLambdaOutSGId:
+    Description: VPC Endpoint Security Group Id
+    Value: !Ref VPCEndpointLambdaOutSG
