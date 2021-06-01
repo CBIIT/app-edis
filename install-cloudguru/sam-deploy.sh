@@ -22,7 +22,7 @@ done
 
 s3bucket="cf-templates-$account-us-east-1"
 
-sam_template="sam-template.yaml"
+sam_template="sam-openapi-template.yaml"
 
 echo "account = $account, s3 = ${s3bucket}"
 echo ""

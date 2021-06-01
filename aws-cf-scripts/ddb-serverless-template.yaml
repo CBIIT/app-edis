@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >
-  Create a dynamodb table 'nedorgs'
+  Create a dynamodb tables 'nedorgs' and 'extusers'
 Parameters:
   Environment:
     Description: Environment tier
@@ -48,6 +48,26 @@ Resources:
             WriteCapacityUnits: "5"
           Projection:
             ProjectionType: "ALL"
+
+  ExtUsersTable:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      AttributeDefinitions:
+        -
+          AttributeName: "USER_ID"
+          AttributeType: "S"
+      KeySchema:
+        -
+          AttributeName: "USER_ID"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      TableName: !Join
+        - '-'
+        - - extusers
+          - !Ref Environment
+
 Outputs:
   DdbNetOrgsArn:
     Description: ARN of nedorgs DynamoDB table
@@ -59,3 +79,13 @@ Outputs:
     Description: Nedorgs DynamoDB table name
     Value:
       Ref: NedorgsTable
+  DdbExtusersArn:
+    Description: ARN of nextusers DynamoDB table
+    Value:
+      Fn::GetAtt:
+        - ExtUsersTable
+        - Arn
+  DdbExtusers:
+    Description: Extusers DynamoDB table name
+    Value:
+      Ref: ExtUsersTable

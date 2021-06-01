@@ -1,0 +1,165 @@
+swagger: '2.0'
+info:
+  description: Enterprise Data & Integration Services Web Services - **eRA Commons User Service**
+  version: 0.1.0
+  title: eRA Commons User API
+  # put the contact info for your development or API team
+  contact:
+    email: NCICBIITBizAppsSupportLowTier@mail.nih.gov
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+basePath: /eracommonsapi/v1
+x-amazon-apigateway-request-validators:
+  all:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params:
+    validateRequestBody: true
+    validateRequestParameters: true
+  body:
+    validateRequestBody: true
+    validateRequestParameters: false
+
+# tags are used for organizing operations
+tags:
+  - name: clients
+    description: Operations available to clients - service to service
+
+paths:
+  /eracommonsapi/v1/users:
+    get:
+      tags:
+        - clients
+      summary: External User Information within time range
+      operationId: getUsers
+      description: |
+        Get external eRA Commons user records that have changed within a given time range
+      x-amazon-apigateway-request-validator: params
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: limit
+          description: number of records to retrieve
+          required: false
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 999
+          default: 999
+        - in: query
+          name: offset
+          description: index of the first record to retrieve
+          required: false
+          type: integer
+          default: 0
+        - name: from
+          in: query
+          description: start date range
+          required: false
+          type: string
+          format: date
+        - name: to
+          in: query
+          description: end date range
+          required: false
+          type: string
+          format: date
+      responses:
+        200:
+          description: JSON formatted records of the user information
+          schema:
+            $ref: '#/definitions/Users'
+        400:
+          description: bad input parameter
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${EraCommonsUserApiLambdaFunction.Arn}/invocations
+        httpMethod: POST
+        timeoutInMillis: 3000
+        type: "aws_proxy"
+
+  /eracommonsapi/v1/user/{userID}:
+    get:
+      tags:
+        - clients
+      summary: External User Information
+      operationId: getUserByUserId
+      description: |
+        Get external eRA Commons user by USER_ID
+      parameters:
+        - name: userID
+          in: path
+          required: true
+          description: User ID
+          type: string
+      responses:
+        '200':
+          description: JSON formatted record of the user information
+          schema:
+            $ref: '#/definitions/User'
+        '400':
+          description: bad input parameter
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${EraCommonsUserApiLambdaFunction.Arn}/invocations
+        httpMethod: POST
+        timeoutInMillis: 3000
+        type: "aws_proxy"
+
+definitions:
+  Users:
+    type: object
+    properties:
+      total:
+        type: integer
+      offset:
+        type: integer
+      size:
+        type: integer
+      error:
+        type: string
+        description: Error message if not empty - rest of the fields are zeros
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/User'
+  User:
+    type: object
+    required:
+      - USER_ID
+      - EMAIL
+      - STATUS_CODE
+      - STATUS_DESC
+      - ACCOUNT_CREATED_DATE
+    properties:
+      USER_ID:
+        type: string
+        format: string
+      EMAIL:
+        type: string
+      NAME_PREFFIX:
+        type: string
+      FIRST_NAME:
+        type: string
+      MI_NAME:
+        type: string
+      LAST_NAME:
+        type: string
+      NAME_SUFFIX:
+        type: string
+      STATUS_CODE:
+        type: integer
+      STATUS_DESC:
+        type: string
+      ACCOUNT_CREATED_DATE:
+        type: string
+        format: date-time
+      ACCOUNT_UPDATED_DATE:
+        type: string
+        format: date-time
+      ORG_ID:
+        type: integer
+      ORG_NAME:
+        type: string
