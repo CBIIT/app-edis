@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >
-  Create a dynamodb tables 'nedorgs' and 'extusers'
+  Create a dynamodb table 'extusers'
 Parameters:
   Environment:
     Description: Environment tier
@@ -12,49 +12,15 @@ Parameters:
       - stage
       - prod
 Resources:
-  NedorgsTable:
-    Type: "AWS::DynamoDB::Table"
-    Properties:
-      AttributeDefinitions:
-        -
-          AttributeName: "sac"
-          AttributeType: "S"
-        -
-          AttributeName: "parent_sac"
-          AttributeType: "S"
-      KeySchema:
-        -
-          AttributeName: "parent_sac"
-          KeyType: "HASH"
-        -
-          AttributeName: "sac"
-          KeyType: "RANGE"
-      ProvisionedThroughput:
-        ReadCapacityUnits: "5"
-        WriteCapacityUnits: "5"
-      TableName: !Join
-        - '-'
-        - - nedorgs
-          - !Ref Environment
-      GlobalSecondaryIndexes:
-        -
-          IndexName: sacIndex
-          KeySchema:
-            -
-              AttributeName: "sac"
-              KeyType: "HASH"
-          ProvisionedThroughput:
-            ReadCapacityUnits: "5"
-            WriteCapacityUnits: "5"
-          Projection:
-            ProjectionType: "ALL"
-
   ExtUsersTable:
     Type: "AWS::DynamoDB::Table"
     Properties:
       AttributeDefinitions:
         -
           AttributeName: "USER_ID"
+          AttributeType: "S"
+        -
+          AttributeName: "LAST_UPDATED_DAY"
           AttributeType: "S"
       KeySchema:
         -
@@ -67,18 +33,23 @@ Resources:
         - '-'
         - - extusers
           - !Ref Environment
+      GlobalSecondaryIndexes:
+        -
+          IndexName: dateIndex
+          KeySchema:
+            -
+              AttributeName: "LAST_UPDATED_DAY"
+              KeyType: "HASH"
+            -
+              AttributeName: "USER_ID"
+              KeyType: "RANGE"
+          ProvisionedThroughput:
+            ReadCapacityUnits: "5"
+            WriteCapacityUnits: "5"
+          Projection:
+            ProjectionType: "ALL"
 
 Outputs:
-  DdbNetOrgsArn:
-    Description: ARN of nedorgs DynamoDB table
-    Value:
-      Fn::GetAtt:
-        - NedorgsTable
-        - Arn
-  DdbNetOrgs:
-    Description: Nedorgs DynamoDB table name
-    Value:
-      Ref: NedorgsTable
   DdbExtusersArn:
     Description: ARN of nextusers DynamoDB table
     Value:

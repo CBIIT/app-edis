@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: Enterprise Data & Integration Services Web Services - **eRA Commons User Service**
-  version: 0.1.0
+  version: 0.2.1
   title: eRA Commons User API
   # put the contact info for your development or API team
   contact:
@@ -9,7 +9,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-basePath: /eracommonsapi/v1
+#host: 5jc6xbped1.execute-api.us-east-1.amazonaws.com
 x-amazon-apigateway-request-validators:
   all:
     validateRequestBody: true
@@ -31,10 +31,14 @@ paths:
     get:
       tags:
         - clients
-      summary: External User Information within time range
+      summary: Get external users records within date range
       operationId: getUsers
       description: |
-        Get external eRA Commons user records that have changed within a given time range
+        Get external eRA Commons user records that have changed within a given date range
+
+        For example - https://localhost/eracommonsapi/v1/users?limit=500&offset=0&from=2021-05-01&to=2021-05-01
+
+        (retrieve up to 500 user records for 05/01/2021)
       x-amazon-apigateway-request-validator: params
       produces:
         - application/json
@@ -77,17 +81,17 @@ paths:
         uri:
           Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${EraCommonsUserApiLambdaFunction.Arn}/invocations
         httpMethod: POST
-        timeoutInMillis: 3000
+        timeoutInMillis: 10000
         type: "aws_proxy"
 
   /eracommonsapi/v1/user/{userID}:
     get:
       tags:
         - clients
-      summary: External User Information
+      summary: Get External User Record for given USER ID
       operationId: getUserByUserId
       description: |
-        Get external eRA Commons user by USER_ID
+        Get external eRA Commons user record by USER_ID
       parameters:
         - name: userID
           in: path
@@ -105,7 +109,35 @@ paths:
         uri:
           Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${EraCommonsUserApiLambdaFunction.Arn}/invocations
         httpMethod: POST
-        timeoutInMillis: 3000
+        timeoutInMillis: 10000
+        type: "aws_proxy"
+
+  /eracommonsapi/v1/users/date/{date}:
+    get:
+      tags:
+        - clients
+      summary: Get External User Records for a given day
+      operationId: getUserByDate
+      description: |
+        Get external eRA Commons user records by given date
+      parameters:
+        - name: date
+          in: path
+          required: true
+          description: Date in format YYYY-MM-DD
+          type: string
+      responses:
+        '200':
+          description: JSON formatted records of the user information
+          schema:
+            $ref: '#/definitions/Users'
+        '400':
+          description: bad input parameter
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${EraCommonsUserApiLambdaFunction.Arn}/invocations
+        httpMethod: POST
+        timeoutInMillis: 10000
         type: "aws_proxy"
 
 definitions:

@@ -5,33 +5,61 @@ AWS.config.update({
    region: "us-east-1"
 });
 
-const docClient = new AWS.DynamoDB.DocumentClient();
+const docClient = new AWS.DynamoDB.DocumentClient({maxRetries: 15, retryDelayOptions: {base: 200}});
 const args = process.argv.slice(2)
 const table = args[0];
 const inputfile = args[1];
+console.debug('Arguments: ', args)
 
-console.log("Importing data into DynamoDb table \"" + table + "\"");
+//Set the AWS profile if needed
+if (args.length > 2 && args[2]) {
+    console.debug("Setting up AWS profile to ", args[2]);
+    const credentials = new AWS.SharedIniFileCredentials({profile: args[2]});
+    AWS.config.credentials = credentials;
+}
 
-const allRecs = JSON.parse(fs.readFileSync(inputfile, 'utf-8'));
-let n = 0;
-allRecs.forEach(function (rec) {
-   var params = {
-       TableName: table,
-       Item: rec
-   };
-   console.log(JSON.stringify(params));
+async function run()
+{
+    console.log("Importing data into DynamoDb table \"" + table + "\"");
 
-   docClient.put(params, function (err, data) {
+    let n = 1;
+    try {
 
-       if (err) {
-           console.error(JSON.stringify(err));
-       }
-   })
-   n++;
-});
+        const allRecs = JSON.parse(fs.readFileSync(inputfile, 'utf-8'));
+        const lastIndex = allRecs.length - 1;
+            let batch = [];
+        for (const [index, rec] of allRecs.entries()) {
+            console.debug(n, JSON.stringify(rec));
+            batch.push({
+                PutRequest : {
+                    Item: rec
+                }
+            });
+            if (batch.length >= 25 || (index === lastIndex)) {
 
-console.log("Imported " + n + " data records into DynamoDb table \"" + inputfile + "\"");
+                var params = {
+                    RequestItems: {
+                        [table]: batch
+                    }
+                };
+
+                const data = await docClient.batchWrite(params).promise();
+                console.debug(n, 'result ', data);
+                batch = [];
+            }
+            n++;
+        }
+        n--;
+    } catch (e) {
+        console.error(e);
+    }
+
+    console.log("Imported " + n + " data records into DynamoDb table \"" + inputfile + "\"");
+}
+
+run();
+
 // process.exit();
-setTimeout(function () {
-    process.exit();
-}, 10000);
+// setTimeout(function () {
+//     process.exit();
+// }, 60000);

@@ -14,17 +14,8 @@ Parameters:
   LambdaRoleArn:
     Description: ARN of lambda function role user api web service
     Type: String
-  VpcEndpointId:
-    Description: VPC Endpoint to traffic from VPC to API Gateway
-    Type: String
-  VpcSubnetId1:
-    Description: First VPC subnet ID of corresponding EC2 instance
-    Type: String
-  VpcSubnetId2:
-    Description: Second VPC subnet ID of corresponding EC2 instance
-    Type: String
-  SgId:
-    Description: Default Secirity Group ID for VPC
+  S3bucket:
+    Description: S3 bucket for Lambda Auth and UserApi code
     Type: String
 
 Resources:
@@ -68,41 +59,6 @@ Resources:
           MetricsEnabled: true
           DataTraceEnabled: true
           LoggingLevel: INFO
-  NedOrgsApi:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: !Ref Environment
-      Auth:
-        DefaultAuthorizer: TokenAuthorizer
-        Authorizers:
-          TokenAuthorizer:
-            FunctionArn: !GetAtt AuthFunction.Arn
-        ResourcePolicy:
-          CustomStatements:
-            -
-              Effect: "Allow"
-              Principal: "*"
-              Action: "execute-api:Invoke"
-              Resource:
-                - "execute-api:/*/*/*"
-            -
-              Effect: "Deny"
-              Principal: "*"
-              Action: "execute-api:Invoke"
-              Resource:
-                - "execute-api:/*/*/*"
-              Condition:
-                NotIpAddress:
-                  aws:SourceIp:
-                    - 128.231.0.0/16
-      EndpointConfiguration:
-        Type: REGIONAL
-      MethodSettings:
-        - ResourcePath: "/*"
-          HttpMethod: "*"
-          MetricsEnabled: true
-          DataTraceEnabled: true
-          LoggingLevel: INFO
 
   EraCommonsUserApiLambdaFunction:
     Type: AWS::Serverless::Function
@@ -113,23 +69,9 @@ Resources:
         - '-'
         - - lambda-era-commons-user-api
           - !Ref Environment
-      InlineCode: |
-        module.exports.handler = async function(event, context)
-        {
-          console.log(JSON.stringify(event))
-          var response = {
-          "statusCode": 200,
-          "headers": {
-            "Content-Type": "application/json"
-          },
-          "isBase64Encoded": false,
-          "multiValueHeaders": {
-            "X-Custom-Header": ["My value", "My other value"],
-          },
-          "body": 'This is body'
-        }
-          return response
-        }
+      CodeUri:
+        Bucket: !Ref S3bucket
+        Key: lambda-userapi.zip
       Handler: src/lambda.handler
       Runtime: nodejs12.x
       Timeout: 30
@@ -153,11 +95,11 @@ Resources:
             RestApiId: !Ref EraCommonsUserApi
             Path: /eracommonsapi/v1/user/{userID}
             Method: GET
-        ProxyNedOrgsApi:
+        GetUserByDate:
           Type: Api
           Properties:
-            RestApiId: !Ref NedOrgsApi
-            Path: /nedorgapi/v1/{proxy+}
+            RestApiId: !Ref EraCommonsUserApi
+            Path: /eracommonsapi/v1/users/date/{date}
             Method: GET
 
   AuthFunction:
@@ -169,12 +111,9 @@ Resources:
         - '-'
         - - lambda-auth
           - !Ref Environment
-      InlineCode: |
-        module.exports.handler = async function(event, context)
-        {
-          console.log(JSON.stringify(event))
-          return {}
-        }
+      CodeUri:
+        Bucket: !Ref S3bucket
+        Key: lambda-auth.zip
       Handler: src/lambda.handler
       Runtime: nodejs12.x
       Timeout: 30

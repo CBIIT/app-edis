@@ -36,7 +36,6 @@ Resources:
         - IpProtocol: -1
           FromPort: -1
           ToPort: -1
-          CidrIp: 0.0.0.0/0
           SourceSecurityGroupId: !Ref VpcDefaultSgId
 
   VPCEndpointApiGatewaySG:
@@ -56,7 +55,7 @@ Outputs:
     Value: !Ref WebSG
   VPCEndpointApiGatewaySGId:
     Description: VPC Endpoint Security Group Id
-    Value: !Ref VPCEndpointApiGatewaySG
+    Value: !GetAtt VPCEndpointApiGatewaySG.GroupId
   VPCEndpointLambdaOutSGId:
     Description: VPC Endpoint Security Group Id
-    Value: !Ref VPCEndpointLambdaOutSG
+    Value: !GetAtt VPCEndpointLambdaOutSG.GroupId

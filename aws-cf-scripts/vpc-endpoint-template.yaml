@@ -7,34 +7,11 @@ Parameters:
   SubnetId:
     Description: Subnet ID for EC2 instance
     Type: String
+  VPCEndpointGroupId:
+    Description: Security Group Id for VPC endpoint
+    Type: String
 
 Resources:
-  WebSG:
-    Type: "AWS::EC2::SecurityGroup"
-    Properties:
-      GroupDescription: Allow Http and Ssh to web server
-      VpcId: !Ref VpcId
-      SecurityGroupIngress:
-        - IpProtocol: "tcp"
-          FromPort: 80
-          ToPort: 80
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: "tcp"
-          FromPort: 22
-          ToPort: 22
-          CidrIp: 0.0.0.0/0
-
-  VPCEndpointSG:
-    Type: "AWS::EC2::SecurityGroup"
-    Properties:
-      GroupDescription: Allow HTTPS access to API Gateway through VPC Endpoint
-      VpcId: !Ref VpcId
-      SecurityGroupIngress:
-        - IpProtocol: "tcp"
-          FromPort: 443
-          ToPort: 443
-          CidrIp: 0.0.0.0/0
-
   VpcEndpoint:
     Type: AWS::EC2::VPCEndpoint
     Properties:
@@ -48,7 +25,7 @@ Resources:
       PrivateDnsEnabled: true
       VpcEndpointType: Interface
       SecurityGroupIds:
-        - !GetAtt VPCEndpointSG.GroupId
+        - !Ref VPCEndpointGroupId
       ServiceName: com.amazonaws.us-east-1.execute-api
       VpcId: !Ref VpcId
       SubnetIds:
@@ -58,9 +35,3 @@ Outputs:
   VPCEndpointId:
     Description: VPC Endpoint Id
     Value: !Ref VpcEndpoint
-  WebSGId:
-    Description: Web Security Group Id
-    Value: !Ref WebSG
-  VPCEndpointSGId:
-    Description: VPC Endpoint Security Group Id
-    Value: !Ref VPCEndpointSG

@@ -71,4 +71,28 @@ module.exports = (app, opts) => {
         });
     })
 
+    app.get('/nedorgs/:term/startwith', (req, res) => {
+        const term = req.params.term;
+
+        const params = {
+            TableName: nedTable,
+            FilterExpression: "begins_with(#sac, :term)",
+            ExpressionAttributeNames: {
+                "#sac": "sac"
+            },
+            ExpressionAttributeValues: {
+                ":term": term
+            }
+        }
+
+        ddb.scan(params, (err, data) => {
+            if (err) {
+                console.error(JSON.stringify(err));
+                res.send(err)
+            }
+            else {
+                res.json(data);
+            }
+        });
+    })
 }
