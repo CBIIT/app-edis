@@ -1,22 +1,24 @@
 var AWS = require("aws-sdk");
 var fs = require('fs');
 
-AWS.config.update({
-   region: "us-east-1"
-});
-
-const docClient = new AWS.DynamoDB.DocumentClient({maxRetries: 15, retryDelayOptions: {base: 200}});
 const args = process.argv.slice(2)
 const table = args[0];
 const inputfile = args[1];
 console.debug('Arguments: ', args)
 
+const configOptions = {
+    region: "us-east-1"
+}
+
 //Set the AWS profile if needed
 if (args.length > 2 && args[2]) {
     console.debug("Setting up AWS profile to ", args[2]);
-    const credentials = new AWS.SharedIniFileCredentials({profile: args[2]});
-    AWS.config.credentials = credentials;
+    configOptions.credentials = new AWS.SharedIniFileCredentials({profile: args[2]});
 }
+
+AWS.config.update(configOptions);
+
+const docClient = new AWS.DynamoDB.DocumentClient({maxRetries: 15, retryDelayOptions: {base: 200}});
 
 async function run()
 {
