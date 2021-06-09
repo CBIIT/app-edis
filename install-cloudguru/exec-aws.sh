@@ -42,7 +42,13 @@ keypair=../pgmSSHKey.pem
 
 echo "account = $account, s3 = ${s3bucket}"
 echo ""
-aws s3api create-bucket --bucket "$s3bucket" --region us-east-1
+s3exist=$(aws s3api list-buckets --profile ${profile} --query "Buckets[].Name" | grep ${s3bucket})
+if [[ -z ${s3exist} ]]
+then
+  echo Create a new bucket ${s3bucket}
+  aws s3api create-bucket --profile ${profile} --bucket "$s3bucket" --region us-east-1
+fi
+
 if [[ ${w_ec2} = "y" ]]
 then
   aws s3 cp "$cf_ec2" "s3://$s3bucket"
@@ -54,7 +60,7 @@ aws s3 cp  --profile ${profile} "$cf_dir/$cf_ec2_sg" "s3://$s3bucket"
 aws s3 cp  --profile ${profile} "$cf_dir/$cf_vpc" "s3://$s3bucket"
 
 #get current VPC id
-vpcid=$(aws ec2 describe-vpcs  --profile ${profile} --query Vpcs[0].VpcId | sed -e 's/^"//' -e 's/"$//')
+vpcid=$(aws ec2 describe-vpcs --profile ${profile} --query Vpcs[0].VpcId | sed -e 's/^"//' -e 's/"$//')
 echo VPC id = $vpcid
 
 #get us-east-1a Subnet id

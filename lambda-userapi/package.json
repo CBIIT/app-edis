@@ -11,7 +11,8 @@
     "zip": "rm -rf node_modules && rm -rf lambda-userapi.zip && npm install --only='prod' && zip -r lambda-userapi.zip node_modules src/*"
   },
   "dependencies": {
-    "lambda-api": "^0.10.6"
+    "lambda-api": "^0.10.6",
+    "aws-xray-sdk-core": "^3.3.3"
   },
   "devDependencies": {
     "aws-sdk": "2.820.0"

@@ -1,3 +1,15 @@
+const OktaJwtVerifier = require('@okta/jwt-verifier');
+
+const oktaJwtVerifier = (process.env.ISSUER && process.env.AUDIENCE) ?
+    new OktaJwtVerifier({
+    issuer: process.env.ISSUER
+}) : undefined;
+
+// Set the console log level
+const logLevel = process.env['LOG_LEVEL'];
+if (logLevel && logLevel == 'info') {
+    console.debug = function () {}
+}
 
 module.exports.handler = async (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false
@@ -5,14 +17,37 @@ module.exports.handler = async (event, context, callback) => {
     const token = event.authorizationToken;
     console.debug('Authorization token :', token);
 
-    if (token && token.indexOf('Basic') != -1) {
-        console.debug('Analysis of Basic Authorization token');
-        const base64credentials = token.split(' ')[1];
-        console.debug('Base 64 credentials are ', base64credentials);
-        const credentials = Buffer.from(base64credentials, 'base64').toString('ascii');
-        console.debug('Ascii credentials are ', credentials);
-        const [username, password] = credentials.split(':');
-        console.debug('Basic Authentication', username, password);
+    if (token) {
+        if (token.indexOf('Basic') != -1) {
+            console.debug('Analysis of Basic Authorization token');
+            const base64credentials = token.split(' ')[1];
+            console.debug('Base 64 credentials are ', base64credentials);
+            const credentials = Buffer.from(base64credentials, 'base64').toString('ascii');
+            console.debug('Ascii credentials are ', credentials);
+            const [username, password] = credentials.split(':');
+            console.debug('Basic Authentication', username, password);
+            return callback(null, generatePolicy('user', 'Allow', event.methodArn));
+        }
+        else if (token.indexOf('Bearer') != -1) {
+            console.debug('Analysis of Bearer Authorization token');
+            const bearer_token = token.split(' ')[1];
+            if (oktaJwtVerifier) {
+                try {
+                    const jwt = await oktaJwtVerifier.verifyAccessToken(bearer_token, process.env.AUDIENCE);
+                    console.debug('OktaJwtVerifier verification:', jwt);
+                    return callback(null, generatePolicy('user', 'Allow', event.methodArn));
+
+                } catch (err) {
+                    console.error('OktaJwtVerifier verifyToken is failed:', err);
+                    return callback(null, generatePolicy('user', 'Deny', event.methodArn));
+                }
+            }
+            else {
+                console.error('OktaJwtVerifier is not defined - check your environment variables: ISSUER and AUDIENCE');
+                return callback(null, generatePolicy('user', 'Deny', event.methodArn));
+            }
+
+        }
     }
     return callback(null, generatePolicy('user', 'Allow', event.methodArn));
 }

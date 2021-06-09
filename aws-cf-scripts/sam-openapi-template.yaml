@@ -17,6 +17,13 @@ Parameters:
   S3bucket:
     Description: S3 bucket for Lambda Auth and UserApi code
     Type: String
+  Issuer:
+    Description: Okta Authentication Server URL
+    Type: String
+  Audience:
+    Description: Okta Authentication audience
+    Type: String
+    Default: api://default
 
 Resources:
   EraCommonsUserApi:
@@ -59,6 +66,7 @@ Resources:
           MetricsEnabled: true
           DataTraceEnabled: true
           LoggingLevel: INFO
+      TracingEnabled: true
 
   EraCommonsUserApiLambdaFunction:
     Type: AWS::Serverless::Function
@@ -118,6 +126,11 @@ Resources:
       Runtime: nodejs12.x
       Timeout: 30
       Tracing: Active
+      Environment:
+        Variables:
+          LOG_LEVEL: info
+          AUDIENCE:	 !Ref Audience
+          ISSUER:    !Ref Issuer
       Tags:
         app : userinfoapi
       Role: !Ref LambdaRoleArn

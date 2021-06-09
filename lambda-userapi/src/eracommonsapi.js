@@ -1,6 +1,7 @@
 'use strict'
 
-const AWS = require('aws-sdk')
+const AWSXRay = require('aws-xray-sdk-core')
+const AWS = AWSXRay.captureAWS(require('aws-sdk'))
 AWS.config.update({ region: "us-east-1"});
 const ddb = new AWS.DynamoDB.DocumentClient();
 const userTable = 'extusers-dev'
