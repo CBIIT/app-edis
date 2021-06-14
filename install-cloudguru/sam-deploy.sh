@@ -44,7 +44,9 @@ echo -e "Parameters: $tier $lambda_role_arn"
 sam deploy -t $cf_dir/$sam_template  --profile ${profile} --stack-name ${tier}-userapi-app-serverless --s3-bucket $s3bucket --s3-prefix $s3prefix --region $region --no-confirm-changeset --capabilities $capabilities --parameter-overrides \
                     ParameterKey=Environment,ParameterValue=$tier \
                     ParameterKey=LambdaRoleArn,ParameterValue=$lambda_role_arn \
-                    ParameterKey=S3bucket,ParameterValue=$s3bucket
+                    ParameterKey=S3bucket,ParameterValue=$s3bucket \
+                    ParameterKey=Issuer,ParameterValue=https://iam-lab2.cancer.gov/oauth2/auss3iezeLBILuhGa1d6 \
+                    ParameterKey=Audience,ParameterValue=api://default
 
 echo -e "\nServerless Cloud Formation Stack has been deployed"
 

@@ -6,62 +6,130 @@ AWS.config.update({ region: "us-east-1"});
 const ddb = new AWS.DynamoDB.DocumentClient();
 const userTable = 'extusers-dev'
 
+function stringFromDate(todaysDate) {
+    const yyyy = todaysDate.getFullYear().toString();
+    const mm = todaysDate.getMonth()+1
+    const dd  = todaysDate.getDate();
+    return (yyyy + '-' + (mm < 10 ? '0' + mm : mm ) + '-' + (dd < 10 ? '0' + dd : dd));
+}
+
+function dateFromString(strFrom) {
+    const dateParts = strFrom.split('-');
+    return new Date(+dateParts[0], +dateParts[1] - 1, +dateParts[2])
+}
+
 module.exports = (app, opts) => {
 
-    app.get('/users', (req, res) => {
-        const fromDate = req.query.from;
-        const toDate = req.query.to;
+    app.get('/users', async (req, res) => {
+        let strFrom = req.query.from;
+        let strTo   = req.query.to;
+        let byScan = req.query.scan;
 
-        const params = {
-            TableName: userTable
-        }
+        console.debug('Get Users: ', strFrom, strTo, byScan)
 
-        if (fromDate && toDate) {
-            params.FilterExpression = 'LAST_UPDATED_DAY BETWEEN :start AND :end'
-            params.ExpressionAttributeValues = {
-                ':start': fromDate,
-                ':end': toDate
+        if (strFrom && !byScan) {
+            let dateFrom = dateFromString(strFrom);
+            if (!strTo) {
+                strTo = stringFromDate(new Date());
             }
-        }
+            console.debug('GetUsers from - to', strFrom, strTo);
 
-        ddb.scan(params, (err, data) => {
-            if (err) {
-                console.error(JSON.stringify(err));
-                res.send(err)
+            const params = {
+                TableName: userTable,
+                IndexName: 'dateIndex',
+                KeyConditionExpression: "#attr = :date",
+                ExpressionAttributeNames: {
+                    "#attr": "LAST_UPDATED_DAY"
+                }
+            }
+
+            const result = {
+                count: 0,
+                items: []
+            }
+
+            console.log('GetUsers by query from - to', strFrom, strTo);
+            let strDate = strFrom;
+
+            while (strDate <= strTo) {
+                params.ExpressionAttributeValues = {
+                    ":date": strDate
+                }
+                try {
+                    do {
+                        const data = await ddb.query(params).promise();
+                        if (data && data.Items) {
+                            console.debug('Query getUsers on date ' + strDate + ' - result: ', data.Items.length)
+                            result.items = result.items.concat(data.Items);
+                            result.count += data.Items.length
+                        }
+                        params.ExclusiveStartKey = data.LastEvaluatedKey;
+                    } while (params.ExclusiveStartKey);
+                } catch (err) {
+                    result.items = [];
+                    result.error = JSON.stringify(err);
+                    break;
+                }
+                // next date
+                console.debug('Current Date:', dateFrom.getFullYear(), dateFrom.getMonth(), dateFrom.getDate());
+                let nextDate = +dateFrom.getDate() + 1;
+                dateFrom.setDate(nextDate);
+                console.debug('Next Current Date:', nextDate, dateFrom.getFullYear(), dateFrom.getMonth(), dateFrom.getDate());
+                strDate = stringFromDate(dateFrom);
+                console.debug('Next Date:', nextDate, strDate);
+            }
+
+            if (result.error) {
+                console.log('GetUsers by query from ' + strFrom + ' to ' + strTo + ' returns error:', result.error);
             }
             else {
-                const result = {}
-                console.debug("Scan Results", data)
-                result.total = data.Items.length;
-                result.data = data.Items;
-                res.json(result);
+                console.log('GetUsers by query from ' + strFrom + ' to ' + strTo + ' returns ' + result.count + ' items');
             }
-        })
+            res.json(result);
+        }
+        else {
+            //******  Using scan *****//
+            console.log('GetUsers by scan from - to', strFrom, strTo);
 
-        // const result = {
-        //     "total": 1,
-        //     "offset": 0,
-        //     "size": 1,
-        //     "data": [{
-        //         "ACCOUNT_CREATED_DATE": "2000-01-23T04:56:07.000+00:00",
-        //         "ORG_ID": 5,
-        //         "ORG_NAME": "ORG_NAME",
-        //         "ACCOUNT_UPDATED_DATE": "2000-01-23T04:56:07.000+00:00",
-        //         "USER_ID": "USER_ID",
-        //         "NAME_PREFFIX": "NAME_PREFFIX",
-        //         "STATUS_CODE": 5,
-        //         "EMAIL": "EMAIL",
-        //         "LAST_NAME": "LAST_NAME",
-        //         "FIRST_NAME": "FIRST_NAME",
-        //         "STATUS_DESC": "STATUS_DESC",
-        //         "MI_NAME": "MI_NAME",
-        //         "NAME_SUFFIX": "NAME_SUFFIX"
-        //     }]
-        // }
-        // res.json(result);
+            const params = {
+                TableName: userTable
+            }
+
+            if (strFrom) {
+                if (!strTo) {
+                    strTo = stringFromDate(new Date());
+                }
+
+                params.FilterExpression = 'LAST_UPDATED_DAY BETWEEN :start AND :end'
+                params.ExpressionAttributeValues = {
+                    ':start': strFrom,
+                    ':end': strTo
+                }
+            }
+            console.debug("Get users by scan", strFrom, strTo, params)
+            let result = {
+                count: 0,
+                items: []
+            }
+            try {
+                do {
+                    const data = await ddb.scan(params).promise();
+                    console.debug("Get users by scan results:", data)
+                    result.count += data.Items.length;
+                    result.items = result.items.concat(data.Items);
+                    params.ExclusiveStartKey = data.LastEvaluatedKey;
+                } while (params.ExclusiveStartKey);
+                console.log('GetUsers by scan from ' + strFrom + ' to ' + strTo + ' returns ' + result.count + ' items');
+            } catch (err) {
+                result.items = [];
+                result.error = err;
+                console.log('GetUsers by scan from ' + strFrom + ' to ' + strTo + ' returns error:', result.error);
+            }
+            res.json(result);
+        }
     });
 
-    app.get('/users/date/:date', (req, res) => {
+    app.get('/users/date/:date', async (req, res) => {
         const given_date = req.params.date;
 
         console.log('get users for ' + given_date);
@@ -78,39 +146,27 @@ module.exports = (app, opts) => {
                 ":date": given_date
             }
         }
-        ddb.query(params, (err, data) => {
-            if (err) {
-                console.error(JSON.stringify(err));
-                res.send(err)
-            } else {
-                const result = {}
-                result.total = data.length
-                result.data = data
-                console.debug('Query by date - result: ',result )
-                res.json(result);
-            }
-        });
-    //     const result = {
-    //         "total": 1,
-    //         "offset": 0,
-    //         "size": 1,
-    //         "data": [{
-    //             "ACCOUNT_CREATED_DATE": "2000-01-23T04:56:07.000+00:00",
-    //             "ORG_ID": 5,
-    //             "ORG_NAME": "ORG_NAME",
-    //             "ACCOUNT_UPDATED_DATE": "2000-01-23T04:56:07.000+00:00",
-    //             "USER_ID": "USER_ID",
-    //             "NAME_PREFFIX": "NAME_PREFFIX",
-    //             "STATUS_CODE": 5,
-    //             "EMAIL": "EMAIL",
-    //             "LAST_NAME": "LAST_NAME",
-    //             "FIRST_NAME": "FIRST_NAME",
-    //             "STATUS_DESC": "STATUS_DESC",
-    //             "MI_NAME": "MI_NAME",
-    //             "NAME_SUFFIX": "NAME_SUFFIX"
-    //         }]
-    //     }
-    //     res.json(result);
+        const result = {
+            count: 0,
+            items: []
+        }
+
+        try {
+            do {
+                const data = await ddb.query(params).promise();
+                if (data && data.Items) {
+                    result.count += data.Items.length;
+                    result.items = result.items.concat(data.Items);
+                }
+                params.ExclusiveStartKey = data.LastEvaluatedKey;
+            } while (params.ExclusiveStartKey);
+            console.debug('Query by date - result: ', result)
+            console.log('get users for ' + given_date + ' returns ' + result.count + ' items');
+        } catch (err) {
+            result.error = err;
+            console.log('get users for ' + given_date + ' returns error:', result.error);
+        }
+        res.json(result);
     })
 
     app.get('/user/:userid', (req, res) => {
@@ -121,47 +177,18 @@ module.exports = (app, opts) => {
 
         const params = {
             TableName: userTable,
-            KeyConditionExpression: "#attr = :user_id",
-            ExpressionAttributeNames: {
-                "#attr": "USER_ID"
-            },
-            ExpressionAttributeValues: {
-                ":user_id": userid
+            Key: {
+                USER_ID: userid
             }
         }
-        ddb.query(params, (err, data) => {
+        ddb.get(params, (err, data) => {
             if (err) {
                 const errJson = JSON.stringify(err)
-                console.error(errJson);
-                res.send(err)
+                console.error('get extuser for USER_ID = ' + userid + ' returns error:', err);
+                res.json({ error: errJson});
             } else {
-                if (data && Array.isArray(data.Items)) {
-                    if (data.Items.length) {
-                        res.json(data.Items[0])
-                    } else {
-                        res.json({error: "User '" + userid + "' not found"})
-                    }
-                } else {
-                    res.json(data)
-                }
+                res.json(data.Item)
             }
         });
-
-        // const result = {
-        //     "ACCOUNT_CREATED_DATE" : "2000-01-23T04:56:07.000+00:00",
-        //     "ORG_ID" : 5,
-        //     "ORG_NAME" : "ORG_NAME",
-        //     "ACCOUNT_UPDATED_DATE" : "2000-01-23T04:56:07.000+00:00",
-        //     "USER_ID" : userid,
-        //     "NAME_PREFFIX" : "NAME_PREFFIX",
-        //     "STATUS_CODE" : 5,
-        //     "EMAIL" : "EMAIL",
-        //     "LAST_NAME" : "LAST_NAME",
-        //     "FIRST_NAME" : "FIRST_NAME",
-        //     "STATUS_DESC" : "STATUS_DESC",
-        //     "MI_NAME" : "MI_NAME",
-        //     "NAME_SUFFIX" : "NAME_SUFFIX"
-        // };
-        // res.json(result);
     })
 }

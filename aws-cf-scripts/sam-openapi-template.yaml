@@ -129,8 +129,8 @@ Resources:
       Environment:
         Variables:
           LOG_LEVEL: info
-          AUDIENCE:	 !Ref Audience
-          ISSUER:    !Ref Issuer
+          AUDIENCE: !Ref Audience
+          ISSUER: !Ref Issuer
       Tags:
         app : userinfoapi
       Role: !Ref LambdaRoleArn

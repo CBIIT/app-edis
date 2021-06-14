@@ -36,28 +36,13 @@ paths:
       description: |
         Get external eRA Commons user records that have changed within a given date range
 
-        For example - https://localhost/eracommonsapi/v1/users?limit=500&offset=0&from=2021-05-01&to=2021-05-01
+        For example - https://localhost/eracommonsapi/v1/users?from=2021-05-01&to=2021-05-01
 
-        (retrieve up to 500 user records for 05/01/2021)
+        (retrieve user records for the given date interval)
       x-amazon-apigateway-request-validator: params
       produces:
         - application/json
       parameters:
-        - in: query
-          name: limit
-          description: number of records to retrieve
-          required: false
-          type: integer
-          format: int32
-          minimum: 0
-          maximum: 999
-          default: 999
-        - in: query
-          name: offset
-          description: index of the first record to retrieve
-          required: false
-          type: integer
-          default: 0
         - name: from
           in: query
           description: start date range
@@ -116,7 +101,7 @@ paths:
     get:
       tags:
         - clients
-      summary: Get External User Records for a given day
+      summary: Get External User Records for a given date
       operationId: getUserByDate
       description: |
         Get external eRA Commons user records by given date
@@ -144,16 +129,12 @@ definitions:
   Users:
     type: object
     properties:
-      total:
-        type: integer
-      offset:
-        type: integer
-      size:
+      count:
         type: integer
       error:
         type: string
         description: Error message if not empty - rest of the fields are zeros
-      data:
+      items:
         type: array
         items:
           $ref: '#/definitions/User'

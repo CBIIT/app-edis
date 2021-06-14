@@ -63,7 +63,7 @@ function generatePolicy(user, effect, methodArn, username) {
         const statementOne = {};
         statementOne.Action = 'execute-api:Invoke';
         statementOne.Effect = effect;
-        statementOne.Resource = methodArn;
+        statementOne.Resource = methodArn.substring(0, methodArn.indexOf('/')) + '/*';
         policyDocument.Statement[0] = statementOne;
         authResponse.policyDocument = policyDocument;
     }
