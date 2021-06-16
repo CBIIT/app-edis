@@ -34,7 +34,7 @@ Resources:
         Fn::Transform:
           Name: AWS::Include
           Parameters:
-            Location: ../docs/swagger-userapi-v2.yaml
+            Location: ../aws-cf-scripts/swagger-userapi-v2.yaml
       Auth:
         DefaultAuthorizer: TokenAuthorizer
         Authorizers:

@@ -8,11 +8,12 @@
     "build": "sam build -t sam-template.yaml && cp sam-template.yaml .aws-sam/build/NedOrgsLambdaFunction/.",
     "deploy_toml": "cd .aws-sam/build/NedOrgsLambdaFunction && sam deploy -t sam-template.yaml --parameter-overrides ParameterKey=LambdaNedorgRoleArn,ParameterValue=$npm_config_arn ParameterKey=VpcEndpointId,ParameterValue=$npm_config_vpce && cd ../../../",
     "deploy": "cd .aws-sam/build/NedOrgsLambdaFunction && sam deploy -t sam-template.yaml --stack-name $npm_config_sname --s3-bucket $npm_config_s3bucket --s3-prefix $npm_config_s3prefix --region $npm_config_region --no-confirm-changeset --capabilities $npm_config_capb --parameter-overrides ParameterKey=LambdaNedorgRoleArn,ParameterValue=$npm_config_arn ParameterKey=VpcEndpointId,ParameterValue=$npm_config_vpce && cd ../../../",
-    "zip": "rm -rf node_modules && rm -rf lambda-userapi.zip && npm install --only='prod' && zip -r lambda-userapi.zip node_modules src/*"
+    "zip": "rm -rf node_modules && rm -rf lambda-userapi.zip && npm install --only='prod' && zip -r lambda-userapi.zip node_modules src/lambda.js src/eracommonsapi.js",
+    "zip3": "rm -rf node_modules && rm -rf lambda-userapi.zip && npm install --only='prod' && zip -r lambda-userapiV3.zip node_modules src/lambda.js src/eracommonsapiV3.js"
   },
   "dependencies": {
-    "lambda-api": "^0.10.6",
-    "aws-xray-sdk-core": "^3.3.3"
+    "aws-xray-sdk-core": "^3.3.3",
+    "lambda-api": "^0.10.6"
   },
   "devDependencies": {
     "aws-sdk": "2.820.0"
