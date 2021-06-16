@@ -32,6 +32,29 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
       Path: /
+
+  apiAccessDdbRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Join
+        - '-'
+        - - apigateway-userapi-ddb
+          - !Ref Environment
+          - role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service:
+                - apigateway.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+      Path: /
+
   account:
     Type: AWS::ApiGateway::Account
     Properties:
@@ -49,6 +72,16 @@ Outputs:
     Value:
       Fn::GetAtt:
       - apiOrgapiRole
+      - Arn
+  ApiGatewayAccessDdbRoleName:
+    Description: Name of API Gateway Access to Dynamo DB role.
+    Value:
+      Ref: apiAccessDdbRole
+  ApiGatewayAccessDdbRoleArn:
+    Description: ARN of API Gateway Access to Dynamo DB role.
+    Value:
+      Fn::GetAtt:
+      - apiAccessDdbRole
       - Arn
   ApiGatewayAccount:
     Description: AWS Account that is associated with API Gateway

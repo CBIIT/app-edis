@@ -14,6 +14,9 @@ Parameters:
   LambdaRoleArn:
     Description: ARN of lambda function role user api web service
     Type: String
+  DynamoDbRoleArn:
+    Description: ARN of Api Gateway permission to access DynamoDB role.  Used in swagger file
+    Type: String
   S3bucket:
     Description: S3 bucket for Lambda Auth and UserApi code
     Type: String
@@ -24,6 +27,9 @@ Parameters:
     Description: Okta Authentication audience
     Type: String
     Default: api://default
+  UsersTableName:
+    Description: Users table name
+    Type: String
 
 Resources:
   EraCommonsUserApi:

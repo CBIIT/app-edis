@@ -38,15 +38,17 @@ region="us-east-1"
 capabilities="CAPABILITY_IAM"
 
 lambda_role_arn=$(aws cloudformation describe-stacks  --profile ${profile} --stack-name ${tier}-userapi-iam-lambda --query "Stacks[0].Outputs[?OutputKey=='LambdaOrgapiRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
+dynamodb_role_arn=$(aws cloudformation describe-stacks  --profile ${profile} --stack-name ${tier}-userapi-iam-apigtwy --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayAccessDdbRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
 
 echo -e "Parameters: $tier $lambda_role_arn"
 
 sam deploy -t $cf_dir/$sam_template  --profile ${profile} --stack-name ${tier}-userapi-app-serverless --s3-bucket $s3bucket --s3-prefix $s3prefix --region $region --no-confirm-changeset --capabilities $capabilities --parameter-overrides \
                     ParameterKey=Environment,ParameterValue=$tier \
                     ParameterKey=LambdaRoleArn,ParameterValue=$lambda_role_arn \
+                    ParameterKey=DynamoDbRoleArn,ParameterValue=$dynamodb_role_arn \
                     ParameterKey=S3bucket,ParameterValue=$s3bucket \
+                    ParameterKey=UsersTableName,ParameterValue=extusers-$tier \
                     ParameterKey=Issuer,ParameterValue=https://iam-lab2.cancer.gov/oauth2/auss3iezeLBILuhGa1d6 \
                     ParameterKey=Audience,ParameterValue=api://default
 
 echo -e "\nServerless Cloud Formation Stack has been deployed"
-

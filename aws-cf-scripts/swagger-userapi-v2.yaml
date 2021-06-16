@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: Enterprise Data & Integration Services Web Services - **eRA Commons User Service**
-  version: 0.2.1
+  version: 0.2.2
   title: eRA Commons User API
   # put the contact info for your development or API team
   contact:
@@ -124,6 +124,150 @@ paths:
         httpMethod: POST
         timeoutInMillis: 10000
         type: "aws_proxy"
+
+  /eracommonsapi/v2/user/{userID}:
+    get:
+      tags:
+        - clients
+      summary: Get External User Record for given USER ID straight from Dynamo DB
+      operationId: getUserByUserIdFromDdb
+      description: |
+        Get external eRA Commons user record by USER_ID straight from Dynamo DB
+      parameters:
+        - name: userID
+          in: path
+          required: true
+          description: User ID
+          type: string
+      responses:
+        '200':
+          description: JSON formatted record of the user information
+          schema:
+            $ref: '#/definitions/User'
+        '400':
+          description: bad input parameter
+      x-amazon-apigateway-integration:
+        type: aws
+        httpMethod: POST
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:dynamodb:action/GetItem
+        credentials:
+          Fn::Sub: ${DynamoDbRoleArn}
+        passthroughBehavior: when_no_templates
+        timeoutInMillis: 10000
+        requestTemplates:
+          application/json:
+            Fn::Sub: |-
+              {
+                  "TableName": "${UsersTableName}",
+                  "Key": {
+                      "USER_ID": {
+                          "S": "$input.params('userID')"
+                      }
+                  },
+                  "ConsistentRead": true
+              }
+        responses:
+          2\d{2}:
+            statusCode: 200
+            responseTemplates:
+              application/json:
+                Fn::Sub: |-
+                  #set ($elem = $input.path('$.Item'))
+                  #if($elem == "")
+                    {
+                    }
+                  #else
+                    {
+                      "USER_ID": "$elem.USER_ID.S",
+                      "PERSON_ID": $elem.PERSON_ID.N,
+                      "FIRST_NAME": "$elem.FIRST_NAME.S",
+                      "LAST_NAME": "$elem.LAST_NAME.S",
+                      "NAME_PREFIX": "$elem.NAME_PREFIX.S",
+                      "MI_NAME": "$elem.MI_NAME.S",
+                      "NAME_SUFFIX": "$elem.NAME_SUFFIX.S",
+                      "EMAIL": "$elem.EMAIL.S",
+                      "ORG_NAME": "$elem.ORG_NAME.S",
+                      "ACCOUNT_CREATED_DATE": "$elem.ACCOUNT_CREATED_DATE.S",
+                      "ACCOUNT_UPDATED_DATE": "$elem.ACCOUNT_UPDATED_DATE.S",
+                      "STATUS_CODE": $elem.STATUS_CODE.N,
+                      "STATUS_DESC": "$elem.STATUS_DESCRIP.S",
+                      "LAST_UPDATED_DAY": "$elem.LAST_UPDATED_DAY.S",
+                    }
+                  #end
+
+  /eracommonsapi/v2/users/date/{date}:
+    get:
+      tags:
+        - clients
+      summary: Get External User Records for a given date straight from Dynamo DB
+      operationId: getUserByDateFromDdb
+      description: |
+        Get external eRA Commons user records by given date straight from Dynamo DB
+      parameters:
+        - name: date
+          in: path
+          required: true
+          description: Date in format YYYY-MM-DD
+          type: string
+      responses:
+        '200':
+          description: JSON formatted records of the user information
+          schema:
+            $ref: '#/definitions/Users'
+        '400':
+          description: bad input parameter
+      x-amazon-apigateway-integration:
+        type: aws
+        httpMethod: POST
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:dynamodb:action/Query
+        credentials:
+          Fn::Sub: ${DynamoDbRoleArn}
+        passthroughBehavior: when_no_templates
+        timeoutInMillis: 10000
+        requestTemplates:
+          application/json:
+            Fn::Sub: |-
+              {
+                "TableName": "${UsersTableName}",
+                "IndexName": "dateIndex",
+                "KeyConditionExpression": "LAST_UPDATED_DAY = :date",
+                "ExpressionAttributeValues": {
+                  ":date": { "S": "$input.params('date')" }
+                }
+              }
+        responses:
+          2\d{2}:
+            statusCode: 200
+            responseTemplates:
+              application/json:
+                Fn::Sub: |-
+                  #set ($inputRoot = $input.path('$'))
+                  {
+                    "count": $inputRoot.Count,
+                    "items": [
+                  #foreach($elem in $inputRoot.Items)
+                      {
+                        "USER_ID": "$elem.USER_ID.S",
+                        "PERSON_ID": $elem.PERSON_ID.N,
+                        "FIRST_NAME": "$elem.FIRST_NAME.S",
+                        "LAST_NAME": "$elem.LAST_NAME.S",
+                        "NAME_PREFIX": "$elem.NAME_PREFIX.S",
+                        "MI_NAME": "$elem.MI_NAME.S",
+                        "NAME_SUFFIX": "$elem.NAME_SUFFIX.S",
+                        "EMAIL": "$elem.EMAIL.S",
+                        "ORG_NAME": "$elem.ORG_NAME.S",
+                        "ACCOUNT_CREATED_DATE": "$elem.ACCOUNT_CREATED_DATE.S",
+                        "ACCOUNT_UPDATED_DATE": "$elem.ACCOUNT_UPDATED_DATE.S",
+                        "STATUS_CODE": $elem.STATUS_CODE.N,
+                        "STATUS_DESC": "$elem.STATUS_DESCRIP.S",
+                        "LAST_UPDATED_DAY": "$elem.LAST_UPDATED_DAY.S",
+                      }#if($foreach.hasNext),#end
+
+                  #end
+                    ]
+                  }
 
 definitions:
   Users:
