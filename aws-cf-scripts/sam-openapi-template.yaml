@@ -141,6 +141,42 @@ Resources:
         app : userinfoapi
       Role: !Ref LambdaRoleArn
 
+  ApiKey:
+    Type: AWS::ApiGateway::ApiKey
+    DependsOn: EraCommonsUserApi
+    Properties:
+      Name: !Sub CBIIT-SN-apiGatewayPoC1-${Environment}
+      Description: "Api Key for Service Now Client"
+      Enabled: true
+      StageKeys:
+        - RestApiId: !Ref EraCommonsUserApi
+          StageName: !Ref EraCommonsUserApiStage
+      Value: !Sub CBIIT-SN-apiGatewayPoC1-${Environment}
+
+  ApiUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    DependsOn:
+      - EraCommonsUserApi
+      - ApiKey
+    Properties:
+      ApiStages:
+        - ApiId: !Ref EraCommonsUserApi
+          Stage: !Ref EraCommonsUserApiStage
+      Description: Api Usage Plan for Service Now Client
+      UsagePlanName: !Sub CBIIT-SN-apiGatewayPoC1-usage-plan-${Environment}
+
+  ApiUsagePlanKey:
+    Type: AWS::ApiGateway::UsagePlanKey
+    DependsOn:
+      - EraCommonsUserApi
+      - ApiKey
+      - ApiUsagePlan
+    Properties:
+      KeyId: !Ref ApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref ApiUsagePlan
+
+
 Outputs:
   LambdaFunctionConsoleUrl:
     Description: Console URL for the Lambda Function.
