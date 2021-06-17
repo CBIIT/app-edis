@@ -27,5 +27,5 @@ npm install
 #node index.js ${ddb_table}
 
 #load extusers-${tier} table
-node batchload.js extusers-${tier} "../docs/NIH External Accounts - No Roles - Address.json" ${profile}
+node batchdelete.js extusers-${tier} ${profile}
 cd $cur_dir
