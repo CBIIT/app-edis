@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Creates a role for API Gateway User Api Web Service.
+Description: Creates IAM role for API Gateway to access CloudWatch logs; creates IAM role for API Gateway methods to access DynamoDB AWS service
 Parameters:
   Environment:
     Description: Environment tier

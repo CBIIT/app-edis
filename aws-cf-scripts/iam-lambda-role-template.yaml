@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Creates a role for Lambda funtion User Api Web Service.
+Description: Creates role for Lambda function that executes API Gateway requests.
 Parameters:
   Environment:
     Description: Environment tier
