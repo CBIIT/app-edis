@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: Enterprise Data & Integration Services Web Services - **eRA Commons User Service**
-  version: "0.3.0"
+  version: "0.3.2"
   title: eRA Commons User API
   # put the contact info for your development or API team
   contact:
@@ -34,9 +34,7 @@ paths:
       operationId: getUsers
       description: |
         Get external eRA Commons user records that have changed within given date range
-
         For example - https://localhost/eracommonsapi/v1/users?from=2021-05-01&to=2021-05-01
-
         (retrieve user records for the given date interval)
       x-amazon-apigateway-request-validator: params
       parameters:
@@ -80,7 +78,7 @@ paths:
         - clients
       summary: External User Information
       operationId: getUserByUserId
-      description: |
+      description:
         Get external eRA Commons user record by USER_ID
       parameters:
         - name: userID
@@ -110,7 +108,7 @@ paths:
         - clients
       summary: Get External User Records for a given date
       operationId: getUserByDate
-      description: |
+      description:
         Get external eRA Commons user records by given date
       parameters:
         - name: date
@@ -141,7 +139,7 @@ paths:
         - clients
       summary: Get External User Record for given USER ID straight from Dynamo DB
       operationId: getUserByUserIdFromDdb
-      description: |
+      description:
         Get external eRA Commons user record by USER_ID straight from Dynamo DB
       parameters:
         - name: userID
@@ -219,6 +217,130 @@ paths:
                     }
                   #end
 
+  /eracommonsapi/v2/users:
+    get:
+      tags:
+        - clients
+      summary: Get External User Records for date range straight from Dynamo DB
+      operationId: getUsersFromDdb
+      description: |
+        Get external eRA Commons user records *for date range* straight from Dynamo DB  
+        You have to check the result for existence of LastEvaluatedKey property and  
+        loop your request passing it's value (```?lastEvaluatedKey=xxx```) as query parameter  
+        until the final result does not contain LastEvaluatedKey property
+      parameters:
+        - name: from
+          in: query
+          description: start date range
+          required: false
+          schema:
+            type: string
+            format: date
+            example: '2016-05-15'
+        - name: to
+          in: query
+          description: end date range
+          required: false
+          schema:
+            type: string
+            format: date
+            example: '2016-05-15'
+        - name: lastEvaluatedKey
+          in: query
+          description: Last Evaluated Key from previous request
+          required: false
+          schema:
+            type: string
+            example: 'lastuserid'
+      responses:
+        '200':
+          description: JSON formatted records of the users information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersChunk'
+        '400':
+          description: bad input parameter
+      x-amazon-apigateway-integration:
+        type: aws
+        httpMethod: POST
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:dynamodb:action/Scan
+        credentials:
+          Fn::Sub: ${DynamoDbRoleArn}
+        passthroughBehavior: when_no_templates
+        timeoutInMillis: 10000
+        requestTemplates:
+          application/json:
+            Fn::Sub: |-
+              #set($from = $input.params('from'))
+              #set($to = $input.params('to'))
+              #set($lastEvaluatedKey = $input.params('lastEvaluatedKey'))
+              {
+                "TableName": "${UsersTableName}"
+              #if($lastEvaluatedKey != "")
+                , "ExclusiveStartKey": { "USER_ID": { "S": "$lastEvaluatedKey" } }
+              #end
+              #if(($from != "") && ($to != ""))
+                , "FilterExpression": "LAST_UPDATED_DAY BETWEEN :start AND :end",
+                "ExpressionAttributeValues": {
+                    ":start": { "S": "$from"},
+                    ":end": { "S": "$to"}
+                }
+              #elseif(($from != "") && ($to == ""))
+                , "FilterExpression": "LAST_UPDATED_DAY >= :start",
+                "ExpressionAttributeValues": {
+                    ":start": { "S": "$from"}
+                }
+              #end
+              }
+        responses:
+          2\d{2}:
+            statusCode: 200
+            responseTemplates:
+              application/json:
+                Fn::Sub: |-
+                  #set ($inputRoot = $input.path('$'))
+                  #set ($lastEvaluatedKey = $inputRoot.LastEvaluatedKey.USER_ID.S)
+                  {
+                    "count": $inputRoot.Count,
+                  #if($lastEvaluatedKey != "")
+                    "lastEvaluatedKey": "$lastEvaluatedKey",
+                  #end
+                    "items": [
+                  #foreach($elem in $inputRoot.Items)
+                      {
+                        "USER_ID": "$elem.USER_ID.S",
+                        "PERSON_ID": $elem.PERSON_ID.N,
+                        "FIRST_NAME": "$elem.FIRST_NAME.S",
+                        "LAST_NAME": "$elem.LAST_NAME.S",
+                        "NAME_PREFIX": "$elem.NAME_PREFIX.S",
+                        "MI_NAME": "$elem.MI_NAME.S",
+                        "NAME_SUFFIX": "$elem.NAME_SUFFIX.S",
+                        "EMAIL": "$elem.EMAIL.S",
+                        "ORG_NAME": "$elem.ORG_NAME.S",
+                        "ORG_ID": $elem.ORG_ID.N,
+                        "ORG_ADDRESS_1": "$elem.ORG_ADDRESS_1.S",
+                        "ORG_ADDRESS_2": "$elem.ORG_ADDRESS_2.S",
+                        "ORG_ADDRESS_3": "$elem.ORG_ADDRESS_3.S",
+                        "ORG_ADDRESS_4": "$elem.ORG_ADDRESS_4.S",
+                        "ORG_ADDRESS_5": "$elem.ORG_ADDRESS_5.S",
+                        "CITY": "$elem.CITY.S",
+                        "STATE": "$elem.STATE.S",
+                        "PHONE_NUMBER": "$elem.PHONE_NUMBER.S",
+                        "ORG_EMAIL": "$elem.ORG_EMAIL.S",
+                        "ACCOUNT_CREATED_DATE": "$elem.ACCOUNT_CREATED_DATE.S",
+                        "ACCOUNT_UPDATED_DATE": "$elem.ACCOUNT_UPDATED_DATE.S",
+                        "STATUS_CODE": $elem.STATUS_CODE.N,
+                        "STATUS_DESC": "$elem.STATUS_DESCRIP.S",
+                        "LAST_UPDATED_DAY": "$elem.LAST_UPDATED_DAY.S",
+                      }#if($foreach.hasNext),#end
+
+                  #end
+                    ]
+                  }
+
+
   /eracommonsapi/v2/users/date/{date}:
     get:
       tags:
@@ -226,7 +348,10 @@ paths:
       summary: Get External User Records for a given date straight from Dynamo DB
       operationId: getUserByDateFromDdb
       description: |
-        Get external eRA Commons user records by given date straight from Dynamo DB
+        Get external eRA Commons user records *for a given date* straight from Dynamo DB  
+        You have to check the result for existence of LastEvaluatedKey property and  
+        loop your request passing it's value (```?lastEvaluatedKey=xxx```) as query parameter  
+        until the final result does not contain LastEvaluatedKey property
       parameters:
         - name: date
           in: path
@@ -234,13 +359,20 @@ paths:
           description: Date in format YYYY-MM-DD
           schema:
             type: string
+        - name: lastEvaluatedKey
+          in: query
+          description: optional Last Evaluated Key from previous request's result
+          required: false
+          schema:
+            type: string
+            example: 'lastuserid'
       responses:
         '200':
           description: JSON formatted records of the user information
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Users'
+                $ref: '#/components/schemas/UsersChunk'
         '400':
           description: bad input parameter
       x-amazon-apigateway-integration:
@@ -255,6 +387,7 @@ paths:
         requestTemplates:
           application/json:
             Fn::Sub: |-
+              #set($lastEvaluatedKey = $input.params('lastEvaluatedKey'))
               {
                 "TableName": "${UsersTableName}",
                 "IndexName": "dateIndex",
@@ -262,6 +395,9 @@ paths:
                 "ExpressionAttributeValues": {
                   ":date": { "S": "$input.params('date')" }
                 }
+              #if($lastEvaluatedKey != "")
+                , "ExclusiveStartKey": { "USER_ID": { "S": "$lastEvaluatedKey" } }
+              #end
               }
         responses:
           2\d{2}:
@@ -270,8 +406,12 @@ paths:
               application/json:
                 Fn::Sub: |-
                   #set ($inputRoot = $input.path('$'))
+                  #set ($lastEvaluatedKey = $inputRoot.LastEvaluatedKey.USER_ID.S)
                   {
                     "count": $inputRoot.Count,
+                  #if($lastEvaluatedKey != "")
+                    "lastEvaluatedKey": "$lastEvaluatedKey",
+                  #end
                     "items": [
                   #foreach($elem in $inputRoot.Items)
                       {
@@ -315,6 +455,22 @@ components:
         error:
           type: string
           description: Error message if not empty - rest of the fields are zeros
+        items:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+
+    UsersChunk:
+      type: object
+      properties:
+        count:
+            type: integer
+        error:
+          type: string
+          description: Error message if not empty - rest of the fields are zeros
+        lastEvaluatedKey:
+          type: string
+          description: If present, the result is incomplete, pass this value as "lastEvaluatedKey" query parameter to get the next chunk of results
         items:
             type: array
             items:

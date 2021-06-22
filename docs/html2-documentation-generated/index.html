@@ -565,7 +565,6 @@
   
   .sidenav > li > a:hover {
     background-color: #ffffff;
-    color: #4c8eca;
   }
   
   .sidenav > li.has-modifications a {
@@ -769,6 +768,28 @@
     }
   }
 };
+            defs["UsersChunk"] = {
+  "type" : "object",
+  "properties" : {
+    "count" : {
+      "type" : "integer"
+    },
+    "error" : {
+      "type" : "string",
+      "description" : "Error message if not empty - rest of the fields are zeros"
+    },
+    "lastEvaluatedKey" : {
+      "type" : "string",
+      "description" : "If present, the result is incomplete, pass this value as \"lastEvaluatedKey\" query parameter to get the next chunk of results"
+    },
+    "items" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/User"
+      }
+    }
+  }
+};
   </script>
 
   <div class="container-fluid">
@@ -801,6 +822,9 @@
                     <li data-group="Clients" data-name="getUsers" class="">
                       <a href="#api-Clients-getUsers">getUsers</a>
                     </li>
+                    <li data-group="Clients" data-name="getUsersFromDdb" class="">
+                      <a href="#api-Clients-getUsersFromDdb">getUsersFromDdb</a>
+                    </li>
           </ul>
         </nav>
       </div>
@@ -814,7 +838,7 @@
         <div id="header">
           <div id="api-_">
             <h2 id="welcome-to-apidoc">API and SDK Documentation</h2>
-              <div class="app-desc">Version: 0.3.1</div>
+              <div class="app-desc">Version: 0.3.2</div>
             <hr>
             <div>Enterprise Data &amp; Integration Services Web Services - <strong>eRA Commons User Service</strong></div>
           </div>
@@ -831,8 +855,7 @@
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Get external eRA Commons user records by given date
-</p>
+                        <p class="marked">Get external eRA Commons user records by given date</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/eracommonsapi/v1/users/date/{date}</span></code></pre>
@@ -1136,7 +1159,10 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Get external eRA Commons user records by given date straight from Dynamo DB
+                        <p class="marked">Get external eRA Commons user records *for a given date* straight from Dynamo DB  
+You have to check the result for existence of LastEvaluatedKey property and  
+loop your request passing it&#x27;s value (&#x60;&#x60;&#x60;?lastEvaluatedKey&#x3D;xxx&#x60;&#x60;&#x60;) as query parameter  
+until the final result does not contain LastEvaluatedKey property
 </p>
                         <p></p>
                         <br />
@@ -1162,7 +1188,7 @@ except ApiException as e:
                           <div class="tab-pane active" id="examples-Clients-getUserByDateFromDdb-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"//eracommonsapi/v2/users/date/{date}"</code></pre>
+"//eracommonsapi/v2/users/date/{date}?lastEvaluatedKey="</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Clients-getUserByDateFromDdb-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -1179,8 +1205,9 @@ public class ClientsApiExample {
         
         ClientsApi apiInstance = new ClientsApi();
         String date = date_example; // String | Date in format YYYY-MM-DD
+        String lastEvaluatedKey = lastEvaluatedKey_example; // String | optional Last Evaluated Key from previous request's result
         try {
-            Users result = apiInstance.getUserByDateFromDdb(date);
+            UsersChunk result = apiInstance.getUserByDateFromDdb(date, lastEvaluatedKey);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ClientsApi#getUserByDateFromDdb");
@@ -1198,8 +1225,9 @@ public class ClientsApiExample {
     public static void main(String[] args) {
         ClientsApi apiInstance = new ClientsApi();
         String date = date_example; // String | Date in format YYYY-MM-DD
+        String lastEvaluatedKey = lastEvaluatedKey_example; // String | optional Last Evaluated Key from previous request's result
         try {
-            Users result = apiInstance.getUserByDateFromDdb(date);
+            UsersChunk result = apiInstance.getUserByDateFromDdb(date, lastEvaluatedKey);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ClientsApi#getUserByDateFromDdb");
@@ -1214,12 +1242,14 @@ public class ClientsApiExample {
   </div> -->
                             <div class="tab-pane" id="examples-Clients-getUserByDateFromDdb-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">String *date = date_example; // Date in format YYYY-MM-DD
+String *lastEvaluatedKey = lastEvaluatedKey_example; // optional Last Evaluated Key from previous request's result (optional)
 
 ClientsApi *apiInstance = [[ClientsApi alloc] init];
 
 // Get External User Records for a given date straight from Dynamo DB
 [apiInstance getUserByDateFromDdbWith:date
-              completionHandler: ^(Users output, NSError* error) {
+    lastEvaluatedKey:lastEvaluatedKey
+              completionHandler: ^(UsersChunk output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -1235,7 +1265,9 @@ ClientsApi *apiInstance = [[ClientsApi alloc] init];
 
 var api = new ERaCommonsUserApi.ClientsApi()
 var date = date_example; // {{String}} Date in format YYYY-MM-DD
-
+var opts = { 
+  'lastEvaluatedKey': lastEvaluatedKey_example // {{String}} optional Last Evaluated Key from previous request's result
+};
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -1243,7 +1275,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.getUserByDateFromDdb(date, callback);
+api.getUserByDateFromDdb(date, opts, callback);
 </code></pre>
                             </div>
 
@@ -1266,11 +1298,12 @@ namespace Example
 
             var apiInstance = new ClientsApi();
             var date = date_example;  // String | Date in format YYYY-MM-DD
+            var lastEvaluatedKey = lastEvaluatedKey_example;  // String | optional Last Evaluated Key from previous request's result (optional) 
 
             try
             {
                 // Get External User Records for a given date straight from Dynamo DB
-                Users result = apiInstance.getUserByDateFromDdb(date);
+                UsersChunk result = apiInstance.getUserByDateFromDdb(date, lastEvaluatedKey);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -1289,9 +1322,10 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiClientsApi();
 $date = date_example; // String | Date in format YYYY-MM-DD
+$lastEvaluatedKey = lastEvaluatedKey_example; // String | optional Last Evaluated Key from previous request's result
 
 try {
-    $result = $api_instance->getUserByDateFromDdb($date);
+    $result = $api_instance->getUserByDateFromDdb($date, $lastEvaluatedKey);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling ClientsApi->getUserByDateFromDdb: ', $e->getMessage(), PHP_EOL;
@@ -1306,9 +1340,10 @@ use WWW::SwaggerClient::ClientsApi;
 
 my $api_instance = WWW::SwaggerClient::ClientsApi->new();
 my $date = date_example; # String | Date in format YYYY-MM-DD
+my $lastEvaluatedKey = lastEvaluatedKey_example; # String | optional Last Evaluated Key from previous request's result
 
 eval { 
-    my $result = $api_instance->getUserByDateFromDdb(date => $date);
+    my $result = $api_instance->getUserByDateFromDdb(date => $date, lastEvaluatedKey => $lastEvaluatedKey);
     print Dumper($result);
 };
 if ($@) {
@@ -1326,10 +1361,11 @@ from pprint import pprint
 # create an instance of the API class
 api_instance = swagger_client.ClientsApi()
 date = date_example # String | Date in format YYYY-MM-DD
+lastEvaluatedKey = lastEvaluatedKey_example # String | optional Last Evaluated Key from previous request's result (optional)
 
 try: 
     # Get External User Records for a given date straight from Dynamo DB
-    api_response = api_instance.get_user_by_date_from_ddb(date)
+    api_response = api_instance.get_user_by_date_from_ddb(date, lastEvaluatedKey=lastEvaluatedKey)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ClientsApi->getUserByDateFromDdb: %s\n" % e)</code></pre>
@@ -1371,6 +1407,32 @@ except ApiException as e:
 
 
 
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">lastEvaluatedKey</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_getUserByDateFromDdb_lastEvaluatedKey">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                                    <div class="inner description">
+                                                        optional Last Evaluated Key from previous request&#x27;s result
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                            </table>
 
                           <h2>Responses</h2>
                             <h3> Status: 200 - JSON formatted records of the user information </h3>
@@ -1392,7 +1454,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/Users"
+        "$ref" : "#/components/schemas/UsersChunk"
       }
     }
   }
@@ -1441,8 +1503,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Get external eRA Commons user record by USER_ID
-</p>
+                        <p class="marked">Get external eRA Commons user record by USER_ID</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/eracommonsapi/v1/user/{userID}</span></code></pre>
@@ -1746,8 +1807,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Get external eRA Commons user record by USER_ID straight from Dynamo DB
-</p>
+                        <p class="marked">Get external eRA Commons user record by USER_ID straight from Dynamo DB</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/eracommonsapi/v2/user/{userID}</span></code></pre>
@@ -2052,9 +2112,7 @@ except ApiException as e:
                         <div class="clearfix"></div>
                         <p></p>
                         <p class="marked">Get external eRA Commons user records that have changed within given date range
-
 For example - https://localhost/eracommonsapi/v1/users?from&#x3D;2021-05-01&amp;to&#x3D;2021-05-01
-
 (retrieve user records for the given date interval)
 </p>
                         <p></p>
@@ -2373,6 +2431,374 @@ except ApiException as e:
                                     </script>
                                   </div>
                                   <input id='responses-getUsers-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                            <h3> Status: 400 - bad input parameter </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Clients-getUsersFromDdb">
+                      <article id="api-Clients-getUsersFromDdb-0" data-group="User" data-name="getUsersFromDdb" data-version="0">
+                        <div class="pull-left">
+                          <h1>getUsersFromDdb</h1>
+                          <p>Get External User Records for date range straight from Dynamo DB</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Get external eRA Commons user records *for date range* straight from Dynamo DB  
+You have to check the result for existence of LastEvaluatedKey property and  
+loop your request passing it&#x27;s value (&#x60;&#x60;&#x60;?lastEvaluatedKey&#x3D;xxx&#x60;&#x60;&#x60;) as query parameter  
+until the final result does not contain LastEvaluatedKey property
+</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/eracommonsapi/v2/users</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Clients-getUsersFromDdb-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Clients-getUsersFromDdb-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Clients-getUsersFromDdb-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Clients-getUsersFromDdb-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Clients-getUsersFromDdb-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Clients-getUsersFromDdb-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Clients-getUsersFromDdb-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Clients-getUsersFromDdb-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Clients-getUsersFromDdb-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Clients-getUsersFromDdb-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Clients-getUsersFromDdb-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Clients-getUsersFromDdb-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Accept: application/json"\
+"//eracommonsapi/v2/users?from=&to=&lastEvaluatedKey="</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.ClientsApi;
+
+import java.io.File;
+import java.util.*;
+
+public class ClientsApiExample {
+
+    public static void main(String[] args) {
+        
+        ClientsApi apiInstance = new ClientsApi();
+        date from = 2013-10-20; // date | start date range
+        date to = 2013-10-20; // date | end date range
+        String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
+        try {
+            UsersChunk result = apiInstance.getUsersFromDdb(from, to, lastEvaluatedKey);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ClientsApi#getUsersFromDdb");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ClientsApi;
+
+public class ClientsApiExample {
+
+    public static void main(String[] args) {
+        ClientsApi apiInstance = new ClientsApi();
+        date from = 2013-10-20; // date | start date range
+        date to = 2013-10-20; // date | end date range
+        String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
+        try {
+            UsersChunk result = apiInstance.getUsersFromDdb(from, to, lastEvaluatedKey);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ClientsApi#getUsersFromDdb");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">date *from = 2013-10-20; // start date range (optional)
+date *to = 2013-10-20; // end date range (optional)
+String *lastEvaluatedKey = lastEvaluatedKey_example; // Last Evaluated Key from previous request (optional)
+
+ClientsApi *apiInstance = [[ClientsApi alloc] init];
+
+// Get External User Records for date range straight from Dynamo DB
+[apiInstance getUsersFromDdbWith:from
+    to:to
+    lastEvaluatedKey:lastEvaluatedKey
+              completionHandler: ^(UsersChunk output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var ERaCommonsUserApi = require('e_ra_commons_user_api');
+
+var api = new ERaCommonsUserApi.ClientsApi()
+var opts = { 
+  'from': 2013-10-20, // {{date}} start date range
+  'to': 2013-10-20, // {{date}} end date range
+  'lastEvaluatedKey': lastEvaluatedKey_example // {{String}} Last Evaluated Key from previous request
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getUsersFromDdb(opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class getUsersFromDdbExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new ClientsApi();
+            var from = 2013-10-20;  // date | start date range (optional) 
+            var to = 2013-10-20;  // date | end date range (optional) 
+            var lastEvaluatedKey = lastEvaluatedKey_example;  // String | Last Evaluated Key from previous request (optional) 
+
+            try
+            {
+                // Get External User Records for date range straight from Dynamo DB
+                UsersChunk result = apiInstance.getUsersFromDdb(from, to, lastEvaluatedKey);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling ClientsApi.getUsersFromDdb: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiClientsApi();
+$from = 2013-10-20; // date | start date range
+$to = 2013-10-20; // date | end date range
+$lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
+
+try {
+    $result = $api_instance->getUsersFromDdb($from, $to, $lastEvaluatedKey);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling ClientsApi->getUsersFromDdb: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::ClientsApi;
+
+my $api_instance = WWW::SwaggerClient::ClientsApi->new();
+my $from = 2013-10-20; # date | start date range
+my $to = 2013-10-20; # date | end date range
+my $lastEvaluatedKey = lastEvaluatedKey_example; # String | Last Evaluated Key from previous request
+
+eval { 
+    my $result = $api_instance->getUsersFromDdb(from => $from, to => $to, lastEvaluatedKey => $lastEvaluatedKey);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling ClientsApi->getUsersFromDdb: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.ClientsApi()
+from = 2013-10-20 # date | start date range (optional)
+to = 2013-10-20 # date | end date range (optional)
+lastEvaluatedKey = lastEvaluatedKey_example # String | Last Evaluated Key from previous request (optional)
+
+try: 
+    # Get External User Records for date range straight from Dynamo DB
+    api_response = api_instance.get_users_from_ddb(from=from, to=to, lastEvaluatedKey=lastEvaluatedKey)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ClientsApi->getUsersFromDdb: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+
+
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">from</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_getUsersFromDdb_from">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    date
+                                                </span>
+                                                    <span class="format">
+                                                        (date)
+                                                    </span>
+                                
+                                                    <div class="inner description">
+                                                        start date range
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                                <tr><td style="width:150px;">to</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_getUsersFromDdb_to">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    date
+                                                </span>
+                                                    <span class="format">
+                                                        (date)
+                                                    </span>
+                                
+                                                    <div class="inner description">
+                                                        end date range
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                                <tr><td style="width:150px;">lastEvaluatedKey</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_getUsersFromDdb_lastEvaluatedKey">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                                    <div class="inner description">
+                                                        Last Evaluated Key from previous request
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                            </table>
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - JSON formatted records of the users information </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-getUsersFromDdb-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-getUsersFromDdb-200-schema">
+                                  <div id='responses-getUsersFromDdb-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "JSON formatted records of the users information",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/UsersChunk"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-getUsersFromDdb-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-getUsersFromDdb-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-getUsersFromDdb-200-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
