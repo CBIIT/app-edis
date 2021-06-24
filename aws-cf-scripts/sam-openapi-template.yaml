@@ -66,12 +66,18 @@ Resources:
                     - 128.231.0.0/16
       EndpointConfiguration:
         Type: REGIONAL
+      CacheClusterEnabled: true
+      CacheClusterSize: "1.6"
       MethodSettings:
         - ResourcePath: "/*"
           HttpMethod: "*"
           MetricsEnabled: true
           DataTraceEnabled: true
           LoggingLevel: INFO
+          CachingEnabled: true
+          CacheDataEncrypted: true
+          CacheTtlInSeconds: 300
+          
       TracingEnabled: true
 
   EraCommonsUserApiLambdaFunction:
@@ -88,8 +94,11 @@ Resources:
         Key: lambda-userapi.zip
       Handler: src/lambda.handler
       Runtime: nodejs12.x
+      MemorySize: 2048
       Timeout: 30
       Tracing: Active
+      EventInvokeConfig:
+        MaximumRetryAttempts: 0
       Environment:
         Variables:
           LOG_LEVEL: info
@@ -130,8 +139,11 @@ Resources:
         Key: lambda-auth.zip
       Handler: src/lambda.handler
       Runtime: nodejs12.x
+      MemorySize: 2048
       Timeout: 30
       Tracing: Active
+      EventInvokeConfig:
+        MaximumRetryAttempts: 0
       Environment:
         Variables:
           LOG_LEVEL: info

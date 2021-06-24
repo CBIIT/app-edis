@@ -71,6 +71,9 @@ paths:
         httpMethod: POST
         timeoutInMillis: 10000
         type: "aws_proxy"
+        cacheKeyParameters:
+          - method.request.querystring.from
+          - method.request.querystring.to
 
   /eracommonsapi/v1/user/{userID}:
     get:
@@ -102,6 +105,9 @@ paths:
         httpMethod: POST
         timeoutInMillis: 10000
         type: "aws_proxy"
+        cacheKeyParameters:
+          - method.request.path.userID
+
   /eracommonsapi/v1/users/date/{date}:
     get:
       tags:
@@ -132,6 +138,8 @@ paths:
         httpMethod: POST
         timeoutInMillis: 10000
         type: "aws_proxy"
+        cacheKeyParameters:
+          - method.request.path.date
 
   /eracommonsapi/v2/user/{userID}:
     get:
@@ -166,6 +174,8 @@ paths:
           Fn::Sub: ${DynamoDbRoleArn}
         passthroughBehavior: when_no_templates
         timeoutInMillis: 10000
+        cacheKeyParameters:
+          - method.request.path.userID
         requestTemplates:
           application/json:
             Fn::Sub: |-
@@ -270,6 +280,10 @@ paths:
           Fn::Sub: ${DynamoDbRoleArn}
         passthroughBehavior: when_no_templates
         timeoutInMillis: 10000
+        cacheKeyParameters:
+          - method.request.querystring.from
+          - method.request.querystring.to
+          - method.request.querystring.lastEvaluatedKey
         requestTemplates:
           application/json:
             Fn::Sub: |-
@@ -384,6 +398,9 @@ paths:
           Fn::Sub: ${DynamoDbRoleArn}
         passthroughBehavior: when_no_templates
         timeoutInMillis: 10000
+        cacheKeyParameters:
+          - method.request.path.date
+          - method.request.querystring.lastEvaluatedKey
         requestTemplates:
           application/json:
             Fn::Sub: |-
@@ -526,4 +543,31 @@ components:
           example: 846901
         ORG_NAME:
           type: string
-          example: ALABAMA STATE UNIVERSITY
+          example: UNIVERSITY OF CAPE TOWN
+        ORG_ADDRESS_1:
+          type: string
+          example: UNIVERSITY OF CAPE TOWN
+        ORG_ADDRESS_2:
+          type: string
+          example: RESEARCH & INNOVATION
+        ORG_ADDRESS_3:
+          type: string
+          example: 2 Rhodes Avenue
+        ORG_ADDRESS_4:
+          type: string
+          example: Mowbray, CAPE TOWN 7700, SOUTH AFRICA
+        ORG_ADDRESS_5:
+          type: string
+          example: ' '
+        CITY:
+          type: string
+          example: RONDEBOSCH
+        STATE:
+          type: string
+          example: ' '
+        PHONE_NUMBER:
+          type: string
+          example: 27211234567
+        ORG_EMAIL:
+          type: string
+          example: First.Last@uct.ac.za

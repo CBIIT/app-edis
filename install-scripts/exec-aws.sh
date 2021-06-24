@@ -36,7 +36,7 @@ cf_ec2="ec2-serverless-template.yaml"
 cf_ddb="ddb-serverless-template.yaml"
 cf_iam_lambda="iam-lambda-role-template.yaml"
 cf_iam_apigateway="iam-apigtw-role-template.yaml"
-cf_ec2_sg="ec2-sg-template.yaml"
+#cf_ec2_sg="ec2-sg-template.yaml"
 cf_vpc="vpc-endpoint-template.yaml"
 keypair=../pgmSSHKey.pem
 
@@ -56,7 +56,7 @@ fi
 aws s3 cp  --profile ${profile} "$cf_dir/$cf_ddb" "s3://$s3bucket"
 aws s3 cp  --profile ${profile} "$cf_dir/$cf_iam_lambda" "s3://$s3bucket"
 aws s3 cp  --profile ${profile} "$cf_dir/$cf_iam_apigateway" "s3://$s3bucket"
-aws s3 cp  --profile ${profile} "$cf_dir/$cf_ec2_sg" "s3://$s3bucket"
+#aws s3 cp  --profile ${profile} "$cf_dir/$cf_ec2_sg" "s3://$s3bucket"
 aws s3 cp  --profile ${profile} "$cf_dir/$cf_vpc" "s3://$s3bucket"
 
 #get current VPC id
@@ -75,14 +75,14 @@ echo Default Security Group = $sg
 aws cloudformation create-stack --profile ${profile} --stack-name ${tier}-userapi-iam-lambda --template-url "https://${s3bucket}.s3.amazonaws.com/${cf_iam_lambda}" --parameters ParameterKey=Environment,ParameterValue=${tier} --capabilities CAPABILITY_NAMED_IAM
 aws cloudformation create-stack --profile ${profile}  --stack-name ${tier}-userapi-iam-apigtwy --template-url "https://${s3bucket}.s3.amazonaws.com/${cf_iam_apigateway}" --parameters ParameterKey=Environment,ParameterValue=${tier} --capabilities CAPABILITY_NAMED_IAM
 aws cloudformation create-stack --profile ${profile}  --stack-name ${tier}-userapi-ddb --template-url "https://${s3bucket}.s3.amazonaws.com/${cf_ddb}" --parameters ParameterKey=Environment,ParameterValue=${tier}
-aws cloudformation create-stack --profile ${profile}  --stack-name ${tier}-userapi-ec2-sg --template-url "https://${s3bucket}.s3.amazonaws.com/${cf_ec2_sg}" --parameters ParameterKey=VpcId,ParameterValue=$vpcid ParameterKey=SubnetId,ParameterValue=$subnetid ParameterKey=VpcDefaultSgId,ParameterValue=$sg
+#aws cloudformation create-stack --profile ${profile}  --stack-name ${tier}-userapi-ec2-sg --template-url "https://${s3bucket}.s3.amazonaws.com/${cf_ec2_sg}" --parameters ParameterKey=VpcId,ParameterValue=$vpcid ParameterKey=SubnetId,ParameterValue=$subnetid ParameterKey=VpcDefaultSgId,ParameterValue=$sg
 #aws cloudformation create-stack --stack-name ${tier}-userapi-vpc-endpoint --template-url "https://${s3bucket}.s3.amazonaws.com/${cf_vpc}" --parameters ParameterKey=VpcId,ParameterValue=$vpcid ParameterKey=SubnetId,ParameterValue=$subnetid
 
-sgid=null
-while [ ${sgid} = null ]; do
+arnddb=null
+while [ ${arnddb} = null ]; do
     sleep 2s
     echo -n "."
-    sgid=$(aws cloudformation describe-stacks  --profile ${profile} --stack-name ${tier}-userapi-ec2-sg --query "Stacks[0].Outputs[?OutputKey=='VPCEndpointApiGatewaySGId'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
+    arnddb=$(aws cloudformation describe-stacks  --profile ${profile} --stack-name ${tier}-userapi-ddb --query "Stacks[0].Outputs[?OutputKey=='DdbExtusersArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
 done
 
 if [[ ${w_ec2} = "y" ]]
