@@ -8,7 +8,7 @@ if (logLevel && logLevel == 'info') {
 
 // app.register(require('./restapi'), { prefix: '/nedorgapi/v1'})
 app.register(require('./eracommonsapi'), { prefix: '/eracommonsapi/v1'})
-console.debug('The application has been registered');
+console.debug('The application has been registered  - for version 2');
 
 module.exports.handler = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false
