@@ -1,8 +1,8 @@
 #!/bin/bash
 
-usage() { echo "Usage: $0 [-a <account>] [-t <tier>] [-p profile] [-h]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-a <s3bucket>] [-t <tier>] [-p profile] [-h]" 1>&2; exit 1; }
 
-account="107424568411"
+s3bucket="cf-templates-107424568411-us-east-1"
 tier="dev"
 cf_dir="../aws-cf-scripts"
 profile="default"
@@ -12,7 +12,7 @@ do
     case "${opt}" in
         h) usage
           ;;
-        a) account=${OPTARG}
+        a) s3bucket=${OPTARG}
           ;;
         t) tier=${OPTARG}
           ;;
@@ -23,16 +23,8 @@ do
     esac
 done
 
-s3bucket="cf-templates-$account-us-east-1"
-lambda_auth_code="lambda-auth.zip"
-lambda_userapi_code="lambda-userapi.zip"
-
 sam_template="sam-openapi-template.yaml"
 
-aws s3 cp --profile ${profile} "../lambda-auth/$lambda_auth_code" "s3://$s3bucket"
-aws s3 cp --profile ${profile}  "../lambda-userapi/$lambda_userapi_code" "s3://$s3bucket"
-
-sname="app-serverless"
 s3_prefix="userapi-serverless"
 region="us-east-1"
 capabilities="CAPABILITY_IAM"
@@ -43,12 +35,12 @@ dynamodb_role_arn=$(aws cloudformation describe-stacks  --profile ${profile} --s
 echo -e "Parameters: $tier $lambda_role_arn"
 
 sam deploy -t $cf_dir/$sam_template  --profile ${profile} --stack-name ${tier}-userapi-app-serverless --s3-bucket $s3bucket --s3-prefix $s3prefix --region $region --no-confirm-changeset --capabilities $capabilities --parameter-overrides \
-                    ParameterKey=Environment,ParameterValue=$tier \
-                    ParameterKey=LambdaRoleArn,ParameterValue=$lambda_role_arn \
-                    ParameterKey=DynamoDbRoleArn,ParameterValue=$dynamodb_role_arn \
-                    ParameterKey=S3bucket,ParameterValue=$s3bucket \
-                    ParameterKey=UsersTableName,ParameterValue=extusers-$tier \
-                    ParameterKey=Issuer,ParameterValue=https://iam-lab2.cancer.gov/oauth2/auss3iezeLBILuhGa1d6 \
-                    ParameterKey=Audience,ParameterValue=api://default
+                    Environment=$tier \
+                    LambdaRoleArn=$lambda_role_arn \
+                    DynamoDbRoleArn=$dynamodb_role_arn \
+                    S3bucket=$s3bucket \
+                    UsersTableName=extusers-$tier \
+                    Issuer=https://iam-lab2.cancer.gov/oauth2/auss3iezeLBILuhGa1d6 \
+                    Audience=api://default
 
 echo -e "\nServerless Cloud Formation Stack has been deployed"
