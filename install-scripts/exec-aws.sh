@@ -46,18 +46,19 @@ aws cloudformation deploy --profile ${profile} --stack-name ${tier}-userapi-ddb 
 
 stackStatus=null
 echo -n "Creating stacks..."
-while [ ${stackStatus} != 'CREATE_COMPLETE' ] && [ ${stackStatus} != 'ROLLBACK_COMPLETE' ] && [ ${stackStatus} != 'CREATE_FAILED' ] && [ ${stackStatus} != 'UPDATE_COMPLETE' ] && [ ${stackStatus} != 'UPDATE_FAILED' ]; do
+while [ "$stackStatus" != 'CREATE_COMPLETE' ] && [ "$stackStatus" != 'ROLLBACK_COMPLETE' ] && [ "$stackStatus" != 'CREATE_FAILED' ] && [ "$stackStatus" != 'UPDATE_COMPLETE' ] && [ "$stackStatus" != 'UPDATE_FAILED' ]; do
     sleep 2s
     echo -n "."
     stackStatus=$(aws cloudformation describe-stacks --stack-name ${tier}-userapi-ddb --query "Stacks[0].StackStatus" | sed -e 's/^"//' -e 's/"$//')
 done
 
-if [ ${stackStatus} = 'CREATE_COMPLETE' ]
+if [ "$stackStatus" = 'CREATE_COMPLETE' ]
 then
   echo -e "\nCloudFormation stacks have been created successfully."
-elif [ ${stackStatus} = 'UPDATE_COMPLETE' ]
+elif [ "$stackStatus" = 'UPDATE_COMPLETE' ]
 then
   echo -e "\nCloudFormation stacks have been updated successfully."
 else
   echo -e "\nFAILED: Failed to create or update CloudFormation stacks.  Please, check the CloudFormation stacks in AWS Console."
+  exit 1
 fi
