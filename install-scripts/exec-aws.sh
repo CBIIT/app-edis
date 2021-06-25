@@ -49,7 +49,7 @@ echo -n "Creating stacks..."
 while [ "$stackStatus" != 'CREATE_COMPLETE' ] && [ "$stackStatus" != 'ROLLBACK_COMPLETE' ] && [ "$stackStatus" != 'CREATE_FAILED' ] && [ "$stackStatus" != 'UPDATE_COMPLETE' ] && [ "$stackStatus" != 'UPDATE_FAILED' ]; do
     sleep 2s
     echo -n "."
-    stackStatus=$(aws cloudformation describe-stacks --stack-name ${tier}-userapi-ddb --query "Stacks[0].StackStatus" | sed -e 's/^"//' -e 's/"$//')
+    stackStatus=$(aws cloudformation describe-stacks --stack-name ${tier}-userapi-ddb --profile $profile --query "Stacks[0].StackStatus" | sed -e 's/^"//' -e 's/"$//')
 done
 
 if [ "$stackStatus" = 'CREATE_COMPLETE' ]
