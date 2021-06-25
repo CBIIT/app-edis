@@ -89,9 +89,7 @@ Resources:
         - '-'
         - - lambda-era-commons-user-api
           - !Ref Environment
-      CodeUri:
-        Bucket: !Ref S3bucket
-        Key: lambda-userapi.zip
+      CodeUri: ../lambda-userapi/lambda-userapi.zip
       Handler: src/lambda.handler
       Runtime: nodejs12.x
       MemorySize: 2048
@@ -134,9 +132,7 @@ Resources:
         - '-'
         - - lambda-auth
           - !Ref Environment
-      CodeUri:
-        Bucket: !Ref S3bucket
-        Key: lambda-auth.zip
+      CodeUri: ../lambda-auth/lambda-auth.zip
       Handler: src/lambda.handler
       Runtime: nodejs12.x
       MemorySize: 2048
