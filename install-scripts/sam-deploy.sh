@@ -25,7 +25,7 @@ done
 
 sam_template="sam-openapi-template.yaml"
 
-s3_prefix="userapi-serverless"
+s3prefix="userapi-serverless"
 region="us-east-1"
 capabilities="CAPABILITY_IAM"
 
