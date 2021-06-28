@@ -23,3 +23,80 @@ The **input parameters** for Serverless ApplicationModel (SAM) template are foll
 
 ![cf_diagram](../docs/images/sam-openapi-template.png)
 
+## Installation
+
+### Step by step instruction to deploy and configure service
+
+#### Prerequisites
+
+To build, debug, run, and deploy projects you need to install the following:
+
+* **npm** and **Node.js** - Node JavaScript package manager (https://docs.npmjs.com/cli/v6/configuring-npm/install)
+* **zip** - A file compression and packaging utility compatible with PKZIP (For CentOS - https://centos.pkgs.org/7/centos-x86_64/zip-3.0-11.el7.x86_64.rpm.html)
+* **aws cli** - AWS Command Line Interface (https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
+* **sam cli** - SAM (Serverless Application Model) Command Line Interface (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
+* **AWS Credentials** - AWS Access Key and AWS Secret Access Key for previsioned account
+
+The AWS credentials can be installed by using aws cli command (*access ID and Key values are fake*):
+```
+aws configure
+AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
+AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+Default region name [None]: us-east-1
+Default output format [None]: json
+```
+
+See https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html for further configuration details.  For example, you can specified a profile name if you have credentials for multiple AWS accounts.
+
+### NOTE
+**Keep in mind that all shell scripts are for macOS and Linux OS.  The alternative batch files can be created for Windows**
+
+### Step by step manual instructions
+
+1. Verify that all necessary appications are installed and available (see _Prerequisites_)
+2. Switch to **install-scripts** folder
+3. Run the *exec-aws.sh* script.  This script deploys several CloudFormation templates to setup DynamoDB table(s), creates or updates API Gateway and Lambda IAM roles.
+The script creates CloudFormation stacks if they don't exist or creates change sets and deploys only the chaned portions of templates.
+Optionally, shell command line argiments allow to select S3 bucket to store CloudFormation templates, API Gatewat deplyment stage, and profile name if yo have multiple AWS accounts in your configuration
+
+```shell
+./exec-aws.sh [-a <s3bucket>] [-t <tier>] [-p profile] [-h]
+```
+The following templates are created / updated by running this script:
+- *ddb-serverless-template.yaml* - Creates / updates dynamodb table **'extusers'**
+- *iam-lambda-role-template.yaml* - Creates / updates role for Lambda function that executes API Gateway requests
+- *iam-apigtw-role-template.yaml*  - Creates / updates IAM role for API Gateway to access CloudWatch logs; creates / updates IAM role for API Gateway methods to access DynamoDB AWS service
+
+4. Run the *sam-deploy.sh* script. It runs *sam deploy* command to deploy the *sam-openapi-template.yaml* template.  The generated template creates / updates CloudFormation stack which in turn creates / updates API Gateway interface, Lambda Authorizer, and Lambda Execution function.
+
+```shell
+./sam-deploy.sh [-a <s3bucket>] [-t <tier>] [-p profile] [-h]
+```
+
+The scripts gets the existing IAM roles for API Gateway and Lambda function and passes them into sam deply command along with tier, S3 Bucket name, and Okta authentication server credentials
+
+5. Optionally, the *load-data.sh scripts populates Dynamo DB table with fake data stored in *docs/NIH External Accounts - No Roles - Address.json* file
+
+Note, that Lambda Authorization and Lambda execution functions code are prebuilt and pushed to github as zip files into corresponding folders.
+Alternatively, you can build these files with the command *npm run zip* in **lambda-auth** and **lambda-userapi** folders.
+
+### CI/CD Jenkins deployment
+
+The automated deployment is setup in dev instance of Jenkins.  It hides the AWS access keys in Jenkins credentials files.
+The deployment job (https://i2e-jenkins-dev.nci.nih.gov/jenkins/job/_default/job/_lower/job/_sandbox/job/_aws_pocs/job/AWS_edis/) has the following input parameters:
+
+- GIT_TAG - branch or tag the app-edis GitHub project (https://github.com/CBIIT/app-edis)
+- AWS_ACCESS - AWS credentials - by selecting different AWS credentials you can deploy the application into different AWS accounts
+- S3_BUCKET_CF - S3 Bucket for CloudFormation templates and source code. Will be created if it does not exist
+- TIER - Dropdown selection of API Gateway deployment stage name (dev, qa, test, stage, prod)
+
+The AWS Credentials can be setup by opening the Jenkins Credentials Credentioals view (https://i2e-jenkins-dev.nci.nih.gov/jenkins/job/_default/job/_lower/credentials/) and adding a new Credentials or updating the existing one if needed.
+Store *AWS Acccess Key ID* as *Username* and *AWS Secret Access Key* as *Password*:
+
+![jenkins](../docs/images/jenkins-credentials.png)
+
+You can make changes in cloud formation template and Lambda functions source code, push it into GitHub repository and run the Jenkins job multiple times.
+CloudFormation deployments will determine the changes, create corresponding change sets and deploy them into AWS account.
+
+See [change-management.docx](doc/change-management.docx) document for details of Cloud Formation change management
+
