@@ -1,13 +1,15 @@
 #!/bin/bash
 
-usage() { echo "Usage: $0 [-a <s3bucket>] [-t <tier>] [-p profile] [-h]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-a <s3bucket>] [-t <tier>] [-p profile] [-c] [-h]" 1>&2; exit 1; }
 
 s3bucket="cf-templates-107424568411-us-east-1"
 tier="dev"
-profile="default"
+profile=""
 cf_dir="../aws-cf-scripts"
+s3bucket_create=0
 
-while getopts ha:t:p: opt
+
+while getopts hca:t:p: opt
 do
     case "${opt}" in
         h) usage
@@ -17,6 +19,8 @@ do
         t) tier=${OPTARG}
           ;;
         p) profile=${OPTARG}
+          ;;
+        c) s3bucket_create=1
           ;;
         *) usage
           ;;
@@ -31,7 +35,7 @@ cf_iam_apigateway="iam-apigtw-role-template.yaml"
 echo -e "Create ${s3bucket} if it does not exist"
 
 s3exist=$(aws s3api head-bucket --bucket $s3bucket --profile ${profile} 2>&1 || true)
-if [ -n "${s3exist}" ]
+if [ -n "${s3exist}" ] 
  then
     echo -e "Bucket ${s3bucket} does not exist. Creating a new one"
     aws s3api create-bucket --profile ${profile} --bucket "$s3bucket" --region us-east-1
