@@ -1,0 +1,80 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless Express User Info REST APIs powered by API Gateway and Lambda
+Parameters:
+  Environment:
+    Description: Environment tier
+    Type: String
+    AllowedValues:
+      - dev
+      - test
+      - qa
+      - stage
+      - prod
+  LambdaRoleArn:
+    Description: ARN of lambda function role user api web service
+    Type: String
+  S3bucket:
+    Description: S3 bucket for Lambda Auth and UserApi code
+    Type: String
+  S3zip:
+    Description: S3 zip file for oracledb layer
+    Type: String
+  VpcSubnetId1:
+    Description: First VPC subnet ID
+    Type: String
+  VpcSubnetId2:
+    Description: Second VPC subnet ID
+    Type: String
+
+Resources:
+  OracleDbLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      CompatibleRuntimes:
+        - nodejs10.x
+        - nodejs12.x
+        - nodejs14.x
+      ContentUri:
+        Bucket: !Ref S3bucket
+        Key:  !Ref S3zip
+      Description: OracleDB lambda layer to connect to Oracle database 
+
+  EraCommonsLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: >-
+        Lambda function aceeses Oracle eRA Commons and refreshes Dynamo DB table
+      FunctionName: !Join
+        - '-'
+        - - lambda-era-commons
+          - !Ref Environment
+      CodeUri: ../lambda-eracommons/lambda-eracommons.zip
+      Handler: src/lambda.handler
+      Runtime: nodejs12.x
+      MemorySize: 2048
+      Timeout: 30
+      Tracing: Active
+      EventInvokeConfig:
+        MaximumRetryAttempts: 0
+      Environment:
+        Variables:
+          LOG_LEVEL: info
+      Tags:
+        app : userinfoapi
+      Role: !Ref LambdaRoleArn
+      Layers:
+        - !Ref OracleDbLayer
+      VpcConfig:
+        SubnetIds:
+          - !Ref VpcSubnetId1
+          - !Ref VpcSubnetId2
+
+Outputs:
+  LambdaFunctionConsoleUrl:
+    Description: Console URL for the Lambda Function.
+    Value: !Sub https://${AWS::Region}.console.aws.amazon.com/lambda/home?region=${AWS::Region}#/functions/${EraCommonsLambdaFunction}
+
+  LambdaFunctionName:
+    Description: Name of the Serverless Express Lambda Function
+    Value: !Ref EraCommonsLambdaFunction
