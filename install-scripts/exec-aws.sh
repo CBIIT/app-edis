@@ -4,7 +4,7 @@ usage() { echo "Usage: $0 [-a <s3bucket>] [-t <tier>] [-p profile] [-c] [-h]" 1>
 
 s3bucket="cf-templates-107424568411-us-east-1"
 tier="dev"
-profile=""
+profile="default"
 cf_dir="../aws-cf-scripts"
 s3bucket_create=0
 

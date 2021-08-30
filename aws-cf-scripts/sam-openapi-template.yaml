@@ -64,6 +64,7 @@ Resources:
                 NotIpAddress:
                   aws:SourceIp:
                     - 128.231.0.0/16
+                    - 156.40.216.3/32
       EndpointConfiguration:
         Type: REGIONAL
       CacheClusterEnabled: true
@@ -87,7 +88,7 @@ Resources:
         Lambda function contains eRA Commons External Users Info REST APIs implementation.
       FunctionName: !Join
         - '-'
-        - - lambda-era-commons-user-api
+        - - lambda-edis-user-api
           - !Ref Environment
       CodeUri: ../lambda-userapi/lambda-userapi.zip
       Handler: src/lambda.handler

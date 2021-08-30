@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Creates role for Lambda function that performs refresh from eRA Commons Oracle database.
+Parameters:
+  Environment:
+    Description: Environment tier
+    Type: String
+    AllowedValues:
+      - dev
+      - test
+      - qa
+      - stage
+      - prod
+  SecretArn:
+    Description: ARN of era-commons-connect secret
+    Type: String
+  DdbTableArn:
+    Description: ARN of DynamoDB userinfo table
+    Type: String
+
+Resources:
+  lambdaOrgapiRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Join
+        - '-'
+        - - lambda-eracommons
+          - !Ref Environment
+          - role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: eraCommonsRead
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: secretsPermissions
+                Effect: Allow
+                Action:
+                  - secretsmanager:GetResourcePolicy
+                  - secretsmanager:GetSecretValue
+                  - secretsmanager:DescribeSecret
+                  - secretsmanager:ListSecretVersionIds
+                Resource: !Ref SecretArn
+              - Sid: logGroupPermissions
+                Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: '*'
+              - Sid: ddbPermissions
+                Effect: Allow
+                Action:
+                  - dynamodb:*
+                Resource: !Ref DdbTableArn
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
+      Path: /
+Outputs:
+  LambdaOrgapiRoleName:
+    Description: Name of Lambda Orgapi role.
+    Value:
+      Ref: lambdaOrgapiRole
+  LambdaOrgapiRoleArn:
+    Description: ARN of Lambda Orgapi role.
+    Value:
+      Fn::GetAtt:
+      - lambdaOrgapiRole
+      - Arn
+
