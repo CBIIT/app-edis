@@ -21,11 +21,12 @@ do
 done
 
 #subnet1="MUST TO SET subnet1"
-#subnet2=MUST TO SET subnet2
+#subnet2="MUST TO SET subnet2"
+#sgid="MUST BE SET to lambda security group id"
 
 if [ -z ${subnet1+x} ]
 then
-  echo "ERROR: You must to set subnet1 and subnet2";
+  echo "ERROR: You must set subnet1, subnet2, and sgid";
   exit 1;
 fi
 
@@ -39,7 +40,7 @@ capabilities="CAPABILITY_IAM"
 
 aws s3 cp "../lambda-eracommons/layer/${layer_zip}" "s3://${s3bucket}/${s3zip}"
 
-lambda_role_arn=$(aws cloudformation describe-stacks  --stack-name ${tier}-edis-iam-lambda --query "Stacks[0].Outputs[?OutputKey=='LambdaOrgapiRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
+lambda_role_arn=$(aws cloudformation describe-stacks  --stack-name dev-edis-eracommons-iam-lamba-role --query "Stacks[0].Outputs[?OutputKey=='LambdaOrgapiRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
 
 echo -e "Parameters: $tier $lambda_role_arn"
 
@@ -50,7 +51,8 @@ sam deploy -t $cf_dir/$sam_template --stack-name ${tier}-edis-lambda-eracommons 
                     LambdaRoleArn=$lambda_role_arn \
                     S3bucket=$s3bucket \
                     S3zip=$s3zip \
-                    VpcSubnetId1= \
-                    VpcSubnetId2=
+                    VpcSubnetId1=$subnet1 \
+                    VpcSubnetId2=$subnet2 \
+                    SgId=$sgid
 
 echo -e "\nServerless Cloud Formation Stack has been deployed"

@@ -26,6 +26,9 @@ Parameters:
   VpcSubnetId2:
     Description: Second VPC subnet ID
     Type: String
+  SgId:
+    Description: Lambda Security Group
+    Type: String
 
 Resources:
   OracleDbLayer:
@@ -69,6 +72,8 @@ Resources:
         SubnetIds:
           - !Ref VpcSubnetId1
           - !Ref VpcSubnetId2
+        SecurityGroupIds:
+          - !Ref SgId
 
 Outputs:
   LambdaFunctionConsoleUrl:

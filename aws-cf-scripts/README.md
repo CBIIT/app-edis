@@ -54,8 +54,16 @@ See https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html for
 ### Step by step manual instructions
 
 1. Verify that all necessary appications are installed and available (see _Prerequisites_)
-2. Switch to **install-scripts** folder
-3. Run the *exec-aws.sh* script.  This script deploys several CloudFormation templates to setup DynamoDB table(s), creates or updates API Gateway and Lambda IAM roles.
+2. Setup eRA Commond database credentials:
+   1. Open AWS Console and goto __Secrets Manager__
+   2. Create a new secret __era-commons-connect__
+```
+user: <eRA Commons service account name>
+pwd: <password>
+connect: <eRA Commons Database Connection String>
+```
+3. Switch to **install-scripts** folder
+4. Run the *exec-aws.sh* script.  This script deploys several CloudFormation templates to setup DynamoDB table(s), creates or updates API Gateway and Lambda IAM roles.
 The script creates CloudFormation stacks if they don't exist or creates change sets and deploys only the chaned portions of templates.
 Optionally, shell command line argiments allow to select S3 bucket to store CloudFormation templates, API Gatewat deplyment stage, and profile name if yo have multiple AWS accounts in your configuration
 

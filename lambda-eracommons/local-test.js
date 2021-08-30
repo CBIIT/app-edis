@@ -1,3 +1,8 @@
 const readme = require('./src/lambda')
 
-readme.readFromOracle();
+async function runme()
+{
+    await readme.readFromEraCommons();
+}
+
+runme();

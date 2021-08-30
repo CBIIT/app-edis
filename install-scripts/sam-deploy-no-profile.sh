@@ -26,8 +26,8 @@ s3prefix="app-edis-${tier}"
 region="us-east-1"
 capabilities="CAPABILITY_IAM"
 
-lambda_role_arn=$(aws cloudformation describe-stacks  --stack-name ${tier}-edis-iam-lambda --query "Stacks[0].Outputs[?OutputKey=='LambdaOrgapiRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
-dynamodb_role_arn=$(aws cloudformation describe-stacks  --stack-name ${tier}-edis-iam-apigtwy --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayAccessDdbRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
+lambda_role_arn=$(aws cloudformation describe-stacks  --stack-name ${tier}-edis-eracommons-iam-lambda --query "Stacks[0].Outputs[?OutputKey=='LambdaOrgapiRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
+dynamodb_role_arn=$(aws cloudformation describe-stacks  --stack-name ${tier}-userapi-iam-apigtwy --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayAccessDdbRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
 
 echo -e "Parameters: $tier $lambda_role_arn"
 
