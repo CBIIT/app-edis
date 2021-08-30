@@ -783,6 +783,10 @@
     "ORG_EMAIL" : {
       "type" : "string",
       "example" : "First.Last@uct.ac.za"
+    },
+    "LOGINGOV_USER_ID" : {
+      "type" : "string",
+      "example" : "12345-67890-12234-45678"
     }
   }
 };
@@ -848,6 +852,9 @@
                     </li>
                     <li data-group="Clients" data-name="getUserByDateFromDdb" class="">
                       <a href="#api-Clients-getUserByDateFromDdb">getUserByDateFromDdb</a>
+                    </li>
+                    <li data-group="Clients" data-name="getUserByLogingovUserIdFromDdb" class="">
+                      <a href="#api-Clients-getUserByLogingovUserIdFromDdb">getUserByLogingovUserIdFromDdb</a>
                     </li>
                     <li data-group="Clients" data-name="getUserByUserId" class="">
                       <a href="#api-Clients-getUserByUserId">getUserByUserId</a>
@@ -1516,6 +1523,310 @@ except ApiException as e:
                                     </script>
                                   </div>
                                   <input id='responses-getUserByDateFromDdb-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                            <h3> Status: 400 - bad input parameter </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Clients-getUserByLogingovUserIdFromDdb">
+                      <article id="api-Clients-getUserByLogingovUserIdFromDdb-0" data-group="User" data-name="getUserByLogingovUserIdFromDdb" data-version="0">
+                        <div class="pull-left">
+                          <h1>getUserByLogingovUserIdFromDdb</h1>
+                          <p>Get External User Record for given LOGIN.GOV USER ID straight from Dynamo DB</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Get external eRA Commons user record by LOGIN.GOV USER_ID straight from Dynamo DB</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/eracommonsapi/v2/logingovuser/{logingovUserId}</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Accept: application/json"\
+"//eracommonsapi/v2/logingovuser/{logingovUserId}"</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.ClientsApi;
+
+import java.io.File;
+import java.util.*;
+
+public class ClientsApiExample {
+
+    public static void main(String[] args) {
+        
+        ClientsApi apiInstance = new ClientsApi();
+        String logingovUserId = logingovUserId_example; // String | LOGIN.GOV User ID
+        try {
+            User result = apiInstance.getUserByLogingovUserIdFromDdb(logingovUserId);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ClientsApi#getUserByLogingovUserIdFromDdb");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ClientsApi;
+
+public class ClientsApiExample {
+
+    public static void main(String[] args) {
+        ClientsApi apiInstance = new ClientsApi();
+        String logingovUserId = logingovUserId_example; // String | LOGIN.GOV User ID
+        try {
+            User result = apiInstance.getUserByLogingovUserIdFromDdb(logingovUserId);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ClientsApi#getUserByLogingovUserIdFromDdb");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">String *logingovUserId = logingovUserId_example; // LOGIN.GOV User ID
+
+ClientsApi *apiInstance = [[ClientsApi alloc] init];
+
+// Get External User Record for given LOGIN.GOV USER ID straight from Dynamo DB
+[apiInstance getUserByLogingovUserIdFromDdbWith:logingovUserId
+              completionHandler: ^(User output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var ERaCommonsUserApi = require('e_ra_commons_user_api');
+
+var api = new ERaCommonsUserApi.ClientsApi()
+var logingovUserId = logingovUserId_example; // {{String}} LOGIN.GOV User ID
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getUserByLogingovUserIdFromDdb(logingovUserId, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class getUserByLogingovUserIdFromDdbExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new ClientsApi();
+            var logingovUserId = logingovUserId_example;  // String | LOGIN.GOV User ID
+
+            try
+            {
+                // Get External User Record for given LOGIN.GOV USER ID straight from Dynamo DB
+                User result = apiInstance.getUserByLogingovUserIdFromDdb(logingovUserId);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling ClientsApi.getUserByLogingovUserIdFromDdb: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiClientsApi();
+$logingovUserId = logingovUserId_example; // String | LOGIN.GOV User ID
+
+try {
+    $result = $api_instance->getUserByLogingovUserIdFromDdb($logingovUserId);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling ClientsApi->getUserByLogingovUserIdFromDdb: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::ClientsApi;
+
+my $api_instance = WWW::SwaggerClient::ClientsApi->new();
+my $logingovUserId = logingovUserId_example; # String | LOGIN.GOV User ID
+
+eval { 
+    my $result = $api_instance->getUserByLogingovUserIdFromDdb(logingovUserId => $logingovUserId);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling ClientsApi->getUserByLogingovUserIdFromDdb: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.ClientsApi()
+logingovUserId = logingovUserId_example # String | LOGIN.GOV User ID
+
+try: 
+    # Get External User Record for given LOGIN.GOV USER ID straight from Dynamo DB
+    api_response = api_instance.get_user_by_logingov_user_id_from_ddb(logingovUserId)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ClientsApi->getUserByLogingovUserIdFromDdb: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">logingovUserId*</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_getUserByLogingovUserIdFromDdb_logingovUserId">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                                      <div class="inner description">
+                                                          LOGIN.GOV User ID
+                                                      </div>
+                                              </div>
+                                                  <div class="inner required">
+                                                      Required
+                                                  </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - JSON formatted record of the user information </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-getUserByLogingovUserIdFromDdb-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-getUserByLogingovUserIdFromDdb-200-schema">
+                                  <div id='responses-getUserByLogingovUserIdFromDdb-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "JSON formatted record of the user information",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/User"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-getUserByLogingovUserIdFromDdb-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-getUserByLogingovUserIdFromDdb-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-getUserByLogingovUserIdFromDdb-200-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
