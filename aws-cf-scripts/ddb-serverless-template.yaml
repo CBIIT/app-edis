@@ -22,6 +22,9 @@ Resources:
         -
           AttributeName: "LAST_UPDATED_DAY"
           AttributeType: "S"
+        -
+          AttributeName: "LOGINGOV_USER_ID"
+          AttributeType: "S"
       KeySchema:
         -
           AttributeName: "USER_ID"
@@ -39,6 +42,20 @@ Resources:
           KeySchema:
             -
               AttributeName: "LAST_UPDATED_DAY"
+              KeyType: "HASH"
+            -
+              AttributeName: "USER_ID"
+              KeyType: "RANGE"
+          ProvisionedThroughput:
+            ReadCapacityUnits: "5"
+            WriteCapacityUnits: "5"
+          Projection:
+            ProjectionType: "ALL"
+        -
+          IndexName: logingovIndex
+          KeySchema:
+            -
+              AttributeName: "LOGINGOV_USER_ID"
               KeyType: "HASH"
             -
               AttributeName: "USER_ID"
