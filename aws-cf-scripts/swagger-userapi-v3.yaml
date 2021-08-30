@@ -224,6 +224,7 @@ paths:
                       "STATUS_CODE": $elem.STATUS_CODE.N,
                       "STATUS_DESC": "$elem.STATUS_DESCRIP.S",
                       "LAST_UPDATED_DAY": "$elem.LAST_UPDATED_DAY.S",
+                      "LOGINGOV_USER_ID": "$elem.LOGINGOV_USER_ID.S",
                     }
                   #end
 
@@ -348,6 +349,7 @@ paths:
                         "STATUS_CODE": $elem.STATUS_CODE.N,
                         "STATUS_DESC": "$elem.STATUS_DESCRIP.S",
                         "LAST_UPDATED_DAY": "$elem.LAST_UPDATED_DAY.S",
+                        "LOGINGOV_USER_ID": "$elem.LOGINGOV_USER_ID.S",
                       }#if($foreach.hasNext),#end
 
                   #end
@@ -456,10 +458,94 @@ paths:
                         "STATUS_CODE": $elem.STATUS_CODE.N,
                         "STATUS_DESC": "$elem.STATUS_DESCRIP.S",
                         "LAST_UPDATED_DAY": "$elem.LAST_UPDATED_DAY.S",
+                        "LOGINGOV_USER_ID": "$elem.LOGINGOV_USER_ID.S",
                       }#if($foreach.hasNext),#end
 
                   #end
                     ]
+                  }
+
+  /eracommonsapi/v2/logingovuser/{logingovUserId}:
+    get:
+      tags:
+        - clients
+      summary: Get External User Record for given LOGIN.GOV USER ID straight from Dynamo DB
+      operationId: getUserByLogingovUserIdFromDdb
+      description: Get external eRA Commons user record by LOGIN.GOV USER_ID straight from Dynamo DB
+      parameters:
+        - name: logingovUserId
+          in: path
+          required: true
+          description: LOGIN.GOV User ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: JSON formatted record of the user information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: bad input parameter
+      x-amazon-apigateway-integration:
+        type: aws
+        httpMethod: POST
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:dynamodb:action/Query
+        credentials:
+          Fn::Sub: ${DynamoDbRoleArn}
+        passthroughBehavior: when_no_templates
+        timeoutInMillis: 10000
+        cacheKeyParameters:
+          - method.request.path.logingovUserId
+        requestTemplates:
+          application/json:
+            Fn::Sub: |-
+              {
+                "TableName": "${UsersTableName}",
+                "IndexName": "logingovIndex",
+                "KeyConditionExpression": "LOGINGOV_USER_ID = :logingovUserId",
+                "ExpressionAttributeValues": {
+                  ":logingovUserId": { "S": "$input.params('logingovUserId')" }
+                }
+              }
+        responses:
+          2\d{2}:
+            statusCode: 200
+            responseTemplates:
+              application/json:
+                Fn::Sub: |-
+                  #set ($inputRoot = $input.path('$'))
+                  {
+                    "count": $inputRoot.Count,
+                  #if($inputRoot.Count > 0)
+                    "USER_ID": "$inputRoot.Items[0].USER_ID.S",
+                    "PERSON_ID": $inputRoot.Items[0].PERSON_ID.N,
+                    "FIRST_NAME": "$inputRoot.Items[0].FIRST_NAME.S",
+                    "LAST_NAME": "$inputRoot.Items[0].LAST_NAME.S",
+                    "NAME_PREFIX": "$inputRoot.Items[0].NAME_PREFIX.S",
+                    "MI_NAME": "$inputRoot.Items[0].MI_NAME.S",
+                    "NAME_SUFFIX": "$inputRoot.Items[0].NAME_SUFFIX.S",
+                    "EMAIL": "$inputRoot.Items[0].EMAIL.S",
+                    "ORG_NAME": "$inputRoot.Items[0].ORG_NAME.S",
+                    "ORG_ID": $inputRoot.Items[0].ORG_ID.N,
+                    "ORG_ADDRESS_1": "$inputRoot.Items[0].ORG_ADDRESS_1.S",
+                    "ORG_ADDRESS_2": "$inputRoot.Items[0].ORG_ADDRESS_2.S",
+                    "ORG_ADDRESS_3": "$inputRoot.Items[0].ORG_ADDRESS_3.S",
+                    "ORG_ADDRESS_4": "$inputRoot.Items[0].ORG_ADDRESS_4.S",
+                    "ORG_ADDRESS_5": "$inputRoot.Items[0].ORG_ADDRESS_5.S",
+                    "CITY": "$inputRoot.Items[0].CITY.S",
+                    "STATE": "$inputRoot.Items[0].STATE.S",
+                    "PHONE_NUMBER": "$inputRoot.Items[0].PHONE_NUMBER.S",
+                    "ORG_EMAIL": "$inputRoot.Items[0].ORG_EMAIL.S",
+                    "ACCOUNT_CREATED_DATE": "$inputRoot.Items[0].ACCOUNT_CREATED_DATE.S",
+                    "ACCOUNT_UPDATED_DATE": "$inputRoot.Items[0].ACCOUNT_UPDATED_DATE.S",
+                    "STATUS_CODE": $inputRoot.Items[0].STATUS_CODE.N,
+                    "STATUS_DESC": "$inputRoot.Items[0].STATUS_DESCRIP.S",
+                    "LAST_UPDATED_DAY": "$inputRoot.Items[0].LAST_UPDATED_DAY.S",
+                    "LOGINGOV_USER_ID": "$inputRoot.Items[0].LOGINGOV_USER_ID.S",
+                  #end
                   }
 
 components:
@@ -571,3 +657,6 @@ components:
         ORG_EMAIL:
           type: string
           example: First.Last@uct.ac.za
+        LOGINGOV_USER_ID:
+          type: string
+          example: 12345-67890-12234-45678
