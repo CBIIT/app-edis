@@ -6,7 +6,7 @@ tier="dev"
 profile=""
 filename=""
 
-while getopts ht:p: opt
+while getopts ht:p:f: opt
 do
     case "${opt}" in
         h) usage
