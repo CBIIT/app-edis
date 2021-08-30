@@ -518,7 +518,6 @@ paths:
                 Fn::Sub: |-
                   #set ($inputRoot = $input.path('$'))
                   {
-                    "count": $inputRoot.Count,
                   #if($inputRoot.Count > 0)
                     "USER_ID": "$inputRoot.Items[0].USER_ID.S",
                     "PERSON_ID": $inputRoot.Items[0].PERSON_ID.N,
