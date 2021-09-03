@@ -20,7 +20,7 @@ do
     esac
 done
 
-cf_iam_lambda="iam-lambda-role-template.yaml"
+cf_iam_lambda="iam-lambda-eracommons-role-template.yaml"
 cf_iam_apigateway="iam-apigtw-role-template.yaml"
 
 s3exist=$(aws s3api head-bucket --bucket $s3bucket 2>&1 || true)
@@ -30,15 +30,18 @@ if [ -n "${s3exist}" ]
     exit 1
 fi
 
-aws cloudformation deploy --stack-name ${tier}-edis-iam-lambda --template-file "$cf_dir/$cf_iam_lambda" \
+ddb_table_arn=$(aws cloudformation describe-stacks --stack-name ${tier}-edis-ddb --query "Stacks[0].Outputs[?OutputKey=='DdbExtusersArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
+
+aws cloudformation deploy --stack-name ${tier}-edis-iam-lambda-role --template-file "$cf_dir/$cf_iam_lambda" \
                           --s3-bucket ${s3bucket} --s3-prefix app-edis-${tier} \
                           --parameter-overrides \
                             Environment=${tier} --capabilities CAPABILITY_NAMED_IAM
 
-aws cloudformation deploy --stack-name ${tier}-edis-iam-apigtwy --template-file "$cf_dir/$cf_iam_apigateway" \
+aws cloudformation deploy --stack-name ${tier}-edis-iam-apigtwy-role --template-file "$cf_dir/$cf_iam_apigateway" \
                           --s3-bucket ${s3bucket} --s3-prefix app-edis-${tier} \
                           --parameter-overrides \
-                            Environment=${tier} --capabilities CAPABILITY_NAMED_IAM
+                            Environment=${tier} \
+                            DdbTableArn=${ddb_table_arn} --capabilities CAPABILITY_NAMED_IAM 
 
 stackStatus=$(aws cloudformation describe-stacks --stack-name ${tier}-edis-iam-apigtwy --query "Stacks[0].StackStatus" | sed -e 's/^"//' -e 's/"$//')
 if [ "$stackStatus" = 'CREATE_COMPLETE' ]

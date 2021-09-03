@@ -1,0 +1,15 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+  This template deploys a Security Group for NIH Internal
+  Network
+Parameters:
+  VpcId:
+    Description: VPC ID
+    Type: String
+
+Resources:
+  NIHnetsg:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Allow all traffic from NIHnet
+      VpcId: !Ref VpcId
