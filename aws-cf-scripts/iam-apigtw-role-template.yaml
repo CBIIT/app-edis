@@ -10,6 +10,10 @@ Parameters:
       - qa
       - stage
       - prod
+  DdbTableArn:
+    Description: ARN of DynamoDB userinfo table
+    Type: String
+
 Resources:
   apiOrgapiRole:
     Type: AWS::IAM::Role
@@ -51,8 +55,18 @@ Resources:
                 - apigateway.amazonaws.com
             Action:
               - sts:AssumeRole
+      Policies:
+        - PolicyName: !Sub ddbExtusersRead-${Environment}
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: ddbPermissions
+                Effect: Allow
+                Action:
+                  - dynamodb:*
+                Resource: !Ref DdbTableArn
       ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+        - arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
       Path: /
 
   account:

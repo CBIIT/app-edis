@@ -56,25 +56,24 @@ See https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html for
 1. Verify that all necessary appications are installed and available (see _Prerequisites_)
 2. Setup eRA Commond database credentials:
    1. Open AWS Console and goto __Secrets Manager__
-   2. Create a new secret __era-commons-connect__
+   2. Create a new secret __era-commons-connect-{tier}__
 ```
-user: <eRA Commons service account name>
+user: <EDIS CBIIT{tier} service account name>
 pwd: <password>
-connect: <eRA Commons Database Connection String>
+connect: <CBIITSG{tier} Connection String>
 ```
 3. Switch to **install-scripts** folder
-4. Run the *exec-aws.sh* script.  This script deploys several CloudFormation templates to setup DynamoDB table(s), creates or updates API Gateway and Lambda IAM roles.
-The script creates CloudFormation stacks if they don't exist or creates change sets and deploys only the chaned portions of templates.
-Optionally, shell command line argiments allow to select S3 bucket to store CloudFormation templates, API Gatewat deplyment stage, and profile name if yo have multiple AWS accounts in your configuration
+4. Run the *exec-aws-no-profile.sh* script.  This script deploys CloudFormation templates to setup DynamoDB table for the given tier
+The script creates CloudFormation stack if they don't exist or creates change set and deploys only the changed portions of templates.
+Pass -a {S3 bucket name} to store CloudFormation templates and -t {tier} to deploy to selected tier
 
 ```shell
-./exec-aws.sh [-a <s3bucket>] [-t <tier>] [-p profile] [-h]
+./exec-aws-no-profile.sh [-a <s3bucket>] [-t <tier>] [-p profile] [-h]
 ```
-The following templates are created / updated by running this script:
+The following template is created / updated by running this script:
 - *ddb-serverless-template.yaml* - Creates / updates dynamodb table **'extusers'**
-- *iam-lambda-role-template.yaml* - Creates / updates role for Lambda function that executes API Gateway requests
-- *iam-apigtw-role-template.yaml*  - Creates / updates IAM role for API Gateway to access CloudWatch logs; creates / updates IAM role for API Gateway methods to access DynamoDB AWS service
 
+********
 4. Run the *sam-deploy.sh* script. It runs *sam deploy* command to deploy the *sam-openapi-template.yaml* template.  The generated template creates / updates CloudFormation stack which in turn creates / updates API Gateway interface, Lambda Authorizer, and Lambda Execution function.
 
 ```shell
