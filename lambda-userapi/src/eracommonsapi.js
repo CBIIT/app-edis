@@ -172,7 +172,7 @@ module.exports = (app, opts) => {
     app.get('/user/:userid', (req, res) => {
         const userid = req.params.userid;
 
-        console.log('get extuser for USER_ID = ' + userid);
+        console.log('get extuser for USER_ID = ' + userid + ' from table ' + userTable);
         // req.log.debug('through logging frmwrk - get extuser for USER_ID ' + userid);
 
         const params = {
@@ -187,6 +187,7 @@ module.exports = (app, opts) => {
                 console.error('get extuser for USER_ID = ' + userid + ' returns error:', err);
                 res.json({ error: errJson});
             } else {
+                console.debug('Returned data: ', data);
                 res.json(data.Item)
             }
         });
