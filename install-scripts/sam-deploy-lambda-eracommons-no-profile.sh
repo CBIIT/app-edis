@@ -40,7 +40,7 @@ capabilities="CAPABILITY_IAM"
 
 aws s3 cp "../lambda-eracommons/layer/${layer_zip}" "s3://${s3bucket}/${s3zip}"
 
-lambda_role_arn=$(aws cloudformation describe-stacks  --stack-name ${tier}-edis-eracommons-iam-lamba-role --query "Stacks[0].Outputs[?OutputKey=='LambdaOrgapiRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
+lambda_role_arn=$(aws cloudformation describe-stacks  --stack-name ${tier}-edis-eracommons-iam-lambda-role --query "Stacks[0].Outputs[?OutputKey=='LambdaOrgapiRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
 
 echo -e "Parameters: $tier $lambda_role_arn"
 
