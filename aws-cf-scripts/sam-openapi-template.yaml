@@ -36,6 +36,7 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: !Ref Environment
+      Description: !Sub ${Environment} - Enterprise Data & Integration Services Web Services
       DefinitionBody:
         Fn::Transform:
           Name: AWS::Include
