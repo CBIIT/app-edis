@@ -64,7 +64,9 @@ Resources:
                 Effect: Allow
                 Action:
                   - dynamodb:*
-                Resource: !Ref DdbTableArn
+                Resource:
+                  - !Ref DdbTableArn
+                  - !Sub ${DdbTableArn}/index/*
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
       Path: /
