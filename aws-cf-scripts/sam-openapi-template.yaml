@@ -102,6 +102,7 @@ Resources:
       Environment:
         Variables:
           LOG_LEVEL: info
+          TABLE: !Sub extusers-${Environment}
       Tags:
         app : userinfoapi
       Role: !Ref LambdaRoleArn
