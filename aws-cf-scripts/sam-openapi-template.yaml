@@ -66,6 +66,7 @@ Resources:
                   aws:SourceIp:
                     - 128.231.0.0/16
                     - 156.40.216.3/32
+                    - 156.40.216.1/32
       EndpointConfiguration:
         Type: REGIONAL
       CacheClusterEnabled: true
