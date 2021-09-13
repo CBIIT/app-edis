@@ -225,6 +225,7 @@ paths:
                       "STATUS_DESC": "$elem.STATUS_DESCRIP.S",
                       "LAST_UPDATED_DAY": "$elem.LAST_UPDATED_DAY.S",
                       "LOGINGOV_USER_ID": "$elem.LOGINGOV_USER_ID.S",
+                      "ALIAS_DESCRIP": "$elem.ALIAS_DESCRIP.S"
                     }
                   #end
 
@@ -350,6 +351,7 @@ paths:
                         "STATUS_DESC": "$elem.STATUS_DESCRIP.S",
                         "LAST_UPDATED_DAY": "$elem.LAST_UPDATED_DAY.S",
                         "LOGINGOV_USER_ID": "$elem.LOGINGOV_USER_ID.S",
+                        "ALIAS_DESCRIP": "$elem.ALIAS_DESCRIP.S"
                       }#if($foreach.hasNext),#end
 
                   #end
@@ -459,6 +461,7 @@ paths:
                         "STATUS_DESC": "$elem.STATUS_DESCRIP.S",
                         "LAST_UPDATED_DAY": "$elem.LAST_UPDATED_DAY.S",
                         "LOGINGOV_USER_ID": "$elem.LOGINGOV_USER_ID.S",
+                        "ALIAS_DESCRIP": "$elem.ALIAS_DESCRIP.S"
                       }#if($foreach.hasNext),#end
 
                   #end
@@ -544,6 +547,7 @@ paths:
                     "STATUS_DESC": "$inputRoot.Items[0].STATUS_DESCRIP.S",
                     "LAST_UPDATED_DAY": "$inputRoot.Items[0].LAST_UPDATED_DAY.S",
                     "LOGINGOV_USER_ID": "$inputRoot.Items[0].LOGINGOV_USER_ID.S",
+                    "ALIAS_DESCRIP": "$elem.ALIAS_DESCRIP.S"
                   #end
                   }
 
@@ -659,3 +663,6 @@ components:
         LOGINGOV_USER_ID:
           type: string
           example: 12345-67890-12234-45678
+        ALIAS_DESCRIP:
+          type: string
+          example: abcd@company.gov
