@@ -547,7 +547,7 @@ paths:
                     "STATUS_DESC": "$inputRoot.Items[0].STATUS_DESCRIP.S",
                     "LAST_UPDATED_DAY": "$inputRoot.Items[0].LAST_UPDATED_DAY.S",
                     "LOGINGOV_USER_ID": "$inputRoot.Items[0].LOGINGOV_USER_ID.S",
-                    "ALIAS_DESCRIP": "$elem.ALIAS_DESCRIP.S"
+                    "ALIAS_DESCRIP": "$inputRoot.Items[0].ALIAS_DESCRIP.S"
                   #end
                   }
 
