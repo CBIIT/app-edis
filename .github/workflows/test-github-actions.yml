@@ -14,6 +14,10 @@ on:
       lambda_build_number:
         description: "Number of the build workflow run"
         required: true
+      s3bucket:
+        description: 'S3 bucket to use for deployment'
+        required: true
+        default: cf-templates-woyzwinjenjf-us-east-1
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -60,3 +64,8 @@ jobs:
         run: |
           aws cloudformation describe-stacks | grep StackName
           
+      - name: EDIS sam deployment
+        if: success()
+        working-directory: install-scripts
+        run: |
+          ./sam-deploy-no-profile.sh -a ${{ github.event.inputs.s3bucket }} -t ${{ github.event.inputs.tier }}
