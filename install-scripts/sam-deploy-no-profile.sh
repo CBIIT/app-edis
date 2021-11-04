@@ -36,8 +36,8 @@ else
   apigtwy_role_stack="${tier}-edis-iam-apigtwy-role"
 fi
 
-lambda_role_arn=$(aws cloudformation describe-stacks  --stack-name ${tier}-edis-eracommons-iam-lamba-role --query "Stacks[0].Outputs[?OutputKey=='LambdaOrgapiRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
-dynamodb_role_arn=$(aws cloudformation describe-stacks  --stack-name ${tier}-edis-iam-apigtwy-role --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayAccessDdbRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
+lambda_role_arn=$(aws cloudformation describe-stacks  --stack-name ${lambda_role_stack} --query "Stacks[0].Outputs[?OutputKey=='LambdaOrgapiRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
+dynamodb_role_arn=$(aws cloudformation describe-stacks  --stack-name ${apigtwy_role_stack} --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayAccessDdbRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
 #lambda_role_arn=$(aws cloudformation describe-stacks  --stack-name iam-lambda-roles --query "Stacks[0].Outputs[?OutputKey=='LambdaOrgapiRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
 #dynamodb_role_arn=$(aws cloudformation describe-stacks  --stack-name iam-apigateway-roles --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayAccessDdbRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
 
