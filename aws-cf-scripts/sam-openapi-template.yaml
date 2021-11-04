@@ -92,7 +92,7 @@ Resources:
         - '-'
         - - lambda-edis-user-api
           - !Ref Environment
-      CodeUri: ../lambda-userapi/lambda-userapi.zip
+      CodeUri: ../lambda-zip/lambda-userapi/lambda-userapi.zip
       Handler: src/lambda.handler
       Runtime: nodejs12.x
       MemorySize: 2048
@@ -136,7 +136,7 @@ Resources:
         - '-'
         - - lambda-auth
           - !Ref Environment
-      CodeUri: ../lambda-auth/lambda-auth.zip
+      CodeUri: ../lambda-zip/lambda-auth/lambda-auth.zip
       Handler: src/lambda.handler
       Runtime: nodejs12.x
       MemorySize: 2048
@@ -162,7 +162,7 @@ Resources:
       Enabled: true
       StageKeys:
         - RestApiId: !Ref EraCommonsUserApi
-          StageName: !Ref EraCommonsUserApiStage
+          StageName: !Ref Environment
       Value: !Sub CBIIT-SN-apiGatewayPoC1-${Environment}
 
   ApiUsagePlan:
@@ -173,7 +173,7 @@ Resources:
     Properties:
       ApiStages:
         - ApiId: !Ref EraCommonsUserApi
-          Stage: !Ref EraCommonsUserApiStage
+          Stage: !Ref Environment
       Description: Api Usage Plan for Service Now Client
       UsagePlanName: !Sub CBIIT-SN-apiGatewayPoC1-usage-plan-${Environment}
 
