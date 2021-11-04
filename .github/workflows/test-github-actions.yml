@@ -42,6 +42,7 @@ jobs:
           workflow_conclusion: success
           run_number: ${{ github.event.inputs.lambda_build_number }}
           name: lambda-zip
+          path: lambda-zip
       
       - name: Check the existence of artifact
         run: |
