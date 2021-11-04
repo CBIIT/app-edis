@@ -10,6 +10,10 @@ on:
       tier:
         description: 'Environment tier'
         required: true
+        default: dev
+      lambda_build_number:
+        description: "Number of the build workflow run"
+        required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -18,12 +22,28 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     
-    environment: dev
+    environment: ${{ github.event.inputs.tier }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
           echo environment secrets ${{ secrets.AWS_ACCESS_KEY_ID }} and ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           echo Environment Tier - ${{ github.event.inputs.tier }}
+      
+      - name: Download built Lambda functions
+        uses: dawidd6/action-download-artifact@v2
+        with: 
+          workflow: lambda-build.yml
+          workflow_conclusion: success
+          run_number: ${{ github.event.inputs.lambda_build_number }}
+      
+      - name: Check the existince of artifact
+        run: |
+          ls -la lambda-auth
+          
+          
