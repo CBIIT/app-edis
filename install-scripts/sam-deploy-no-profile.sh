@@ -26,7 +26,17 @@ s3prefix="app-edis-${tier}"
 region="us-east-1"
 capabilities="CAPABILITY_IAM"
 
-lambda_role_arn=$(aws cloudformation describe-stacks  --stack-name ${tier}-edis-eracommons-iam-lambda-role --query "Stacks[0].Outputs[?OutputKey=='LambdaOrgapiRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
+# cloud team named dev tiers stacks not following the directions
+if [ ${tier} = "dev" ]
+then
+  lambda_role_stack="dev-edis-eracommons-iam-lamba-role"
+  apigtwy_role_stack="iam-apigateway-roles"
+else
+  lambda_role_stack="${tier}-edis-eracommons-iam-lamba-role"
+  apigtwy_role_stack="${tier}-edis-iam-apigtwy-role"
+fi
+
+lambda_role_arn=$(aws cloudformation describe-stacks  --stack-name ${tier}-edis-eracommons-iam-lamba-role --query "Stacks[0].Outputs[?OutputKey=='LambdaOrgapiRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
 dynamodb_role_arn=$(aws cloudformation describe-stacks  --stack-name ${tier}-edis-iam-apigtwy-role --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayAccessDdbRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
 #lambda_role_arn=$(aws cloudformation describe-stacks  --stack-name iam-lambda-roles --query "Stacks[0].Outputs[?OutputKey=='LambdaOrgapiRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
 #dynamodb_role_arn=$(aws cloudformation describe-stacks  --stack-name iam-apigateway-roles --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayAccessDdbRoleArn'].OutputValue | [0]" | sed -e 's/^"//' -e 's/"$//')
