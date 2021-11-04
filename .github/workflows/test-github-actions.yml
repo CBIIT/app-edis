@@ -41,9 +41,21 @@ jobs:
           workflow: lambda-build.yml
           workflow_conclusion: success
           run_number: ${{ github.event.inputs.lambda_build_number }}
+          name: lambda-zip
       
-      - name: Check the existince of artifact
+      - name: Check the existence of artifact
         run: |
-          ls -la lambda-auth
+          ls -la lambda-zip/lambda-userapi
+
+      - name: Setup AWS configuration
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
           
+      - name: Test AWS Configuration
+        if: success()
+        run: |
+          aws cloudformation describe-stacks  --profile edis | grep StackName
           
