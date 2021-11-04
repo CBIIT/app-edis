@@ -58,5 +58,5 @@ jobs:
       - name: Test AWS Configuration
         if: success()
         run: |
-          aws cloudformation describe-stacks  --profile edis | grep StackName
+          aws cloudformation describe-stacks | grep StackName
           
