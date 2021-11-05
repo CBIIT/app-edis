@@ -23,7 +23,16 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # Build lambda-auth zip file
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: javascript
+          queries: security-and-quality
+  
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
+
+# Build lambda-auth zip file
       - name: build lambda-auth
         working-directory: lambda-auth
         run: |
