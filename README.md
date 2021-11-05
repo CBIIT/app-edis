@@ -1,5 +1,7 @@
 # Enterprise Data & Integration Services Web Services
 
+![build](https://github.com/CBIIT/app-edis/actions/workflows/lambda-build.yml/badge.svg)
+
 The project contains the following modules:
 * **aws-cf-scripts** - Set of cloud formation configuration templates to deploy and configure AWS resources
 * **install-cloudguru** - Set of shell scripts to deploy and configure AWS resources with Cloud Formation stacks
