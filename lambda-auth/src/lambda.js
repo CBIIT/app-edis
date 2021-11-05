@@ -49,6 +49,7 @@ module.exports.handler = async (event, context, callback) => {
 
         }
     }
+    var tmp = str.replace('"', '\"');
     return callback(null, generatePolicy('user', 'Allow', event.methodArn));
 }
 
