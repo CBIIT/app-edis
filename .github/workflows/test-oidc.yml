@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Setup AWS configuration
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@b8c74de
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
           role-session-name: TestSessionWithOIDC
