@@ -13,7 +13,9 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    
+
+    environment: sandbox
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -22,7 +24,7 @@ jobs:
       - name: Setup AWS configuration
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::716152600666:role/github-oidc-provider-Role-DR575OZP4196
+          role-to-assume: ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
           role-session-name: TestSessionWithOIDC
           aws-region: us-east-1
           
