@@ -51,7 +51,8 @@ It also defines inline policy to access the given DynamoDB table defined by *Ddb
                   - !Sub ${DdbTableArn}/index/*
 
 ```
-##ddb-serverless-template.yaml
+
+## ddb-serverless-template.yaml
 **Description:** Creates DynamoDB table to store eRA Commons external User Records
 
 **Input Parameters:**
@@ -114,7 +115,7 @@ API Key for ServiceNow client associated with selected API Usage Plan. The purpo
 
 API Usage Plan for ServiceNow client. The purpose is Usage Monitoring
 
-## CI/CD Jenkins deployment
+# CI/CD Jenkins deployment
 
 The automated deployment has been setup in dev instance of Jenkins.  It hides the AWS access keys in Jenkins credentials files.
 The deployment job (https://i2e-jenkins-dev.nci.nih.gov/jenkins/job/_default/job/_lower/job/_sandbox/job/_aws_pocs/job/AWS_edis/) has the following input parameters:
@@ -134,6 +135,6 @@ CloudFormation deployments will determine the changes, create corresponding chan
 
 See [change-management.docx](doc/change-management.docx) document for details of Cloud Formation change management
 
-## Github Actions Deployment
+# Github Actions Deployment
 
 See github Action [https://github.com/CBIIT/app-edis/actions](https://github.com/CBIIT/app-edis/actions) for implementation POC.
