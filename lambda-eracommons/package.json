@@ -3,20 +3,14 @@
   "version": "0.0.1",
   "main": "lambda.js",
   "scripts": {
-    "start": "sam local start-api -d 5859 -t sam-template.yaml",
-    "build_toml": "sam build -t sam-template.yaml && cp sam-template.yaml .aws-sam/build/NedOrgsLambdaFunction/. && cp samconfig.toml .aws-sam/build/NedOrgsLambdaFunction/.",
-    "build": "sam build -t sam-template.yaml && cp sam-template.yaml .aws-sam/build/NedOrgsLambdaFunction/.",
-    "deploy_toml": "cd .aws-sam/build/NedOrgsLambdaFunction && sam deploy -t sam-template.yaml --parameter-overrides ParameterKey=LambdaNedorgRoleArn,ParameterValue=$npm_config_arn ParameterKey=VpcEndpointId,ParameterValue=$npm_config_vpce && cd ../../../",
-    "deploy": "cd .aws-sam/build/NedOrgsLambdaFunction && sam deploy -t sam-template.yaml --stack-name $npm_config_sname --s3-bucket $npm_config_s3bucket --s3-prefix $npm_config_s3prefix --region $npm_config_region --no-confirm-changeset --capabilities $npm_config_capb --parameter-overrides ParameterKey=LambdaNedorgRoleArn,ParameterValue=$npm_config_arn ParameterKey=VpcEndpointId,ParameterValue=$npm_config_vpce && cd ../../../",
+    "layer": "mkdir layer && mkdir layer/nodejs && npm i oracledb --prefix ./layer/nodejs && npm i oracledb-prebuilt-for-lambda --prefix ./layer/nodejs && mv layer/nodejs/lib layer/. && cd layer && zip -r oracledb-layer.zip lib nodejs/node_modules && cd ..",
     "zip": "rm -rf lambda-eracommons.zip && zip -r lambda-eracommons.zip package.json src",
     "zip3": "rm -rf node_modules && rm -rf lambda-userapi.zip && npm install --only='prod' && zip -r lambda-userapiV3.zip node_modules src/lambda.js src/eracommonsapiV3.js",
     "test": "jest unit --coverage"
   },
-  "dependencies": {
-  },
   "devDependencies": {
-    "oracledb": "^5.2.0",
-    "oracledb-prebuilt-for-lambda": "^5.2.0",
-    "aws-sdk": "2.820.0"
+    "aws-sdk": "2.820.0",
+    "oracledb": "^5.3.0",
+    "oracledb-prebuilt-for-lambda": "^5.3.0"
   }
 }
