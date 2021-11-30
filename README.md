@@ -18,6 +18,9 @@ To build, debug, run, and deploy projects you need to install the following:
 * **aws cli** - AWS Command Line Interface (https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
 * **sam cli** - SAM (Serverless Application Model) Command Line Interface (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html) 
 * **AWS Credentials** - AWS Access Key and AWS Secret Access Key for previsioned account
+  
+    OR
+* **AWS OIDC Provider** - AWS OpenID Connect identity provider
 
 The AWS credentials can be installed by using aws cli command (*access ID and Key values are fake*):
 ```
@@ -33,34 +36,72 @@ See https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html for
 ### NOTE
 **Keep in mind that all shell scripts are for macOS and Linux OS.  The alternative batch files can be created for Windows**
 
-### Step By Step instructions to configure, build, deploy, and run the service in *acoudguru.com* playground instance
+## Step By Step instructions to configure, build, and deploy the service in NCI CBIIT AWS instance
 
-1. Ensure that all prerequisites actions are completed
-2. In **install-cloudguru** project run *exec-aws.sh* script to create necessary AWS resources
+1. Build **lambda-auth** Lambda function
+```shell
+cd lambda-auth
+npm run zip
+cp lambda-auth.zip ../lambda-zip/.
+cd ..
 ```
-./exec-aws.sh
+2. Build **lambda-userapi** Lambda function
+```shell
+cd lambda-userapi
+npm run zip
+cp lambda-userapi.zip ../lambda-zip/.
+cd ..
 ```
-3. In **install-cloudguru** project run *load-data.sh* script to populate Dynamo DB table with sample ned org data
+3. Build **lambda-eracommons** Lambda function
+```shell
+cd lambda-eracommons
+#create oracledb layer distribution
+npm install
+npm run layer
+
+#create lambda zip distribution
+npm run zip
+cp lambda-eracommons.zip ../lambda-zip/.
+cd ..
 ```
-./load-data.sh
+4. ***For Cloud Team*** - Create S3 bucket for CloudFormation templates if it does not exist
+```shell
+aws s3api create-bucket --profile <profile> --bucket "<S3 Bucket Name>" --region us-east-1
+# or without profile
+aws s3api create-bucket --bucket "<S3 Bucket Name>" --region us-east-1
 ```
-4. In **install-cloudguru** project run *sa-deploy.sh* script to create API Gateway and Lambda functions resources:
+5. Create DynamoDB table to store user information
+```shell
+cd install-scripts
+./exec-aws-no-profile.sh -a <S3 Bucket Name> -t <tier>
+cd ..
 ```
-./sam-deploy.sh
+6. Load DynamoDB table with initial data from json file. See  the example of the file in docs folder - [NIH External Accounts - No Roles - Address.json](/docs/NIH%20External%20Accounts%20-%20No%20Roles%20-%20Address.json).
+The easiest way to create this file is to extract csv file from the database and convert it to json using online converter.
+```shell
+cd install-scripts
+./load-data.sh -t <tier> -f <filename> [-p <aws profile>]
+cd ..
 ```
-5. In **lambda-auth** project build the zip package for Lambda Authorizer
+7. ***For Cloud Team*** - Create roles for *lambda-eracommons* Lambda function and for API Gateway
+```shell
+cd install-scripts
+./create-roles-no-profile.sh -a <S3 Bucket Name> -t <tier>
+cd ..
 ```
-./npm run zip
+8. Deploy API gateway and Lambda functions for authorization and user api
+```shell
+cd install-scripts
+./sam-deploy-no-profile.sh -a <S3 Bucket Name> -t <tier>
+cd ..
 ```
-6. Open *lambda-auth-dev* Lambda function in AWS console and upload the created zip file
-7. In **lambda-userapi** project build the zip package for Lambda Rest API
+9. Deploy lambda-eracommons Lambda function. First edit the *install-scripts/sam-deploy-lambda-eracommons-no-profile.sh* file
+and set the VPC subnet1, subnet2, and security group sgid (lines 23-25) with values from the AWS account
+```shell
+cd install-scripts
+./sam-deploy-lambda-eracommons-no-profile.sh -a <S3 Bucket Name> -t <tier>
+cd ..
 ```
-./npm run zip
-```
-8. Open *lambda-userapi-dev* Lambda function in AWS console and upload the created zip file
-9. get the URL of api from API Gateway Resources (in dev tier) and run **curl** command:
-```
-curl -i https://user:password@<API Gateway URL>/v1/nedorgs/HNC14
-```
-10. Check the results of the command.
-11. Open AWS Console Cloud Watch and check the logs produces by both Lambda functions 
+10. Set the scheduler event to run lambda-eracommons Lambda function once a day to refresh the DynamoDB table from eRA Commons database
+
+
