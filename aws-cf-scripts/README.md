@@ -12,6 +12,7 @@ The AWS Cloud Formation templates are depicted below:
 
 | lambda-userapi-api-{environment}-role | IAM Role |   
 | --- | --- |
+
 The role allows to get events from API Gateway, read/write DynamoDB table, log messages to CloudWatch and to XRay
 <br>The role includes the following AWS managed policies:
 - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
@@ -30,6 +31,7 @@ The role allows to get events from API Gateway, read/write DynamoDB table, log m
 
 | apigateway-userapi-ddb-{environment}-role | IAM Role |   
 | --- | --- |
+
 The role allows API Gateway methods to access DynamoDB table directly, without lambda-userapi Lambda function
 <br>The role includes the following AWS managed policies:
 - arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
@@ -59,6 +61,7 @@ It also defines inline policy to access the given DynamoDB table defined by *Ddb
 
 | extusers-{environment} | DynamoDB table |   
 | --- | --- |
+
 The table has **Primary Key** USER_ID
 <br>Global Secondary Index (GSI) **dateIndex** - Hash Key is LAST_UPDATED_DAY and Sort Key is USER_ID
 <br>Global Secondary Index (GSI) **logingovIndex** - Hash Key is LOGINGOV_USER_ID and Sort Key is USER_ID
