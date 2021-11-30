@@ -1,17 +1,72 @@
-## Description of AWS Cloud Formation templates for deploying API Gateway PoC AWS components 
+# Description of AWS Cloud Formation templates for deploying EDIS AWS components 
 
 The AWS Cloud Formation templates are depicted below:
 
-The **input parameters** for templates are following:
+## iam-lambda-role-template.yaml
+**Description:** Creates IAM role for lambda-userapi Lambda function
 
-- **Environment** (dev, test, qa, stage, prod)
+**Input Parameters:**
+- **Environment** - the tier (dev, test, qa, stage, prod)
 
+**Resources**
 
-![cf_diagram](../docs/images/iam-lambda-role-template.png)
-![cf_diagram](../docs/images/iam-apigtw-role-template.png)
-![cf_diagram](../docs/images/ddb-serverless-template.png)
+| lambda-userapi-api-{environment}-role | IAM Role |   
+| --- | --- |
+The role allows to get events from API Gateway, read/write DynamoDB table, log messages to CloudWatch and to XRay
+<br>The role includes the following AWS managed policies:
+- arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+- arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+- arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+- arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
 
-The **input parameters** for Serverless ApplicationModel (SAM) template are following:
+## iam-apigtw-role-template.yaml
+**Description:** Creates IAM role for API Gateway
+
+**Input Parameters:**
+- **Environment** - the tier (dev, test, qa, stage, prod)
+- **DdbTableArn** - ARN of DynamoDB userinfo table
+
+**Resources**
+
+| apigateway-userapi-ddb-{environment}-role | IAM Role |   
+| --- | --- |
+The role allows API Gateway methods to access DynamoDB table directly, without lambda-userapi Lambda function
+<br>The role includes the following AWS managed policies:
+- arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+
+It also defines inline policy to access the given DynamoDB table defined by *DdbTableArn*:
+```yaml
+        - PolicyName: !Sub ddbExtusersRead-${Environment}
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: ddbPermissions
+                Effect: Allow
+                Action:
+                  - dynamodb:*
+                Resource:
+                  - !Ref DdbTableArn
+                  - !Sub ${DdbTableArn}/index/*
+
+```
+##ddb-serverless-template.yaml
+**Description:** Creates DynamoDB table to store eRA Commons external User Records
+
+**Input Parameters:**
+- **Environment** - the tier (dev, test, qa, stage, prod)
+
+**Resources**
+
+| extusers-{environment} | DynamoDB table |   
+| --- | --- |
+The table has **Primary Key** USER_ID
+<br>Global Secondary Index (GSI) **dateIndex** - Hash Key is LAST_UPDATED_DAY and Sort Key is USER_ID
+<br>Global Secondary Index (GSI) **logingovIndex** - Hash Key is LOGINGOV_USER_ID and Sort Key is USER_ID
+
+## sam-openapi-template.yaml
+**Description:** Creates API Gateway based on open API swagger file and deploys lambda-auth and lambda-userapi Lambda funcitons 
+
+**Input Parameters:**
 
 - **Environment** (dev, test, qa, stage, prod)
 - **LambdaRoleArn** – ARN of Lambda function that executed methods of API
@@ -21,75 +76,44 @@ The **input parameters** for Serverless ApplicationModel (SAM) template are foll
 - **Audience** – Okta Authentication audience (api://default)
 - **UsersTableName** – DynamoDB NIH external users table name
 
-![cf_diagram](../docs/images/sam-openapi-template.png)
+**Resources**
 
-## Installation
+| eRA Commons User API | API Gateway |   
+| --- | --- |
 
-### Step by step instruction to deploy and configure service
+API Gateway deployment is based on [swagger-userapi-v3.yaml](/swagger-userapi-v3.yaml) open API specification template.
+<br>The API Gateway has the following properties:
+- stage name ( {environment} )
+- type REGIONAL
+- Authorization by lambda-auth Lambda Authorization function
+- Authorization by Resource Policy limmiting access by IP ranges
+- Enabled CloudWatch logging (access and execution log groups)
+- Enabled XRay tracing
 
-#### Prerequisites
+| lambda-auth-{env} | Lambda Function |   
+| --- | --- |
 
-To build, debug, run, and deploy projects you need to install the following:
+The Lambda function Authorizer decodes the "_Authorization_" request header, verifies the OAuth 2 token with Okta
+authorization server
 
-* **npm** and **Node.js** - Node JavaScript package manager (https://docs.npmjs.com/cli/v6/configuring-npm/install)
-* **zip** - A file compression and packaging utility compatible with PKZIP (For CentOS - https://centos.pkgs.org/7/centos-x86_64/zip-3.0-11.el7.x86_64.rpm.html)
-* **aws cli** - AWS Command Line Interface (https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
-* **sam cli** - SAM (Serverless Application Model) Command Line Interface (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
-* **AWS Credentials** - AWS Access Key and AWS Secret Access Key for previsioned account
+| lambda-userapi-{Environment} | Lambda Function |   
+| --- | --- |
 
-The AWS credentials can be installed by using aws cli command (*access ID and Key values are fake*):
-```
-aws configure
-AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
-AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-Default region name [None]: us-east-1
-Default output format [None]: json
-```
+The Lambda function implements V1 API Gateway endpoints - it retrieves user by ID, by Date, by Date Range, and by Login.gov ID
 
-See https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html for further configuration details.  For example, you can specified a profile name if you have credentials for multiple AWS accounts.
+| CBIIT-SN-apiGatewayPoC1-${Environment} | API Key |   
+| --- | --- |
 
-### NOTE
-**Keep in mind that all shell scripts are for macOS and Linux OS.  The alternative batch files can be created for Windows**
+API Key for ServiceNow client associated with selected API Usage Plan. The purpose is Usage Monitoring
 
-### Step by step manual instructions
+| CBIIT-SN-apiGatewayPoC1-usage-plan-${Environment} | API Usage Plan |   
+| --- | --- |
 
-1. Verify that all necessary appications are installed and available (see _Prerequisites_)
-2. Setup eRA Commond database credentials:
-   1. Open AWS Console and goto __Secrets Manager__
-   2. Create a new secret __era-commons-connect-{tier}__
-```
-user: <EDIS CBIIT{tier} service account name>
-pwd: <password>
-connect: <CBIITSG{tier} Connection String>
-```
-3. Switch to **install-scripts** folder
-4. Run the *exec-aws-no-profile.sh* script.  This script deploys CloudFormation templates to setup DynamoDB table for the given tier
-The script creates CloudFormation stack if they don't exist or creates change set and deploys only the changed portions of templates.
-Pass -a {S3 bucket name} to store CloudFormation templates and -t {tier} to deploy to selected tier
+API Usage Plan for ServiceNow client. The purpose is Usage Monitoring
 
-```shell
-./exec-aws-no-profile.sh [-a <s3bucket>] [-t <tier>] [-p profile] [-h]
-```
-The following template is created / updated by running this script:
-- *ddb-serverless-template.yaml* - Creates / updates dynamodb table **'extusers'**
+## CI/CD Jenkins deployment
 
-********
-4. Run the *sam-deploy.sh* script. It runs *sam deploy* command to deploy the *sam-openapi-template.yaml* template.  The generated template creates / updates CloudFormation stack which in turn creates / updates API Gateway interface, Lambda Authorizer, and Lambda Execution function.
-
-```shell
-./sam-deploy.sh [-a <s3bucket>] [-t <tier>] [-p profile] [-h]
-```
-
-The scripts gets the existing IAM roles for API Gateway and Lambda function and passes them into sam deply command along with tier, S3 Bucket name, and Okta authentication server credentials
-
-5. Optionally, the *load-data.sh scripts populates Dynamo DB table with fake data stored in *docs/NIH External Accounts - No Roles - Address.json* file
-
-Note, that Lambda Authorization and Lambda execution functions code are prebuilt and pushed to github as zip files into corresponding folders.
-Alternatively, you can build these files with the command *npm run zip* in **lambda-auth** and **lambda-userapi** folders.
-
-### CI/CD Jenkins deployment
-
-The automated deployment is setup in dev instance of Jenkins.  It hides the AWS access keys in Jenkins credentials files.
+The automated deployment has been setup in dev instance of Jenkins.  It hides the AWS access keys in Jenkins credentials files.
 The deployment job (https://i2e-jenkins-dev.nci.nih.gov/jenkins/job/_default/job/_lower/job/_sandbox/job/_aws_pocs/job/AWS_edis/) has the following input parameters:
 
 - GIT_TAG - branch or tag the app-edis GitHub project (https://github.com/CBIIT/app-edis)
@@ -107,3 +131,6 @@ CloudFormation deployments will determine the changes, create corresponding chan
 
 See [change-management.docx](doc/change-management.docx) document for details of Cloud Formation change management
 
+## Github Actions Deployment
+
+See github Action [https://github.com/CBIIT/app-edis/actions](https://github.com/CBIIT/app-edis/actions) for implementation POC.
