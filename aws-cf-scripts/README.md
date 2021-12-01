@@ -52,6 +52,19 @@ It also defines inline policy to access the given DynamoDB table defined by *Ddb
 
 ```
 
+## GS-stack-template.yaml
+**Description:**  Creates and Deploys a Security Group for NIH Internal Network
+
+**Input Parameters:**
+- **VpcId** - VPC ID
+
+**Resources**
+
+| {environment}-SG-stack-NIHnetsg | Security Group |   
+| --- | --- |
+
+The security group is used for lambda-eracommons Lambda function to configure it inside VPC
+
 ## ddb-serverless-template.yaml
 **Description:** Creates DynamoDB table to store eRA Commons external User Records
 
@@ -114,6 +127,44 @@ API Key for ServiceNow client associated with selected API Usage Plan. The purpo
 | --- | --- |
 
 API Usage Plan for ServiceNow client. The purpose is Usage Monitoring
+
+## sam-lambda-eracommons.yaml
+**Description:** Creates and deploys lambda-eracommons Lambda funciton to retrieve data from eRA Commons database
+and populate it into DynamoDB table
+
+**Input Parameters:**
+
+- **Environment** (dev, test, qa, stage, prod)
+- **LambdaRoleArn** – ARN of Lambda function that executed methods of API
+- **DynamoDbRoleArn** – ARN of role to permit API method to access DynamoDB table
+- **S3bucket** – S3 bucket name that contains Lambda functions executable code and dbLayer code
+- **S3zip** – Zip file for oracledb layer prepared in S3 bucket
+- **VpcSubnetId1** – Subnet ID for selected VPC to configure Lambda function
+- **VpcSubnetId2** – Another subnet ID for selected VPC to configure Lambda function
+- **SgId** – Security group ID that is used for lambda-eracommons Lambda function to configure it inside VPC
+
+**Resources**
+
+| OracleDbLayer | AWS::Serverless::LayerVersion |   
+| --- | --- |
+
+Lambda Function Layer that contains OracleDB library to connect to Oracle database
+
+| lambda-era-commons-{environment} | Lambda Function |   
+| --- | --- |
+
+lambda-eracommons Lambda Function to refresh DynamoDB table from eRA Commons database.
+<br>The function has the following properties:
+
+- Environment variables:
+  - LOG_LEVEL - (debug/info)
+  - TABLE - extusers-${Environment} DynamoDB table
+  - SECRET: era-commons-connect-${Environment} - contans connect string and credentials to eRA Commons database
+- Lambda Layer - oracledb lambda common layer
+- VPC Configuration:
+  - VPC Subnet 1
+  - VPC Subnet 2
+  - Security Group - {SgId}
 
 # CI/CD Jenkins deployment
 
