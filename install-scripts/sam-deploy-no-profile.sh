@@ -51,7 +51,7 @@ sam deploy -t $cf_dir/$sam_template --stack-name ${tier}-edis-app-serverless --s
                     DynamoDbRoleArn=$dynamodb_role_arn \
                     S3bucket=$s3bucket \
                     UsersTableName=extusers-$tier \
-                    Issuer=https://iam-stage.cancer.gov/oauth2/aus114k6x72d19Eum0h8 \
+                    Issuer=https://nih-nci.oktapreview.com/oauth2/aus13y2f31cSMywhw0h8 \
                     Audience=api://default
 
 echo -e "\nServerless Cloud Formation Stack has been deployed"
