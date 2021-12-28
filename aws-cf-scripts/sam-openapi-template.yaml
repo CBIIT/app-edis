@@ -8,7 +8,6 @@ Parameters:
     AllowedValues:
       - dev
       - test
-      - qa
       - stage
       - prod
   LambdaRoleArn:
@@ -20,18 +19,34 @@ Parameters:
   S3bucket:
     Description: S3 bucket for Lambda Auth and UserApi code
     Type: String
-  Issuer:
-    Description: Okta Authentication Server URL
-    Type: String
-  Audience:
-    Description: Okta Authentication audience
-    Type: String
-    Default: api://default
   UsersTableName:
     Description: Users table name
     Type: String
 
+Mappings:
+  OktaMap:
+    dev:
+      issuer: https://nih-nci.oktapreview.com/oauth2/aus13y2f31cSMywhw0h8
+      audience: api://default
+    test:
+      issuer: https://nih-nci.oktapreview.com/oauth2/aus13y2f31cSMywhw0h8
+      audience: api://default
+    stage:
+      issuer: https://iam.cancer.gov/oauth2/ausb533gx0oJEKboc297
+      audience: api://default
+    prod:
+      issuer: https://iam.cancer.gov/oauth2/ausb533gx0oJEKboc297
+      audience: api://default
+
 Resources:
+  AccessLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub business_apps/${Environment}/edisapi/accesslogs
+      RetentionInDays: 90
+      Tags:
+        - app: userinfoapi
+
   EraCommonsUserApi:
     Type: AWS::Serverless::Api
     Properties:
@@ -82,7 +97,31 @@ Resources:
           CachingEnabled: true
           CacheDataEncrypted: true
           CacheTtlInSeconds: 300
-          
+      AccessLogSetting:
+        DestinationArn: !GetAtt AccessLogGroup.Arn
+        Format: >
+          {
+          "requestTime": "$context.requestTime",
+          "requestId": "$context.requestId",
+          "httpMethod": "$context.httpMethod",
+          "path": "$context.path",
+          "resourcePath": "$context.resourcePath",
+          "status": $context.status,
+          "responseLatency": $context.responseLatency,
+          "xrayTraceId": "$context.xrayTraceId",
+          "integrationRequestId": "$context.integration.requestId",
+          "functionResponseStatus": "$context.integration.status",
+          "integrationLatency": "$context.integration.latency",
+          "integrationServiceStatus": "$context.integration.integrationStatus",
+          "authorizeResultStatus": "$context.authorize.status",
+          "authorizerServiceStatus": "$context.authorizer.status",
+          "authorizerLatency": "$context.authorizer.latency",
+          "authorizerRequestId": "$context.authorizer.requestId",
+          "ip": "$context.identity.sourceIp",
+          "userAgent": "$context.identity.userAgent",
+          "principalId": "$context.authorizer.principalId",
+          "user": "$context.identity.user"
+          }
       TracingEnabled: true
 
   EraCommonsUserApiLambdaFunction:
@@ -149,8 +188,8 @@ Resources:
       Environment:
         Variables:
           LOG_LEVEL: info
-          AUDIENCE: !Ref Audience
-          ISSUER: !Ref Issuer
+          AUDIENCE: !FindInMap [OktaMap, !Ref Environment, audience]
+          ISSUER: !FindInMap [OktaMap, !Ref Environment, issuer]
       Tags:
         app : userinfoapi
       Role: !Ref LambdaRoleArn

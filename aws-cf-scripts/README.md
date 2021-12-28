@@ -89,8 +89,6 @@ The table has **Primary Key** USER_ID
 - **LambdaRoleArn** – ARN of Lambda function that executed methods of API
 - **DynamoDbRoleArn** – ARN of role to permit API method to access DynamoDB table
 - **S3Bucket** – S3 bucket name that contains Lambda functions executable code
-- **Issuer** – Okta Authentication Server URL
-- **Audience** – Okta Authentication audience (api://default)
 - **UsersTableName** – DynamoDB NIH external users table name
 
 **Resources**

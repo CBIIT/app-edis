@@ -39,8 +39,6 @@ sam deploy -t $cf_dir/$sam_template  --profile ${profile} --stack-name ${tier}-u
                     LambdaRoleArn=$lambda_role_arn \
                     DynamoDbRoleArn=$dynamodb_role_arn \
                     S3bucket=$s3bucket \
-                    UsersTableName=extusers-$tier \
-                    Issuer=https://iam-lab2.cancer.gov/oauth2/auss3iezeLBILuhGa1d6 \
-                    Audience=api://default
+                    UsersTableName=extusers-$tier
 
 echo -e "\nServerless Cloud Formation Stack has been deployed"
