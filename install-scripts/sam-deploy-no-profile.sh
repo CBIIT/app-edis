@@ -1,13 +1,12 @@
 #!/bin/bash
 
-usage() { echo "Usage: $0 [-a <s3bucket>] [-t <tier>] -i <OKTA issuer> [-h]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-a <s3bucket>] [-t <tier>] [-h]" 1>&2; exit 1; }
 
 s3bucket="cf-templates-107424568411-us-east-1"
 tier="dev"
 cf_dir="../aws-cf-scripts"
-issuer="none"
 
-while getopts ha:t:p:i: opt
+while getopts ha:t:p: opt
 do
     case "${opt}" in
         h) usage
@@ -15,8 +14,6 @@ do
         a) s3bucket=${OPTARG}
           ;;
         t) tier=${OPTARG}
-          ;;
-        i) issuer=${OPTARG}
           ;;
         *) usage
           ;;
@@ -29,11 +26,6 @@ s3prefix="app-edis-${tier}"
 region="us-east-1"
 capabilities="CAPABILITY_IAM"
 
-if [ ${issuer} = "none" ]
-then
-  echo -e "Error - issuer must be defined"
-  exit 1
-fi
 
 # cloud team named dev tiers stacks not following the directions
 if [ ${tier} = "dev" ]
@@ -59,8 +51,6 @@ sam deploy -t $cf_dir/$sam_template --stack-name ${tier}-edis-app-serverless --s
                     LambdaRoleArn=$lambda_role_arn \
                     DynamoDbRoleArn=$dynamodb_role_arn \
                     S3bucket=$s3bucket \
-                    UsersTableName=extusers-$tier \
-                    Issuer=$issuer \
-                    Audience=api://default
+                    UsersTableName=extusers-$tier
 
 echo -e "\nServerless Cloud Formation Stack has been deployed"
