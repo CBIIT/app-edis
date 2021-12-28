@@ -42,10 +42,8 @@ Resources:
   AccessLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub business_apps/${Environment}/edisapi/accesslogs
+      LogGroupName: !Sub business_apps-${Environment}-edisapi-accesslogs
       RetentionInDays: 90
-      Tags:
-        - app: userinfoapi
 
   EraCommonsUserApi:
     Type: AWS::Serverless::Api
