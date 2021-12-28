@@ -25,7 +25,7 @@ module.exports.handler = async (event, context, callback) => {
             const credentials = Buffer.from(base64credentials, 'base64').toString('ascii');
             console.debug('Ascii credentials are ', credentials);
             const [username, password] = credentials.split(':');
-            console.debug('Basic Authentication', username, password);
+            console.debug('Basic Authentication for ', username);
             return callback(null, generatePolicy('user', 'Allow', event.methodArn));
         }
         else if (token.indexOf('Bearer') != -1) {
