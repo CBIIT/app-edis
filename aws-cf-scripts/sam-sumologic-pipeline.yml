@@ -1,0 +1,279 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+Description: Sumo Logic CloudWatch Log Ingestion Pipeline
+Parameters:
+  NCIPortfolio:
+    Type: String
+    Default: business_apps
+    AllowedValues:
+      - analysistools
+      - biobank
+      - business_apps
+      - cadsr
+      - ccr
+      - dceg
+      - edis
+      - evs
+      - fnlcr
+      - grants
+      - ocpl
+      - <Select Sub-Org>
+    Description: >-
+      Describe the name of the portfolio for which the application in scope
+      belongs to. Use only alphanumeric characters.
+  NCIEnvironment:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - test
+      - stage
+      - prod
+    Description: >-
+      Specify the tier this stack implementation pertains to. Use only
+      alphanumeric characters.
+  NCIApplication:
+    Type: String
+    Default: edisapi
+    Description: Provide the name of the application. Use only alphanumeric characters.
+  NCISource:
+    Type: String
+    Default: accesslogs
+    Description: >-
+      Describe the source of the log files (i.e. IIS Server, App, SQLServer,
+      DynamoDb). Use only alphanumeric characters.
+  CWLogRetentionDuration:
+    Type: Number
+    Default: 7
+    Description: >-
+      The number of days in which CloudWatch will retain logs after collected
+      from originating source.
+  EmailID:
+    Type: String
+    Default: test@gmail.com
+    Description: >-
+      Enter your email for receiving alerts.You will receive confirmation email
+      after the deployment is complete, confirm it to subscribe for alerts.
+  NumOfWorkers:
+    Type: Number
+    Default: 4
+    Description: >-
+      Enter the number of lambda function invocations for faster Dead Letter
+      Queue processing.
+  LogFormat:
+    Type: String
+    Default: Others
+    AllowedValues:
+      - VPC-RAW
+      - VPC-JSON
+      - Others
+    Description: Choose the Service
+  IncludeLogGroupInfo:
+    Type: String
+    Default: 'true'
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Description: Select true to get loggroup/logstream values in logs
+  LogStreamPrefix:
+    Type: String
+    Description: >-
+      (Optional) Enter comma separated list of logStream name prefixes to filter
+      by logStream. Please note this is seperate from a logGroup. This is used
+      to only send certain logStreams within a cloudwatch logGroup(s). LogGroups
+      still need to be subscribed to the created Lambda funciton, regardless of
+      what is input for this value.
+    Default: ''
+  SumoCWLogGroup:
+    Type: String
+    Description: EDIS API Access Log Group Name (get it from sam-openapi-template.yaml outputs)
+  SumoCWLambdaExecutionRoleArn:
+    Type: String
+    Description: IAM role ARN for SumoLogic ingesters Lambda functions
+
+Mappings:
+  SumoMap:
+    dev:
+      url: https://collectors.fed.sumologic.com/receiver/v1/http/ZaVnC4dhaV3QksNrlfyWH7Tko0Pi_WwIKpHiOffiCRw29H2lZPXIXp8l4Qi_BHjeuohVE6B5eiWmHlc4yw2om9T52PtAPxB36v5Dd5CuPD5igSe2VYvUjg==
+    test:
+      url: https://collectors.fed.sumologic.com/receiver/v1/http/ZaVnC4dhaV0GkHyh3iyoPaiRQ1Z3pCudz47_TYTYrWvVx5B_qLegKODkCQ8vudm2wPXyHWcfj2i_DUt990_WUCsTMetC-D3I0hTGmzve4TIFUXHbo5fr-A==
+    stage:
+      url: https://collectors.fed.sumologic.com/receiver/v1/http/ZaVnC4dhaV3OmaFRUKabjeo2PFLs2rflvLDdA2EtlEBkN00VdIYUQ3iEkHM2txj-Uc6IaB0YQvslN8IhjqGRMIiBTLK1Tf7dfhBGnJthUiNgk_HjyFK-bQ==
+    prod:
+      url: https://collectors.fed.sumologic.com/receiver/v1/http/ZaVnC4dhaV26Isttivzw3wkq04F8X8aoP5UCzYo_BScWxKiKD6iAVJhn7YxDv9XPsqY9MwEK3YfZuwxMPZpfMMrrpYqD3scur8kIlbkCJW67GapbaLgeow==
+
+Resources:
+  SumoCWLogSubsriptionFilter:
+    Type: 'AWS::Logs::SubscriptionFilter'
+    Properties:
+      LogGroupName: !Ref SumoCWLogGroup
+      DestinationArn: !GetAtt
+        - SumoCWLogsLambda
+        - Arn
+      FilterPattern: ''
+    DependsOn:
+      - SumoCWLambdaPermission
+      - SumoCWLogsLambda
+
+  SumoCWLambdaPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      FunctionName: !GetAtt
+        - SumoCWLogsLambda
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: !Join
+        - .
+        - - logs
+          - !Ref 'AWS::Region'
+          - amazonaws.com
+      SourceAccount: !Ref 'AWS::AccountId'
+
+  SumoCWDeadLetterQueue:
+    Type: 'AWS::SQS::Queue'
+    Properties:
+      QueueName: !Join
+        - '-'
+        - - SumoCWDeadLetterQueue
+          - !Ref NCIPortfolio
+          - !Ref NCIEnvironment
+          - !Ref NCIApplication
+          - !Ref NCISource
+
+  SumoCWLogsLambda:
+    Type: 'AWS::Serverless::Function'
+    DependsOn:
+      - SumoCWDeadLetterQueue
+    Properties:
+      FunctionName: !Join
+        - '-'
+        - - SumoCWLogsLambda
+          - !Ref NCIPortfolio
+          - !Ref NCIEnvironment
+          - !Ref NCIApplication
+          - !Ref NCISource
+      CodeUri: ../lambda-zip/cloudwatchlogs-with-dlq.zip
+      Role: !Ref SumoCWLambdaExecutionRoleArn
+      Timeout: 300
+      DeadLetterQueue:
+        Type: SQS
+        TargetArn: !GetAtt
+          - SumoCWDeadLetterQueue
+          - Arn
+      Handler: cloudwatchlogs_lambda.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Environment:
+        Variables:
+          SUMO_ENDPOINT: !FindInMap [SumoMap, !Ref NCIEnvironment, url]
+          LOG_FORMAT: !Ref LogFormat
+          INCLUDE_LOG_INFO: !Ref IncludeLogGroupInfo
+          LOG_STREAM_PREFIX: !Ref LogStreamPrefix
+
+  SumoCWEventsInvokeLambdaPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      FunctionName: !Ref SumoCWProcessDLQLambda
+      Action: 'lambda:InvokeFunction'
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt
+        - SumoCWProcessDLQScheduleRule
+        - Arn
+
+  SumoCWProcessDLQScheduleRule:
+    Type: 'AWS::Events::Rule'
+    Properties:
+      Description: Events rule for Cron
+      ScheduleExpression: rate(5 minutes)
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt
+            - SumoCWProcessDLQLambda
+            - Arn
+          Id: TargetFunctionV1
+
+  SumoCWProcessDLQLambda:
+    Type: 'AWS::Serverless::Function'
+    DependsOn:
+      - SumoCWDeadLetterQueue
+    Properties:
+      FunctionName: !Join
+        - '-'
+        - - SumoCWProcessDLQLambda
+          - !Ref NCIPortfolio
+          - !Ref NCIEnvironment
+          - !Ref NCIApplication
+          - !Ref NCISource
+      CodeUri: ../lambda-zip/cloudwatchlogs-with-dlq.zip
+      Role: !Ref SumoCWLambdaExecutionRoleArn
+      Timeout: 300
+      Handler: DLQProcessor.handler
+      DeadLetterQueue:
+        Type: SQS
+        TargetArn: !GetAtt
+          - SumoCWDeadLetterQueue
+          - Arn
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Environment:
+        Variables:
+          SUMO_ENDPOINT: !FindInMap [SumoMap, !Ref NCIEnvironment, url]
+          TASK_QUEUE_URL: !Join
+            - ''
+            - - 'https://sqs.'
+              - !Ref 'AWS::Region'
+              - .amazonaws.com/
+              - !Ref 'AWS::AccountId'
+              - /
+              - !GetAtt
+                - SumoCWDeadLetterQueue
+                - QueueName
+          NUM_OF_WORKERS: !Ref NumOfWorkers
+          LOG_FORMAT: !Ref LogFormat
+          INCLUDE_LOG_INFO: !Ref IncludeLogGroupInfo
+          LOG_STREAM_PREFIX: !Ref LogStreamPrefix
+
+  SumoCWEmailSNSTopic:
+    Type: 'AWS::SNS::Topic'
+    Properties:
+      Subscription:
+        - Endpoint: !Ref EmailID
+          Protocol: email
+
+  SumoCWSpilloverAlarm:
+    Type: 'AWS::CloudWatch::Alarm'
+    Properties:
+      AlarmActions:
+        - !Ref SumoCWEmailSNSTopic
+      AlarmDescription: >-
+        Notify via email if number of messages in DeadLetterQueue exceeds
+        threshold
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: QueueName
+          Value: !GetAtt
+            - SumoCWDeadLetterQueue
+            - QueueName
+      EvaluationPeriods: '1'
+      MetricName: ApproximateNumberOfMessagesVisible
+      Namespace: AWS/SQS
+      Period: '3600'
+      Statistic: Sum
+      Threshold: '100000'
+    DependsOn:
+      - SumoCWEmailSNSTopic
+
+Outputs:
+  SumoCWLogsLambdaArn:
+    Description: The ARN of the sumologic cloudwatch logs lambda
+    Value: !GetAtt
+      - SumoCWLogsLambda
+      - Arn
+    Export:
+      Name: !Join
+        - '-'
+        - - SumoCWLogsLambdaArn
+          - !Ref NCIPortfolio
+          - !Ref NCIEnvironment
+          - !Ref NCIApplication
+          - !Ref NCISource

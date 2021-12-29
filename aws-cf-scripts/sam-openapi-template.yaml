@@ -249,3 +249,7 @@ Outputs:
   ApiHostName:
     Description: Host name with root folder to create URL for your API.
     Value: !Sub ${EraCommonsUserApi}.execute-api.${AWS::Region}.amazonaws.com
+
+  ApiAccessLogGroup:
+    Description: The name of created Log Group for API Gateway Access logs
+    Value: !Ref AccessLogGroup

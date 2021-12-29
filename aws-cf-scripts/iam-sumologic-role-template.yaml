@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Creates IAM role for SumoLogic ingesters Lambda functions
+
+
+Resources:
+  SumoCWLambdaExecutionRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: SQSCreateLogsRolePolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'sqs:DeleteMessage'
+                  - 'sqs:GetQueueUrl'
+                  - 'sqs:ListQueues'
+                  - 'sqs:ChangeMessageVisibility'
+                  - 'sqs:SendMessageBatch'
+                  - 'sqs:ReceiveMessage'
+                  - 'sqs:SendMessage'
+                  - 'sqs:GetQueueAttributes'
+                  - 'sqs:ListQueueTags'
+                  - 'sqs:ListDeadLetterSourceQueues'
+                  - 'sqs:DeleteMessageBatch'
+                  - 'sqs:PurgeQueue'
+                  - 'sqs:DeleteQueue'
+                  - 'sqs:CreateQueue'
+                  - 'sqs:ChangeMessageVisibilityBatch'
+                  - 'sqs:SetQueueAttributes'
+                Resource: !Sub arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:*
+        - PolicyName: CloudWatchCreateLogsRolePolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                  - 'logs:DescribeLogStreams'
+                Resource: !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*
+        - PolicyName: InvokeLambdaRolePolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'lambda:InvokeFunction'
+                Resource: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:SumoCWProcessDLQLambda*
+
+Outputs:
+  SumoCWLambdaExecutionRoleName:
+    Description: Name of SumoCWLambdaExecutionRole.
+    Value:
+      Ref: SumoCWLambdaExecutionRole
+  SumoCWLambdaExecutionRoleArn:
+    Description: ARN of SumoCWLambdaExecutionRole.
+    Value:
+      Fn::GetAtt:
+        - SumoCWLambdaExecutionRole
+        - Arn
