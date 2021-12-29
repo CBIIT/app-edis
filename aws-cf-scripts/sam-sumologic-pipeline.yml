@@ -263,17 +263,3 @@ Resources:
     DependsOn:
       - SumoCWEmailSNSTopic
 
-Outputs:
-  SumoCWLogsLambdaArn:
-    Description: The ARN of the sumologic cloudwatch logs lambda
-    Value: !GetAtt
-      - SumoCWLogsLambda
-      - Arn
-    Export:
-      Name: !Join
-        - '-'
-        - - SumoCWLogsLambdaArn
-          - !Ref NCIPortfolio
-          - !Ref NCIEnvironment
-          - !Ref NCIApplication
-          - !Ref NCISource
