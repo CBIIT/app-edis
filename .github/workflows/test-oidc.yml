@@ -29,8 +29,7 @@ jobs:
       - name: Setup AWS configuration
         uses: aws-actions/configure-aws-credentials@master
         with:
-          #role-to-assume: ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
-          role-to-assume: arn:aws:iam::716152600666:role/github-oidc-provider-Role-DR575OZP4196
+          role-to-assume: ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
           role-session-name: TestSessionWithOIDC
           aws-region: us-east-1
           
