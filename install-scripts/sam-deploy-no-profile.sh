@@ -33,7 +33,7 @@ then
   lambda_role_stack="dev-edis-eracommons-iam-lamba-role"
   apigtwy_role_stack="iam-apigateway-roles"
 else
-  lambda_role_stack="${tier}-edis-eracommons-iam-lamba-role"
+  lambda_role_stack="${tier}-edis-eracommons-iam-lambda-role"
   apigtwy_role_stack="${tier}-edis-iam-apigtwy-role"
 fi
 
