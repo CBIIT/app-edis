@@ -27,6 +27,7 @@ Parameters:
     AllowedValues:
       - dev
       - test
+      - qa
       - stage
       - prod
     Description: >-
@@ -96,6 +97,8 @@ Mappings:
     dev:
       url: https://collectors.fed.sumologic.com/receiver/v1/http/ZaVnC4dhaV3QksNrlfyWH7Tko0Pi_WwIKpHiOffiCRw29H2lZPXIXp8l4Qi_BHjeuohVE6B5eiWmHlc4yw2om9T52PtAPxB36v5Dd5CuPD5igSe2VYvUjg==
     test:
+      url: https://collectors.fed.sumologic.com/receiver/v1/http/ZaVnC4dhaV0GkHyh3iyoPaiRQ1Z3pCudz47_TYTYrWvVx5B_qLegKODkCQ8vudm2wPXyHWcfj2i_DUt990_WUCsTMetC-D3I0hTGmzve4TIFUXHbo5fr-A==
+    qa:
       url: https://collectors.fed.sumologic.com/receiver/v1/http/ZaVnC4dhaV0GkHyh3iyoPaiRQ1Z3pCudz47_TYTYrWvVx5B_qLegKODkCQ8vudm2wPXyHWcfj2i_DUt990_WUCsTMetC-D3I0hTGmzve4TIFUXHbo5fr-A==
     stage:
       url: https://collectors.fed.sumologic.com/receiver/v1/http/ZaVnC4dhaV3OmaFRUKabjeo2PFLs2rflvLDdA2EtlEBkN00VdIYUQ3iEkHM2txj-Uc6IaB0YQvslN8IhjqGRMIiBTLK1Tf7dfhBGnJthUiNgk_HjyFK-bQ==
