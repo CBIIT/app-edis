@@ -1,0 +1,189 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless Express User Info REST APIs powered by API Gateway and Lambda
+Parameters:
+  Environment:
+    Description: Environment tier
+    Type: String
+    AllowedValues:
+      - dev
+      - test
+      - qa
+      - stage
+      - prod
+  LambdaRoleArn:
+    Description: ARN of lambda function role user api web service
+    Type: String
+  VpcSubnetId1:
+    Description: First VPC subnet ID
+    Type: String
+  VpcSubnetId2:
+    Description: Second VPC subnet ID
+    Type: String
+  SgId:
+    Description: Lambda Security Group
+    Type: String
+  Secret:
+    Description: Secrets Manager secret with ned connection credentials
+    Type: String
+
+Resources:
+#  AccessLogGroup:
+#    Type: AWS::Logs::LogGroup
+#    Properties:
+#      LogGroupName: !Sub business_apps-${Environment}-ned-api-accesslogs
+#      RetentionInDays: 90
+
+  NedApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref Environment
+      Description: !Sub ${Environment} - NED Web Services
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: ../aws-cf-scripts/swagger-ned-routes.yaml
+      Auth:
+        ResourcePolicy:
+          CustomStatements:
+            -
+              Effect: "Allow"
+              Principal: "*"
+              Action: "execute-api:Invoke"
+              Resource:
+                - "execute-api:/*/*/*"
+            -
+              Effect: "Deny"
+              Principal: "*"
+              Action: "execute-api:Invoke"
+              Resource:
+                - "execute-api:/*/*/*"
+              Condition:
+                NotIpAddress:
+                  aws:SourceIp:
+                    - 128.231.0.0/16
+                    - 156.40.216.3/32
+                    - 156.40.216.1/32
+                    - 52.115.248.9
+                    - 149.96.193.8/29
+      EndpointConfiguration:
+        Type: REGIONAL
+      MethodSettings:
+        - ResourcePath: "/*"
+          HttpMethod: "*"
+          MetricsEnabled: true
+          DataTraceEnabled: true
+          LoggingLevel: INFO
+      AccessLogSetting:
+#        DestinationArn: !GetAtt AccessLogGroup.Arn
+        DestinationArn: !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:business_apps-${Environment}-ned-api-accesslogs
+        Format: >
+          {
+          "requestTime": "$context.requestTime",
+          "requestId": "$context.requestId",
+          "httpMethod": "$context.httpMethod",
+          "path": "$context.path",
+          "resourcePath": "$context.resourcePath",
+          "status": $context.status,
+          "responseLatency": $context.responseLatency,
+          "xrayTraceId": "$context.xrayTraceId",
+          "integrationRequestId": "$context.integration.requestId",
+          "functionResponseStatus": "$context.integration.status",
+          "integrationLatency": "$context.integration.latency",
+          "integrationServiceStatus": "$context.integration.integrationStatus",
+          "authorizeResultStatus": "$context.authorize.status",
+          "authorizerServiceStatus": "$context.authorizer.status",
+          "authorizerLatency": "$context.authorizer.latency",
+          "authorizerRequestId": "$context.authorizer.requestId",
+          "ip": "$context.identity.sourceIp",
+          "userAgent": "$context.identity.userAgent",
+          "principalId": "$context.authorizer.principalId",
+          "user": "$context.identity.user"
+          }
+      TracingEnabled: true
+
+  NedApiLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: >-
+        Lambda function contains NED REST APIs implementation.
+      FunctionName: !Sub lambda-edis-ned-api-${Environment}
+      CodeUri: ../lambda-zip/lambda-ned-api/lambda-ned-api.zip
+      Handler: src/lambda.handler
+      Runtime: nodejs12.x
+      MemorySize: 2048
+      Timeout: 30
+      Tracing: Active
+      EventInvokeConfig:
+        MaximumRetryAttempts: 0
+      Environment:
+        Variables:
+          LOG_LEVEL: info
+          SECRET: !Ref Secret
+      Tags:
+          app : userinfoapi
+      Role: !Ref LambdaRoleArn
+      VpcConfig:
+        SubnetIds:
+          - !Ref VpcSubnetId1
+          - !Ref VpcSubnetId2
+        SecurityGroupIds:
+          - !Ref SgId
+      Events:
+        NedByName:
+          Type: Api
+          Properties:
+            RestApiId: !Ref NedApi
+            Path: /nedapi/ByName
+            Method: POST
+        NedByNIHid:
+          Type: Api
+          Properties:
+            RestApiId: !Ref NedApi
+            Path: /nedapi/ByNIHid
+            Method: POST
+        NedByIDAccount:
+          Type: Api
+          Properties:
+            RestApiId: !Ref NedApi
+            Path: /nedapi/ByIDAccount
+            Method: POST
+        NedByIc:
+          Type: Api
+          Properties:
+            RestApiId: !Ref NedApi
+            Path: /nedapi/ByIc
+            Method: POST
+        NedChangesByIc:
+          Type: Api
+          Properties:
+            RestApiId: !Ref NedApi
+            Path: /nedapi/ChangesByIc
+            Method: POST
+
+Outputs:
+  LambdaFunctionConsoleUrl:
+    Description: Console URL for the Lambda Function.
+    Value: !Sub https://${AWS::Region}.console.aws.amazon.com/lambda/home?region=${AWS::Region}#/functions/${NedApiLambdaFunction}
+
+  ApiGatewayApiConsoleUrl:
+    Description: Console URL for the API Gateway API's Stage.
+    Value: !Sub https://${AWS::Region}.console.aws.amazon.com/apigateway/home?region=${AWS::Region}#/apis/${NedApi}/stages/${Environment}
+
+  ApiUrl:
+    Description: Invoke URL for your API. Clicking this link will perform a GET request
+      on the root resource of your API.
+    Value: !Sub https://${NedApi}.execute-api.${AWS::Region}.amazonaws.com/${Environment}/
+
+  LambdaFunctionName:
+    Description: Name of the Serverless Express Lambda Function
+    Value: !Ref NedApiLambdaFunction
+
+  ApiHostName:
+    Description: Host name with root folder to create URL for your API.
+    Value: !Sub ${NedApi}.execute-api.${AWS::Region}.amazonaws.com
+
+#  ApiAccessLogGroup:
+#    Description: The name of created Log Group for API Gateway Access logs
+#    Value: !Ref AccessLogGroup
