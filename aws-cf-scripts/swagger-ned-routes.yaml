@@ -1,0 +1,406 @@
+openapi: 3.0.0
+info:
+  description: Enterprise Data & Integration Services Web Services - **NED RESR Web Service**
+  version: "0.1.0"
+  title: NED REST Web Service API
+  # put the contact info for your development or API team
+  contact:
+    email: NCICBIITBizAppsSupportLowTier@mail.nih.gov
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+x-amazon-apigateway-request-validators:
+  all:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params:
+    validateRequestBody: true
+    validateRequestParameters: true
+  body:
+    validateRequestBody: true
+    validateRequestParameters: false
+
+# tags are used for organizing operations
+tags:
+  - name: clients
+    description: Operations available to clients - service to service
+
+paths:
+  /nedapi/ByName:
+    post:
+      tags:
+        - clients
+      summary: Get NED Person records by the given first and last name
+      operationId: getNedPersonByName
+      description: |
+        Get NED Person records that satisfied by passed first name and last name criteria
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                FirstName:
+                  type: string
+                LastName:
+                  type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/nedresponse'
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${NedApiLambdaFunction.Arn}/invocations
+        httpMethod: POST
+        timeoutInMillis: 29000
+        type: aws_proxy
+
+  /nedapi/ByNIHid:
+    post:
+      tags:
+        - clients
+      summary: NED Person records by the given NIH id
+      operationId: getNedPersonByNIHid
+      description: |
+        Get NED Person records that satisfied NIH ID criteria
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                nihid:
+                  type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/nedresponse'
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${NedApiLambdaFunction.Arn}/invocations
+        httpMethod: POST
+        timeoutInMillis: 29000
+        type: aws_proxy
+
+  /nedapi/ByIDAccount:
+    post:
+      tags:
+        - clients
+      summary: NED Person records by the given NIH id
+      operationId: getNedPersonByIDAccount
+      description: |
+        Get NED Person records that satisfied NIH ID criteria
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                Identifier:
+                  type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/nedresponse'
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${NedApiLambdaFunction.Arn}/invocations
+        httpMethod: POST
+        timeoutInMillis: 29000
+        type: aws_proxy
+
+  /nedapi/ByIc:
+    post:
+      tags:
+        - clients
+      summary: NED Person NIH IDs by the given IC
+      operationId: getNedPersonByIc
+      description: |
+        Get NED Person NIH IDs that satisfy given IC criteria
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                IcoreSite:
+                  type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/NedByIcResponse'
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${NedApiLambdaFunction.Arn}/invocations
+        httpMethod: POST
+        timeoutInMillis: 29000
+        type: aws_proxy
+
+  /nedapi/ChangesByIc:
+    post:
+      tags:
+        - clients
+      summary: NED Person NIH IDs by the given IC
+      operationId: getChangesByIc
+      description: |
+        Get NED Person NIH IDs that satisfy given IC criteria
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                IcoreSite:
+                  type: string
+                From_Date:
+                  type: string
+                From_Time:
+                  type: string
+                To_Date:
+                  type: string
+                To_Time:
+                  type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/ChangesByIcResponse'
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${NedApiLambdaFunction.Arn}/invocations
+        httpMethod: POST
+        timeoutInMillis: 29000
+        type: aws_proxy
+
+components:
+  responses: 
+    nedresponse:
+      description: Response with a list of NED Person objects
+      content:
+        application/json:
+          schema:
+            type: object
+            xml:
+              wrapped: true
+              name: nedperson
+            properties:
+              NumberOfRecords:
+                type: integer
+                description: number of NED Person objects in response
+              NEDPerson:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NEDPerson'
+
+    NedByIcResponse:
+      description: Response with a list of NED IDs
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              NumberOfRecords:
+                type: integer
+                description: number of NED Person objects in response
+              NEDPerson:
+                type: array
+                items:
+                  properties:
+                    Uniqueidentifier:
+                      type: string
+
+    ChangesByIcResponse:
+      description: Response with a list of NED Changes records
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              NUMBER_OF_RECORDS:
+                type: integer
+                description: number of NED Changes records in response
+              NED_CHANGES_RECORD:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NEDChangeRecord'
+
+  schemas:
+    NEDPerson:
+      type: object
+      description: NED Person object - a collection
+      properties:
+        PhoneNumbers:
+          type: object
+          properties:
+            PhoneNumber:
+              type: object
+              properties:
+                "$value":
+                  type: string
+                attributes:
+                  type: object
+                  properties:
+                    ns0:PhoneNumberType:
+                      type: string
+        NIHSSO:
+          type: object
+          properties:
+            SSOUsername:
+              type: string
+            SSODomain:
+              type: string
+        Description:
+          type: string
+        Title:
+          type: string
+        NIHADACCTREQ:
+          type: string
+        NIHADMAILBOXREQ:
+          type: string
+        Uniqueidentifier:
+          type: string
+        administrativeContactsInformation:
+          type: object
+          properties:
+            administrativeContact:
+              type: array
+              items:
+                properties:
+                  HHSID:
+                    type: string
+                  attributes:
+                    type: object
+                    properties:
+                      ns0:administrativeContactType:
+                        type: string
+        EmployeeType:
+          type: string
+        NIHIPD:
+          type: string
+        Names:
+          type: object
+          properties:
+            Name:
+              type: array
+              items:
+                properties:
+                  FormattedName:
+                    type: string
+                  NoMiddleName:
+                    type: string
+                  GivenName:
+                    type: string
+                  attributes:
+                    type: object
+                    properties:
+                      ns0:NameType:
+                        type: string
+                  MixCaseSurname:
+                    type: string
+                  Surname:
+                    type: string
+        Addresses:
+          type: object
+          properties:
+            Address:
+              type: array
+              items:
+                properties:
+                  Site:
+                    type: string
+                  MailStop:
+                    type: string
+                  Locality:
+                    type: string
+                  BuildingName:
+                    type: string
+                  State:
+                    type: string
+                  FormattedAddress:
+                    type: string
+                  PostalCode:
+                    type: string
+                  Street:
+                    type: string
+                  Country:
+                    type: string
+                  attributes:
+                    type: object
+                    properties:
+                      ns0:AddressType:
+                        type: string
+                  RoomNumber:
+                    type: string
+        NIHVPNAUTH:
+          type: string
+        SubEmployeeType:
+          type: string
+        TrackingData:
+          type: object
+          properties:
+            CreatorsName:
+              type: string
+            DirectoryEntryEffectiveDate:
+              type: string
+            CreateTimeStamp:
+              type: string
+            ModifyTimeStamp:
+              type: string
+        NIHBadge:
+          type: object
+          properties:
+            BadgeIssueReason:
+              type: string
+            BadgeRequestType:
+              type: string
+            BadgeStatus:
+              type: string
+            BadgeRequestDate:
+              type: string
+            BadgeExpirationDate:
+              type: string
+            BadgeRequestExpirationDate:
+              type: string
+            BadgeType:
+              type: string
+        EmailAddresses:
+          type: object
+          properties:
+            EmailAddress:
+              type: array
+              items:
+                properties:
+                  "$value":
+                    type: string
+                  attributes:
+                    type: object
+                    properties:
+                      ns0:EmailAddressType:
+                        type: string
+        OrganizationInformation:
+          type: object
+          properties:
+            NIHOUAcronym:
+              type: string
+            NIHOrgPath:
+              type: string
+            NIHSAC:
+              type: string
+            NIHOrgAcronym:
+              type: string
+            NIHOrgName:
+              type: string
+            NIHOUName:
+              type: string
+        NIHDirEntryNoPrint:
+          type: string
+
+    NEDChangeRecord:
+      type: object
+      properties:
+        NIHSITE:
+          type: string
+        ACTION_DATE:
+          type: string
+        ACTION:
+          type: string
+        UNIQUEIDENTIFIER:
+          type: string
+        ACTION_TIME:
+          type: string
+        SN:
+          type: string
+        NIHORGACRONYM:
+          type: string
+        GIVENNAME:
+          type: string
+  
