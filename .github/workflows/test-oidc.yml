@@ -6,6 +6,11 @@ name: Test OIDC provider
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs: 
+          tier:
+            description: 'Environment tier'
+            required: true
+            default: dev
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -14,7 +19,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    environment: sandbox
+    environment: ${{ github.event.inputs.tier }}
     
     permissions: 
       packages: write
