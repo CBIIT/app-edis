@@ -47,15 +47,15 @@ jobs:
           echo Lambda Build Number - ${{ github.event.inputs.lambda_build_number }}
           echo S3 Bucket - ${{ github.event.inputs.s3bucket }}
       
-      - name: Download built Lambda functions
-        uses: dawidd6/action-download-artifact@v2
-        with: 
-          workflow: lambda-build.yml
-          workflow_conclusion: success
-          run_number: ${{ github.event.inputs.lambda_build_number }}
-          name: lambda-zip
-          path: lambda-zip
-      
+#      - name: Download built Lambda functions
+#        uses: dawidd6/action-download-artifact@v2
+#        with: 
+#          workflow: lambda-build.yml
+#          workflow_conclusion: success
+#          run_number: ${{ github.event.inputs.lambda_build_number }}
+#          name: lambda-zip
+#          path: lambda-zip
+#      
       - name: Check the existence of artifact
         run: |
           ls -la lambda-zip/lambda-userapi
