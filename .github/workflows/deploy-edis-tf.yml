@@ -7,14 +7,14 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
-      env:
+      envt:
         description: 'Environment'
         required: true
         default: dev
       tier:
         description: 'Deployment tier'
         required: true
-        default: dev
+        default: dev2
       lambda_build_number:
         description: "Number of the build workflow run"
         required: true
@@ -30,7 +30,8 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     
-    environment: ${{ github.event.inputs.env }}
+    environment: ${{ github.event.inputs.envt }}
+
     env:
       working-directory: tf/
 
@@ -43,9 +44,11 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Workflow Parameters
         run: |
+          echo Environment - ${{ github.event.inputs.envt }}
           echo Deployment Tier - ${{ github.event.inputs.tier }}
           echo Lambda Build Number - ${{ github.event.inputs.lambda_build_number }}
           echo S3 Bucket - ${{ github.event.inputs.s3bucket }}
+          echo Secret - ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
       
 #      - name: Download built Lambda functions
 #        uses: dawidd6/action-download-artifact@v2
@@ -64,7 +67,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@master
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
-          role-session-name: SessionWithOIDC
+          role-session-name: TestSessionWithOIDC
           aws-region: us-east-1
 
       - name: Test AWS Configuration
