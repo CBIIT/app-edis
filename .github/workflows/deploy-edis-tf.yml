@@ -32,6 +32,11 @@ jobs:
     
     environment: ${{ github.event.inputs.envt }}
 
+    permissions:
+      packages: write
+      id-token: write
+      contents: write
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -47,15 +52,6 @@ jobs:
           echo S3 Bucket - ${{ github.event.inputs.s3bucket }}
           echo Secret - ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
       
-#      - name: Download built Lambda functions
-#        uses: dawidd6/action-download-artifact@v2
-#        with: 
-#          workflow: lambda-build.yml
-#          workflow_conclusion: success
-#          run_number: ${{ github.event.inputs.lambda_build_number }}
-#          name: lambda-zip
-#          path: lambda-zip
-#      
       - name: Check the existence of artifact
         run: |
           ls -la lambda-zip/lambda-userapi
