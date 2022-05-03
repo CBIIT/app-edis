@@ -32,9 +32,6 @@ jobs:
     
     environment: ${{ github.event.inputs.envt }}
 
-    env:
-      working-directory: tf/
-
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -83,15 +80,15 @@ jobs:
       - name: Init Terraform
         id: init
         run: terraform init -backend-config="bucket=${{ github.event.inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/api-edis-${{ github.event.inputs.tier }}" -backend-config="region=us-east-1"
-        working-directory: ${{ env.working-directory }}
+        working-directory: tf/
 
       - name: Validate Terraform
         id: validate
         run: terraform validate
-        working-directory: ${{ env.working-directory }}
+        working-directory: tf/
 
       - name: Planning Terraform
         id: plan
         run: terraform plan -var 'env=${{ github.event.inputs.tier }}'
-        working-directory: ${{ env.working-directory }}
+        working-directory: tf/
 
