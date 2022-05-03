@@ -1,0 +1,104 @@
+# This is a basic workflow to help you get started with Actions
+
+name: EDIS Deployment Terraform
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'Environment'
+        required: true
+        default: dev
+      tier:
+        description: 'Deployment tier'
+        required: true
+        default: dev
+      lambda_build_number:
+        description: "Number of the build workflow run"
+        required: true
+      s3bucket:
+        description: 'S3 bucket to use for deployment'
+        required: true
+        default: cf-templates-woyzwinjenjf-us-east-1
+
+
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    
+    environment: ${{ github.event.inputs.env }}
+    env:
+      working-directory: tf/
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Repository Checkout
+      - uses: actions/checkout@v3
+
+      # Runs a set of commands using the runners shell
+      - name: Workflow Parameters
+        run: |
+          echo Deployment Tier - ${{ github.event.inputs.tier }}
+          echo Lambda Build Number - ${{ github.event.inputs.lambda_build_number }}
+          echo S3 Bucket - ${{ github.event.inputs.s3bucket }}
+      
+      - name: Download built Lambda functions
+        uses: dawidd6/action-download-artifact@v2
+        with: 
+          workflow: lambda-build.yml
+          workflow_conclusion: success
+          run_number: ${{ github.event.inputs.lambda_build_number }}
+          name: lambda-zip
+          path: lambda-zip
+      
+      - name: Check the existence of artifact
+        run: |
+          ls -la lambda-zip/lambda-userapi
+
+      - name: Setup AWS configuration
+        uses: aws-actions/configure-aws-credentials@master
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
+          role-session-name: SessionWithOIDC
+          aws-region: us-east-1
+
+      - name: Test AWS Configuration
+        run: |
+          aws cloudformation describe-stacks | grep StackName
+      
+      - name: Install Terraform
+        id: install
+        uses: hashicorp/setup-terraform@v2
+        with: 
+          terraform_wrapper: false
+
+      - name: Init Terraform
+        id: init
+        run: terraform init -backend-config="bucket=${{ github.event.inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/api-edis-${{ github.event.inputs.tier }}" -backend-config="region=us-east-1"
+        working-directory: ${{ env.working-directory }}
+
+      - name: Validate Terraform
+        id: validate
+        run: terraform validate
+        working-directory: ${{ env.working-directory }}
+
+      - name: Planning Terraform
+        id: plan
+        run: terraform plan -var 'env=${{ github.event.inputs.tier }}'
+        working-directory: ${{ env.working-directory }}
+
+#      - name: Apply Terraform
+#        id: apply
+#        run: terraform apply -auto-approve -input=false -lock=false
+#        working-directory: ${{ env.working-directory }}
+
+#      - name: EDIS sam deployment
+#        if: success()
+#        working-directory: install-scripts
+#        run: |
+#          ./sam-deploy-no-profile.sh -a ${{ github.event.inputs.s3bucket }} -t ${{ github.event.inputs.tier }}
