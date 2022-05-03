@@ -38,7 +38,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Repository Checkout
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
 
       # Runs a set of commands using the runners shell
       - name: Workflow Parameters
@@ -92,13 +92,3 @@ jobs:
         run: terraform plan -var 'env=${{ github.event.inputs.tier }}'
         working-directory: ${{ env.working-directory }}
 
-#      - name: Apply Terraform
-#        id: apply
-#        run: terraform apply -auto-approve -input=false -lock=false
-#        working-directory: ${{ env.working-directory }}
-
-#      - name: EDIS sam deployment
-#        if: success()
-#        working-directory: install-scripts
-#        run: |
-#          ./sam-deploy-no-profile.sh -a ${{ github.event.inputs.s3bucket }} -t ${{ github.event.inputs.tier }}
