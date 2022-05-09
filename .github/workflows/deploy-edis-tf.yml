@@ -86,6 +86,6 @@ jobs:
 
       - name: Terraform Deployment
         id: apply
-        run: terraform apply -auto-approve -input=false -lock=false -var 'env=${{ github.event.inputs.tier }}'
+        run: terraform apply -auto-approve -input=false -lock=false -var 'env=${{ github.event.inputs.tier }}' -var 'policy-boundary-arn=arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:policy/PermissionBoundary_PowerUser'
         working-directory: tf/
 

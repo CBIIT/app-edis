@@ -21,7 +21,7 @@ resource "aws_iam_role" "iam_for_lambda" {
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
   ]
   path = "/"
-  permissions_boundary = "arn:aws:iam::aws:policy/${var.must-be-policy-name}"
+  permissions_boundary = var.must-be-policy-arn
 }
 
 resource "aws_iam_role" "iam_for_api_gateway" {
@@ -43,7 +43,7 @@ resource "aws_iam_role" "iam_for_api_gateway" {
     "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
   ]
   path = "/"
-  permissions_boundary = "arn:aws:iam::aws:policy/${var.must-be-policy-name}"
+  permissions_boundary = var.must-be-policy-arn
 }
 
 resource "aws_iam_role" "iam_access_ddb" {
@@ -82,6 +82,6 @@ resource "aws_iam_role" "iam_access_ddb" {
     "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
   ]
   path = "/"
-  permissions_boundary = "arn:aws:iam::aws:policy/${var.must-be-policy-name}"
+  permissions_boundary = var.must-be-policy-arn
 }
 

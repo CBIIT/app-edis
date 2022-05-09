@@ -4,10 +4,10 @@ variable "role-prefix" {
   default = "power-user"
 }
 
-variable "role-policy-name" {
+variable "policy-boundary-arn" {
   type = string
   description = "Must be policy to include in any IAM role"
-  default = "PermissionBoundary_PowerUser"
+  default = ""
 }
 
 variable "env" {
