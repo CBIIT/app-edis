@@ -15,9 +15,6 @@ on:
         description: 'Deployment tier'
         required: true
         default: dev2
-      lambda_build_number:
-        description: "Number of the build workflow run"
-        required: true
       s3bucket:
         description: 'S3 bucket to use for deployment'
         required: true
@@ -48,7 +45,6 @@ jobs:
         run: |
           echo Environment - ${{ github.event.inputs.envt }}
           echo Deployment Tier - ${{ github.event.inputs.tier }}
-          echo Lambda Build Number - ${{ github.event.inputs.lambda_build_number }}
           echo S3 Bucket - ${{ github.event.inputs.s3bucket }}
           echo Secret - ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
       
