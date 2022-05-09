@@ -54,7 +54,7 @@ resource "aws_lambda_function" "era_commons_lambda" {
 }
 
 resource "aws_lambda_function_event_invoke_config" "ers_commons_lambda_config" {
-  function_name = "aws_lambda_function.era_commons_lambda.function_name"
+  function_name = aws_lambda_function.era_commons_lambda.function_name
   maximum_retry_attempts = 0
 }
 
@@ -84,7 +84,7 @@ resource "aws_lambda_function" "auth_lambda" {
 }
 
 resource "aws_lambda_function_event_invoke_config" "auth_lambda_config" {
-  function_name = "aws_lambda_function.auth_lambda.function_name"
+  function_name = aws_lambda_function.auth_lambda.function_name
   maximum_retry_attempts = 0
 }
 
