@@ -7,6 +7,6 @@ module "lambda" {
   source = "./modules/lambda"
   env = var.env
   must-be-role-prefix = var.role-prefix
-  must-be-policy-name = var.role-policy-name
+  must-be-policy-arn = var.policy-boundary-arn
   ddb-table-arn = module.ddb-extusers.ddb-extusers-arn
 }
