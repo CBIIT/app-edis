@@ -84,3 +84,8 @@ jobs:
         run: terraform plan -var 'env=${{ github.event.inputs.tier }}'
         working-directory: tf/
 
+      - name: Terraform Deployment
+        id: apply
+        run: terraform apply -auto-approve -input=false -lock=false -var 'env=${{ github.event.inputs.tier }}'
+        working-directory: tf/
+
