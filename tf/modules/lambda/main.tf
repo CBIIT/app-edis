@@ -5,6 +5,10 @@ locals {
       issuer = "https://nih-nci.oktapreview.com/oauth2/aus13y2f31cSMywhw0h8"
       audience = "api://default"
     }
+    dev2 = {
+      issuer = "https://nih-nci.oktapreview.com/oauth2/aus13y2f31cSMywhw0h8"
+      audience = "api://default"
+    }
     test = {
       issuer = "https://nih-nci.oktapreview.com/oauth2/aus13y2f31cSMywhw0h8"
       audience = "api://default"
