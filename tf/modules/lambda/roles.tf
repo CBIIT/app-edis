@@ -22,6 +22,9 @@ resource "aws_iam_role" "iam_for_lambda" {
   ]
   path = "/"
   permissions_boundary = var.must-be-policy-arn
+  tags = {
+    app = "userinfoapi"
+  }
 }
 
 resource "aws_iam_role" "iam_for_api_gateway" {
@@ -44,6 +47,32 @@ resource "aws_iam_role" "iam_for_api_gateway" {
   ]
   path = "/"
   permissions_boundary = var.must-be-policy-arn
+  tags = {
+    app = "userinfoapi"
+  }
+}
+
+resource "aws_iam_policy" "iam_access_ddb" {
+  name = "ddb-extusers-read-${var.env}"
+  path = "/"
+  description = "Access to given ddb table"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = ["dynamodb:*"]
+        Effect = "Allow"
+        Sid    = "ddbPermissions"
+        Resource = [
+          var.ddb-table-arn,
+          "${var.ddb-table-arn}/index/*"
+        ]
+      }
+    ]
+  })
+  tags = {
+    app = "userinfoapi"
+  }
 }
 
 resource "aws_iam_role" "iam_access_ddb" {
@@ -61,27 +90,31 @@ resource "aws_iam_role" "iam_access_ddb" {
       }
     ]
   })
-  inline_policy {
-    name = "ddb-extusers-read-${var.env}"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Action = ["dynamodb:*"]
-          Effect = "Allow"
-          Sid    = "ddbPermissions"
-          Resource = [
-            var.ddb-table-arn,
-            "${var.ddb-table-arn}/index/*"
-          ]
-        }
-      ]
-    })
-  }
+#  inline_policy {
+#    name = "ddb-extusers-read-${var.env}"
+#    policy = jsonencode({
+#      Version = "2012-10-17"
+#      Statement = [
+#        {
+#          Action = ["dynamodb:*"]
+#          Effect = "Allow"
+#          Sid    = "ddbPermissions"
+#          Resource = [
+#            var.ddb-table-arn,
+#            "${var.ddb-table-arn}/index/*"
+#          ]
+#        }
+#      ]
+#    })
+#  }
   managed_policy_arns = [
-    "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+    "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
+    aws_iam_policy.iam_access_ddb.arn
   ]
   path = "/"
   permissions_boundary = var.must-be-policy-arn
+  tags = {
+    app = "userinfoapi"
+  }
 }
 
