@@ -22,9 +22,6 @@ resource "aws_iam_role" "iam_for_lambda" {
   ]
   path = "/"
   permissions_boundary = var.must-be-policy-arn
-  tags = {
-    app = "userinfoapi"
-  }
 }
 
 resource "aws_iam_role" "iam_for_api_gateway" {
@@ -47,9 +44,6 @@ resource "aws_iam_role" "iam_for_api_gateway" {
   ]
   path = "/"
   permissions_boundary = var.must-be-policy-arn
-  tags = {
-    app = "userinfoapi"
-  }
 }
 
 resource "aws_iam_policy" "iam_access_ddb" {
@@ -70,9 +64,6 @@ resource "aws_iam_policy" "iam_access_ddb" {
       }
     ]
   })
-  tags = {
-    app = "userinfoapi"
-  }
 }
 
 resource "aws_iam_role" "iam_access_ddb" {
@@ -113,8 +104,5 @@ resource "aws_iam_role" "iam_access_ddb" {
   ]
   path = "/"
   permissions_boundary = var.must-be-policy-arn
-  tags = {
-    app = "userinfoapi"
-  }
 }
 
