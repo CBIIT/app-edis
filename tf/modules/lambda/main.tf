@@ -107,9 +107,9 @@ data "template_file" "api_swagger" {
 
   vars = {
     lambda_arn = "${aws_lambda_function.era_commons_lambda.invoke_arn}"
-    ddb_action_get_item = "arn:aws:apigateway::dynamodb:action/GetItem"
-    ddb_action_scan = "arn:aws:apigateway::dynamodb:action/scan"
-    ddb_action_query = "arn:aws:apigateway::dynamodb:action/Query"
+    ddb_action_get_item = "arn:aws:apigateway:us-east-1:dynamodb:action/GetItem"
+    ddb_action_scan = "arn:aws:apigateway:us-east-1:dynamodb:action/Scan"
+    ddb_action_query = "arn:aws:apigateway:us-east-1:dynamodb:action/Query"
     ddb_role_arn = "${aws_iam_role.iam_access_ddb.arn}"
     users_table_name = "${local.table-name}"
   }
