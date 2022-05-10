@@ -47,7 +47,7 @@ resource "aws_iam_role" "iam_for_api_gateway" {
 }
 
 resource "aws_iam_policy" "iam_access_ddb" {
-  name = "ddb-extusers-read-${var.env}"
+  name = "${var.must-be-role-prefix}-ddb-extusers-read-${var.env}"
   path = "/"
   description = "Access to given ddb table"
   policy = jsonencode({
