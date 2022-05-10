@@ -479,7 +479,7 @@ paths:
       x-amazon-apigateway-integration:
         type: aws
         httpMethod: POST
-        uri:${ddb_action_query}
+        uri: ${ddb_action_query}
         credentials: ${ddb_role_arn}
         passthroughBehavior: when_no_templates
         timeoutInMillis: 10000

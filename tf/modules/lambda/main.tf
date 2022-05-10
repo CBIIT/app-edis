@@ -93,7 +93,7 @@ resource "aws_api_gateway_account" "era_commons_user_api" {
 }
 
 resource "aws_api_gateway_rest_api" "era_commons_user_api" {
-  name = "Era Commons User Api - ${var.env}"
+  name = "eRA Commons User API - ${var.env}"
   description = "${var.env} - Enterprise Data & Integration Services Web Services"
   endpoint_configuration {
     types = ["REGIONAL"]
