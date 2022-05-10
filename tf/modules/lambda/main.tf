@@ -117,7 +117,6 @@ data "template_file" "api_swagger" {
 
 resource "aws_api_gateway_deployment" "era_commons_user_api" {
   rest_api_id = "${aws_api_gateway_rest_api.era_commons_user_api.id}"
-  stage_name  = "${var.env}"
 }
 
 resource "aws_api_gateway_authorizer" "era_commons_user_api" {
@@ -209,7 +208,7 @@ EOF
 resource "aws_api_gateway_method_settings" "era_commons_user_api" {
   method_path = "*/*"
   rest_api_id = "${aws_api_gateway_rest_api.era_commons_user_api.id}"
-  stage_name  = "${var.env}"
+  stage_name  = "${aws_api_gateway_stage.era_commons_user_api.stage_name}"
   settings {
     metrics_enabled = true
     logging_level = "INFO"
