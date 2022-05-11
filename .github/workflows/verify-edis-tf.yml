@@ -121,12 +121,14 @@ jobs:
         run: tflint --init
 
       - name: Run TFLint
-        run: tflint -f compact
-        working-directory: ./tf
+        run: |
+          cd tf
+          tflint -f compact
+          cd ..
 
-      - name: Checkov Create Artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: Checkov Scan Results
-          path: ./results.sarif
+#      - name: Checkov Create Artifact
+#        uses: actions/upload-artifact@master
+#        with:
+#          name: Checkov Scan Results
+#          path: ./results.sarif
         
