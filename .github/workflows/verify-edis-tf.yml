@@ -112,7 +112,7 @@ jobs:
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v1
         with:
-          tflint_version: v0.29.0
+          tflint_version: latest
 
       - name: Show version
         run: tflint --version
@@ -121,7 +121,7 @@ jobs:
         run: tflint --init
 
       - name: Run TFLint
-        run: tflint -f default
+        run: tflint -f compact
         working-directory: ./tf
 
       - name: Checkov Create Artifact
