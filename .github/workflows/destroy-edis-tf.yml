@@ -68,5 +68,5 @@ jobs:
 
       - name: Destroy Terraform
         id: destroy
-        run: terraform destroy
+        run: terraform destroy -auto-approve -input=false -lock=false -var 'env=${{ github.event.inputs.tier }}' -var 'policy-boundary-arn=arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:policy/PermissionBoundary_PowerUser'
         working-directory: tf/
