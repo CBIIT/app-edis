@@ -103,12 +103,12 @@ jobs:
 #          container_user: 1000
 #        continue-on-error: true
 #
-#      - name: Cache plugin dir
-#        uses: actions/cache@v2
-#        with:
-#          path: ~/.tflint.d/plugins
-#          key: tflint-${{ hashFiles('.tflint.hcl') }}
-
+      - uses: actions/cache@v2
+        name: Cache plugin dir
+        with:
+          path: ~/.tflint.d/plugins
+          key: ubuntu-latest-tflint-${{ hashFiles('.tflint.hcl') }}
+          
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v1
         with:
@@ -118,12 +118,14 @@ jobs:
         run: tflint --version
 
       - name: Init TFLint
-        run: tflint --init
+        run: | 
+          tflint --init
+          tflint --help
 
       - name: Run TFLint
         run: |
           cd tf
-          tflint -f compact
+          tflint -f compact --module --no-color --loglevel=debug
           cd ..
 
 #      - name: Checkov Create Artifact
