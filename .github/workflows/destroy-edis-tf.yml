@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: EDIS Terraform Quality Check
+name: EDIS Terraform Destroy
 
 # Controls when the workflow will run
 on:
@@ -48,10 +48,6 @@ jobs:
           echo S3 Bucket - ${{ github.event.inputs.s3bucket }}
           echo Secret - ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
       
-      - name: Check the existence of artifact
-        run: |
-          ls -la lambda-zip/lambda-userapi
-
       - name: Setup AWS configuration
         uses: aws-actions/configure-aws-credentials@master
         with:
@@ -59,10 +55,6 @@ jobs:
           role-session-name: TestSessionWithOIDC
           aws-region: us-east-1
 
-      - name: Test AWS Configuration
-        run: |
-          aws cloudformation describe-stacks | grep StackName
-      
       - name: Install Terraform
         id: install
         uses: hashicorp/setup-terraform@v2
@@ -74,59 +66,7 @@ jobs:
         run: terraform init -backend-config="bucket=${{ github.event.inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/api-edis-${{ github.event.inputs.tier }}" -backend-config="region=us-east-1"
         working-directory: tf/
 
-      - name: Validate Terraform
-        id: validate
-        run: terraform validate
+      - name: Destroy Terraform
+        id: destroy
+        run: terraform destroy
         working-directory: tf/
-
-      - name: Planning Terraform
-        id: plan
-        run: terraform plan -var 'env=${{ github.event.inputs.tier }}' -input=false -no-color -out tfplan.binary
-        working-directory: tf/
-
-      - name: Show Terraform
-        id: show
-        run: terraform show -json tfplan.binary > plan.json
-        working-directory: tf/
-
-      - name: Run Checkov Scan
-        id: checkov
-        uses: bridgecrewio/checkov-action@master
-        with:
-          directory: tf/
-          quiet: true
-          soft_fail: false
-          framework: terraform
-          output_format: sarif
-          download_external_modules: true
-          log_level: WARNING
-          container_user: 1000
-        continue-on-error: true
-
-      - name: Checkov Create Artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: Checkov Scan Results
-          path: ./results.sarif
-
-      - name: Cache plugin dir
-        uses: actions/cache@v2
-        with:
-          path: ~/.tflint.d/plugins
-          key: tflint-${{ hashFiles('.tflint.hcl') }}
-
-      - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@v1
-        with:
-          tflint_version: v0.29.0
-
-      - name: Show version
-        run: tflint --version
-
-      - name: Init TFLint
-        run: tflint --init
-
-      - name: Run TFLint
-        run: tflint -f compact
-        working-directory: ./tf
-        
