@@ -79,41 +79,35 @@ jobs:
         run: terraform validate
         working-directory: tf/
 
-      - name: Planning Terraform
-        id: plan
-        run: terraform plan -var 'env=${{ github.event.inputs.tier }}' -input=false -no-color -out tfplan.binary
-        working-directory: tf/
+#      - name: Planning Terraform
+#        id: plan
+#        run: terraform plan -var 'env=${{ github.event.inputs.tier }}' -input=false -no-color -out tfplan.binary
+#        working-directory: tf/
 
-      - name: Show Terraform
-        id: show
-        run: terraform show -json tfplan.binary > plan.json
-        working-directory: tf/
+#      - name: Show Terraform
+#        id: show
+#        run: terraform show -json tfplan.binary > plan.json
+#        working-directory: tf/
 
-      - name: Run Checkov Scan
-        id: checkov
-        uses: bridgecrewio/checkov-action@master
-        with:
-          directory: tf/
-          quiet: true
-          soft_fail: false
-          framework: terraform
-          output_format: sarif
-          download_external_modules: true
-          log_level: WARNING
-          container_user: 1000
-        continue-on-error: true
-
-      - name: Checkov Create Artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: Checkov Scan Results
-          path: ./results.sarif
-
-      - name: Cache plugin dir
-        uses: actions/cache@v2
-        with:
-          path: ~/.tflint.d/plugins
-          key: tflint-${{ hashFiles('.tflint.hcl') }}
+#      - name: Run Checkov Scan
+#        id: checkov
+#        uses: bridgecrewio/checkov-action@master
+#        with:
+#          directory: tf/
+#          quiet: true
+#          soft_fail: false
+#          framework: terraform
+#          output_format: sarif
+#          download_external_modules: true
+#          log_level: WARNING
+#          container_user: 1000
+#        continue-on-error: true
+#
+#      - name: Cache plugin dir
+#        uses: actions/cache@v2
+#        with:
+#          path: ~/.tflint.d/plugins
+#          key: tflint-${{ hashFiles('.tflint.hcl') }}
 
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v1
@@ -127,6 +121,12 @@ jobs:
         run: tflint --init
 
       - name: Run TFLint
-        run: tflint -f compact
+        run: tflint -f sarif
         working-directory: ./tf
+
+      - name: Checkov Create Artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: Checkov Scan Results
+          path: ./results.sarif
         
