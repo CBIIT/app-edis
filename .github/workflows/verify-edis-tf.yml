@@ -112,7 +112,7 @@ jobs:
       - name: TerraDocs Execute
         uses: terraform-docs/gh-actions@v1.0.0
         with:
-          working-dir: tf,tf/api-gateway,tf/ddb-extusers,tf/lambda
+          working-dir: tf,tf/modules/api-gateway,tf/modules/ddb-extusers,tf/modules/lambda
           output-file: README.md
           output-method: inject
           git-push: "true"  
