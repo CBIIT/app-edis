@@ -79,58 +79,40 @@ jobs:
         run: terraform validate
         working-directory: tf/
 
-#      - name: Planning Terraform
-#        id: plan
-#        run: terraform plan -var 'env=${{ github.event.inputs.tier }}' -input=false -no-color -out tfplan.binary
-#        working-directory: tf/
+      - name: Planning Terraform
+        id: plan
+        run: terraform plan -var 'env=${{ github.event.inputs.tier }}' -input=false -no-color -out tfplan.binary
+        working-directory: tf/
 
-#      - name: Show Terraform
-#        id: show
-#        run: terraform show -json tfplan.binary > plan.json
-#        working-directory: tf/
+      - name: Show Terraform
+        id: show
+        run: terraform show -json tfplan.binary > plan.json
+        working-directory: tf/
 
-#      - name: Run Checkov Scan
-#        id: checkov
-#        uses: bridgecrewio/checkov-action@master
-#        with:
-#          directory: tf/
-#          quiet: true
-#          soft_fail: false
-#          framework: terraform
-#          output_format: sarif
-#          download_external_modules: true
-#          log_level: WARNING
-#          container_user: 1000
-#        continue-on-error: true
-#
-      - uses: actions/cache@v2
-        name: Cache plugin dir
+      - name: Run Checkov Scan
+        id: checkov
+        uses: bridgecrewio/checkov-action@master
         with:
-          path: ~/.tflint.d/plugins
-          key: ubuntu-latest-tflint-${{ hashFiles('.tflint.hcl') }}
-          
-      - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@v1
+          directory: tf/
+          quiet: true
+          soft_fail: false
+          framework: terraform
+          output_format: sarif
+          download_external_modules: true
+          log_level: WARNING
+          container_user: 1000
+        continue-on-error: true
+
+      - name: Checkov Create Artifact
+        uses: actions/upload-artifact@master
         with:
-          tflint_version: latest
+          name: Checkov Scan Results
+          path: ./results.sarif
 
-      - name: Show version
-        run: tflint --version
-
-      - name: Init TFLint
-        run: | 
-          tflint --init
-          tflint --help
-
-      - name: Run TFLint
-        run: |
-          cd tf
-          tflint -f compact --module --no-color --loglevel=debug
-          cd ..
-
-#      - name: Checkov Create Artifact
-#        uses: actions/upload-artifact@master
-#        with:
-#          name: Checkov Scan Results
-#          path: ./results.sarif
-        
+      - name: TerraDocs Execute
+        uses: terraform-docs/gh-actions@v1.0.0
+        with:
+          working-dir: tf,tf/api-gateway,tf/ddb-extusers,tf/lambda
+          output-file: README.md
+          output-method: inject
+          git-push: "true"  
