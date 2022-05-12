@@ -42,3 +42,11 @@ resource "aws_dynamodb_table" "extusers-table" {
 output "ddb-extusers-arn" {
   value = aws_dynamodb_table.extusers-table.arn
 }
+
+output "ddb-extusers-name" {
+  value = aws_dynamodb_table.extusers-table.name
+}
+
+output "iam-access-ddb-role-arn" {
+  value = aws_iam_role.iam_access_ddb.arn
+}

@@ -10,7 +10,7 @@ variable "must-be-policy-arn" {
   description = "Mandatory policy to be included in any IAM role"
 }
 
-variable "ddb-table-arn" {
+variable "ddb-table-name" {
   default = ""
-  description = "Dynamo DB table ARN to connect API Gateway method to Dynamo DB"
+  description = "Dynamo DB table name to connect Lambda function to Dynamo DB"
 }
