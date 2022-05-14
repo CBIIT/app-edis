@@ -1,4 +1,3 @@
-
 resource "aws_lambda_function" "lambda" {
   function_name = "${var.app}-lambda-function-${var.env}"
   description   = var.lambda_description

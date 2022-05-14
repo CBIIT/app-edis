@@ -21,13 +21,13 @@ variable "lambda_runtime" {
 
 variable "lambda_memory_size" {
   type        = number
-  description = "Amount of memory in MB allocated for your Lambda Function used at runtime"
+  description = "Amount of memory allocated to your Lambda Function, used at runtime (in MB)."
   default     = 2048
 }
 
 variable "lambda_timeout" {
   type        = number
-  description = "The lambda function timeout duration"
+  description = "Amount of time your Lambda Function has to run (in seconds)."
   default     = 30
 }
 
@@ -62,7 +62,7 @@ variable "must-be-role-prefix" {
   description = "Mandatory IAM role name prefix"
 }
 variable "must-be-policy-arn" {
-  default     = ""
+  type = string
   description = "Mandatory policy to be included in any IAM role"
 }
 
