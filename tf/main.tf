@@ -1,21 +1,23 @@
 
 
-module "ddb-extusers" {
-  source = "./modules/ddb-extusers"
+module "dynamodb" {
+  source = "./modules/dynamodb"
   env    = var.env
 }
 
 module "lambda" {
-  depends_on          = [module.ddb-extusers]
+  depends_on = [module.dynamodb]
+
   source              = "./modules/lambda"
   env                 = var.env
   must-be-role-prefix = var.role-prefix
   must-be-policy-arn  = var.policy-boundary-arn
-  ddb-table-name      = module.ddb-extusers.ddb-extusers-name
+  ddb-table-name      = module.dynamodb.dynamodb_table_name
 }
 
 module "api-gateway" {
-  depends_on          = [module.ddb-extusers, module.lambda]
+  depends_on = [module.dynamodb, module.lambda]
+
   source              = "./modules/api-gateway"
   env                 = var.env
   must-be-role-prefix = var.role-prefix
