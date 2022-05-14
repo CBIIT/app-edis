@@ -44,8 +44,9 @@ resource "aws_api_gateway_account" "api_gateway" {
 resource "aws_api_gateway_rest_api" "api_gateway" {
   name        = "${var.app-name} - ${var.env}"
   description = "${var.env} - ${var.app-description}"
+
   endpoint_configuration {
-    types = ["REGIONAL"]
+    types = [var.apigw_endpoint_config]
   }
   body = var.api-swagger
 }
@@ -55,29 +56,30 @@ resource "aws_api_gateway_deployment" "api_gateway" {
 }
 
 resource "aws_api_gateway_authorizer" "api_gateway" {
-  name           = "era-commons-user-api-authorizer"
+  name           = "${var.app}-lambda-authorizer-${var.env}"
   rest_api_id    = aws_api_gateway_rest_api.api_gateway.id
   authorizer_uri = aws_lambda_function.auth_lambda.invoke_arn
-  type           = "TOKEN"
+  type           = var.authorizer_type
 }
 
 resource "aws_api_gateway_rest_api_policy" "api_gateway" {
-  count       = (var.api-resource-policy != "") ? 1 : 0
+  count = (var.api-resource-policy != "") ? 1 : 0
+
   rest_api_id = aws_api_gateway_rest_api.api_gateway.id
   policy      = var.api-resource-policy
 }
 
 resource "aws_cloudwatch_log_group" "api_gateway" {
-  name              = "business_apps-${var.env}-${var.app-name}-accesslogs"
-  retention_in_days = 90
+  name              = "${var.portfolio}-${var.env}-${var.app}-accesslogs"
+  retention_in_days = var.cloudwatch_log_retention_days
 }
 
 resource "aws_api_gateway_stage" "api_gateway" {
   deployment_id         = aws_api_gateway_deployment.api_gateway.id
   rest_api_id           = aws_api_gateway_rest_api.api_gateway.id
   stage_name            = var.env
-  cache_cluster_enabled = true
-  cache_cluster_size    = "1.6"
+  cache_cluster_enabled = var.apigw_stage_cache_enabled
+  cache_cluster_size    = var.apigw_stage_cache_size
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.api_gateway.arn
     format          = "{ \"requestTime\":  \"$context.requestTime\", \"requestId\": \"$context.requestId\", \"httpMethod\": \"$context.httpMethod\", \"path\": \"$context.path\", \"resourcePath\": \"$context.resourcePath\", \"status\": $context.status, \"responseLatency\": $context.responseLatency, \"xrayTraceId\": \"$context.xrayTraceId\", \"integrationRequestId\": \"$context.integration.requestId\", \"functionResponseStatus\": \"$context.integration.status\", \"integrationLatency\": \"$context.integration.latency\", \"integrationServiceStatus\": \"$context.integration.integrationStatus\", \"authorizeResultStatus\": \"$context.authorize.status\", \"authorizerServiceStatus\": \"$context.authorizer.status\", \"authorizerLatency\": \"$context.authorizer.latency\", \"authorizerRequestId\": \"$context.authorizer.requestId\", \"ip\": \"$context.identity.sourceIp\", \"userAgent\": \"$context.identity.userAgent\", \"principalId\": \"$context.authorizer.principalId\", \"user\": \"$context.identity.user\" }"
@@ -86,19 +88,16 @@ resource "aws_api_gateway_stage" "api_gateway" {
 }
 
 resource "aws_api_gateway_method_settings" "api_gateway" {
-  method_path = "*/*"
+  method_path = var.apigw_method_path
   rest_api_id = aws_api_gateway_rest_api.api_gateway.id
   stage_name  = aws_api_gateway_stage.api_gateway.stage_name
+  
   settings {
-    metrics_enabled      = true
-    logging_level        = "INFO"
-    data_trace_enabled   = true
-    cache_data_encrypted = true
-    cache_ttl_in_seconds = 300
-    caching_enabled      = true
+    metrics_enabled      = var.apigw_method_metrics_enabled
+    logging_level        = var.apigw_method_log_level
+    data_trace_enabled   = var.apigw_method_trace_enabled
+    cache_data_encrypted = var.apigw_method_cache_encryption
+    cache_ttl_in_seconds = var.apigw_method_cache_ttl
+    caching_enabled      = var.apigw_method_cache_enabled
   }
-}
-
-output "url" {
-  value = "${aws_api_gateway_deployment.api_gateway.invoke_url}/api"
 }
