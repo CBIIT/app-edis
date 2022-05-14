@@ -1,3 +1,6 @@
+The api-gateway module creates api gateway based on a given swagger file and includes lambda authorizer for authorization API calls
+
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
