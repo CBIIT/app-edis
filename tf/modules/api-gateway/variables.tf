@@ -6,7 +6,7 @@ variable "portfolio" {
 
 variable "app" {
   type        = string
-  description = ""
+  description = "The name of the application that this IaC supports"
 }
 
 variable "env" {
@@ -17,14 +17,10 @@ variable "must-be-role-prefix" {
   default     = ""
   description = "Mandatory IAM role name prefix"
 }
+
 variable "must-be-policy-arn" {
   default     = ""
   description = "Mandatory policy to be included in any IAM role"
-}
-
-variable "app-name" {
-  default     = "apigateway"
-  description = "Name of the project that will be assigned as a tag to every resource of the project, also used in API Gateway API name"
 }
 
 variable "app-description" {
