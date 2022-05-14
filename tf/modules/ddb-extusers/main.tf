@@ -1,10 +1,10 @@
 
-resource "aws_dynamodb_table" "extusers-table" {
-  name           = "extusers-${var.env}"
-  hash_key       = "USER_ID"
-  billing_mode   = "PROVISIONED"
-  read_capacity  = 5
-  write_capacity = 5
+resource "aws_dynamodb_table" "dynamodb" {
+  name           = "${var.app}-dynamodb-table-${var.env}"
+  hash_key       = var.dynamodb_hash_key
+  billing_mode   = var.dynamodb_billing_mode
+  read_capacity  = var.dynamodb_read_capacity
+  write_capacity = var.dynamodb_write_capacity
 
 
   attribute {
@@ -37,16 +37,4 @@ resource "aws_dynamodb_table" "extusers-table" {
     read_capacity   = 5
     write_capacity  = 5
   }
-}
-
-output "ddb-extusers-arn" {
-  value = aws_dynamodb_table.extusers-table.arn
-}
-
-output "ddb-extusers-name" {
-  value = aws_dynamodb_table.extusers-table.name
-}
-
-output "iam-access-ddb-role-arn" {
-  value = aws_iam_role.iam_access_ddb.arn
 }

@@ -10,8 +10,8 @@ resource "aws_iam_policy" "iam_access_ddb" {
         Effect = "Allow"
         Sid    = "ddbPermissions"
         Resource = [
-          aws_dynamodb_table.extusers-table.arn,
-          "${aws_dynamodb_table.extusers-table.arn}/index/*"
+          aws_dynamodb_table.dynamodb.arn,
+          "${aws_dynamodb_table.dynamodb.arn}/index/*"
         ]
       }
     ]
