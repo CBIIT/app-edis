@@ -3,7 +3,7 @@ resource "aws_api_gateway_account" "api_gateway" {
 }
 
 resource "aws_api_gateway_rest_api" "api_gateway" {
-  name                         = "${var.app-name}-REST-API-${var.env}"
+  name                         = "${var.app}-REST-API-${var.env}"
   description                  = "${var.env} - ${var.app-description}"
   disable_execute_api_endpoint = var.apigw_disable_execute_api_endpoint
   body                         = [var.api-swagger]
