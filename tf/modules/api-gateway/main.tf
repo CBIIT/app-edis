@@ -6,32 +6,35 @@
 
 # Lambda Authorizer
 resource "aws_lambda_function" "auth_lambda" {
-  function_name = "lambda-auth-${var.env}"
+  function_name = "${var.app}-lambda-auth-${var.env}"
   role          = aws_iam_role.auth_lambda.arn
   description   = "Lambda function with basic authorization."
-  handler       = "src/lambda.handler"
-  runtime       = "nodejs12.x"
-  memory_size   = 2048
-  timeout       = 30
+  handler       = var.lambda_handler_file
+  runtime       = var.lambda_runtime
+  memory_size   = var.lambda_memory_size
+  timeout       = var.timeout
+  filename      = var.lambda_file_location
+
   tracing_config {
-    mode = "Active"
+    mode = var.lambda_tracing_mode
   }
+
   environment {
     variables = {
-      "LOG_LEVEL" = "info"
+      "LOG_LEVEL" = var.lambda_log_level
       "AUDIENCE"  = var.okta-audience
       "ISSUER"    = var.okta-issuer
     }
   }
+
   tags = {
-    app = var.app-name
+    app = var.app
   }
-  filename = "../lambda-zip/lambda-auth/lambda-auth.zip"
 }
 
 resource "aws_lambda_function_event_invoke_config" "auth_lambda" {
   function_name          = aws_lambda_function.auth_lambda.function_name
-  maximum_retry_attempts = 0
+  maximum_retry_attempts = var.lambda_config_retry_attempts
 }
 
 resource "aws_api_gateway_account" "api_gateway" {
