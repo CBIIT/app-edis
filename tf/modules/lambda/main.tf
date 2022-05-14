@@ -20,7 +20,8 @@ resource "aws_lambda_function" "lambda" {
   }
 
   tags = {
-    app = var.app
+    app  = var.app
+    tier = var.env
   }
 }
 
