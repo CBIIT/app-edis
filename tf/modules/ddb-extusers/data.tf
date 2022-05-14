@@ -1,10 +1,19 @@
+data "aws_iam_policy_document" "dynamodb_assume_role" {
+  statement {
+    sid     = "DynamoAssumeRoleAPIGW"
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["apigateway.amazonaws.com"]
+    }
+  }
+}
+
 data "aws_iam_policy_document" "dynamodb_access" {
   statement {
-
-    sid = "DynamoDbAccess"
-
+    sid    = "DynamoDbAccess"
     effect = "Allow"
-
     actions = [
       "dynamodb:BatchGetItem",
       "dynamodb:BatchWriteItem",
@@ -31,7 +40,6 @@ data "aws_iam_policy_document" "dynamodb_access" {
       "dynamodb:UpdateTable",
       "dynamodb:UpdateTimeToLive"
     ]
-
     resources = [
       aws_dynamodb_table.dynamodb.arn,
       "${aws_dynamodb_table.dynamodb.arn}/index/*",
