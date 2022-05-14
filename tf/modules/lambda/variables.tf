@@ -62,7 +62,7 @@ variable "must-be-role-prefix" {
   description = "Mandatory IAM role name prefix"
 }
 variable "must-be-policy-arn" {
-  type = string
+  type        = string
   description = "Mandatory policy to be included in any IAM role"
 }
 
