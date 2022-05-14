@@ -1,21 +1,8 @@
 resource "aws_iam_policy" "iam_access_ddb" {
-  name        = "${var.must-be-role-prefix}-ddb-extusers-read-${var.env}"
+  name        = "${var.must-be-role-prefix}-${aws_dynamodb_table.dynamodb.name}-policy"
   path        = "/"
-  description = "Access to given ddb table"
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = ["dynamodb:*"]
-        Effect = "Allow"
-        Sid    = "ddbPermissions"
-        Resource = [
-          aws_dynamodb_table.dynamodb.arn,
-          "${aws_dynamodb_table.dynamodb.arn}/index/*"
-        ]
-      }
-    ]
-  })
+  description = "Permits access to the ${aws_dynamodb_table.dynamodb.name} DynamoDB table"
+  policy      = data.aws_iam_policy_document.dynamodb_access.json
 }
 
 resource "aws_iam_role" "iam_access_ddb" {

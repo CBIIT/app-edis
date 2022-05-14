@@ -44,4 +44,13 @@ resource "aws_dynamodb_table" "dynamodb" {
     read_capacity   = 5
     write_capacity  = 5
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tags = {
+    app  = var.app
+    tier = var.env
+  }
 }
