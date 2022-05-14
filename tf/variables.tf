@@ -1,18 +1,18 @@
 variable "role-prefix" {
-  type = string
+  type        = string
   description = "Must be prefix to any IAM role"
-  default = "power-user"
+  default     = "power-user"
 }
 
 variable "policy-boundary-arn" {
-  type = string
+  type        = string
   description = "Must be policy to include in any IAM role"
-  default = ""
+  default     = ""
 }
 
 variable "env" {
-  type = string
-  default = "dev"
+  type        = string
+  default     = "dev"
   description = "Environment tier"
 }
 

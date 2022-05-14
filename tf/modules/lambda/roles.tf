@@ -20,7 +20,7 @@ resource "aws_iam_role" "iam_for_lambda" {
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
   ]
-  path = "/"
+  path                 = "/"
   permissions_boundary = var.must-be-policy-arn
 }
 

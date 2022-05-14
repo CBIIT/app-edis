@@ -1,6 +1,6 @@
 resource "aws_iam_policy" "iam_access_ddb" {
-  name = "${var.must-be-role-prefix}-ddb-extusers-read-${var.env}"
-  path = "/"
+  name        = "${var.must-be-role-prefix}-ddb-extusers-read-${var.env}"
+  path        = "/"
   description = "Access to given ddb table"
   policy = jsonencode({
     Version = "2012-10-17"
@@ -37,6 +37,6 @@ resource "aws_iam_role" "iam_access_ddb" {
     "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
     aws_iam_policy.iam_access_ddb.arn
   ]
-  path = "/"
+  path                 = "/"
   permissions_boundary = var.must-be-policy-arn
 }
