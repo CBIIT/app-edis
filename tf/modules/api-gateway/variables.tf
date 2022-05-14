@@ -90,59 +90,65 @@ variable "authorizer_type" {
 }
 
 variable "cloudwatch_log_retention_days" {
-  type = number 
+  type        = number
   description = "The number of days that logs within a log group will be retained."
-  default = 90
+  default     = 90
 }
 
 variable "apigw_stage_cache_enabled" {
-  type = bool 
+  type        = bool
   description = "Set to true to enable an API Gateway cache"
-  default = false
+  default     = false
+}
+
+variable "apigw_stage_xray_enabled" {
+  type        = bool
+  description = ""
+  default     = false
 }
 
 variable "apigw_method_cache_enabled" {
-  type = bool 
-  description = "" 
-  default = false
+  type        = bool
+  description = ""
+  default     = false
 }
 
 variable "apigw_stage_cache_size" {
-  type = string 
+  type        = string
   description = ""
 }
 
 variable "apigw_method_path" {
-  type = string 
+  type        = string
   description = ""
-  default = "*/*"
+  default     = "*/*"
 }
 
 variable "apigw_method_log_level" {
-  type = string 
+  type        = string
   description = ""
-  default = "info"
+  default     = "info"
 }
 
 variable "apigw_method_cache_encryption" {
-  type = bool 
+  type        = bool
   description = ""
 }
 
 variable "apigw_method_cache_ttl" {
-  type = number
+  type        = number
   description = ""
-  default = 300
+  default     = 300
 }
 
 variable "apigw_method_metrics_enabled" {
-  type = bool
+  type        = bool
   description = ""
-  default = true
+  default     = true
 }
 
 variable "apigw_method_trace_enabled" {
-  type = bool 
+  type        = bool
   description = ""
 }
 
