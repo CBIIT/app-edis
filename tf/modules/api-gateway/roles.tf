@@ -22,7 +22,7 @@ resource "aws_iam_role" "auth_lambda" {
     "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
   ]
-  path = "/"
+  path                 = "/"
   permissions_boundary = var.must-be-policy-arn
 }
 
@@ -44,7 +44,7 @@ resource "aws_iam_role" "api_gateway" {
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
   ]
-  path = "/"
+  path                 = "/"
   permissions_boundary = var.must-be-policy-arn
 }
 

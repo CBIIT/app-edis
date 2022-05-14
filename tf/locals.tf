@@ -67,12 +67,12 @@ data "template_file" "api_swagger" {
   template = file("modules/lambda/tf-swagger-userapi-v3.yaml")
 
   vars = {
-    lambda_arn = module.lambda.lambda_arn
+    lambda_arn          = module.lambda.lambda_arn
     ddb_action_get_item = "arn:aws:apigateway:us-east-1:dynamodb:action/GetItem"
-    ddb_action_scan = "arn:aws:apigateway:us-east-1:dynamodb:action/Scan"
-    ddb_action_query = "arn:aws:apigateway:us-east-1:dynamodb:action/Query"
-    ddb_role_arn = module.ddb-extusers.iam-access-ddb-role-arn
-    users_table_name = module.ddb-extusers.ddb-extusers-name
+    ddb_action_scan     = "arn:aws:apigateway:us-east-1:dynamodb:action/Scan"
+    ddb_action_query    = "arn:aws:apigateway:us-east-1:dynamodb:action/Query"
+    ddb_role_arn        = module.ddb-extusers.iam-access-ddb-role-arn
+    users_table_name    = module.ddb-extusers.ddb-extusers-name
   }
 }
 
