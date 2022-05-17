@@ -3,6 +3,8 @@
 module "ddb-extusers" {
   source = "./modules/ddb-extusers"
   env = var.env
+  must-be-role-prefix = var.role-prefix
+  must-be-policy-arn = var.policy-boundary-arn
 }
 
 module "lambda" {
