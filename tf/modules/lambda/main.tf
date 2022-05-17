@@ -28,5 +28,5 @@ resource "aws_lambda_function_event_invoke_config" "era_commons_lambda" {
 }
 
 output "lambda_arn" {
-  value = aws_lambda_function.era_commons_lambda.arn
+  value = aws_lambda_function.era_commons_lambda.invoke_arn
 }
