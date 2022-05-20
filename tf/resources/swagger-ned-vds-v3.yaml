@@ -1,0 +1,355 @@
+openapi: 3.0.0
+info:
+  description: Enterprise Data & Integration Services Web Services - **NED RESR Web Service**
+  version: "0.1.0"
+  title: User REST Web Service API
+  # put the contact info for your development or API team
+  contact:
+    email: NCICBIITBizAppsSupportLowTier@mail.nih.gov
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+x-amazon-apigateway-request-validators:
+  all:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params:
+    validateRequestBody: true
+    validateRequestParameters: true
+  body:
+    validateRequestBody: true
+    validateRequestParameters: false
+
+# tags are used for organizing operations
+tags:
+  - name: clients
+    description: Operations available to clients - service to service
+
+paths:
+  /userapi/vds/userById:
+    post:
+      tags:
+        - clients
+      summary: VDS User record by the given NIH id (UNIQUEIDENTIFIER)
+      operationId: getUserById
+      description: |
+        Get VDS User record(s) that satisfied NIH ID criteria
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                id:
+                  type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/vdsresponse'
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn}
+        httpMethod: POST
+        timeoutInMillis: 29000
+        type: aws_proxy
+
+  /userapi/vds/usersByIc:
+    get:
+      tags:
+        - clients
+      summary: VDS user records by the given IC
+      operationId: getVdsUsersByIc
+      description: |
+        Get VDS user records that satisfied IC criteria
+      parameters: 
+        - name: Identifier
+          in: query
+          description: IC
+          schema:
+            type: string
+            example: 'NCI'
+        - name: lastEvaluatedKey
+          in: query
+          description: Last Evaluated Key from previous request
+          required: false
+          schema:
+            type: string
+            example: '12345'
+      responses:
+        '200':
+          $ref: '#/components/responses/vdsUsersByIcResponse'
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn}
+        httpMethod: POST
+        timeoutInMillis: 29000
+        type: aws_proxy
+
+  /userapi/ned/changesByIc:
+    post:
+      tags:
+        - clients
+      summary: NED Person NIH IDs by the given IC
+      operationId: getChangesByIc
+      description: |
+        Get NED Person NIH IDs that satisfy given IC criteria
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                IcoreSite:
+                  type: string
+                From_Date:
+                  type: string
+                From_Time:
+                  type: string
+                To_Date:
+                  type: string
+                To_Time:
+                  type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/ChangesByIcResponse'
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn  }
+        httpMethod: POST
+        timeoutInMillis: 29000
+        type: aws_proxy
+
+components:
+  responses: 
+    vdsresponse:
+      description: Response with a list of VDS User objects
+      content:
+        application/json:
+          schema:
+            type: object
+            xml:
+              wrapped: true
+              name: vdsuser
+            properties:
+              NumberOfRecords:
+                type: integer
+                description: number of VDS User objects in response
+              User:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VDSUser'
+
+    ChangesByIcResponse:
+      description: Response with a list of NED Changes records
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              NUMBER_OF_RECORDS:
+                type: integer
+                description: number of NED Changes records in response
+              NED_CHANGES_RECORD:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NEDChangeRecord'
+
+    vdsUsersByIcResponse:
+      description: Response with a list of User Records for given IC
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VDSUsersChunk'
+
+  schemas:
+
+    NEDChangeRecord:
+      type: object
+      properties:
+        NIHSITE:
+          type: string
+        ACTION_DATE:
+          type: string
+        ACTION:
+          type: string
+        UNIQUEIDENTIFIER:
+          type: string
+        ACTION_TIME:
+          type: string
+        SN:
+          type: string
+        NIHORGACRONYM:
+          type: string
+        GIVENNAME:
+          type: string
+
+    VDSUsersChunk:
+      type: object
+      properties:
+        count:
+          type: integer
+        error:
+          type: string
+          description: Error message if not empty - rest of the fields are zeros
+        lastEvaluatedKey:
+          type: string
+          description: If present, the result is incomplete, pass this value as "lastEvaluatedKey" query parameter to get the next chunk of results
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/VDSUser'
+
+    VDSUser:
+      type: object
+      properties:
+        NIHADMAILBOXREQ:
+          type: string
+          example: Y
+        NIHIDBADGEEXPDATE:
+          type: string
+          example: 2026-11-12 00:00:00.0
+        NIHPOC:
+          type: string
+          example: 0010123456
+        NIHSSOUSERNAME:
+          type: string
+          example: smithj
+        BUILDINGNAME:
+          type: string
+          example: FDC 123
+        NIHPHYSICALADDRESS:
+          type: string
+          example: FDC 123 BG RM 119$431 WOOD STREET$FREDERICK MD 21702
+        MIDDLENAME:
+          type: string
+          example: Joseph
+        NIHDIRENTRYEFFECTIVEDATE:
+          type: string
+          example: 2009-01-14 00:00:00.0
+        distinguishedName:
+          type: string
+          example: CN=smithj,OU=Users,OU=NCI-Frederick,OU=NIH,OU=AD,DC=nih,DC=gov
+        MAIL:
+          type: string
+          example: smithj@mail.gov
+        NIHSAC:
+          type: string
+          example: HNCB45
+        NIHMIXCASESN:
+          type: string
+          example: John
+        NIHCREATORSNAME:
+          type: string
+          example: 0010012345
+        UNIQUEIDENTIFIER:
+          type: string
+          example: 0011234567
+        NIHPRIMARYSMTP:
+          type: string
+          example: johnj@mail.gov
+        NIHDUPUID:
+          type: string
+          example: 0013312345
+        NIHSUBORGSTATUS:
+          type: string
+          example: CONTRACTOR
+        PERSONALTITLE:
+          type: string
+          example: Mr
+        NIHCREATETIMESTAMP:
+          type: string
+          example: 2009-01-14 14:12:30.0
+        L:
+          type: string
+          example: Frederick
+        NIHCOTRID:
+          type: string
+          example: 0010123456
+        managedObjects:
+          type: string
+          example: CN=NCI-Frederick Rees alarms,OU=Distribution Lists,OU=Messaging,OU=NCI-Frederick,OU=NIH,OU=AD,DC=nih,DC=gov
+        ipPhone:
+          type: string
+          example: (301) 111-1111
+        NIHMODIFYTIMESTAMP:
+          type: string
+          example: 2021-12-27 10:25:49.0
+        POSTALADDRESS:
+          type: string
+          example: BG 111 RM 119$1050 BOYLES STREET$FREDERICK MD 21702
+        ORGANIZATIONALSTAT:
+          type: string
+          example: CONTRACTOR
+        NIHSITE:
+          type: string
+          example: MD-FCR
+        countryCode:
+          type: string
+          example: 123
+        ROOMNUMBER:
+          type: string
+          example: 123
+        NIHCOMPANYNAME:
+          type: string
+          example: FFRDC FNLCR LBR (Leidos Biomedical Research Inc.)
+        TELEPHONENUMBER:
+          type: string
+          example: +1 301 111 1111
+        proxyAddresses:
+          type: array
+          items: 
+            type: string
+          example: 
+            - smtp:smithj@nci.gov
+            - X500:/O=NIH/OU=NIHEXCHANGE/cn=Recipients/cn=smithj
+            - smtp:smithj@nih.mail.onmicrosoft.com
+            - smtp:smithj@nih.gov
+        NIHORGACRONYM:
+          type: string
+          example: NCI
+        SN:
+          type: string
+          example: Smith
+        NIHADACCTREQ:
+          type: string
+          example: Y
+        NIHSERVAO:
+          type: string
+          example: 0010101234
+        GIVENNAME:
+          type: string
+          example: John
+        displayName:
+          type: string
+          example: Smith, John (NIH/NCI) [C]
+        memberOf:
+          type: array
+          items: 
+            type: string
+          example:
+            - CN=NIH CONTRACTOR ACCOUNTS,OU=NIH WIDE GROUPS,OU=ADOG,DC=nih,DC=gov
+            - CN=NIH Exchange Users,OU=Groups,OU=CIT,OU=NIH,ou=ad,dc=nih,dc=gov
+            - CN=PrimaryUsers,OU=Accounts,OU=CES,OU=OPS,DC=nih,DC=gov
+        userAccountControl:
+          type: string
+          example: 123
+        NIHORGPATH:
+          type: string
+          example: NCI DCTD DTP NPB
+        NIHGUBORGSTATUS:
+          type: string
+          example: ???
+        NIHSUMMERSTATUS:
+          type: string
+          example: ???
+        NIHBADGETITLE:
+          type: string
+          example: ???
+        NIHIDBADGELESS6MOS:
+          type: string
+          example: ???
+        NIHVPNRemoteAccess:
+          type: string
+          example: true
+        NIHPrivacyAwarenessCompDate:
+          type: string
+        PrivacyAwarenessRefresherCompDate:
+          type: string
+        NIHInformationSecurityAwarenessCompDate:
+          type: string
+        InformationSecurityRefresherCompDate:
+          type: string
