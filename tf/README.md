@@ -39,7 +39,7 @@
 |------|-------------|------|---------|:--------:|
 | <a name="input_env"></a> [env](#input\_env) | Environment tier | `string` | `"dev"` | no |
 | <a name="input_policy-boundary-arn"></a> [policy-boundary-arn](#input\_policy-boundary-arn) | Must be policy to include in any IAM role | `string` | `""` | no |
-| <a name="input_role-prefix"></a> [role-prefix](#input\_role-prefix) | Must be prefix to any IAM role | `string` | `"power-user"` | no |
+| <a name="input_role-prefix"></a> [role-prefix](#input\_role-prefix) | Must be prefix to any IAM role | `string` | `"power-user-edis"` | no |
 
 ## Outputs
 
