@@ -67,7 +67,7 @@ module "api-gateway-userinfo" {
   must-be-role-prefix = var.role-prefix
   must-be-policy-arn  = var.policy-boundary-arn
   okta-issuer         = lookup(local.OktaMap, var.env).issuer
-  app                 = "userinfo"
+  app                 = "edis"
   app-description     = "Enterprise Data & Integration Services Web Services for NED and VDS user info"
   api-swagger         = data.template_file.api_userinfo_swagger.rendered
   api-resource-policy = local.era_commons_resource_policy
