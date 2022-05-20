@@ -1,32 +1,51 @@
 
-resource "aws_lambda_function" "era_commons_lambda" {
-  function_name = join("-", ["lambda-edis-user-api", var.env])
-  role          = aws_iam_role.iam_for_lambda.arn  # TODO
-  description   = "Lambda function contains eRA Commons External Users Info REST APIs implementation."
-  handler = "src/lambda.handler"
-  runtime = "nodejs12.x"
-  memory_size = 2048
-  timeout = 30
+# -----------------------------------------------------------------------------
+# Data: aws_caller_identity gets data from current AWS account
+# -----------------------------------------------------------------------------
+
+data "aws_caller_identity" "_" {}
+
+resource "aws_lambda_function" "lambda" {
+  function_name = "${var.app}-${var.lambda-name}-${var.env}"
+  role          = aws_iam_role.iam_for_lambda.arn
+  description   = var.lambda-description
+  handler       = "src/lambda.handler"
+  runtime       = "nodejs12.x"
+  memory_size   = 2048
+  timeout       = 30
   tracing_config {
     mode = "Active"
   }
   environment {
-    variables = {
-      "LOG_LEVEL" = "info"
-      "TABLE"     = var.ddb-table-name
-    }
+    variables = var.lambda-env-variables
   }
   tags = {
-    app = "userinfoapi"
+    Tier = var.env
+    Name = var.resource_tag_name
   }
-  filename = "../lambda-zip/lambda-userapi/lambda-userapi.zip"
+  filename = var.file-name
 }
 
-resource "aws_lambda_function_event_invoke_config" "era_commons_lambda" {
-  function_name = aws_lambda_function.era_commons_lambda.function_name
-  maximum_retry_attempts = 0
+resource "aws_lambda_function_event_invoke_config" "lambda" {
+  function_name          = aws_lambda_function.lambda.function_name
+  maximum_retry_attempts = var.max-retry
 }
 
-output "lambda_arn" {
-  value = aws_lambda_function.era_commons_lambda.invoke_arn
+# -----------------------------------------------------------------------------
+# Resources: Lambda API Gateway permission
+# -----------------------------------------------------------------------------
+
+resource "aws_lambda_permission" "_" {
+  count         = var.create_api_gateway_integration ? 1 : 0
+  principal     = "apigateway.amazonaws.com"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda.arn
+
+  source_arn = "arn:aws:execute-api:${
+    var.region
+    }:${
+    data.aws_caller_identity._.account_id
+    }:${
+    var.api_gateway_rest_api_id
+  }/*/*"
 }

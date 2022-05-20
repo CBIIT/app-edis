@@ -66,7 +66,7 @@ paths:
         '400':
           description: bad input parameter
       x-amazon-apigateway-integration:
-        uri: ${lambda_arn}
+        uri: ${lambda_invoke_arn}
         httpMethod: POST
         timeoutInMillis: 10000
         type: "aws_proxy"
@@ -99,7 +99,7 @@ paths:
         '400':
           description: bad input parameter
       x-amazon-apigateway-integration:
-        uri: ${lambda_arn}
+        uri: ${lambda_invoke_arn}
         httpMethod: POST
         timeoutInMillis: 10000
         type: "aws_proxy"
@@ -131,7 +131,7 @@ paths:
         '400':
           description: bad input parameter
       x-amazon-apigateway-integration:
-        uri: ${lambda_arn}
+        uri: ${lambda_invoke_arn}
         httpMethod: POST
         timeoutInMillis: 10000
         type: "aws_proxy"

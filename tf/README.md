@@ -1,3 +1,7 @@
+# Enterprise Data & Integration Services Web Services
+
+## Terraform scripts deployment
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -16,15 +20,18 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_api-gateway"></a> [api-gateway](#module\_api-gateway) | ./modules/api-gateway | n/a |
+| <a name="module_api-gateway-era-commons"></a> [api-gateway-era-commons](#module\_api-gateway-era-commons) | ./modules/api-gateway | n/a |
+| <a name="module_api-gateway-userinfo"></a> [api-gateway-userinfo](#module\_api-gateway-userinfo) | ./modules/api-gateway | n/a |
 | <a name="module_ddb-extusers"></a> [ddb-extusers](#module\_ddb-extusers) | ./modules/ddb-extusers | n/a |
-| <a name="module_lambda"></a> [lambda](#module\_lambda) | ./modules/lambda | n/a |
+| <a name="module_lambda-era-commons-api"></a> [lambda-era-commons-api](#module\_lambda-era-commons-api) | ./modules/lambda | n/a |
+| <a name="module_lambda-userinfo-api"></a> [lambda-userinfo-api](#module\_lambda-userinfo-api) | ./modules/lambda | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
-| [template_file.api_swagger](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
+| [template_file.api_era-commons-swagger](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
+| [template_file.api_userinfo_swagger](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 
 ## Inputs
 

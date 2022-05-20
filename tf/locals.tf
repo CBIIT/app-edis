@@ -26,7 +26,7 @@ locals {
     }
   })
 
-  resource_policy = <<EOF
+  era_commons_resource_policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -61,18 +61,37 @@ locals {
 }
 EOF
 
+  lambda_era_commons_api_role_policies = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
+    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
+  ]
+
+  lambda_userinfo_api_role_policies = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
+    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
+  ]
 }
 
-data "template_file" "api_swagger" {
-  template = file("modules/lambda/tf-swagger-userapi-v3.yaml")
+data "template_file" "api_era-commons-swagger" {
+  template = file("resources/tf-swagger-era-commons-v3.yaml")
 
   vars = {
-    lambda_arn = module.lambda.lambda_arn
+    lambda_invoke_arn   = module.lambda-era-commons-api.invoke_arn
     ddb_action_get_item = "arn:aws:apigateway:us-east-1:dynamodb:action/GetItem"
-    ddb_action_scan = "arn:aws:apigateway:us-east-1:dynamodb:action/Scan"
-    ddb_action_query = "arn:aws:apigateway:us-east-1:dynamodb:action/Query"
-    ddb_role_arn = module.ddb-extusers.iam-access-ddb-role-arn
-    users_table_name = module.ddb-extusers.ddb-extusers-name
+    ddb_action_scan     = "arn:aws:apigateway:us-east-1:dynamodb:action/Scan"
+    ddb_action_query    = "arn:aws:apigateway:us-east-1:dynamodb:action/Query"
+    ddb_role_arn        = module.ddb-extusers.iam-access-ddb-role-arn
+    users_table_name    = module.ddb-extusers.ddb-extusers-name
   }
 }
 
+data "template_file" "api_userinfo_swagger" {
+  template = file("resources/swagger-ned-vds-v3.yaml")
+
+  vars = {
+    lambda_invoke_arn = module.lambda-userinfo-api.invoke_arn
+  }
+}
