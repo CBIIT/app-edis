@@ -14,7 +14,7 @@ data "aws_iam_policy_document" "iam_access_ddb" {
   statement {
     sid     = "ddbPermissions"
     effect  = "Allow"
-    actions = ["dynamodb.*"]
+    actions = ["dynamodb:*"]
     resources = [
       aws_dynamodb_table.extusers-table.arn,
       "${aws_dynamodb_table.extusers-table.arn}/index/*"
