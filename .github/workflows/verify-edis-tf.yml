@@ -81,7 +81,7 @@ jobs:
 
       - name: Planning Terraform
         id: plan
-        run: terraform plan -var 'env=${{ github.event.inputs.tier }}' -input=false -no-color -out tfplan.binary
+        run: terraform plan -var 'env=${{ github.event.inputs.tier }}'  -var 'subnet1="subnet1"' -var 'subnet2="subnet2"' -var 'vpcsg="vpcng"' -input=false -no-color -out tfplan.binary
         working-directory: tf/
 
       - name: Show Terraform
