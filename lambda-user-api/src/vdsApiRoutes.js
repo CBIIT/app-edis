@@ -151,7 +151,7 @@ const getLdapClient = async () => {
 
 function _getTlsOptions() {
     if (!tlsOptions) {
-        console.log('cert', conf.vds.cert)
+        // console.log('cert', conf.vds.cert)
         tlsOptions = {
             ca: [conf.vds.cert]
         };
