@@ -92,7 +92,7 @@ jobs:
 
       - name: Planning Terraform
         id: plan
-        run: terraform plan -var 'env=${{ github.event.inputs.tier }}'
+        run: terraform plan -var 'env=${{ github.event.inputs.tier }}' -var 'policy-boundary-arn=arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:policy/PermissionBoundary_PowerUser' -var 'subnet1=${{ github.event.inputs.subnet1 }}' -var 'subnet2=${{ github.event.inputs.subnet2 }}' -var 'vpcsg=${{ github.event.inputs.vpcsg }}'
         working-directory: tf/
 
       - name: Terraform Deployment
