@@ -47,6 +47,8 @@ module.exports.handler = async (event, context, callback) => {
   if (!configuration) {
     console.debug('Getting secret parameters...');
     configuration = await getSecretParameters();
+    // Need to prepare private key here
+    configuration.vds_cert = Buffer.from(configuration.vds_cert.replace(/\\n/g, '\n'), 'utf-8');
     initConfiguration(configuration);
     // Configure the SOAP Web Service credentials
     console.debug('Configuration is about to set...', configuration.ned_wsdl, configuration.ned_wsdl_changes);

@@ -62,6 +62,17 @@ variable "lambda-managed-policies" {
   default     = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
 }
 
+variable "security_group_ids" {
+  description = "List of EC2 security groups ids for Lambda function inside VPC"
+  type = list(string)
+  default = []
+}
+variable "subnet_ids" {
+  description = "List of EC2 subnet ids for Lambda function inside VPC"
+  type = list(string)
+  default = []
+}
+
 # -----------------------------------------------------------------------------
 # Variables: API Gateway integration
 # -----------------------------------------------------------------------------
