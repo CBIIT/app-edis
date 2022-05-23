@@ -40,6 +40,9 @@
 | <a name="input_env"></a> [env](#input\_env) | Environment tier | `string` | `"dev"` | no |
 | <a name="input_policy-boundary-arn"></a> [policy-boundary-arn](#input\_policy-boundary-arn) | Must be policy to include in any IAM role | `string` | `""` | no |
 | <a name="input_role-prefix"></a> [role-prefix](#input\_role-prefix) | Must be prefix to any IAM role | `string` | `"power-user-edis"` | no |
+| <a name="input_subnet1"></a> [subnet1](#input\_subnet1) | VPC Subnet 1 id for Lambda functions placed inside VPC | `string` | n/a | yes |
+| <a name="input_subnet2"></a> [subnet2](#input\_subnet2) | VPC Subnet 2 id for Lambda functions placed inside VPC | `string` | n/a | yes |
+| <a name="input_vpcsg"></a> [vpcsg](#input\_vpcsg) | Security Group id for Lambda functions placed inside VPC | `string` | n/a | yes |
 
 ## Outputs
 
