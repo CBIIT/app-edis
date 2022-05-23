@@ -43,6 +43,8 @@ No modules.
 | <a name="input_must-be-role-prefix"></a> [must-be-role-prefix](#input\_must-be-role-prefix) | Mandatory IAM role name prefix | `any` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | AWS region | `any` | n/a | yes |
 | <a name="input_resource_tag_name"></a> [resource\_tag\_name](#input\_resource\_tag\_name) | Value of tag 'Name' for cost/resource tracking | `any` | n/a | yes |
+| <a name="input_security_group_ids"></a> [security\_group\_ids](#input\_security\_group\_ids) | List of EC2 security groups ids for Lambda function inside VPC | `list(string)` | `[]` | no |
+| <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | List of EC2 subnet ids for Lambda function inside VPC | `list(string)` | `[]` | no |
 
 ## Outputs
 
