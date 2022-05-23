@@ -22,7 +22,7 @@ module "lambda-era-commons-api" {
     LOG_LEVEL = "info"
     TABLE     = module.ddb-extusers.ddb-extusers-name
   })
-  lambda-managed-policies        = local.lambda_userinfo_api_role_policies
+  lambda-managed-policies        = local.lambda_era_commons_api_role_policies
   create_api_gateway_integration = true
   api_gateway_rest_api_id        = module.api-gateway-era-commons.rest_api_id
 }
@@ -42,8 +42,11 @@ module "lambda-userinfo-api" {
     LOG_LEVEL = "info"
     SECRET    = "era-commons-connect"
   })
+  lambda-managed-policies        = local.lambda_userinfo_api_role_policies
   create_api_gateway_integration = true
   api_gateway_rest_api_id        = module.api-gateway-userinfo.rest_api_id
+  subnet_ids = [ var.subnet1, var.subnet2 ]
+  security_group_ids = [ var.vpcsg ]
 }
 
 module "api-gateway-era-commons" {

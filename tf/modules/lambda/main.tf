@@ -24,6 +24,10 @@ resource "aws_lambda_function" "lambda" {
     Name = var.resource_tag_name
   }
   filename = var.file-name
+  vpc_config {
+    security_group_ids = var.security_group_ids
+    subnet_ids         = var.subnet_ids
+  }
 }
 
 resource "aws_lambda_function_event_invoke_config" "lambda" {
