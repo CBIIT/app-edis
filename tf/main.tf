@@ -1,5 +1,6 @@
 
 module "ddb-extusers" {
+  count = (var.build-eracommons) ? 1 : 0
   source              = "./modules/ddb-extusers"
   env                 = var.env
   must-be-role-prefix = var.role-prefix
@@ -7,6 +8,7 @@ module "ddb-extusers" {
 }
 
 module "lambda-era-commons-api" {
+  count = (var.build-eracommons) ? 1 : 0
   depends_on          = [module.ddb-extusers]
   source              = "./modules/lambda"
   env                 = var.env
@@ -27,7 +29,16 @@ module "lambda-era-commons-api" {
   api_gateway_rest_api_id        = module.api-gateway-era-commons.rest_api_id
 }
 
+module "ddb-userinfo" {
+  count = (var.build-userinfo) ? 1 : 0
+  source              = "./modules/ddb-userinfo"
+  env                 = var.env
+  must-be-role-prefix = var.role-prefix
+  must-be-policy-arn  = var.policy-boundary-arn
+}
+
 module "lambda-userinfo-api" {
+  count = (var.build-userinfo) ? 1 : 0
   source              = "./modules/lambda"
   env                 = var.env
   must-be-role-prefix = var.role-prefix
@@ -50,6 +61,7 @@ module "lambda-userinfo-api" {
 }
 
 module "api-gateway-era-commons" {
+  count = (var.build-eracommons) ? 1 : 0
   depends_on          = [module.ddb-extusers]
   source              = "./modules/api-gateway"
   env                 = var.env
@@ -65,6 +77,7 @@ module "api-gateway-era-commons" {
 }
 
 module "api-gateway-userinfo" {
+  count = (var.build-userinfo) ? 1 : 0
   source              = "./modules/api-gateway"
   env                 = var.env
   must-be-role-prefix = var.role-prefix
