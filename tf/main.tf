@@ -22,11 +22,11 @@ module "lambda-era-commons-api" {
   lambda-description  = "Lambda function contains eRA Commons External Users Info REST APIs implementation."
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
-    TABLE     = module.ddb-extusers.ddb-extusers-name
+    TABLE     = module.ddb-extusers[0].ddb-extusers-name
   })
   lambda-managed-policies        = local.lambda_era_commons_api_role_policies
   create_api_gateway_integration = true
-  api_gateway_rest_api_id        = module.api-gateway-era-commons.rest_api_id
+  api_gateway_rest_api_id        = module.api-gateway-era-commons[0].rest_api_id
 }
 
 module "ddb-userinfo" {
@@ -55,7 +55,7 @@ module "lambda-userinfo-api" {
   })
   lambda-managed-policies        = local.lambda_userinfo_api_role_policies
   create_api_gateway_integration = true
-  api_gateway_rest_api_id        = module.api-gateway-userinfo.rest_api_id
+  api_gateway_rest_api_id        = module.api-gateway-userinfo[0].rest_api_id
   subnet_ids = [ var.subnet1, var.subnet2 ]
   security_group_ids = [ var.vpcsg ]
 }
@@ -70,7 +70,7 @@ module "api-gateway-era-commons" {
   okta-issuer         = lookup(local.OktaMap, var.env).issuer
   app                 = "edis"
   app-description     = "Enterprise Data & Integration Services Web Services for eRA Commons users"
-  api-swagger         = data.template_file.api_era-commons-swagger.rendered
+  api-swagger         = data.template_file.api_era-commons-swagger[0].rendered
   api-resource-policy = local.era_commons_resource_policy
   api-gateway-name    = "era-commons"
   resource_tag_name   = "edis"
@@ -85,7 +85,7 @@ module "api-gateway-userinfo" {
   okta-issuer         = lookup(local.OktaMap, var.env).issuer
   app                 = "edis"
   app-description     = "Enterprise Data & Integration Services Web Services for NED and VDS user info"
-  api-swagger         = data.template_file.api_userinfo_swagger.rendered
+  api-swagger         = data.template_file.api_userinfo_swagger[0].rendered
   api-resource-policy = local.era_commons_resource_policy
   api-gateway-name    = "userinfo"
   resource_tag_name   = "edis"

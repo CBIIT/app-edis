@@ -78,21 +78,23 @@ EOF
 
 data "template_file" "api_era-commons-swagger" {
   template = file("resources/tf-swagger-era-commons-v3.yaml")
+  count = (var.build-eracommons) ? 1 : 0
 
   vars = {
-    lambda_invoke_arn   = module.lambda-era-commons-api.invoke_arn
+    lambda_invoke_arn   = module.lambda-era-commons-api[0].invoke_arn
     ddb_action_get_item = "arn:aws:apigateway:us-east-1:dynamodb:action/GetItem"
     ddb_action_scan     = "arn:aws:apigateway:us-east-1:dynamodb:action/Scan"
     ddb_action_query    = "arn:aws:apigateway:us-east-1:dynamodb:action/Query"
-    ddb_role_arn        = module.ddb-extusers.iam-access-ddb-role-arn
-    users_table_name    = module.ddb-extusers.ddb-extusers-name
+    ddb_role_arn        = module.ddb-extusers[0].iam-access-ddb-role-arn
+    users_table_name    = module.ddb-extusers[0].ddb-extusers-name
   }
 }
 
 data "template_file" "api_userinfo_swagger" {
   template = file("resources/swagger-ned-vds-v3.yaml")
+  count = (var.build-userinfo) ? 1 : 0
 
   vars = {
-    lambda_invoke_arn = module.lambda-userinfo-api.invoke_arn
+    lambda_invoke_arn = module.lambda-userinfo-api[0].invoke_arn
   }
 }
