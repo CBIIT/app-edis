@@ -60,3 +60,15 @@ variable "lambda-log-level" {
   description = "LOG LEVEL of lambda authorizer"
   default     = "INFO"
 }
+
+variable "cache_enabled" {
+  type = bool
+  description = "Set to true to enable API Gateway cache"
+  default = false
+}
+
+variable "cache_size" {
+  type = string
+  description = "Size of API Gateway cache (not applied if cache_enabled is false)"
+  default = "1.6"
+}

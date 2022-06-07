@@ -30,3 +30,15 @@ variable "vpcsg" {
   type = string
   description = "Security Group id for Lambda functions placed inside VPC"
 }
+
+variable "build-eracommons" {
+  type = bool
+  description = "Set to true to deploy era commons API related resources"
+  default = false
+}
+
+variable "build-userinfo" {
+  type = bool
+  description = "Set to true to deploy user info API related resources"
+  default = false
+}
