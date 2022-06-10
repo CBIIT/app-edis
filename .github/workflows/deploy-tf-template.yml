@@ -94,19 +94,19 @@ jobs:
         id: initBoth
         run: terraform init -backend-config="bucket=${{ inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/api-edis-all-${{ inputs.tier }}" -backend-config="region=us-east-1"
         working-directory: tf/
-        if: ${{ inputs.build-eracommons }} && ${{ inputs.build-userinfo }}
+        if: ${{ inputs.build-eracommons && inputs.build-userinfo }}
 
       - name: Init Terraform for eRAcommons 
         id: initEraCommons
         run: terraform init -backend-config="bucket=${{ inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/api-edis-eracommons-${{ inputs.tier }}" -backend-config="region=us-east-1"
         working-directory: tf/
-        if: ${{ inputs.build-eracommons }} && !(${{ inputs.build-userinfo }})
+        if: ${{ inputs.build-eracommons && !inputs.build-userinfo }}
 
       - name: Init Terraform for UserInfo 
         id: initUserInfo
         run: terraform init -backend-config="bucket=${{ inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/api-edis-userinfo-${{ inputs.tier }}" -backend-config="region=us-east-1"
         working-directory: tf/
-        if: ${{ inputs.build-userinfo }} && !(${{ inputs.build-eracommons }}) 
+        if: ${{ inputs.build-userinfo && !inputs.build-eracommons }} 
 
       - name: Validate Terraform
         id: validate
