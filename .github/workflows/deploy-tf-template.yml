@@ -73,7 +73,7 @@ jobs:
           echo Subnet 1 - ${{ inputs.subnet1 }}
           echo Subnet 2 - ${{ inputs.subnet2 }}
           echo Security Group - ${{ inputs.vpcsg }}
-          echo Secret - ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
+          echo Secret - ${{ secret.AWS_OIDC_PROVIDER_ROLE }}
           echo Build eraCommons project - ${{ inputs.build-eracommons }}
           echo Build userInfoApi project - ${{ inputs.build-userinfo }}
       
