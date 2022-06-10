@@ -51,7 +51,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     
-    environment: ${{ github.event.inputs.envt }}
+    environment: ${{ inputs.envt }}
 
     permissions:
       packages: write

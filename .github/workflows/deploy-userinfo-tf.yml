@@ -32,8 +32,6 @@ on:
 jobs:
   deployment:
     
-    environment: ${{ github.event.inputs.envt }}
-    
     # The type of runner that the job will run on
     uses: ./.github/workflows/deploy-tf-template.yml
     with:
