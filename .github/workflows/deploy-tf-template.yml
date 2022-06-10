@@ -84,45 +84,41 @@ jobs:
           role-session-name: TestSessionWithOIDC
           aws-region: us-east-1
 
-      - name: Test AWS Configuration
-        run: |
-          aws cloudformation describe-stacks | grep StackName
+      - name: Install Terraform
+        id: install
+        uses: hashicorp/setup-terraform@v2
+        with: 
+          terraform_wrapper: false
 
-#      - name: Install Terraform
-#        id: install
-#        uses: hashicorp/setup-terraform@v2
-#        with: 
-#          terraform_wrapper: false
-#
-#      - name: Init Terraform for both eRAcommons and UserInfo 
-#        id: initBoth
-#        run: terraform init -backend-config="bucket=${{ github.event.inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/api-edis-all-${{ github.event.inputs.tier }}" -backend-config="region=us-east-1"
-#        working-directory: tf/
-#        if: ${{ github.events.input.build-eracommons }} && ${{ github.events.input.build-userinfo }}
-#
-#      - name: Init Terraform for eRAcommons 
-#        id: initEraCommons
-#        run: terraform init -backend-config="bucket=${{ github.event.inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/api-edis-eracommons-${{ github.event.inputs.tier }}" -backend-config="region=us-east-1"
-#        working-directory: tf/
-#        if: ${{ github.events.input.build-eracommons }} && !(${{ github.events.input.build-userinfo }})
-#
-#      - name: Init Terraform for UserInfo 
-#        id: initUserInfo
-#        run: terraform init -backend-config="bucket=${{ github.event.inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/api-edis-userinfo-${{ github.event.inputs.tier }}" -backend-config="region=us-east-1"
-#        working-directory: tf/
-#        if: !(${{ github.events.input.build-eracommons }}) && ${{ github.events.input.build-userinfo }}
-#
-#      - name: Validate Terraform
-#        id: validate
-#        run: terraform validate
-#        working-directory: tf/
-#
-#      - name: Planning Terraform
-#        id: plan
-#        run: terraform plan -var 'env=${{ github.event.inputs.tier }}' -var 'policy-boundary-arn=arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:policy/PermissionBoundary_PowerUser' -var 'subnet1=${{ github.event.inputs.subnet1 }}' -var 'subnet2=${{ github.event.inputs.subnet2 }}' -var 'vpcsg=${{ github.event.inputs.vpcsg }}' -var 'build-eracommons=${{ github.event.inputs.build-eracommons }}' -var 'build-userinfo=${{ github.event.inputs.build-userinfo }}'
-#        working-directory: tf/
-#
-#      - name: Terraform Deployment
-#        id: apply
-#        run: terraform apply -auto-approve -input=false -lock=false -var 'env=${{ github.event.inputs.tier }}' -var 'policy-boundary-arn=arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:policy/PermissionBoundary_PowerUser' -var 'subnet1=${{ github.event.inputs.subnet1 }}' -var 'subnet2=${{ github.event.inputs.subnet2 }}' -var 'vpcsg=${{ github.event.inputs.vpcsg }}' -var 'build-eracommons=${{ github.event.inputs.build-eracommons }}' -var 'build-userinfo=${{ github.event.inputs.build-userinfo }}'
-#        working-directory: tf/
+      - name: Init Terraform for both eRAcommons and UserInfo 
+        id: initBoth
+        run: terraform init -backend-config="bucket=${{ inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/api-edis-all-${{ inputs.tier }}" -backend-config="region=us-east-1"
+        working-directory: tf/
+        if: ${{ inputs.build-eracommons }} && ${{ inputs.build-userinfo }}
+
+      - name: Init Terraform for eRAcommons 
+        id: initEraCommons
+        run: terraform init -backend-config="bucket=${{ inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/api-edis-eracommons-${{ inputs.tier }}" -backend-config="region=us-east-1"
+        working-directory: tf/
+        if: ${{ inputs.build-eracommons }} && !(${{ inputs.build-userinfo }})
+
+      - name: Init Terraform for UserInfo 
+        id: initUserInfo
+        run: terraform init -backend-config="bucket=${{ inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/api-edis-userinfo-${{ inputs.tier }}" -backend-config="region=us-east-1"
+        working-directory: tf/
+        if: !(${{ inputs.build-eracommons }}) && ${{ inputs.build-userinfo }}
+
+      - name: Validate Terraform
+        id: validate
+        run: terraform validate
+        working-directory: tf/
+
+      - name: Planning Terraform
+        id: plan
+        run: terraform plan -var 'env=${{ inputs.tier }}' -var 'policy-boundary-arn=arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:policy/PermissionBoundary_PowerUser' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 'build-eracommons=${{ inputs.build-eracommons }}' -var 'build-userinfo=${{ inputs.build-userinfo }}'
+        working-directory: tf/
+
+      - name: Terraform Deployment
+        id: apply
+        run: terraform apply -auto-approve -input=false -lock=false -var 'env=${{ inputs.tier }}' -var 'policy-boundary-arn=arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:policy/PermissionBoundary_PowerUser' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 'build-eracommons=${{ inputs.build-eracommons }}' -var 'build-userinfo=${{ inputs.build-userinfo }}'
+        working-directory: tf/
