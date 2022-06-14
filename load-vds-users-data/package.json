@@ -1,0 +1,19 @@
+{
+  "name": "refresh-vds-users-2-ddb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "zip": "rm -rf node_modules && rm -rf ../lambda-zip/load-vds-users/load-vds-users.zip && npm install --only='prod' && zip -r ../lambda-zip//load-vds-users/load-vds-users.zip node_modules src/* load-local.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "latest",
+    "aws-xray-sdk-core": "^3.3.3",
+    "console-stamp": "^3.0.6",
+    "ldapjs": "^2.3.2"
+  }
+}

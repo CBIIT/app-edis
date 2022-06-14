@@ -6,7 +6,7 @@
 
 # Lambda Authorizer
 resource "aws_lambda_function" "auth_lambda" {
-  function_name = "lambda-auth-${var.app}-${var.api-gateway-name}-${var.env}"
+  function_name = "${var.app}-${var.api-gateway-name}-auth-${var.env}"
   role          = aws_iam_role.auth_lambda.arn
   description   = "Lambda function with basic authorization."
   handler       = "src/lambda.handler"
@@ -52,7 +52,7 @@ resource "aws_api_gateway_deployment" "api_gateway" {
 }
 
 resource "aws_api_gateway_authorizer" "api_gateway" {
-  name           = "era-commons-user-api-authorizer"
+  name           = "${var.app}-${var.api-gateway-name}-${var.env}-authorizer"
   rest_api_id    = aws_api_gateway_rest_api.api_gateway.id
   authorizer_uri = aws_lambda_function.auth_lambda.invoke_arn
   type           = "TOKEN"
