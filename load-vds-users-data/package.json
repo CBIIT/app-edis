@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "zip": "rm -rf node_modules && rm -rf ../lambda-zip/load-vds-users/load-vds-users.zip && npm install --only='prod' && zip -r ../lambda-zip//load-vds-users/load-vds-users.zip node_modules src/* load-local.js"
+    "zip": "rm -rf node_modules && rm -rf ../lambda-zip/load-vds-users/load-vds-users.zip && npm install --only='prod' && zip -r ../lambda-zip//load-vds-users/load-vds-users.zip node_modules src/*"
   },
   "keywords": [],
   "author": "",
