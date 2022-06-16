@@ -6,7 +6,7 @@ const {convertBase64Fields} = require("./util")
 
 let tlsOptions;
 
-const getUsers = async (ic) => {
+const getUsers = async (ic, pageCallBack) => {
 
     return new Promise(async function (resolve, reject) {
 
@@ -14,11 +14,10 @@ const getUsers = async (ic) => {
 
         var userSearchOptions = {
             scope: 'sub',
-            attributes: conf.vds.user_attributes,
-            filter: filter,
+            // attributes: conf.vds.user_attributes,
+            // filter: filter,
             paged: true
         };
-        var counter = 0;
         const ldapClient = await getLdapClient();
 
         ldapClient.bind(conf.vds.dn, conf.vds.pwd, function (err) {
@@ -28,7 +27,8 @@ const getUsers = async (ic) => {
                 ldapClient.destroy();
                 return reject(Error(err.message));
             }
-            var users = [];
+            let users = [];
+            let counter = 0;
             console.info('starting search');
             ldapClient.search(conf.vds.searchBase, userSearchOptions, function (err, ldapRes) {
                 if (err) {
@@ -48,14 +48,18 @@ const getUsers = async (ic) => {
                     users.push(obj);
                 });
                 ldapRes.on('searchReference', function () { });
-                ldapRes.on('page', function () {
+                ldapRes.on('page', async function () {
                     console.info(`page end | ${counter} users fetched`);
+                    if (pageCallBack) {
+                        await pageCallBack(users);
+                        users = [];
+                    }
                 });
                 ldapRes.on('error', function (err) {
                     ldapClient.destroy();
                     if (err.code === 32) {
                         // Object doesn't exist. The user DN is most likely not fully provisioned yet.
-                        resolve({});
+                        resolve(counter);
                     } else {
                         console.error('err');
                         reject(Error(err.message));
@@ -65,7 +69,7 @@ const getUsers = async (ic) => {
                     console.info('destroy client');
                     console.info(counter + ' records found');
                     ldapClient.destroy();
-                    resolve(users);
+                    resolve(counter);
                 });
             });
 

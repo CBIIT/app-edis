@@ -55,11 +55,59 @@ async function run()
     console.debug('Configuration is about to set...', configuration.ned_wsdl, configuration.ned_wsdl_changes);
     console.debug('Configuration is completed', configuration.ned_wsdl, configuration.ned_wsdl_changes);
     
-    const usersResp = await getUsers('NCI');
-    console.debug("Retrieved users - ", usersResp.length, typeof usersResp);
+    // Create a refresh mark as YYYYMMddHH
+    const usersCounter = await getUsers('NCI', processVdsUsers);
+    console.debug("Retrieved users - ", usersCounter, typeof usersCounter);
+    console.debug("Writing the marker: ", marker);
+    const markerRecord = {
+        vdsImport: marker,
+        NEDId: 'DBMARKER',
+        NIHORGACRONYM: 'DBMARKER'
+    }
+    const putParams = {
+        TableName: table,
+        Item: markerRecord
+    }
+    try {
+        await docClient.put(putParams).promise();
+    } catch (err) {
+        console.error(err)
+        process.exit(1);
+    }
     
+    console.log("Imported " + usersCounter + " data records into DynamoDb table \"" + table + "\"");
+    process.exit(0);
+}
+
+const marker = formatDate(new Date());
+run();
+
+async function processVdsUsers(users) {
+    console.debug('Processing ' + users.length + ' users' );
+    users.forEach(user => {
+        user.NEDId = user.UNIQUEIDENTIFIER;
+        user.FirstName = user.GIVENNAME;
+        user.MiddleName = user.MIDDLENAME;
+        user.LastName = user.NIHMIXCASESN;
+        user.Email = getEmail(user);
+        user.Phone = user.TELEPHONENUMBER;
+        user.Classification = user.ORGANIZATIONALSTAT;
+        user.SAC = user.NIHSAC;
+        user.AdministrativeOfficerId = user.NIHSERVAO;
+        user.COTRId = user.NIHCOTRID;
+        user.ManagerId = user.MANAGER;
+        user.Locality - user.L;
+        user.PointOfContactId = user.NIHPOC;
+        user.Division = getDivision(user);
+        user.Locality = user.L;
+        user.Site = user.NIHSITE;
+        user.Building = getBuilding(user);
+        user.Room = user.ROOMNUMBER;
+        user.vdsImport = marker;
+    });
+
     if (table === 'T') {
-        console.debug('Finished in test retrieval mode');
+        // console.debug('Finished in test retrieval mode');
         return;
     }
 
@@ -68,14 +116,13 @@ async function run()
     let n = 1;
     try {
 
-        const allRecs = JSON.parse(fs.readFileSync(inputfile, 'utf-8'));
-        const lastIndex = allRecs.length - 1;
-            let batch = [];
-        for (const [index, rec] of allRecs.entries()) {
-            console.debug(n, JSON.stringify(rec));
+        const lastIndex = users.length - 1;
+        let batch = [];
+        for (const [index, user] of users.entries()) {
+            // console.debug(n, JSON.stringify(rec));
             batch.push({
                 PutRequest : {
-                    Item: rec
+                    Item: user
                 }
             });
             if (batch.length >= 25 || (index === lastIndex)) {
@@ -92,15 +139,28 @@ async function run()
             }
             n++;
         }
-        n--;
     } catch (e) {
         console.error(e);
     }
-
-    console.log("Imported " + n + " data records into DynamoDb table \"" + inputfile + "\"");
 }
 
-run();
+// add leading zero
+function padTo2Digits(num) {
+    return num.toString().padStart(2, '0');
+}
+
+function formatDate(date) {
+    return (
+        [
+            date.getFullYear(),
+            padTo2Digits(date.getMonth() + 1),
+            padTo2Digits(date.getDate()),
+            padTo2Digits(date.getHours()),
+            padTo2Digits(date.getMinutes()),
+            padTo2Digits(date.getSeconds()),
+        ].join('')
+    );
+}
 
 // process.exit();
 // setTimeout(function () {
