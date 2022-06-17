@@ -51,8 +51,10 @@ const getUsers = async (ic, pageCallBack) => {
                 ldapRes.on('page', async function () {
                     console.info(`page end | ${counter} users fetched`);
                     if (pageCallBack) {
-                        await pageCallBack(users);
+                        const chunk = [];
+                        users.forEach(user => chunk.push(user));
                         users = [];
+                        await pageCallBack(chunk, counter);
                     }
                 });
                 ldapRes.on('error', function (err) {

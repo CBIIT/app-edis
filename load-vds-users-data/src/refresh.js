@@ -18,14 +18,13 @@ const args = process.argv.slice(2)
 const table = args[0];
 console.debug('Arguments: ', args)
 
-//Set the AWS profile if needed
-if (args.length > 1 && args[1]) {
-    console.debug("Setting up AWS profile to ", args[1]);
-    configOptions.credentials = new AWS.SharedIniFileCredentials({profile: args[1]});
-}
-
 AWS.config.update({ region: region });
 const SECRET = process.env.SECRET || 'era-commons-connect';
+
+// Create a Secrets Manager client
+const client = new AWS.SecretsManager({
+    region: region
+});
 
 async function getSecretParameters() {
     const data = await client.getSecretValue({SecretId: SECRET}).promise();
@@ -52,10 +51,13 @@ async function run()
     configuration.vds_cert = Buffer.from(configuration.vds_cert.replace(/\\n/g, '\n'), 'utf-8');
     initConfiguration(configuration);
     // Configure the SOAP Web Service credentials
-    console.debug('Configuration is about to set...', configuration.ned_wsdl, configuration.ned_wsdl_changes);
-    console.debug('Configuration is completed', configuration.ned_wsdl, configuration.ned_wsdl_changes);
+    // console.debug('Configuration is about to set...', configuration.ned_wsdl, configuration.ned_wsdl_changes);
+    // console.debug('Configuration is completed', configuration.ned_wsdl, configuration.ned_wsdl_changes);
     
-    // Create a refresh mark as YYYYMMddHH
+    console.debug('Starting dbRefresh...')
+    dbRefresh().then(r => {}); // Start async process to refresh DB
+
+    console.debug('Starting and waiting for getUsers...')
     const usersCounter = await getUsers('NCI', processVdsUsers);
     console.debug("Retrieved users - ", usersCounter, typeof usersCounter);
     console.debug("Writing the marker: ", marker);
@@ -76,16 +78,22 @@ async function run()
     }
     
     console.log("Imported " + usersCounter + " data records into DynamoDb table \"" + table + "\"");
-    process.exit(0);
+    inProgress = false;
 }
 
+// Create a refresh mark as YYYYMMddHH
 const marker = formatDate(new Date());
-run();
+//Initialize array and start flag
+const queueUsers = [];
+let inProgress = true;
 
-async function processVdsUsers(users) {
-    console.debug('Processing ' + users.length + ' users' );
+run().then(r => {});
+
+async function processVdsUsers(users, counter) {
+    const prefix = 'processVdsUsers(' + counter + ') - ';
+    console.debug(prefix + 'Processing ' + users.length + ' users' );
     users.forEach(user => {
-        user.NEDId = user.UNIQUEIDENTIFIER;
+        user.NEDId = '' + user.UNIQUEIDENTIFIER;
         user.FirstName = user.GIVENNAME;
         user.MiddleName = user.MIDDLENAME;
         user.LastName = user.NIHMIXCASESN;
@@ -96,7 +104,6 @@ async function processVdsUsers(users) {
         user.AdministrativeOfficerId = user.NIHSERVAO;
         user.COTRId = user.NIHCOTRID;
         user.ManagerId = user.MANAGER;
-        user.Locality - user.L;
         user.PointOfContactId = user.NIHPOC;
         user.Division = getDivision(user);
         user.Locality = user.L;
@@ -104,44 +111,45 @@ async function processVdsUsers(users) {
         user.Building = getBuilding(user);
         user.Room = user.ROOMNUMBER;
         user.vdsImport = marker;
+        queueUsers.push(user);
     });
+}
+
+async function dbRefresh() {
 
     if (table === 'T') {
         // console.debug('Finished in test retrieval mode');
         return;
     }
-
+    let processedCounter = 0;
     console.log("Importing data into DynamoDb table \"" + table + "\"");
-
-    let n = 1;
-    try {
-
-        const lastIndex = users.length - 1;
+    while (inProgress) {
+        let user = queueUsers.shift();
         let batch = [];
-        for (const [index, user] of users.entries()) {
-            // console.debug(n, JSON.stringify(rec));
+        while (typeof (user) !== 'undefined') {
             batch.push({
                 PutRequest : {
                     Item: user
                 }
             });
-            if (batch.length >= 25 || (index === lastIndex)) {
-
-                var params = {
+            processedCounter++;
+            user = queueUsers.shift();    
+            if (batch.length >= 25 || (typeof (user) === 'undefined' && batch.length > 0)) {
+                const params = {
                     RequestItems: {
                         [table]: batch
                     }
                 };
-
                 const data = await docClient.batchWrite(params).promise();
-                console.debug(n, 'result ', data);
+                console.debug(processedCounter, 'result ', data);
                 batch = [];
             }
-            n++;
         }
-    } catch (e) {
-        console.error(e);
+        console.debug('Sleeping for 1 sec')
+        await sleep(1000);
     }
+    console.info('Refresh is done');
+    process.exit(0);
 }
 
 // add leading zero
@@ -162,6 +170,64 @@ function formatDate(date) {
     );
 }
 
+const getEmail = (obj) => {
+
+    let result = null;
+
+    const proxyEmails = obj.proxyAddresses;
+    if (proxyEmails) {
+        if (Array.isArray(proxyEmails)) {
+            proxyEmails.forEach(email => {
+                const data = email.split(':');
+                if (data[0] === 'SMTP') {
+                    result = data[1];
+                }
+            });
+        } else {
+            const data = proxyEmails.split(':');
+            if (data[0] === 'SMTP') {
+                result = data[1];
+            }
+        }
+    }
+    return result;
+};
+
+const getBuilding = (obj) => {
+
+    if (obj.BUILDINGNAME) {
+        return 'BG ' + obj.BUILDINGNAME;
+    } else {
+        return 'N/A';
+    }
+};
+
+const getDivision = (obj) => {
+
+    let result = 'N/A';
+
+    if (obj.NIHORGPATH) {
+        const orgPathArr = obj.NIHORGPATH.split(' ') || [];
+        const len = orgPathArr.length;
+
+        if (len > 0 && len <= 2) {
+            result = orgPathArr[len - 1];
+        } else if (len > 2) {
+            if (orgPathArr[1] === 'OD') {
+                result = orgPathArr[2];
+            } else {
+                result = orgPathArr[1];
+            }
+        }
+    }
+
+    return result;
+
+};
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 // process.exit();
 // setTimeout(function () {
 //     process.exit();
