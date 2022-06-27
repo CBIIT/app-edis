@@ -11,9 +11,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-athena": "^3.118.0",
     "aws-sdk": "latest",
     "aws-xray-sdk-core": "^3.3.3",
     "console-stamp": "^3.0.6",
-    "ldapjs": "^2.3.2"
+    "ldapjs": "^2.3.2",
+    "parquetjs": "^0.11.2"
   }
 }

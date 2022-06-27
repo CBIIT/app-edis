@@ -90,3 +90,21 @@ module "api-gateway-userinfo" {
   api-gateway-name    = "userinfo"
   resource_tag_name   = "edis"
 }
+
+module "lambda-vds-users-delta" {
+  source              = "./modules/lambda"
+  env                 = var.env
+  must-be-role-prefix = var.role-prefix
+  must-be-policy-arn  = var.policy-boundary-arn
+  resource_tag_name   = "edis"
+  region              = "us-east-1"
+  app                 = "edis"
+  lambda-name         = "vds-users-delta"
+  file-name           = "../lambda-zip/lambda-vds-users-delta/lambda-vds-users-delta.zip"
+  lambda-description  = "Lambda function to run Athena query to get VDS users delta for refresh."
+  lambda-env-variables = tomap({
+    LOG_LEVEL = "debug"
+  })
+  lambda-managed-policies        = local.lambda_vds_users_delta_role_policies
+  create_api_gateway_integration = false
+}
