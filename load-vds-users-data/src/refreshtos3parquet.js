@@ -24,6 +24,7 @@ const table = args[0];
 const bucket = args[1];
 const folder = args[2];
 console.debug('Arguments: ', args)
+const ic = args.length > 3 ? args[3] : '';
 
 AWS.config.update({ region: region });
 const SECRET = process.env.SECRET || 'era-commons-connect';
@@ -67,7 +68,8 @@ const marker = '20220621185432';
 const markerRecord = {
     vdsImport: marker,
     NEDId: 'DBMARKER',
-    NIHORGACRONYM: 'DBMARKER'
+    NIHORGACRONYM: 'DBMARKER',
+    ic: ic ? ic : ''
 }
 const schema = new parquet.ParquetSchema({
     id: { type: 'UTF8'},
@@ -84,35 +86,16 @@ async function run()
     // Need to prepare private key here
     configuration.vds_cert = Buffer.from(configuration.vds_cert.replace(/\\n/g, '\n'), 'utf-8');
     initConfiguration(configuration);
-    // Configure the SOAP Web Service credentials
-    // console.debug('Configuration is about to set...', configuration.ned_wsdl, configuration.ned_wsdl_changes);
-    // console.debug('Configuration is completed', configuration.ned_wsdl, configuration.ned_wsdl_changes);
     
     console.debug('Starting s3Upload...')
     s3Upload().then(r => {}); // Start async process to refresh DB
 
     console.debug('Starting and waiting for getUsers...')
-    const usersCounter = await getUsers('NCI', processVdsUsers);
+    const usersCounter = await getUsers(ic, processVdsUsers);
     console.debug("Retrieved users - ", usersCounter, typeof usersCounter);
     console.debug("Writing the marker: ", marker);
     queueUsers.push(markerRecord);
 
-    // const markerRecord = {
-    //     vdsImport: marker,
-    //     NEDId: 'DBMARKER',
-    //     NIHORGACRONYM: 'DBMARKER'
-    // }
-    // const putParams = {
-    //     TableName: table,
-    //     Item: markerRecord
-    // }
-    // try {
-    //     await docClient.put(putParams).promise();
-    // } catch (err) {
-    //     console.error(err)
-    //     process.exit(1);
-    // }
-    
     console.log("Imported " + usersCounter + " data records into DynamoDb table \"" + table + "\"");
     inProgress = false;
 }
@@ -141,17 +124,18 @@ async function s3Upload() {
         return;
     }
     try {
-
         //prepare single s3 bucket
         let processedCounter = 0;
         console.log("Importing data into appropriate files");
         while (inProgress || queueUsers.length > 0) {
             let user = queueUsers.shift();
             while (typeof (user) !== 'undefined') {
-                const ic = user.NIHORGACRONYM ? user.NIHORGACRONYM : '';
+                const ic = user.NIHORGACRONYM ? user.NIHORGACRONYM : 'UNKNOWN';
                 let wsIc = s3Map.get(ic);
                 if (!wsIc) {
-                    const key = (ic === 'DBMARKER') ? folder + '/current_marker.mrk'
+                    const key = (ic === 'DBMARKER') ?
+                        ((user.ic && user.ic.length > 0) ? folder + '/current_marker_' + user.ic + '.mrk' :
+                                                           folder + '/current_marker.mrk') 
                         : folder + '/current/' + 'storage_' + ic + '.txt';
                     const {writeStream, uploadPromise} = createWriteStream(bucket, key);
                     const parquetWriter = await parquet.ParquetWriter.openStream(schema, writeStream);
@@ -165,7 +149,7 @@ async function s3Upload() {
                     console.log('Created write stream for', key);
                 }
                 if (user.UNIQUEIDENTIFIER === undefined) {
-                    user.UNIQUEIDENTIFIER = 'unknown';
+                    user.UNIQUEIDENTIFIER = 'UNKNOWN';
                 }
                 await wsIc.writer.appendRow({id: user.UNIQUEIDENTIFIER, content: JSON.stringify(user)});
                 //const writeStatus = wsIc.writeStream.write(user.UNIQUEIDENTIFIER + '\t' + JSON.stringify(user) + '\n');
@@ -180,8 +164,8 @@ async function s3Upload() {
                     console.info(processedCounter, ' records written...');
                 }
             }
-            console.debug('Sleeping for 1 sec')
-            await sleep(1000);
+            console.debug('Sleeping for 3 sec')
+            await sleep(3000);
         }
 
         console.debug('*****Closing Write Streams****')

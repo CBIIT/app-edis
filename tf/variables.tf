@@ -42,3 +42,8 @@ variable "build-userinfo" {
   description = "Set to true to deploy user info API related resources"
   default = false
 }
+
+variable "s3bucket-for-vds-users" {
+  type = string
+  description = "S3 Bucket name to load users info from VDS"
+}

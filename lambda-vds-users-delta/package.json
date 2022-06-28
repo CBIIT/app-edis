@@ -12,8 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "athena-express": "^7.1.5",
-    "aws-sdk": "latest",
-    "aws-xray-sdk-core": "^3.3.3",
     "console-stamp": "^3.0.6"
+  },
+  "devDependencies": {
+    "aws-sdk": "latest",
+    "aws-xray-sdk-core": "^3.3.3"
   }
 }

@@ -108,3 +108,29 @@ module "lambda-vds-users-delta" {
   lambda-managed-policies        = local.lambda_vds_users_delta_role_policies
   create_api_gateway_integration = false
 }
+
+
+module "lambda-load-from-vds" {
+  source              = "./modules/lambda"
+  env                 = var.env
+  must-be-role-prefix = var.role-prefix
+  must-be-policy-arn  = var.policy-boundary-arn
+  resource_tag_name   = "edis"
+  region              = "us-east-1"
+  app                 = "edis"
+  lambda-name         = "load-from-vds"
+  file-name           = "../lambda-zip/lambda-load-from-vds.zip"
+  lambda-description  = "Lambda function to load VDS users into S3 bucket"
+  lambda-env-variables = tomap({
+    LOG_LEVEL = "debug"
+    SECRET    = "era-commons-connect"
+    S3BUCKET  = var.s3bucket-for-vds-users
+    S3FOLDER  = "app-edis-data-${var.env}"
+  })
+  lambda-managed-policies        = local.lambda_userinfo_api_role_policies
+  create_api_gateway_integration = true
+  api_gateway_rest_api_id        = module.api-gateway-userinfo[0].rest_api_id
+  subnet_ids = [ var.subnet1, var.subnet2 ]
+  security_group_ids = [ var.vpcsg ]
+}
+

@@ -10,14 +10,18 @@ const getUsers = async (ic, pageCallBack) => {
 
     return new Promise(async function (resolve, reject) {
 
-        const filter = '(NIHORGACRONYM=' + ic + ')';
-
         var userSearchOptions = {
             scope: 'sub',
             // attributes: conf.vds.user_attributes,
-            // filter: filter,
-            paged: true
+            paged: true,
+            sizeLimit: 301
         };
+        if (ic && ic.length > 0) {
+            userSearchOptions.filter = '(NIHORGACRONYM=' + ic + ')';
+        }
+
+        console.debug('User Search Options', userSearchOptions);
+        
         const ldapClient = await getLdapClient();
 
         ldapClient.bind(conf.vds.dn, conf.vds.pwd, function (err) {
