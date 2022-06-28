@@ -115,10 +115,10 @@ jobs:
 
       - name: Planning Terraform
         id: plan
-        run: terraform plan -var 'env=${{ inputs.tier }}' -var 'policy-boundary-arn=arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:policy/PermissionBoundary_PowerUser' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 'build-eracommons=${{ inputs.build-eracommons }}' -var 'build-userinfo=${{ inputs.build-userinfo }}'
+        run: terraform plan -var 'env=${{ inputs.tier }}' -var 'policy-boundary-arn=arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:policy/PermissionBoundary_PowerUser' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 'build-eracommons=${{ inputs.build-eracommons }}' -var 'build-userinfo=${{ inputs.build-userinfo }}' -var 's3bucket-for-vds-users=${{ inputs.s3bucket }}'
         working-directory: tf/
 
       - name: Terraform Deployment
         id: apply
-        run: terraform apply -auto-approve -input=false -lock=false -var 'env=${{ inputs.tier }}' -var 'policy-boundary-arn=arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:policy/PermissionBoundary_PowerUser' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 'build-eracommons=${{ inputs.build-eracommons }}' -var 'build-userinfo=${{ inputs.build-userinfo }}'
+        run: terraform apply -auto-approve -input=false -lock=false -var 'env=${{ inputs.tier }}' -var 'policy-boundary-arn=arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:policy/PermissionBoundary_PowerUser' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 'build-eracommons=${{ inputs.build-eracommons }}' -var 'build-userinfo=${{ inputs.build-userinfo }}' -var 's3bucket-for-vds-users=${{ inputs.s3bucket }}'
         working-directory: tf/
