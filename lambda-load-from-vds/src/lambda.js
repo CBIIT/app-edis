@@ -157,7 +157,6 @@ async function batchUpload(queue, s3Map, counter) {
 }
 
 async function closeWriteStreams(s3Map) {
-    try {
         console.debug('*****Closing Write Streams****')
         for (const [key, value] of s3Map.entries()) {
             // value.writeStream.end();
@@ -167,10 +166,6 @@ async function closeWriteStreams(s3Map) {
             console.debug('Got await from uploadPromise', response)
         }
         await sleep(1000); // last sleep - kludge
-
-    } catch (err) {
-        console.error(err);
-    }
 }
 
 function sleep(ms) {

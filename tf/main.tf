@@ -127,7 +127,7 @@ module "lambda-load-from-vds" {
     S3BUCKET  = var.s3bucket-for-vds-users
     S3FOLDER  = "app-edis-data-${var.env}"
   })
-  lambda-managed-policies        = local.lambda_userinfo_api_role_policies
+  lambda-managed-policies        = local.lambda_load_from_vds_role_policies
   create_api_gateway_integration = true
   api_gateway_rest_api_id        = module.api-gateway-userinfo[0].rest_api_id
   subnet_ids = [ var.subnet1, var.subnet2 ]
