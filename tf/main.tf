@@ -112,6 +112,7 @@ module "lambda-vds-users-delta" {
 
 module "lambda-load-from-vds" {
   source              = "./modules/lambda"
+  depends_on = [aws_iam_policy.iam_access_s3]
   env                 = var.env
   must-be-role-prefix = var.role-prefix
   must-be-policy-arn  = var.policy-boundary-arn
@@ -127,7 +128,13 @@ module "lambda-load-from-vds" {
     S3BUCKET  = var.s3bucket-for-vds-users
     S3FOLDER  = "app-edis-data-${var.env}"
   })
-  lambda-managed-policies        = local.lambda_load_from_vds_role_policies
+  lambda-managed-policies        = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
+    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
+    "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
+    aws_iam_policy.iam_access_s3.arn
+  ]
   create_api_gateway_integration = true
   api_gateway_rest_api_id        = module.api-gateway-userinfo[0].rest_api_id
   subnet_ids = [ var.subnet1, var.subnet2 ]
