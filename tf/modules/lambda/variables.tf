@@ -58,8 +58,10 @@ variable "lambda-env-variables" {
 
 variable "lambda-managed-policies" {
   description = "List of AWS or customer managed policies to attach to lambda iam role"
-  type        = list(string)
-  default     = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
+  type        = map(string)
+  default     = {
+    "1" = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  }
 }
 
 variable "security_group_ids" {

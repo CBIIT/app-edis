@@ -24,7 +24,7 @@ module "lambda-era-commons-api" {
     LOG_LEVEL = "info"
     TABLE     = module.ddb-extusers[0].ddb-extusers-name
   })
-  lambda-managed-policies        = local.lambda_era_commons_api_role_policies
+  lambda-managed-policies        = { for idx, val in local.lambda_era_commons_api_role_policies: idx => val }
   create_api_gateway_integration = true
   api_gateway_rest_api_id        = module.api-gateway-era-commons[0].rest_api_id
 }
@@ -53,7 +53,7 @@ module "lambda-userinfo-api" {
     LOG_LEVEL = "info"
     SECRET    = "era-commons-connect"
   })
-  lambda-managed-policies        = local.lambda_userinfo_api_role_policies
+  lambda-managed-policies        = { for idx, val in local.lambda_userinfo_api_role_policies: idx => val }
   create_api_gateway_integration = true
   api_gateway_rest_api_id        = module.api-gateway-userinfo[0].rest_api_id
   subnet_ids = [ var.subnet1, var.subnet2 ]
@@ -105,7 +105,7 @@ module "lambda-vds-users-delta" {
   lambda-env-variables = tomap({
     LOG_LEVEL = "debug"
   })
-  lambda-managed-policies        = local.lambda_vds_users_delta_role_policies
+  lambda-managed-policies        = { for idx, val in local.lambda_vds_users_delta_role_policies: idx => val }
   create_api_gateway_integration = false
 }
 
@@ -128,13 +128,7 @@ module "lambda-load-from-vds" {
     S3BUCKET  = var.s3bucket-for-vds-users
     S3FOLDER  = "app-edis-data-${var.env}"
   })
-  lambda-managed-policies        = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
-    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
-    "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
-    aws_iam_policy.iam_access_s3.arn
-  ]
+  lambda-managed-policies        = { for idx, val in local.lambda_load_from_vds_role_policies: idx => val }
   create_api_gateway_integration = true
   api_gateway_rest_api_id        = module.api-gateway-userinfo[0].rest_api_id
   subnet_ids = [ var.subnet1, var.subnet2 ]

@@ -19,8 +19,8 @@ resource "aws_iam_role" "iam_for_lambda" {
 }
 
 resource "aws_iam_role_policy_attachment" "iam_for_lambda" {
-  for_each   = toset(var.lambda-managed-policies)
-  policy_arn = each.key
+  for_each   = var.lambda-managed-policies
+  policy_arn = each.value
   role       = aws_iam_role.iam_for_lambda.name
 }
 
