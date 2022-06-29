@@ -12,7 +12,7 @@ resource "aws_lambda_function" "lambda" {
   handler       = "src/lambda.handler"
   runtime       = "nodejs12.x"
   memory_size   = 2048
-  timeout       = 30
+  timeout       = var.lambda_timeout
   tracing_config {
     mode = "Active"
   }
