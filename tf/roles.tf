@@ -7,6 +7,19 @@ data "aws_iam_policy_document" "iam_access_s3" {
       "arn:aws:s3:::${var.s3bucket-for-vds-users}/app-edis-data-${var.env}/*"
     ]
   }
+  statement {
+    sid     = "s3ListVdsFiles"
+    effect  = "Allow"
+    actions = ["s3:ListBucket"]
+    resources = [
+      "arn:aws:s3:::${var.s3bucket-for-vds-users}"
+    ]
+    condition {
+      test     = "StringLike"
+      values   = [ "app-edis-data-${var.env}/*" ]
+      variable = "s3:prefix"
+    }
+  }
 }
 
 resource "aws_iam_policy" "iam_access_s3" {
