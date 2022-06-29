@@ -1,11 +1,11 @@
 'use strict'
 
-require('console-stamp')(console);
+// require('console-stamp')(console);
 const parquet = require('parquetjs')
 const stream = require("stream");
 const { initConfiguration, conf } = require("./conf");
 const { getUsers }  = require('./vdsActions')
-const { formatDate } = require("./util")
+const { formatDate, sleep } = require("./util")
 
 const AWS = require('aws-sdk'),
     region = 'us-east-1'
@@ -64,7 +64,7 @@ const S3 = new AWS.S3();
 
 module.exports.handler = async (event, context) => {
     context.callbackWaitsForEmptyEventLoop = false;
-    console.debug('Lambda-cds-user-delta', event);
+    console.info('Lambda-cds-user-delta', event);
     
     const ic = event.ic;
     
@@ -86,17 +86,17 @@ module.exports.handler = async (event, context) => {
         const s3Map = new Map();
 
         const usersCounter = await getUsers(ic, processVdsUsers, s3Map);
-        console.debug("Retrieved users - ", usersCounter, typeof usersCounter);
+        console.debug("getUsers...done. Records retrieved", usersCounter, );
 
         console.debug("Writing the marker: ", marker);
         const queueUsers = [];
         queueUsers.push(markerRecord);
-        await batchUpload(queueUsers, s3Map);
+        await batchUpload(queueUsers, 1, s3Map);
 
         await closeWriteStreams(s3Map);
-        console.info("Imported " + usersCounter + " data records into S3 bucket ");
+        console.info("Completed - imported " + usersCounter + " data records into S3 bucket ");
     } catch (error) {
-        console.error(error);
+        console.error('lambda handler',error);
         throw error;
     }
 }
@@ -109,10 +109,10 @@ async function processVdsUsers(users, counter, s3Map) {
             delete user[attr];
         }
     });
-    await batchUpload(users, s3Map, counter);
+    await batchUpload(users, counter, s3Map);
 }
 
-async function batchUpload(queue, s3Map, counter) {
+async function batchUpload(queue, counter, s3Map) {
     if (process.env.TEST) {
         // console.debug('Finished in test retrieval mode');
         return;
@@ -140,19 +140,21 @@ async function batchUpload(queue, s3Map, counter) {
                         writer: parquetWriter
                     }
                     s3Map.set(ic, wsIc);
-                    console.log('Created write stream for', key);
+                    console.info('Created write stream for', key);
                 }
                 if (user.UNIQUEIDENTIFIER === undefined) {
                     user.UNIQUEIDENTIFIER = 'UNKNOWN';
                 }
+                console.debug('Append row...', user.UNIQUEIDENTIFIER, queue.length)
                 await wsIc.writer.appendRow({id: user.UNIQUEIDENTIFIER, content: JSON.stringify(user)});
+                console.debug('Append row... done', user.UNIQUEIDENTIFIER, queue.length)
 
                 user = queue.shift();
             }
-            console.debug('Batch has been written', counter);
+            console.info('Batch upload...done', counter);
         }
     } catch (err) {
-        console.error(err); //TODO
+        console.error('Batch upload error -',err); //TODO
     }
 }
 
@@ -161,14 +163,11 @@ async function closeWriteStreams(s3Map) {
         for (const [key, value] of s3Map.entries()) {
             // value.writeStream.end();
             await value.writer.close();
-            console.debug('Waiting from uploadPromise of ', key);
+            console.debug('uploadPromise of ', key);
             const response = await value.uploadPromise;
-            console.debug('Got await from uploadPromise', response)
+            console.info('uploadPromise...done', response)
         }
         await sleep(1000); // last sleep - kludge
 }
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 

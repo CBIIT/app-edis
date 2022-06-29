@@ -2,7 +2,7 @@
 
 const {conf} = require("./conf");
 const ldap = require('ldapjs');
-const {convertBase64Fields} = require("./util")
+const {convertBase64Fields, sleep} = require("./util")
 
 let tlsOptions;
 
@@ -33,10 +33,12 @@ const getUsers = async (ic, pageCallBack, s3Map) => {
             }
             let users = [];
             let counter = 0;
+            let chunk = [];
+            let processingPage = false; 
             console.info('starting search');
             ldapClient.search(conf.vds.searchBase, userSearchOptions, function (err, ldapRes) {
                 if (err) {
-                    console.error(err);
+                    console.error('starting search error',err);
                     return reject(Error(err.message));
                 }
                 if (!ldapRes) {
@@ -53,28 +55,36 @@ const getUsers = async (ic, pageCallBack, s3Map) => {
                 });
                 ldapRes.on('searchReference', function () { });
                 ldapRes.on('page', async function () {
-                    console.info(`page end | ${counter} users fetched`);
+                    processingPage = true;
+                    console.info('ldap page - records fetched', counter);
                     if (pageCallBack) {
-                        const chunk = [];
+                        await waitForChunkEmpty(chunk);
+                        chunk = [];
                         users.forEach(user => chunk.push(user));
                         users = [];
                         await pageCallBack(chunk, counter, s3Map);
                     }
+                    console.debug('ldap page...done - record fetched', counter);
+                    processingPage = false;
                 });
                 ldapRes.on('error', function (err) {
+                    console.error('ldap error - records fetched', counter, err);
                     ldapClient.destroy();
                     if (err.code === 32) {
                         // Object doesn't exist. The user DN is most likely not fully provisioned yet.
                         resolve(counter);
                     } else {
-                        console.error('err');
+                        console.error('ldap error -', err);
                         reject(Error(err.message));
                     }
                 });
-                ldapRes.on('end', function () {
-                    console.info('destroy client');
-                    console.info(counter + ' records found');
+                ldapRes.on('end', async function () {
+                    console.info('ldap end - destroy client');
+                    while (processingPage) {
+                        await waitForChunkEmpty(chunk);
+                    }
                     ldapClient.destroy();
+                    console.info('ldap end...done', counter);
                     resolve(counter);
                 });
             });
@@ -129,6 +139,14 @@ function _getTlsOptions() {
         };
     }
     return tlsOptions;
+}
+
+async function waitForChunkEmpty(chunk) {
+    console.debug('Wait for chunk empty', chunk.length);
+    while (chunk.length > 0) {
+        await sleep(1000);
+    }
+    console.debug('Wait for chunk empty...done', chunk.length);
 }
 
 module.exports = {getUsers}

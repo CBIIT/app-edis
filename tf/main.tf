@@ -133,5 +133,6 @@ module "lambda-load-from-vds" {
   api_gateway_rest_api_id        = module.api-gateway-userinfo[0].rest_api_id
   subnet_ids = [ var.subnet1, var.subnet2 ]
   security_group_ids = [ var.vpcsg ]
+  lambda_timeout = 900
 }
 

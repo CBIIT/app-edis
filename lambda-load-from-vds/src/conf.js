@@ -92,6 +92,9 @@ const conf = {
             'unixHomeDirectory',
             'MBPROVISIONTYPECD'
         ],
+        includedAttributes: [
+            
+        ],
         searchBase: 'ou=Users,ou=NIH,ou=NIHInternalview,ou=NIHViews',
         base64LdapFields: [
             'objectGUID',

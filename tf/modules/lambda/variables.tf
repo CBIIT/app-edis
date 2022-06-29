@@ -75,6 +75,12 @@ variable "subnet_ids" {
   default = []
 }
 
+variable "lambda_timeout" {
+  description = "Lambda function timeout (default 30 sec, max is 900 - 15min)"
+  type = number
+  default = 30
+}
+
 # -----------------------------------------------------------------------------
 # Variables: API Gateway integration
 # -----------------------------------------------------------------------------
