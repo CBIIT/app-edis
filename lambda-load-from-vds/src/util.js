@@ -95,5 +95,8 @@ function getDivision(obj) {
 
 };
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-module.exports = { convertBase64Fields, padTo2Digits, formatDate, getEmail, getBuilding, getDivision };
+module.exports = { convertBase64Fields, padTo2Digits, formatDate, getEmail, getBuilding, getDivision, sleep };
