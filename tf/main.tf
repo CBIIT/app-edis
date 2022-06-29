@@ -109,7 +109,6 @@ module "lambda-vds-users-delta" {
   create_api_gateway_integration = false
 }
 
-
 module "lambda-load-from-vds" {
   source              = "./modules/lambda"
   depends_on = [aws_iam_policy.iam_access_s3]
@@ -129,10 +128,28 @@ module "lambda-load-from-vds" {
     S3FOLDER  = "app-edis-data-${var.env}"
   })
   lambda-managed-policies        = { for idx, val in local.lambda_load_from_vds_role_policies: idx => val }
-  create_api_gateway_integration = true
-  api_gateway_rest_api_id        = module.api-gateway-userinfo[0].rest_api_id
   subnet_ids = [ var.subnet1, var.subnet2 ]
   security_group_ids = [ var.vpcsg ]
   lambda_timeout = 900
+}
+
+module "lambda-prepare-s3-for-vds" {
+  source              = "./modules/lambda"
+  depends_on = [aws_iam_policy.iam_access_s3]
+  env                 = var.env
+  must-be-role-prefix = var.role-prefix
+  must-be-policy-arn  = var.policy-boundary-arn
+  resource_tag_name   = "edis"
+  region              = "us-east-1"
+  app                 = "edis"
+  lambda-name         = "prepare-s3-for-vds"
+  file-name           = "../lambda-zip/lambda-prepare-s3-for-vds.zip"
+  lambda-description  = "Lambda function to load VDS users into S3 bucket"
+  lambda-env-variables = tomap({
+    LOG_LEVEL = "debug"
+    S3BUCKET  = var.s3bucket-for-vds-users
+    S3FOLDER  = "app-edis-data-${var.env}"
+  })
+  lambda-managed-policies        = { for idx, val in local.lambda_prepare_s3_for_vds_role_policies: idx => val }
 }
 

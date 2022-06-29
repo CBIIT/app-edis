@@ -1,0 +1,19 @@
+{
+  "name": "prepare-s3-for-vds",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "zip": "rm -rf node_modules && rm -rf ../lambda-zip/lambda-prepare-s3-for-vds.zip && npm install --only='prod' && zip -r ../lambda-zip/lambda-prepare-s3-for-vds.zip node_modules src/*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "aws-sdk": "latest",
+    "aws-xray-sdk-core": "^3.3.3"
+  }
+}
+
+
