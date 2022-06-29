@@ -33,15 +33,17 @@ module.exports.handler = async (event, context, callback) => {
             Prefix: folder + '/prev/'
         }
         const listedFiles = await S3.listObjectsV2(params).promise();
+        console.debug('Preparing list of objects to delete...')
         if (listedFiles && listedFiles.Contents.length > 0) {
             const deleteParams = {
                 Bucket: bucket,
                 Delete: { Objects: [] }
             };
             listedFiles.Contents.forEach((content) => {
-                deleteParams.Delete.Objects.push({ Key: content.key});
+                deleteParams.Delete.Objects.push({ Key: content.Key});
+                console.debug('Clean up file', content.Key);
             });
-            console.info('Clean up files from prev folder', deleteParams);
+            console.info('Prepare to cleanup', deleteParams.Delete.Objects.length, 'objects')
         }
         callback(null, {
             ICList: [ 'OD', 'NCI']
