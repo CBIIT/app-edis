@@ -78,7 +78,7 @@ module.exports.handler = async (event, context, callback) => {
         }
 
         // Finally returns a list of ICs to be loaded from VDS
-        callback(null, conf.IC);
+        callback(null, conf);
     } catch (error) {
         console.error('lambda handler',error);
         throw error;
