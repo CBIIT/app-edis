@@ -28,3 +28,26 @@ resource "aws_iam_policy" "iam_access_s3" {
   description = "Access to given S3 bucket folder"
   policy      = data.aws_iam_policy_document.iam_access_s3.json
 }
+
+data "aws_iam_policy_document" "assume_role_step_function" {
+  statement {
+    sid     = ""
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["states.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "step_function" {
+  name               = "${var.role-prefix}-edis-step-function-vds-${var.env}"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_step_function.json
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaRole"
+  ]
+  path                 = "/"
+  permissions_boundary = var.policy-boundary-arn
+}
+
