@@ -42,10 +42,11 @@ data "aws_iam_policy_document" "assume_role_step_function" {
 }
 
 resource "aws_iam_role" "step_function" {
-  name               = "${var.role-prefix}-edis-step-function-vds-${var.env}"
+  name               = "${var.role-prefix}-step-function-vds-${var.env}"
   assume_role_policy = data.aws_iam_policy_document.assume_role_step_function.json
   managed_policy_arns = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaRole"
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaRole",
+    "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
   ]
   path                 = "/"
   permissions_boundary = var.policy-boundary-arn
