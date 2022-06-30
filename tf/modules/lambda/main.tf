@@ -24,6 +24,7 @@ resource "aws_lambda_function" "lambda" {
     Name = var.resource_tag_name
   }
   filename = var.file-name
+  source_code_hash = filebase64sha256("${var.file-name}")
   vpc_config {
     security_group_ids = var.security_group_ids
     subnet_ids         = var.subnet_ids
