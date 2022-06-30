@@ -130,7 +130,7 @@ async function batchUpload(queue, counter, s3Map) {
                     const key = (ic === 'DBMARKER') ?
                         ((user.ic && user.ic.length > 0) ? folder + '/current_marker_' + user.ic + '.mrk' :
                             folder + '/current_marker.mrk')
-                        : folder + '/current/' + 'storage_' + ic + '.txt';
+                        : folder + '/current/' + 'storage_' + ic + '.parquet';
                     const {writeStream, uploadPromise} = createWriteStream(bucket, key);
                     const parquetWriter = await parquet.ParquetWriter.openStream(schema, writeStream);
 
