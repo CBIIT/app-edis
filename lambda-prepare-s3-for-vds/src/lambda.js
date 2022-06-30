@@ -1,5 +1,5 @@
 'use strict'
-
+const { conf } = require('./conf');
 // const { formatDate } = require("./util");
 
 const AWS = require('aws-sdk'),
@@ -41,14 +41,15 @@ module.exports.handler = async (event, context, callback) => {
         };
 
         let listedFiles = await S3.listObjectsV2(prevParams).promise();
-        console.debug('Preparing list of objects to delete...')
+        console.debug('Preparing list of objects to delete...', listedFiles.Contents.length);
         if (listedFiles && listedFiles.Contents.length > 0) {
             listedFiles.Contents.forEach((content) => {
                 deleteParams.Delete.Objects.push({ Key: content.Key});
                 console.debug('Clean up file', content.Key);
             });
             console.info('Prepare to cleanup...done', deleteParams.Delete.Objects.length, 'objects')
-            const deletedResponse = await S3.deleteObjects(deleteParams);
+            console.debug('About to delete...', deleteParams)
+            const deletedResponse = await S3.deleteObjects(deleteParams).promise();
             console.debug('Delete objects...done', deletedResponse.Deleted);
         }
 
@@ -58,25 +59,26 @@ module.exports.handler = async (event, context, callback) => {
             Prefix: currPrefix
         }
         listedFiles = await S3.listObjectsV2(currParams).promise();
-        deleteParams.Delete.Objects = [];
-        await Promise.all(
-            listedFiles.Contents.map(async (fileInfo) => {
-                deleteParams.Delete.Objects.push({ Key: fileInfo.Key});
-                await S3.copyObject({
-                    Bucket: bucket,
-                    CopySource: bucket + '/' + fileInfo.Key,
-                    Key: fileInfo.Key.replace('/current/', '/prev/')
-                }).promise();
-            })
-        );
-        // Delete all files from the 'current' folder
-        const deletedResponse = await S3.deleteObjects(deleteParams);
-        console.debug('Delete objects...done', deletedResponse.Deleted);
+        console.debug('Preparing list of objects to move...', listedFiles.Contents.length);
+        if (listedFiles && listedFiles.Contents.length > 0) {
+            deleteParams.Delete.Objects = [];
+            await Promise.all(
+                listedFiles.Contents.map(async (fileInfo) => {
+                    deleteParams.Delete.Objects.push({Key: fileInfo.Key});
+                    await S3.copyObject({
+                        Bucket: bucket,
+                        CopySource: bucket + '/' + fileInfo.Key,
+                        Key: fileInfo.Key.replace('/current/', '/prev/')
+                    }).promise();
+                })
+            );
+            // Delete all files from the 'current' folder
+            const deletedResponse = await S3.deleteObjects(deleteParams).promise();
+            console.debug('Delete objects...done', deletedResponse.Deleted);
+        }
 
         // Finally returns a list of ICs to be loaded from VDS
-        callback(null, {
-            ICList: [ 'OD', 'NCI']
-        });
+        callback(null, conf.IC);
     } catch (error) {
         console.error('lambda handler',error);
         throw error;
