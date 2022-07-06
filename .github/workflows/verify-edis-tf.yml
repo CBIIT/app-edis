@@ -48,10 +48,6 @@ jobs:
           echo S3 Bucket - ${{ github.event.inputs.s3bucket }}
           echo Secret - ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
       
-      - name: Check the existence of artifact
-        run: |
-          ls -la lambda-zip/lambda-userapi
-
       - name: Setup AWS configuration
         uses: aws-actions/configure-aws-credentials@master
         with:
@@ -71,7 +67,7 @@ jobs:
 
       - name: Init Terraform
         id: init
-        run: terraform init
+        run: terraform init -backend-config="bucket=${{ inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/api-edis-verify-${{ inputs.tier }}" -backend-config="region=us-east-1"
         working-directory: tf/
 
       - name: Validate Terraform
