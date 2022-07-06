@@ -131,6 +131,7 @@ module "lambda-load-from-vds" {
   subnet_ids = [ var.subnet1, var.subnet2 ]
   security_group_ids = [ var.vpcsg ]
   lambda_timeout = 900
+  max-retry = 1
 }
 
 module "lambda-prepare-s3-for-vds" {

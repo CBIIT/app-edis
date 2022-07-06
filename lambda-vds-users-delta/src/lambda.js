@@ -37,7 +37,7 @@ module.exports.handler = async (event, context) => {
         
         query = 'select id from "prevp_t"\n' +
             'except\n' +
-            'select id from "currentp_t")';
+            'select id from "currentp_t"';
         const deletedResults = await athenaExpress.query(query);
         console.info('Deleted delta:', deletedResults);
 
