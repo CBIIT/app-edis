@@ -20,30 +20,52 @@ if (logLevel && logLevel === 'info') {
 
 const S3 = new AWS.S3();
 
+/**
+ * Function to move S3 objects from one folder to another relative to the 'based path' defined in S3FOLDER
+ * environment variable OR delete S3 objects if the destination folder is not defined
+ * 
+ * @param event - JSON object:
+ * {
+ *     src: 'xxx', -- source sub folder to move objects from (required)
+ *     dst: 'yyy'  -- destination sub folder to move objects to (optional - undefined or empty - just delete from src)
+ * }
+ * @param context - event context
+ * @param callback - return JSON array of ICs (TBD)  or error
+ * 
+ */
 module.exports.handler = async (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
     console.info('Lambda-prepare-s3-for-vds', event);
     
-    // const marker = formatDate(new Date());
+    // Input validation
+    if (!event.src || event.src.length === 0) {
+        callback('Error - src folder is not defined');
+        return;
+    }
     
-    try {
-        // Step1.  Remove all files from .../prev/ folder
-        console.debug('Removing all files from prev folder of S3...')
-        const prevPrefix = folder + '/prev/';
-        const currPrefix = folder + '/current/'
-        const prevParams = {
-            Bucket: bucket,
-            Prefix: prevPrefix
-        }
-        const deleteParams = {
-            Bucket: bucket,
-            Delete: { Objects: [] }
-        };
+    const fromFolder = event.src;
+    const toFolder = event.dst;
+    const fromPrefix = folder + '/' + fromFolder + '/';
+    const toPrefix = (toFolder && toFolder.length > 0) ? folder + '/' + toFolder + '/' : ''; 
 
-        let listedFiles = await S3.listObjectsV2(prevParams).promise();
-        console.debug('Preparing list of objects to delete...', listedFiles.Contents.length);
-        if (listedFiles && listedFiles.Contents.length > 0) {
-            listedFiles.Contents.forEach((content) => {
+    try {
+    const deleteParams = {
+        Bucket: bucket,
+        Delete: { Objects: [] }
+    };
+
+    // Step1.  Remove all files from 'dst' folder (if dst folder is defined
+    console.debug('Removing all files from dst folder of S3...', toFolder);
+    if (toPrefix.length > 0) {
+        const listParams = {
+            Bucket: bucket,
+            Prefix: toPrefix
+        }
+        let fileList = await S3.listObjectsV2(listParams).promise();
+
+        console.debug('Preparing list of objects to delete...', fileList.Contents.length);
+        if (fileList && fileList.Contents.length > 0) {
+            fileList.Contents.forEach((content) => {
                 deleteParams.Delete.Objects.push({ Key: content.Key});
                 console.debug('Clean up file', content.Key);
             });
@@ -52,35 +74,49 @@ module.exports.handler = async (event, context, callback) => {
             const deletedResponse = await S3.deleteObjects(deleteParams).promise();
             console.debug('Delete objects...done', deletedResponse.Deleted);
         }
-
-        // Step2.  Move all files from .../current/ folder
-        const currParams = {
+    }
+        
+        // Step2. Get a list of files in 'src' folder
+        const fromListParams = {
             Bucket: bucket,
-            Prefix: currPrefix
+            Prefix: fromPrefix
         }
-        listedFiles = await S3.listObjectsV2(currParams).promise();
-        console.debug('Preparing list of objects to move...', listedFiles.Contents.length);
-        if (listedFiles && listedFiles.Contents.length > 0) {
+        const fromFileList = await S3.listObjectsV2(fromListParams).promise();
+        console.debug('Preparing list of objects to move...', fromFileList.Contents.length);
+
+        if (fromFileList && fromFileList.Contents.length > 0) {
+
+            // Step3. Move all files from src to dst folder if dst folder is defined
+            if (toPrefix.length > 0) {
+                await Promise.all(
+                    fromFileList.Contents.map(async (fileInfo) => {
+                        console.debug('Copying', fileInfo.Key, ' to ', fileInfo.Key.replace(fromPrefix, toPrefix));
+                        await S3.copyObject({
+                            Bucket: bucket,
+                            CopySource: bucket + '/' + fileInfo.Key,
+                            Key: fileInfo.Key.replace(fromPrefix, toPrefix)
+                        }).promise();
+                        console.debug('Copying...done');
+                    })
+                );
+            }
+
+            // Step4. Delete all files from the 'src' folder
             deleteParams.Delete.Objects = [];
-            await Promise.all(
-                listedFiles.Contents.map(async (fileInfo) => {
-                    deleteParams.Delete.Objects.push({Key: fileInfo.Key});
-                    await S3.copyObject({
-                        Bucket: bucket,
-                        CopySource: bucket + '/' + fileInfo.Key,
-                        Key: fileInfo.Key.replace('/current/', '/prev/')
-                    }).promise();
-                })
-            );
-            // Delete all files from the 'current' folder
+            fromFileList.Contents.forEach((content) => {
+                deleteParams.Delete.Objects.push({ Key: content.Key});
+                console.debug('Delete file', content.Key);
+            });
+            console.debug('Deleting objects...', deleteParams.Delete.Objects);
             const deletedResponse = await S3.deleteObjects(deleteParams).promise();
             console.debug('Delete objects...done', deletedResponse.Deleted);
         }
 
         // Finally returns a list of ICs to be loaded from VDS
-        callback(null, conf);
+        console.info('Move files from', fromPrefix, '...done');
+        callback(null, conf); // TBD
     } catch (error) {
-        console.error('lambda handler',error);
+        console.error('error lambda handler',error);
         throw error;
     }
 }

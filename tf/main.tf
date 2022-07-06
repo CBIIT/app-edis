@@ -103,7 +103,7 @@ module "lambda-vds-users-delta" {
   file-name           = "../lambda-zip/lambda-vds-users-delta/lambda-vds-users-delta.zip"
   lambda-description  = "Lambda function to run Athena query to get VDS users delta for refresh."
   lambda-env-variables = tomap({
-    LOG_LEVEL = "debug"
+    LOG_LEVEL = "info"
   })
   lambda-managed-policies        = { for idx, val in local.lambda_vds_users_delta_role_policies: idx => val }
   create_api_gateway_integration = false
@@ -122,7 +122,7 @@ module "lambda-load-from-vds" {
   file-name           = "../lambda-zip/lambda-load-from-vds.zip"
   lambda-description  = "Lambda function to load VDS users into S3 bucket"
   lambda-env-variables = tomap({
-    LOG_LEVEL = "debug"
+    LOG_LEVEL = "info"
     SECRET    = "era-commons-connect"
     S3BUCKET  = var.s3bucket-for-vds-users
     S3FOLDER  = "app-edis-data-${var.env}"
@@ -146,7 +146,7 @@ module "lambda-prepare-s3-for-vds" {
   file-name           = "../lambda-zip/lambda-prepare-s3-for-vds.zip"
   lambda-description  = "Lambda function to load VDS users into S3 bucket"
   lambda-env-variables = tomap({
-    LOG_LEVEL = "debug"
+    LOG_LEVEL = "info"
     S3BUCKET  = var.s3bucket-for-vds-users
     S3FOLDER  = "app-edis-data-${var.env}"
   })

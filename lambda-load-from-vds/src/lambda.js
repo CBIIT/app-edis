@@ -5,7 +5,7 @@ const parquet = require('parquetjs')
 const stream = require("stream");
 const { initConfiguration, conf } = require("./conf");
 const { getUsers }  = require('./vdsActions')
-const { formatDate, sleep } = require("./util")
+const { sleep } = require("./util")
 
 const AWS = require('aws-sdk'),
     region = 'us-east-1'
@@ -36,8 +36,8 @@ async function getSecretParameters() {
         }
     }
     else {
-        console.error('SecretsManager Success: NO ERR OR DATA');
-        throw new Error('SecretsManager Success: NO ERR OR DATA');
+        console.error('SecretsManager: NO ERR OR DATA in response');
+        throw new Error('SecretsManager: NO ERR OR DATA in response');
     }
 }
 
@@ -57,6 +57,9 @@ function createWriteStream(Bucket, Key) {
 
 const schema = new parquet.ParquetSchema({
     id: { type: 'UTF8'},
+    NIHORGPATH: { type: 'UTF8'},
+    // Locality: { type: 'UTF8'},
+    // Division: { type: 'UTF8'},
     content: { type: 'UTF8'}
 });
 
@@ -64,16 +67,14 @@ const S3 = new AWS.S3();
 
 module.exports.handler = async (event, context) => {
     context.callbackWaitsForEmptyEventLoop = false;
-    console.info('Lambda-cds-user-delta', event);
+    console.info('Lambda-load-user-data-from-VDS', event);
     
     const ic = event.ic;
-    
-    const marker = formatDate(new Date());
-    const markerRecord = {
-        vdsImport: marker,
-        NEDId: 'DBMARKER',
-        NIHORGACRONYM: 'DBMARKER',
-        ic: ic ? ic : ''
+    const divisions = event.divisions;
+    const includeDivisions = !!(event.includeDivisions);
+    const subKey = event.name ? event.name : ic;
+    const s3Entry = {
+        key: folder + '/current/' + 'storage_' + subKey + '.parquet'
     }
     
     try {
@@ -83,36 +84,32 @@ module.exports.handler = async (event, context) => {
         initConfiguration(configuration);
 
         console.debug('Starting and waiting for getUsers...')
-        const s3Map = new Map();
-
-        const usersCounter = await getUsers(ic, processVdsUsers, s3Map);
+        const usersCounter = await getUsers(ic, divisions, includeDivisions, processVdsUsers, s3Entry);
         console.debug("getUsers...done. Records retrieved", usersCounter, );
 
-        console.debug("Writing the marker: ", marker);
-        const queueUsers = [];
-        queueUsers.push(markerRecord);
-        await batchUpload(queueUsers, 1, s3Map);
 
-        await closeWriteStreams(s3Map);
+        await closeWriteStreams(s3Entry);
         console.info("Completed - imported " + usersCounter + " data records into S3 bucket ");
     } catch (error) {
-        console.error('lambda handler',error);
+        console.error('Lambda handler',error);
         throw error;
     }
 }
 
-async function processVdsUsers(users, counter, s3Map) {
+async function processVdsUsers(users, counter, s3Entry) {
     const prefix = 'processVdsUsers(' + counter + ') - ';
     console.debug(prefix + 'Processing ' + users.length + ' users' );
     users.forEach(user => {
         for (const attr of conf.vds.excludedAttributes) {
             delete user[attr];
         }
+        user.NEDId = '' + user.UNIQUEIDENTIFIER;
+
     });
-    await batchUpload(users, counter, s3Map);
+    await batchUpload(users, counter, s3Entry);
 }
 
-async function batchUpload(queue, counter, s3Map) {
+async function batchUpload(queue, counter, s3Entry) {
     if (process.env.TEST) {
         // console.debug('Finished in test retrieval mode');
         return;
@@ -120,33 +117,28 @@ async function batchUpload(queue, counter, s3Map) {
 
     try {
         //prepare single s3 bucket
-        // console.log("Importing data into appropriate files");
         while (queue.length > 0) {
             let user = queue.shift();
             while (typeof (user) !== 'undefined') {
-                const ic = user.NIHORGACRONYM ? user.NIHORGACRONYM : 'UNKNOWN';
-                let wsIc = s3Map.get(ic);
-                if (!wsIc) {
-                    const key = (ic === 'DBMARKER') ?
-                        ((user.ic && user.ic.length > 0) ? folder + '/current_marker_' + user.ic + '.mrk' :
-                            folder + '/current_marker.mrk')
-                        : folder + '/current/' + 'storage_' + ic + '.parquet';
-                    const {writeStream, uploadPromise} = createWriteStream(bucket, key);
+                if (!s3Entry.writeStream) {
+                    const {writeStream, uploadPromise} = createWriteStream(bucket, s3Entry.key);
                     const parquetWriter = await parquet.ParquetWriter.openStream(schema, writeStream);
+                    s3Entry.writeStream = writeStream;
+                    s3Entry.uploadPromise = uploadPromise;
+                    s3Entry.writer = parquetWriter;
 
-                    wsIc = {
-                        writeStream: writeStream,
-                        uploadPromise: uploadPromise,
-                        writer: parquetWriter
-                    }
-                    s3Map.set(ic, wsIc);
-                    console.info('Created write stream for', key);
+                    console.info('Created write stream for', s3Entry.key);
                 }
                 if (user.UNIQUEIDENTIFIER === undefined) {
                     user.UNIQUEIDENTIFIER = 'UNKNOWN';
                 }
                 console.debug('Append row...', user.UNIQUEIDENTIFIER, queue.length)
-                await wsIc.writer.appendRow({id: user.UNIQUEIDENTIFIER, content: JSON.stringify(user)});
+                await s3Entry.writer.appendRow({
+                    id: user.UNIQUEIDENTIFIER,
+                    NIHORGPATH: (user.NIHORGPATH) ? user.NIHORGPATH : 'unknown',
+                    // Locality: (user.L) ? user.L : 'unknown',
+                    // Division: getDivision(user),
+                    content: JSON.stringify(user)});
                 console.debug('Append row... done', user.UNIQUEIDENTIFIER, queue.length)
 
                 user = queue.shift();
@@ -154,17 +146,17 @@ async function batchUpload(queue, counter, s3Map) {
             console.info('Batch upload...done', counter);
         }
     } catch (err) {
-        console.error('Batch upload error -',err); //TODO
+        console.error('Batch upload error',err); //TODO
     }
 }
 
-async function closeWriteStreams(s3Map) {
+async function closeWriteStreams(s3Entry) {
         console.debug('*****Closing Write Streams****')
-        for (const [key, value] of s3Map.entries()) {
+        if (s3Entry.writer) {
             // value.writeStream.end();
-            await value.writer.close();
-            console.debug('uploadPromise of ', key);
-            const response = await value.uploadPromise;
+            await s3Entry.writer.close();
+            console.debug('uploadPromise of ', s3Entry.key);
+            const response = await s3Entry.uploadPromise;
             console.info('uploadPromise...done', response)
         }
         await sleep(1000); // last sleep - kludge
