@@ -36,8 +36,9 @@ No modules.
 | <a name="input_file-name"></a> [file-name](#input\_file-name) | Name of the zip file with lambda function body | `any` | n/a | yes |
 | <a name="input_lambda-description"></a> [lambda-description](#input\_lambda-description) | Lambda function description | `string` | `""` | no |
 | <a name="input_lambda-env-variables"></a> [lambda-env-variables](#input\_lambda-env-variables) | List of environment variables for lambda function | `map(string)` | `{}` | no |
-| <a name="input_lambda-managed-policies"></a> [lambda-managed-policies](#input\_lambda-managed-policies) | List of AWS or customer managed policies to attach to lambda iam role | `list(string)` | <pre>[<br>  "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"<br>]</pre> | no |
+| <a name="input_lambda-managed-policies"></a> [lambda-managed-policies](#input\_lambda-managed-policies) | List of AWS or customer managed policies to attach to lambda iam role | `map(string)` | <pre>{<br>  "1": "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"<br>}</pre> | no |
 | <a name="input_lambda-name"></a> [lambda-name](#input\_lambda-name) | Partial name of the Lambda function - the full name consists of app, lambda-name, and env strings separated by '-' | `any` | n/a | yes |
+| <a name="input_lambda_timeout"></a> [lambda\_timeout](#input\_lambda\_timeout) | Lambda function timeout (default 30 sec, max is 900 - 15min) | `number` | `30` | no |
 | <a name="input_max-retry"></a> [max-retry](#input\_max-retry) | Maxumim retry attempts | `number` | `0` | no |
 | <a name="input_must-be-policy-arn"></a> [must-be-policy-arn](#input\_must-be-policy-arn) | Mandatory policy to be included in any IAM role | `any` | n/a | yes |
 | <a name="input_must-be-role-prefix"></a> [must-be-role-prefix](#input\_must-be-role-prefix) | Mandatory IAM role name prefix | `any` | n/a | yes |
