@@ -3,21 +3,71 @@
 const {conf} = require("./conf");
 const ldap = require('ldapjs');
 const {convertBase64Fields, sleep} = require("./util")
+const {AndFilter, EqualityFilter, SubstringFilter, NotFilter, OrFilter} = require("ldapjs/lib/filters");
 
 let tlsOptions;
-
-const getUsers = async (ic, pageCallBack, s3Map) => {
+/**
+ * 
+ * @param ic - NIHORGACRONYM to include
+ * @param divisions - list of strings NIHORGACRONYM starts with - to include / exclude 
+ * @param includeDivs - true to include divisions, false to exclude divisions if any 
+ * @param pageCallBack
+ * @param s3Entry
+ * @returns {Promise<unknown>}
+ */
+const getUsers = async (ic, divisions, includeDivs, pageCallBack, s3Entry) => {
 
     return new Promise(async function (resolve, reject) {
 
-        var userSearchOptions = {
-            scope: 'sub',
+        const userSearchOptions = {
+            scope: 'one',
             // attributes: conf.vds.user_attributes,
             paged: true,
-            sizeLimit: 301
+            sizeLimit: 501
         };
+        if (conf.vds.includedAttributes && conf.vds.includedAttributes.length > 0) {
+            userSearchOptions.attributes = conf.vds.includedAttributes;
+        }
         if (ic && ic.length > 0) {
-            userSearchOptions.filter = '(NIHORGACRONYM=' + ic + ')';
+            let filter = new EqualityFilter({
+                attribute: 'NIHORGACRONYM',
+                value: ic
+            });
+
+            if (divisions && divisions.length === 1) {
+                const divFilter = new SubstringFilter({
+                    attribute: 'NIHORGPATH',
+                    initial: divisions[0]
+                });
+                filter = new AndFilter({
+                    filters: [
+                        filter,
+                        includeDivs ? divFilter : new NotFilter({ filter: divFilter })
+                    ] 
+                })
+            }
+            else if (divisions && divisions.length > 1) {
+                const divFilters = [];
+                for (const division of divisions) {
+                    const divFilter = new SubstringFilter({
+                        attribute: 'NIHORGPATH',
+                        initial: division
+                    });
+                    divFilters.push(divFilter); 
+                }
+                const divFilter = new OrFilter({
+                    filters: divFilters
+                })
+                
+                filter = new AndFilter({
+                    filters: [
+                        filter,
+                        includeDivs ? divFilter : new NotFilter({ filter: divFilter })
+                    ]
+                });
+            }
+            console.debug('created filter', filter);
+            userSearchOptions.filter = filter;
         }
 
         console.debug('User Search Options', userSearchOptions);
@@ -27,7 +77,7 @@ const getUsers = async (ic, pageCallBack, s3Map) => {
         ldapClient.bind(conf.vds.dn, conf.vds.pwd, function (err) {
 
             if (err) {
-                console.error('Bind error: ' + err);
+                console.error('Ldap client bind error' + err);
                 ldapClient.destroy();
                 return reject(Error(err.message));
             }
@@ -38,11 +88,11 @@ const getUsers = async (ic, pageCallBack, s3Map) => {
             console.info('starting search');
             ldapClient.search(conf.vds.searchBase, userSearchOptions, function (err, ldapRes) {
                 if (err) {
-                    console.error('starting search error',err);
+                    console.error('Ldap client search error',err);
                     return reject(Error(err.message));
                 }
                 if (!ldapRes) {
-                    const message = 'Could not get LDAP result!';
+                    const message = 'Ldap client search result event error';
                     console.error(message);
                     return reject(message);
                 }
@@ -53,7 +103,9 @@ const getUsers = async (ic, pageCallBack, s3Map) => {
                     let obj = convertBase64Fields(entry);
                     users.push(obj);
                 });
-                ldapRes.on('searchReference', function () { });
+                ldapRes.on('searchReference', function (reference) {
+                    console.debug('ldap searchReference - ', reference);
+                });
                 ldapRes.on('page', async function () {
                     processingPage = true;
                     console.info('ldap page - records fetched', counter);
@@ -62,7 +114,7 @@ const getUsers = async (ic, pageCallBack, s3Map) => {
                         chunk = [];
                         users.forEach(user => chunk.push(user));
                         users = [];
-                        await pageCallBack(chunk, counter, s3Map);
+                        await pageCallBack(chunk, counter, s3Entry);
                     }
                     console.debug('ldap page...done - record fetched', counter);
                     processingPage = false;
@@ -74,7 +126,7 @@ const getUsers = async (ic, pageCallBack, s3Map) => {
                         // Object doesn't exist. The user DN is most likely not fully provisioned yet.
                         resolve(counter);
                     } else {
-                        console.error('ldap error -', err);
+                        console.error('ldap error', err);
                         reject(Error(err.message));
                     }
                 });
@@ -102,7 +154,7 @@ const getLdapClient = async () => {
             tlsOptions: _getTlsOptions(),
             idleTimeout: 15 * 60 * 1000,
             timeout: 15 * 60 * 1000,
-            connectTimeout: 15 * 60 * 1000 // 15 mins
+            connectTimeout: 15 * 60 * 1000 // 15 minutes
         });
 
         ldapClient.on('connectError', function (err) {
@@ -118,7 +170,7 @@ const getLdapClient = async () => {
         });
 
         ldapClient.on('socketTimeout', function (err) {
-            console.error('ldap socket timeout: ' + err);
+            console.error('ldap client socket timeout: ' + err);
         });
 
         ldapClient.on('timeout', function (err) {
@@ -133,7 +185,6 @@ const getLdapClient = async () => {
 
 function _getTlsOptions() {
     if (!tlsOptions) {
-        // console.log('cert', conf.vds.cert)
         tlsOptions = {
             ca: [conf.vds.cert]
         };

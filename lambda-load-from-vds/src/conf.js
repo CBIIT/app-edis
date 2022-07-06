@@ -93,7 +93,13 @@ const conf = {
             'MBPROVISIONTYPECD'
         ],
         includedAttributes: [
-            
+            // 'NIHORGACRONYM',
+            // 'UNIQUEIDENTIFIER',
+            // 'GIVENNAME',
+            // 'MIDDLENAME',
+            // 'NIHMIXCASESN',
+            // 'L',
+            // 'NIHORGPATH'
         ],
         searchBase: 'ou=Users,ou=NIH,ou=NIHInternalview,ou=NIHViews',
         base64LdapFields: [
