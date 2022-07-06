@@ -100,7 +100,7 @@ module "lambda-vds-users-delta" {
   region              = "us-east-1"
   app                 = "edis"
   lambda-name         = "vds-users-delta"
-  file-name           = "../lambda-zip/lambda-vds-users-delta/lambda-vds-users-delta.zip"
+  file-name           = "../lambda-zip/lambda-vds-users-delta.zip"
   lambda-description  = "Lambda function to run Athena query to get VDS users delta for refresh."
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"

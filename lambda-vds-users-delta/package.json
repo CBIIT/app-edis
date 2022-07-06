@@ -1,11 +1,11 @@
 {
-  "name": "refresh-vds-users-2-ddb",
+  "name": "athena-vds-users-delta",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "zip": "rm -rf node_modules && rm -rf ../lambda-zip/lambda-vds-users-delta/lambda-vds-users-delta.zip && npm install --only='prod' && zip -r ../lambda-zip//lambda-vds-users-delta/lambda-vds-users-delta.zip node_modules src/*"
+    "zip": "rm -rf node_modules && rm -rf ../lambda-zip/lambda-vds-users-delta.zip && npm install --only='prod' && zip -r ../lambda-zip/lambda-vds-users-delta.zip node_modules src/*"
   },
   "keywords": [],
   "author": "",
