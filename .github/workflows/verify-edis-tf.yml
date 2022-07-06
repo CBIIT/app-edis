@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: EDIS Terraform Quality Check
+name: Terraform - Quality Check
 
 # Controls when the workflow will run
 on:
@@ -71,7 +71,7 @@ jobs:
 
       - name: Init Terraform
         id: init
-        run: terraform init -backend-config="bucket=${{ github.event.inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/api-edis-${{ github.event.inputs.tier }}" -backend-config="region=us-east-1"
+        run: terraform init
         working-directory: tf/
 
       - name: Validate Terraform
@@ -81,7 +81,7 @@ jobs:
 
       - name: Planning Terraform
         id: plan
-        run: terraform plan -var 'env=${{ github.event.inputs.tier }}'  -var 'subnet1="subnet1"' -var 'subnet2="subnet2"' -var 'vpcsg="vpcng"' -input=false -no-color -out tfplan.binary
+        run: terraform plan -var 'env=${{ github.event.inputs.tier }}' -var 'subnet1="subnet1"' -var 'subnet2="subnet2"' -var 'vpcsg="vpcng"' -var 'policy-boundary-arn=arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:policy/PermissionBoundary_PowerUser' -var 'build-eracommons=true' -var 'build-userinfo=true' -var 's3bucket-for-vds-users="s3bucket"' -input=false -no-color -out tfplan.binary
         working-directory: tf/
 
       - name: Show Terraform
