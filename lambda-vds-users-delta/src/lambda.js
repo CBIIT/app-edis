@@ -24,19 +24,30 @@ if (logLevel && logLevel === 'info') {
 
 module.exports.handler = async (event, context) => {
     context.callbackWaitsForEmptyEventLoop = false;
-    console.debug('Lambda-cds-user-delta', event);
+    console.debug('Lambda-athena-vds-user-delta', event);
     
     try {
         const athenaExpress = new AthenaExpress(athenaExpressConfig);
-        let deltaQuery = 'select content from (\n' +
+        let query = 'select content from (\n' +
             'select id, content from "currentp_t"\n' +
             'except\n' +
             'select id, content from "prevp_t")';
-        let results = await athenaExpress.query(deltaQuery);
-        console.info('Delta has been created', results);
-        return results.S3Location;
+        const deltaResults = await athenaExpress.query(query);
+        console.info('New and changed delta:', deltaResults);
+        
+        query = 'select id from "prevp_t"\n' +
+            'except\n' +
+            'select id from "currentp_t")';
+        const deletedResults = await athenaExpress.query(query);
+        console.info('Deleted delta:', deletedResults);
+
+        return {
+            delta: deltaResults.S3Location,
+            deleted: deletedResults.S3Location
+        };
+
     } catch (error) {
-        console.error(error);
+        console.error('Lambda-athena-vds-user-delta failed', error);
         throw error;
     }
 }
