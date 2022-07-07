@@ -154,3 +154,22 @@ module "lambda-prepare-s3-for-vds" {
   lambda-managed-policies        = { for idx, val in local.lambda_prepare_s3_for_vds_role_policies: idx => val }
 }
 
+module "lambda-vds-delta-to-db" {
+  source              = "./modules/lambda"
+  depends_on = [aws_iam_policy.iam_access_s3]
+  env                 = var.env
+  must-be-role-prefix = var.role-prefix
+  must-be-policy-arn  = var.policy-boundary-arn
+  resource_tag_name   = "edis"
+  region              = "us-east-1"
+  app                 = "edis"
+  lambda-name         = "vds-delta-to-db"
+  file-name           = "../lambda-zip/lambda-vds-delta-to-db.zip"
+  lambda-description  = "Lambda function to load uodated VDS user records from S3 bucket into DynamoDB"
+  lambda-env-variables = tomap({
+    LOG_LEVEL = "info"
+    TABLE     = module.ddb-userinfo[0].ddb-name
+  })
+  lambda-managed-policies        = { for idx, val in local.lambda_vds-delta-to-db_role_policies: idx => val }
+}
+

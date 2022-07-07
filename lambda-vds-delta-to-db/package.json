@@ -1,0 +1,12 @@
+{
+  "name": "vds-delta-to-db",
+  "version": "0.1.0",
+  "main": "lambda.js",
+  "scripts": {
+    "zip": "rm -rf node_modules && rm -rf ../lambda-zip/lambda-vds-delta-to-db.zip && npm install --only='prod' && zip -r ../lambda-zip/lambda-vds-delta-to-db.zip node_modules src/*"
+  },
+  "devDependencies": {
+    "aws-sdk": "2.820.0",
+    "aws-xray-sdk-core": "^3.3.3"
+  }
+}
