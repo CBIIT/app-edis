@@ -96,6 +96,13 @@ EOF
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
     "${aws_iam_policy.iam_access_s3.arn}"
   ]
+
+  lambda_vds-delta-to-db_role_policies = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
+    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+    "${aws_iam_policy.iam_access_s3.arn}"
+  ]
 }
 
 data "template_file" "api_era-commons-swagger" {
