@@ -14,7 +14,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.21.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.22.0 |
 | <a name="provider_template"></a> [template](#provider\_template) | 2.2.0 |
 
 ## Modules
@@ -28,7 +28,10 @@
 | <a name="module_lambda-era-commons-api"></a> [lambda-era-commons-api](#module\_lambda-era-commons-api) | ./modules/lambda | n/a |
 | <a name="module_lambda-load-from-vds"></a> [lambda-load-from-vds](#module\_lambda-load-from-vds) | ./modules/lambda | n/a |
 | <a name="module_lambda-prepare-s3-for-vds"></a> [lambda-prepare-s3-for-vds](#module\_lambda-prepare-s3-for-vds) | ./modules/lambda | n/a |
+| <a name="module_lambda-sqs-batch-to-db"></a> [lambda-sqs-batch-to-db](#module\_lambda-sqs-batch-to-db) | ./modules/lambda | n/a |
 | <a name="module_lambda-userinfo-api"></a> [lambda-userinfo-api](#module\_lambda-userinfo-api) | ./modules/lambda | n/a |
+| <a name="module_lambda-vds-delta-to-db"></a> [lambda-vds-delta-to-db](#module\_lambda-vds-delta-to-db) | ./modules/lambda | n/a |
+| <a name="module_lambda-vds-delta-to-sqs"></a> [lambda-vds-delta-to-sqs](#module\_lambda-vds-delta-to-sqs) | ./modules/lambda | n/a |
 | <a name="module_lambda-vds-users-delta"></a> [lambda-vds-users-delta](#module\_lambda-vds-users-delta) | ./modules/lambda | n/a |
 
 ## Resources
