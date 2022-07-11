@@ -155,21 +155,62 @@ module "lambda-prepare-s3-for-vds" {
 }
 
 module "lambda-vds-delta-to-db" {
-  source              = "./modules/lambda"
-  depends_on = [aws_iam_policy.iam_access_s3]
-  env                 = var.env
-  must-be-role-prefix = var.role-prefix
-  must-be-policy-arn  = var.policy-boundary-arn
-  resource_tag_name   = "edis"
-  region              = "us-east-1"
-  app                 = "edis"
-  lambda-name         = "vds-delta-to-db"
-  file-name           = "../lambda-zip/lambda-vds-delta-to-db.zip"
-  lambda-description  = "Lambda function to load uodated VDS user records from S3 bucket into DynamoDB"
+  source               = "./modules/lambda"
+  depends_on           = [aws_iam_policy.iam_access_s3]
+  env                  = var.env
+  must-be-role-prefix  = var.role-prefix
+  must-be-policy-arn   = var.policy-boundary-arn
+  resource_tag_name    = "edis"
+  region               = "us-east-1"
+  app                  = "edis"
+  lambda-name          = "vds-delta-to-db"
+  file-name            = "../lambda-zip/lambda-vds-delta-to-db.zip"
+  lambda-description   = "Lambda function to load updated VDS user records from S3 bucket into DynamoDB"
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
     TABLE     = module.ddb-userinfo[0].ddb-name
   })
-  lambda-managed-policies        = { for idx, val in local.lambda_vds-delta-to-db_role_policies: idx => val }
+  lambda-managed-policies = {for idx, val in local.lambda_vds-delta-to-db_role_policies : idx => val}
+  lambda_timeout          = 900
+}
+
+  module "lambda-vds-delta-to-sqs" {
+    source              = "./modules/lambda"
+    depends_on = [aws_iam_policy.iam_access_s3]
+    env                 = var.env
+    must-be-role-prefix = var.role-prefix
+    must-be-policy-arn  = var.policy-boundary-arn
+    resource_tag_name   = "edis"
+    region              = "us-east-1"
+    app                 = "edis"
+    lambda-name         = "vds-delta-to-sqs"
+    file-name           = "../lambda-zip/lambda-vds-delta-to-sqs.zip"
+    lambda-description  = "Lambda function to send updated VDS user records from S3 bucket into SQS"
+    lambda-env-variables = tomap({
+      LOG_LEVEL = "info"
+      SQS_URL     = "tbd"
+    })
+    lambda-managed-policies        = { for idx, val in local.lambda_vds-delta-to-sqs_role_policies: idx => val }
+    lambda_timeout = 900
+}
+
+module "lambda-sqs-batch-to-db" {
+  source               = "./modules/lambda"
+  env                  = var.env
+  must-be-role-prefix  = var.role-prefix
+  must-be-policy-arn   = var.policy-boundary-arn
+  resource_tag_name    = "edis"
+  region               = "us-east-1"
+  app                  = "edis"
+  lambda-name          = "sqs-batch-to-db"
+  file-name            = "../lambda-zip/lambda-sqs-batch-to-db.zip"
+  lambda-description   = "Lambda function to receive updated VDS user records from SQS and load into DynamoDB"
+  lambda-env-variables = tomap({
+    LOG_LEVEL = "info"
+    TABLE     = module.ddb-userinfo[0].ddb-name
+    SQS_URL     = "tbd"
+  })
+  lambda-managed-policies = {for idx, val in local.lambda_sqs-batch-to-db_role_policies : idx => val}
+  lambda_timeout          = 900
 }
 
