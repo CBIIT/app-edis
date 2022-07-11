@@ -16,11 +16,11 @@ AWS.config.update({ region: region });
 const docClient = new AWS.DynamoDB.DocumentClient({maxRetries: 25, retryDelayOptions: {base: 200}});
 
 module.exports.handler = async (event, context) => {
-  context.callbackWaitsForEmptyEventLoop = false
-  console.info('Lambda-sqs-batch-to-db', event);
+  context.callbackWaitsForEmptyEventLoop = false;
   
   for (const record of event.Records) {
     const cmd = JSON.parse(record.body);
+    console.info('Lambda-sqs-batch-to-db', cmd.action, cmd.marker, cmd.start, cmd.end);
     if (cmd.action === 'update') {
       await dbUpdate(cmd.data);
       console.info('Update db records has been successful in range', cmd.marker, cmd.start, cmd.end);

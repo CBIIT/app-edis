@@ -90,7 +90,10 @@ const conf = {
             'objectclass',
             'objectSid',
             'unixHomeDirectory',
-            'MBPROVISIONTYPECD'
+            'MBPROVISIONTYPECD',
+            'thumbnailPhoto',
+            'userSMIMECertificate',
+            'userParameters'
         ],
         includedAttributes: [
             // 'NIHORGACRONYM',
