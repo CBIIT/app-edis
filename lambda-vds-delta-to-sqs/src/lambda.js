@@ -7,7 +7,7 @@ const { formatDate, getEmail, getBuilding, getDivision } = require('./util')
 
 // Environment variables
 const logLevel = process.env['LOG_LEVEL'];
-const table    = process.env['TABLE'];
+const queueUrl = process.env['SQS_URL'];
 
 // Set the console log level
 if (logLevel && logLevel === 'info') {
@@ -16,11 +16,11 @@ if (logLevel && logLevel === 'info') {
 
 AWS.config.update({ region: region });
 const S3 = new AWS.S3();
-const docClient = new AWS.DynamoDB.DocumentClient({maxRetries: 25, retryDelayOptions: {base: 200}});
+const SQS = new AWS.SQS();
 
 module.exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false
-  console.info('Lambda-vds-delta-to-db', event);
+  console.info('Lambda-vds-delta-to-sqs', event);
 
   const deltaS3path = event.delta;
   const deltaS3deleted = event.deleted;
@@ -36,7 +36,7 @@ module.exports.handler = async (event, context) => {
 async function processUpdatedRecords(deltaS3path, marker)
 {
   if (!deltaS3path) {
-    console.info('VDS delta S3 key is not defined - update db is skipped');
+    console.info('VDS delta S3 key is not defined - update is skipped');
     return;
   }
 
@@ -47,7 +47,7 @@ async function processUpdatedRecords(deltaS3path, marker)
   }
   console.debug('decomposed bucket and key', bucket, key);
 
-  // Step 1 - update DB table with new or updated records from S3 VDS delta csv file 
+  // Step 1 - send to SQS chunks with new or updated records from S3 VDS delta csv file 
   try {
     const input = S3.getObject({
       Bucket: bucket,
@@ -97,18 +97,18 @@ async function processUpdatedRecords(deltaS3path, marker)
       if (bulkBuffer.length >= 25) {
         const chunk = bulkBuffer.slice();
         bulkBuffer = [];
-        await dbUpdate(chunk, counter);
+        await sqsSend(chunk, marker, counter);
         console.debug('Stream on line event - resume command for line', counter);
       }
     }
 
     console.debug('Stream after close event - for', deltaS3path, 'lines leftover', bulkBuffer.length, counter);
-    await dbUpdate(bulkBuffer, counter);
+    await sqsSend(bulkBuffer, marker, counter);
     if (counter > 0) {
-      console.info('DB table has been updated successfully with ', counter, 'records.  Update Marker vdsImport is set to ', marker);
+      console.info('Data have been send to SQS successfully with ', counter, 'records.  Update Marker vdsImport is set to ', marker);
     }
     else {
-      console.info('No records have been updated in DB table');
+      console.info('No records have been sent to SQS');
     }
   } catch (err) {
     console.error('Error in readline', err);
@@ -116,7 +116,7 @@ async function processUpdatedRecords(deltaS3path, marker)
   }
 }
 
-// Step 2 - update DB table with deleted records from S3 VDS csv file 
+// Step 2 - send messages to SQS  with deleted records from S3 VDS csv file 
 async function processDeletedRecords(deltaS3deleted, marker)
 {
   if (!deltaS3deleted) {
@@ -153,18 +153,18 @@ async function processDeletedRecords(deltaS3deleted, marker)
       if (bulkBuffer.length >= 25) {
         const chunk = bulkBuffer.slice();
         bulkBuffer = [];
-        await dbUpdateDeleted(chunk, marker, counter);
+        await sqsSendDeleted(chunk, marker, counter);
       }
     }
 
     console.debug('Stream after close event - for', deltaS3deleted, 'lines leftover', bulkBuffer.length);
-    await dbUpdateDeleted(bulkBuffer, marker, counter);
+    await sqsSendDeleted(bulkBuffer, marker, counter);
 
     if (counter > 0) {
-      console.info('DB table records have been archived successfully for ', counter, 'records.  Update Marker vdsDelete is set to ', marker)
+      console.info('SQS messages to archive records have been sent successfully for ', counter, 'records.  Update Marker vdsDelete is set to ', marker)
     }
     else {
-      console.info('No records have been archived in DB table');
+      console.info('No SQS messages have been sent to archive records in DB table');
     }
   } catch (err) {
     console.error('Error in readline', err);
@@ -210,64 +210,42 @@ function processLine(line, counter) {
   }
 }
 
-async function dbUpdate(chunk, counter) {
-  if (table === 'T') {
+async function sqsSend(chunk, marker, counter) {
+  if (!queueUrl || queueUrl === 'T') {
     console.debug('Finished in test retrieval mode');
     return;
   }
-  console.debug('Importing data into DynamoDb table',  table, 'with chunk', chunk.length, 'of', counter);
-  let batch = [];
-  for (const user of chunk) {
-    batch.push({
-      PutRequest : {
-        Item: user
-      }
-    });
-  }
+  console.debug('Sending data into SQS with chunk', chunk.length, 'of', counter);
   const params = {
-    RequestItems: {
-      [table]: batch
-    }
-  };
-  const data = await processItems(params);
-  console.debug('db refresh result ', data);
-}
-
-async function processItems(params) {
-  
-  const result = await docClient.batchWrite(params).promise();
-  if(Object.keys(result.UnprocessedItems).length > 0) {
-    params.RequestItems = result.UnprocessedItems;
-    console.debug('processItems() - retry ', params.RequestItems);
-    return await processItems(params);
+    MessageBody: JSON.stringify({
+      action: 'update',
+      start: '' + (counter - chunk.length),
+      end: '' + counter,
+      marker: marker,
+      data: chunk
+    }),
+    QueueUrl: queueUrl
   }
-  return result;
+  const result = await SQS.sendMessage(params).promise();
+  console.debug('sqs sent result ', result);
 }
 
-async function dbUpdateDeleted(chunk, marker, counter) {
-  if (table === 'T') {
+async function sqsSendDeleted(chunk, marker, counter) {
+  if (!queueUrl || queueUrl === 'T') {
     console.debug('Finished in test deleted mode');
     return;
   }
 
-  console.debug('Reading to be deleted data from DynamoDb table',  table, 'with chunk', chunk.length, 'of', counter);
-  let batch = [];
-  for (const id of chunk) {
-    batch.push({
-      NEDId: id
-    });
-  }
   const params = {
-    RequestItems: {
-      [table]: {
-        Keys: batch
-      }
-    }
-  };
-  const data = await docClient.batchGet(params)
-  console.debug('Items to be deleted', data);
-  for (const user of data) {
-    user.vdsDelete = marker;
+    MessageBody: JSON.stringify({
+      action: 'delete',
+      start: '' + (counter - chunk.length),
+      end: '' + counter,
+      marker: marker,
+      data: chunk
+    }),
+    QueueUrl: queueUrl
   }
-  await dbUpdate(data);
+  const result = await SQS.sendMessage(params).promise();
+  console.debug('sqs sent result ', result);
 }
