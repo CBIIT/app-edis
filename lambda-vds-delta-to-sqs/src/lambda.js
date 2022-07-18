@@ -8,6 +8,7 @@ const { formatDate, getEmail, getBuilding, getDivision } = require('./util')
 // Environment variables
 const logLevel = process.env['LOG_LEVEL'];
 const queueUrl = process.env['SQS_URL'];
+const maxMessageSize = process.env['MAX_SIZE'] || 262144;
 
 // Set the console log level
 if (logLevel && logLevel === 'info') {
@@ -48,6 +49,10 @@ async function processUpdatedRecords(deltaS3path, marker)
   console.debug('decomposed bucket and key', bucket, key);
 
   // Step 1 - send to SQS chunks with new or updated records from S3 VDS delta csv file 
+  let counter = -1;
+  let bulkBuffer = [];
+  let msgSize = 0;
+
   try {
     const input = S3.getObject({
       Bucket: bucket,
@@ -58,46 +63,60 @@ async function processUpdatedRecords(deltaS3path, marker)
       crlfDelay: Infinity
     });
 
-    let counter = -1;
-    let bulkBuffer = [];
 
     for await (const rec of rl) {
-      counter++;
-      if (counter === 0) {
+      if (counter < 0) {
+        counter++;
         continue; // skip the header
       }
+      let user;
       try {
-        const user = processLine(rec, counter);
-        // Enhance user record with additional fields including timestamp
-        user.NEDId = user.UNIQUEIDENTIFIER;
-        user.FirstName = user.GIVENNAME;
-        user.MiddleName = user.MIDDLENAME;
-        user.LastName = user.NIHMIXCASESN;
-        user.Email = getEmail(user);
-        user.Phone = user.TELEPHONENUMBER;
-        user.Classification = user.ORGANIZATIONALSTAT;
-        user.SAC = user.NIHSAC;
-        user.AdministrativeOfficerId = user.NIHSERVAO;
-        user.COTRId = user.NIHCOTRID;
-        user.ManagerId = user.MANAGER;
-        user.Locality = user.L;
-        user.PointOfContactId = user.NIHPOC;
-        user.Division = getDivision(user);
-        user.Locality = user.L;
-        user.Site = user.NIHSITE;
-        user.Building = getBuilding(user);
-        user.Room = user.ROOMNUMBER;
-        user.vdsImport = marker;
-        // push user for bulk update
-        bulkBuffer.push(user);
+        user = processLine(rec, counter);
       } catch (e) {
         console.error('Parsing error', e);
         throw e;
       }
-      if (bulkBuffer.length >= 25) {
+
+      // Enhance user record with additional fields including timestamp
+      user.NEDId = user.UNIQUEIDENTIFIER;
+      user.FirstName = user.GIVENNAME;
+      user.MiddleName = user.MIDDLENAME;
+      user.LastName = user.NIHMIXCASESN;
+      user.Email = getEmail(user);
+      user.Phone = user.TELEPHONENUMBER;
+      user.Classification = user.ORGANIZATIONALSTAT;
+      user.SAC = user.NIHSAC;
+      user.AdministrativeOfficerId = user.NIHSERVAO;
+      user.COTRId = user.NIHCOTRID;
+      user.ManagerId = user.MANAGER;
+      user.Locality = user.L;
+      user.PointOfContactId = user.NIHPOC;
+      user.Division = getDivision(user);
+      user.Locality = user.L;
+      user.Site = user.NIHSITE;
+      user.Building = getBuilding(user);
+      user.Room = user.ROOMNUMBER;
+      user.vdsImport = marker;
+
+      // push user for bulk update
+      const userSize = Buffer.byteLength(JSON.stringify(user), 'utf8'); 
+      msgSize +=  userSize + 1; // comma between user definitions
+      const overflow = msgSize >= maxMessageSize; 
+      if (!overflow) {
+        bulkBuffer.push(user);
+        counter++;
+      }
+
+      if (bulkBuffer.length >= 25 || overflow) {
         const chunk = bulkBuffer.slice();
         bulkBuffer = [];
+        msgSize = 0;
         await sqsSend(chunk, marker, counter);
+        if (overflow) {
+          bulkBuffer.push(user);
+          counter++;
+          msgSize = userSize + 2; // open and close square brackets
+        }
         console.debug('Stream on line event - resume command for line', counter);
       }
     }
@@ -111,7 +130,7 @@ async function processUpdatedRecords(deltaS3path, marker)
       console.info('No records have been sent to SQS');
     }
   } catch (err) {
-    console.error('Error in readline', err);
+    console.error('Error in sqsSend', counter, ' ', JSON.stringify(bulkBuffer).length, err);
     throw err;
   }
 }
@@ -167,7 +186,7 @@ async function processDeletedRecords(deltaS3deleted, marker)
       console.info('No SQS messages have been sent to archive records in DB table');
     }
   } catch (err) {
-    console.error('Error in readline', err);
+    console.error('Error in sqsSendDeleted', counter, ' ', JSON.stringify(bulkBuffer).length, err);
     throw err;
   }
 }
@@ -211,22 +230,54 @@ function processLine(line, counter) {
 }
 
 async function sqsSend(chunk, marker, counter) {
+  // if (tmpDebug === 'Y') {
+  //   const sChunk = JSON.stringify(chunk);
+  //   const ind = sChunk.indexOf(checkString);
+  //   if (ind >= 0) {
+  //     console.info('Testing data into SQS with chunk', chunk.length, 'of', counter);
+  //     console.error('Error in data - index', ind, sChunk.length);
+  //     console.error('Error in data', sChunk);
+  //     console.error('Error in subdata', sChunk.slice(0, ind - 1));
+  //   }
+  //   return;
+  // }
   if (!queueUrl || queueUrl === 'T') {
     console.debug('Finished in test retrieval mode');
     return;
   }
-  console.debug('Sending data into SQS with chunk', chunk.length, 'of', counter);
+  const start = '' + (counter - chunk.length);
+  const end = '' + counter;
+  const sChunk = JSON.stringify({
+    data: chunk
+  });
+  const sChunkLength = Buffer.byteLength(sChunk, 'urf8');
+  console.info('Sending data into SQS with chunk', chunk.length, 'of', counter, sChunkLength);
+
   const params = {
-    MessageBody: JSON.stringify({
-      action: 'update',
-      start: '' + (counter - chunk.length),
-      end: '' + counter,
-      marker: marker,
-      data: chunk
-    }),
-    QueueUrl: queueUrl
+    MessageBody: sChunk,
+    QueueUrl: queueUrl,
+    MessageAttributes: {
+      'action': {
+        DataType: 'String',
+        StringValue: 'update'
+      },
+      'start': {
+        DataType: 'String',
+        StringValue: start
+      },
+      'end': {
+        DataType: 'String',
+        StringValue: end
+      },
+      'marker': {
+        DataType: 'String',
+        StringValue: marker
+      }
+    }
   }
+  const bodyLength = params.MessageBody.length;
   const result = await SQS.sendMessage(params).promise();
+  console.info('Lambda-vds-delta-to-sqs sent', 'update', marker, start, end, bodyLength, sChunkLength);
   console.debug('sqs sent result ', result);
 }
 
@@ -236,16 +287,34 @@ async function sqsSendDeleted(chunk, marker, counter) {
     return;
   }
 
+  const start = '' + (counter - chunk.length);
+  const end = '' + counter;
   const params = {
     MessageBody: JSON.stringify({
-      action: 'delete',
-      start: '' + (counter - chunk.length),
-      end: '' + counter,
-      marker: marker,
       data: chunk
     }),
-    QueueUrl: queueUrl
+    QueueUrl: queueUrl,
+    MessageAttributes: {
+      'action': {
+        DataType: 'String',
+        StringValue: 'delete'
+      },
+      'start': {
+        DataType: 'String',
+        StringValue: start
+      },
+      'end': {
+        DataType: 'String',
+        StringValue: end
+      },
+      'marker': {
+        DataType: 'String',
+        StringValue: marker
+      }
+    }
   }
+  const bodyLength = params.MessageBody.length;
   const result = await SQS.sendMessage(params).promise();
+  console.info('Lambda-vds-delta-to-sqs sent', 'delete', marker, start, end, bodyLength);
   console.debug('sqs sent result ', result);
 }
