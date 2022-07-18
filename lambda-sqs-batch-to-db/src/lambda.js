@@ -1,7 +1,6 @@
 'use strict'
 
-const AWS = require('aws-sdk'),
-      region = 'us-east-1'
+const DynamoDB = require('aws-sdk/clients/dynamodb')
 
 // Environment variables
 const logLevel = process.env['LOG_LEVEL'];
@@ -12,23 +11,38 @@ if (logLevel && logLevel === 'info') {
   console.debug = function () {}
 }
 
-AWS.config.update({ region: region });
-const docClient = new AWS.DynamoDB.DocumentClient({maxRetries: 25, retryDelayOptions: {base: 200}});
+// AWS.config.update({ region: region });
+const docClient = new DynamoDB.DocumentClient({maxRetries: 25, retryDelayOptions: {base: 200}});
 
 module.exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false;
-  
+
+  // Logging all event records
   for (const record of event.Records) {
-    const cmd = JSON.parse(record.body);
-    console.info('Lambda-sqs-batch-to-db', cmd.action, cmd.marker, cmd.start, cmd.end);
-    if (cmd.action === 'update') {
-      await dbUpdate(cmd.data);
-      console.info('Update db records has been successful in range', cmd.marker, cmd.start, cmd.end);
+    console.info('Lambda-sqs-batch-to-db event',
+        record.messageAttributes.action.stringValue, record.messageAttributes.marker.stringValue, 
+        record.messageAttributes.start.stringValue, record.messageAttributes.end.stringValue);
+  }
+
+  try {
+    for (const record of event.Records) {
+      const cmd = JSON.parse(record.body);
+      const action = record.messageAttributes.action.stringValue;
+      const marker = record.messageAttributes.marker.stringValue;
+      const start = record.messageAttributes.start.stringValue;
+      const end = record.messageAttributes.end.stringValue;
+      console.info('Lambda-sqs-batch-to-db to process', action, marker, start, end);
+      if (action === 'update' && table !== 'T') {
+        await dbUpdate(cmd.data);
+        console.info('Update db records has been successful in range', marker, start, end);
+      } else if (action === 'delete' && table !== 'T') {
+        await dbUpdateDeleted(cmd.data, marker);
+        console.info('Archive db records has been successful in range', marker, start, end);
+      }
     }
-    else if (cmd.action === 'delete') {
-      await dbUpdateDeleted(cmd.data, cmd.marker);
-      console.info('Archive db records has been successful in range', cmd.marker, cmd.start, cmd.end);
-    }
+  } catch (e) {
+    console.error(e.message);
+    throw(e);
   }
 }
 
@@ -86,8 +100,9 @@ async function dbUpdateDeleted(chunk, marker) {
       }
     }
   };
-  const data = await docClient.batchGet(params)
-  console.debug('Items to be deleted', data);
+  const response = await docClient.batchGet(params).promise();
+  console.debug('Items to be deleted', response);
+  const data = response.Responses[table];
   for (const user of data) {
     user.vdsDelete = marker;
   }
