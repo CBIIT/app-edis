@@ -64,7 +64,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_vds" {
           "src": "current",
           "dst": "prev"
         },
-        "FunctionName": "${module.lambda-prepare-s3-for-vds.arn}:$LATEST",
+        "FunctionName": "${module.lambda-prepare-s3-for-vds.arn}:$LATEST"
       },
       "Retry": [
         {
