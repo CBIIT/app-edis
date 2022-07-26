@@ -84,7 +84,8 @@ EOF
     "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
     "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
-    "arn:aws:iam::aws:policy/AmazonAthenaFullAccess"
+    "arn:aws:iam::aws:policy/AmazonAthenaFullAccess",
+    "${aws_iam_policy.iam_access_s3.arn}"
   ]
 
   lambda_load_from_vds_role_policies = [
