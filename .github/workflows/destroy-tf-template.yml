@@ -52,7 +52,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     
-    environment: ${{ github.event.inputs.envt }}
+    environment: ${{ inputs.envt }}
 
     permissions:
       packages: write
@@ -68,12 +68,15 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Workflow Parameters
         run: |
-          echo Environment - ${{ github.event.inputs.envt }}
-          echo Deployment Tier - ${{ github.event.inputs.tier }}
-          echo S3 Bucket - ${{ github.event.inputs.s3bucket }}
+          echo Environment - ${{ inputs.envt }}
+          echo Deployment Tier - ${{ inputs.tier }}
+          echo S3 Bucket - ${{ inputs.s3bucket }}
+          echo Subnet 1 - ${{ inputs.subnet1 }}
+          echo Subnet 2 - ${{ inputs.subnet2 }}
+          echo Security Group - ${{ inputs.vpcsg }}
           echo Secret - ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
-          echo Build eraCommons project - ${{ github.event.inputs.build-eracommons }}
-          echo Build userInfoApi project - ${{ github.event.inputs.build-userinfo }}
+          echo Build eraCommons project - ${{ inputs.build-eracommons }}
+          echo Build userInfoApi project - ${{ inputs.build-userinfo }}
       
       - name: Setup AWS configuration
         uses: aws-actions/configure-aws-credentials@master
@@ -87,6 +90,12 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with: 
           terraform_wrapper: false
+
+      - name: Init Terraform for both eRAcommons and UserInfo
+        id: initBoth
+        run: terraform init -backend-config="bucket=${{ inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/api-edis-all-${{ inputs.tier }}" -backend-config="region=us-east-1"
+        working-directory: tf/
+        if: ${{ inputs.build-eracommons && inputs.build-userinfo }}
 
       - name: Init Terraform for eRAcommons
         id: initEraCommons
