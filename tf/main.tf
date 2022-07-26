@@ -171,7 +171,7 @@ module "lambda-prepare-s3-for-vds" {
     lambda-description  = "Lambda function to send updated VDS user records from S3 bucket into SQS"
     lambda-env-variables = tomap({
       LOG_LEVEL = "info"
-      SQS_URL     = "https://sqs.us-east-1.amazonaws.com/${data.aws_caller_identity._.account_id}/vds-delta-queue-${var.env}"
+      SQS_URL     = "https://sqs.us-east-1.amazonaws.com/${data.aws_caller_identity._.account_id}/edis-vds-delta-queue-${var.env}"
     })
     lambda-managed-policies        = { for idx, val in local.lambda_vds-delta-to-sqs_role_policies: idx => val }
     lambda_timeout = 900
@@ -191,7 +191,7 @@ module "lambda-sqs-delta-to-db" {
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
     TABLE     = module.ddb-userinfo[0].ddb-name
-    SQS_URL     = "https://sqs.us-east-1.amazonaws.com/${data.aws_caller_identity._.account_id}/vds-delta-queue-${var.env}"
+    SQS_URL     = "https://sqs.us-east-1.amazonaws.com/${data.aws_caller_identity._.account_id}/edis-vds-delta-queue-${var.env}"
   })
   lambda-managed-policies = {for idx, val in local.lambda_sqs-delta-to-db_role_policies : idx => val}
   lambda_timeout          = 900
