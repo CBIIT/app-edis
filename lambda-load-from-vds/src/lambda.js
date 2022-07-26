@@ -5,7 +5,7 @@ const parquet = require('parquetjs')
 const stream = require("stream");
 const { initConfiguration, conf } = require("./conf");
 const { getUsers }  = require('./vdsActions')
-const { sleep } = require("./util")
+const { sleep, getDivision} = require("./util")
 
 const AWS = require('aws-sdk'),
     region = 'us-east-1'
@@ -59,7 +59,7 @@ const schema = new parquet.ParquetSchema({
     id: { type: 'UTF8'},
     NIHORGPATH: { type: 'UTF8'},
     // Locality: { type: 'UTF8'},
-    // Division: { type: 'UTF8'},
+    Division: { type: 'UTF8'},
     content: { type: 'UTF8'}
 });
 
@@ -137,7 +137,7 @@ async function batchUpload(queue, counter, s3Entry) {
                     id: user.UNIQUEIDENTIFIER,
                     NIHORGPATH: (user.NIHORGPATH) ? user.NIHORGPATH : 'unknown',
                     // Locality: (user.L) ? user.L : 'unknown',
-                    // Division: getDivision(user),
+                    Division: getDivision(user),
                     content: JSON.stringify(user)});
                 console.debug('Append row... done', user.UNIQUEIDENTIFIER, queue.length)
 

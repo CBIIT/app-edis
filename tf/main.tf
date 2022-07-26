@@ -104,6 +104,9 @@ module "lambda-vds-users-delta" {
   lambda-description  = "Lambda function to run Athena query to get VDS users delta for refresh."
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
+    S3BUCKET  = var.s3bucket-for-vds-users
+    S3FOLDER  = "app-edis-data-${var.env}"
+    DB_NAME   = "vdsdb_${var.env}"
   })
   lambda-managed-policies        = { for idx, val in local.lambda_vds_users_delta_role_policies: idx => val }
   create_api_gateway_integration = false
@@ -154,26 +157,6 @@ module "lambda-prepare-s3-for-vds" {
   lambda-managed-policies        = { for idx, val in local.lambda_prepare_s3_for_vds_role_policies: idx => val }
 }
 
-module "lambda-vds-delta-to-db" {
-  source               = "./modules/lambda"
-  depends_on           = [aws_iam_policy.iam_access_s3]
-  env                  = var.env
-  must-be-role-prefix  = var.role-prefix
-  must-be-policy-arn   = var.policy-boundary-arn
-  resource_tag_name    = "edis"
-  region               = "us-east-1"
-  app                  = "edis"
-  lambda-name          = "vds-delta-to-db"
-  file-name            = "../lambda-zip/lambda-vds-delta-to-db.zip"
-  lambda-description   = "Lambda function to load updated VDS user records from S3 bucket into DynamoDB"
-  lambda-env-variables = tomap({
-    LOG_LEVEL = "info"
-    TABLE     = module.ddb-userinfo[0].ddb-name
-  })
-  lambda-managed-policies = {for idx, val in local.lambda_vds-delta-to-db_role_policies : idx => val}
-  lambda_timeout          = 900
-}
-
   module "lambda-vds-delta-to-sqs" {
     source              = "./modules/lambda"
     depends_on = [aws_iam_policy.iam_access_s3]
@@ -188,13 +171,13 @@ module "lambda-vds-delta-to-db" {
     lambda-description  = "Lambda function to send updated VDS user records from S3 bucket into SQS"
     lambda-env-variables = tomap({
       LOG_LEVEL = "info"
-      SQS_URL     = "tbd"
+      SQS_URL     = "https://sqs.us-east-1.amazonaws.com/${data.aws_caller_identity._.account_id}/vds-delta-queue-${var.env}"
     })
     lambda-managed-policies        = { for idx, val in local.lambda_vds-delta-to-sqs_role_policies: idx => val }
     lambda_timeout = 900
 }
 
-module "lambda-sqs-batch-to-db" {
+module "lambda-sqs-delta-to-db" {
   source               = "./modules/lambda"
   env                  = var.env
   must-be-role-prefix  = var.role-prefix
@@ -202,15 +185,146 @@ module "lambda-sqs-batch-to-db" {
   resource_tag_name    = "edis"
   region               = "us-east-1"
   app                  = "edis"
-  lambda-name          = "sqs-batch-to-db"
-  file-name            = "../lambda-zip/lambda-sqs-batch-to-db.zip"
+  lambda-name          = "sqs-delta-to-db"
+  file-name            = "../lambda-zip/lambda-sqs-delta-to-db.zip"
   lambda-description   = "Lambda function to receive updated VDS user records from SQS and load into DynamoDB"
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
     TABLE     = module.ddb-userinfo[0].ddb-name
-    SQS_URL     = "tbd"
+    SQS_URL     = "https://sqs.us-east-1.amazonaws.com/${data.aws_caller_identity._.account_id}/vds-delta-queue-${var.env}"
   })
-  lambda-managed-policies = {for idx, val in local.lambda_sqs-batch-to-db_role_policies : idx => val}
+  lambda-managed-policies = {for idx, val in local.lambda_sqs-delta-to-db_role_policies : idx => val}
   lambda_timeout          = 900
+}
+
+resource "aws_sqs_queue" "edis-sqs" {
+  name = "edis-vds-delta-queue-${var.env}"
+  visibility_timeout_seconds = 7200
+  max_message_size = 262144
+  policy = <<EOF
+{
+  "Version": "2008-10-17",
+  "Id": "__default_policy_ID",
+  "Statement": [
+    {
+      "Sid": "__owner_statement",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::${data.aws_caller_identity._.account_id}:root"
+      },
+      "Action": "SQS:*",
+      "Resource": "arn:aws:sqs:us-east-1:${data.aws_caller_identity._.account_id}:edis-vds-delta-queue-${var.env}"
+    },
+    {
+      "Sid": "__sender_statement",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "${module.lambda-vds-delta-to-sqs.lambda_role_arn}"
+      },
+      "Action": "SQS:SendMessage",
+      "Resource": "arn:aws:sqs:us-east-1:${data.aws_caller_identity._.account_id}:edis-vds-delta-queue-${var.env}"
+    },
+    {
+      "Sid": "__receiver_statement",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "${module.lambda-sqs-delta-to-db.lambda_role_arn}"
+      },
+      "Action": [
+        "SQS:ChangeMessageVisibility",
+        "SQS:DeleteMessage",
+        "SQS:ReceiveMessage"
+      ],
+      "Resource": "arn:aws:sqs:us-east-1:${data.aws_caller_identity._.account_id}:edis-vds-delta-queue-${var.env}"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_lambda_event_source_mapping" "edis-sqs" {
+  batch_size = 2
+  event_source_arn = aws_sqs_queue.edis-sqs.arn
+  enabled = true
+  function_name = module.lambda-sqs-delta-to-db.arn
+}
+
+resource "aws_athena_database" "edis-athena" {
+  bucket = var.s3bucket-for-vds-users
+  name   = "vdsdb_${var.env}"
+}
+
+resource "aws_glue_catalog_table" "edis-athena-prev" {
+  database_name = aws_athena_database.edis-athena.name
+  name          = "prevp_t"
+  table_type = "EXTERNAL_TABLE"
+  parameters = {
+    EXTERNAL = "TRUE"
+  }
+  storage_descriptor {
+    location = "s3://${var.s3bucket-for-vds-users}/app-edis-data-${var.env}/prev/"
+    input_format = "org.apache.hadoop.mapred.TextInputFormat"
+    output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
+    ser_de_info {
+      name = "my-serde"
+      serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+      parameters = {
+        "serialization.format" = 1
+      }
+    }
+    columns {
+      name = "id"
+      type = "string"
+    }
+    columns {
+      name = "nihorgpath"
+      type = "string"
+    }
+    columns {
+      name = "division"
+      type = "string"
+    }
+    columns {
+      name = "content"
+      type = "string"
+    }
+  }
+}
+
+resource "aws_glue_catalog_table" "edis-athena-current" {
+  database_name = aws_athena_database.edis-athena.name
+  name          = "currentp_t"
+  table_type = "EXTERNAL_TABLE"
+  parameters = {
+    EXTERNAL = "TRUE"
+  }
+  storage_descriptor {
+    location = "s3://${var.s3bucket-for-vds-users}/app-edis-data-${var.env}/current/"
+    input_format = "org.apache.hadoop.mapred.TextInputFormat"
+    output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
+    ser_de_info {
+      name = "my-serde"
+      serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+      parameters = {
+        "serialization.format" = 1
+      }
+    }
+    columns {
+      name = "id"
+      type = "string"
+    }
+    columns {
+      name = "nihorgpath"
+      type = "string"
+    }
+    columns {
+      name = "division"
+      type = "string"
+    }
+    columns {
+      name = "content"
+      type = "string"
+    }
+  }
 }
 
