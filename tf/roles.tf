@@ -52,3 +52,44 @@ resource "aws_iam_role" "step_function" {
   permissions_boundary = var.policy-boundary-arn
 }
 
+data "aws_iam_policy_document" "assume_role_event_trigger" {
+  statement {
+    sid     = ""
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["events.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "event_trigger" {
+  name               = "${var.role-prefix}-edis-start-vds-refresh-${var.env}"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_event_trigger.json
+  managed_policy_arns = [
+    aws_iam_policy.iam_refresh_vds.arn
+  ]
+  path                 = "/"
+  permissions_boundary = var.policy-boundary-arn
+}
+
+data "aws_iam_policy_document" "iam_refresh_vds" {
+  statement {
+    sid     = "executeStep"
+    effect  = "Allow"
+    actions = ["states:StartExecution"]
+    resources = [
+      aws_sfn_state_machine.edis_sfn_refresh_vds.arn
+    ]
+  }
+}
+
+resource "aws_iam_policy" "iam_refresh_vds" {
+  name        = "${var.role-prefix}-edis-start-vds-refresh-${var.env}"
+  path        = "/"
+  description = "Allow trigger event to start refresh vds"
+  policy      = data.aws_iam_policy_document.iam_refresh_vds.json
+}
+
+

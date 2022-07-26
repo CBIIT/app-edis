@@ -111,13 +111,18 @@ EOF
     "arn:aws:iam::aws:policy/AmazonSQSFullAccess"
   ]
 
-  lambda_sqs-batch-to-db_role_policies = [
+  lambda_sqs-delta-to-db_role_policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
     "arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole"
   ]
 }
+
+# -----------------------------------------------------------------------------
+# Data: aws_caller_identity gets data from current AWS account
+# -----------------------------------------------------------------------------
+data "aws_caller_identity" "_" {}
 
 data "template_file" "api_era-commons-swagger" {
   template = file("resources/tf-swagger-era-commons-v3.yaml")

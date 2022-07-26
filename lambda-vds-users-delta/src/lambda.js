@@ -8,16 +8,22 @@ const {AthenaExpress} = require("athena-express");
 
 AWS.config.update({ region: region });
 
+// Environment variables
+const logLevel = process.env['LOG_LEVEL'];
+const s3bucket = process.env['S3BUCKET'];
+const s3folder = process.env['S3FOLDER'];
+const db       = process.env['DB_NAME'];
+
+
 const athenaExpressConfig = {
     aws: AWS,
-    s3: 's3://cf-templates-woyzwinjenjf-us-east-1/app-edis-data-dev2/delta/',
-    db: 'vdsdb1_db',
+    s3: 's3://' + s3bucket + '/' + s3folder + '/delta/',
+    db: db,
     getStats: true,
     skipResults: true
 }; //configuring athena-express with aws sdk object
 
 // Set the console log level
-const logLevel = process.env['LOG_LEVEL'];
 if (logLevel && logLevel === 'info') {
     console.debug = function () {}
 }

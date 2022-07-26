@@ -2,9 +2,7 @@
 resource "aws_dynamodb_table" "table" {
   name           = "userinfo-${var.env}"
   hash_key       = "NEDId"
-  billing_mode   = "PROVISIONED"
-  read_capacity  = 5
-  write_capacity = 5
+  billing_mode   = "PAY_PER_REQUEST"
 
 
   attribute {
@@ -21,8 +19,6 @@ resource "aws_dynamodb_table" "table" {
     range_key       = "NEDId"
     name            = "icIndex"
     projection_type = "ALL"
-    read_capacity   = 10
-    write_capacity  = 10
   }
 
   lifecycle {

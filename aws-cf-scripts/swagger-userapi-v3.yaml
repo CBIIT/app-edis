@@ -594,22 +594,22 @@ components:
         USER_ID:
           type: string
           format: string
-          example: ABDOUL9092
+          example: ABCDF9092
         EMAIL:
           type: string
-          example: abdoul9092@company.com
+          example: abcdf2@company.com
         NAME_PREFFIX:
           type: string
           example: Dr
         FIRST_NAME:
           type: string
-          example: Luis
+          example: First
         MI_NAME:
           type: string
-          example: Simon
+          example: M
         LAST_NAME:
           type: string
-          example: Abdou
+          example: Last
         NAME_SUFFIX:
           type: string
           example: Jr
@@ -629,37 +629,37 @@ components:
           example: '2016-08-29T09:12:33.001Z'
         ORG_ID:
           type: integer
-          example: 846901
+          example: 12345
         ORG_NAME:
           type: string
-          example: UNIVERSITY OF CAPE TOWN
+          example: UNIVERSITY OF XXXX
         ORG_ADDRESS_1:
           type: string
-          example: UNIVERSITY OF CAPE TOWN
+          example: UNIVERSITY OF XXXXX
         ORG_ADDRESS_2:
           type: string
-          example: RESEARCH & INNOVATION
+          example: RESEARCH
         ORG_ADDRESS_3:
           type: string
-          example: 2 Rhodes Avenue
+          example: 1 Some Avenue
         ORG_ADDRESS_4:
           type: string
-          example: Mowbray, CAPE TOWN 7700, SOUTH AFRICA
+          example: City, State 9876, USA
         ORG_ADDRESS_5:
           type: string
           example: ' '
         CITY:
           type: string
-          example: RONDEBOSCH
+          example: CITY
         STATE:
           type: string
           example: ' '
         PHONE_NUMBER:
           type: string
-          example: 27211234567
+          example: 1234567890
         ORG_EMAIL:
           type: string
-          example: First.Last@uct.ac.za
+          example: First.Last@company.com
         LOGINGOV_USER_ID:
           type: string
           example: 12345-67890-12234-45678
