@@ -1,6 +1,7 @@
 resource "aws_sfn_state_machine" "edis_sfn_refresh_vds" {
+  count = (var.build-userinfo) ? 1 : 0
   name       = "edis-refresh-vds-${var.env}"
-  role_arn   = aws_iam_role.step_function.arn
+  role_arn   = aws_iam_role.step_function[0].arn
   definition = <<EOF
   {
   "Comment": "State Machine to retrieve user data from VDS",
@@ -363,8 +364,9 @@ EOF
 }
 
 resource "aws_sfn_state_machine" "edis_sfn_rollback" {
+  count = (var.build-userinfo) ? 1 : 0
   name       = "edis-rollback-${var.env}"
-  role_arn   = aws_iam_role.step_function.arn
+  role_arn   = aws_iam_role.step_function[0].arn
   definition = <<EOF
 {
   "Comment": "Rollback VDS data to current folder",
@@ -450,13 +452,14 @@ EOF
 }
 
 resource "aws_cloudwatch_event_rule" "edis_refresh_vds" {
+  count = (var.build-userinfo) ? 1 : 0
   name = "edis-vds-refresh-${var.env}"
   description = "Start Step Function to refresh VDS user data"
   schedule_expression = "cron(30 1 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "edis_refresh_vds" {
-  arn  = aws_sfn_state_machine.edis_sfn_refresh_vds.arn
-  rule = aws_cloudwatch_event_rule.edis_refresh_vds.name
-  role_arn = aws_iam_role.event_trigger.arn
+  arn  = aws_sfn_state_machine.edis_sfn_refresh_vds[0].arn
+  rule = aws_cloudwatch_event_rule.edis_refresh_vds[0].name
+  role_arn = aws_iam_role.event_trigger[0].arn
 }
