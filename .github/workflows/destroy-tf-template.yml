@@ -109,6 +109,12 @@ jobs:
         working-directory: tf/
         if: ${{ inputs.build-userinfo && !inputs.build-eracommons }}
 
+      - name: Init Terraform for account wide
+        id: initAccountWide
+        run: terraform init -backend-config="bucket=${{ inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/api-edis-${{ inputs.tier }}" -backend-config="region=us-east-1"
+        working-directory: tf/
+        if: ${{ !inputs.build-userinfo && !inputs.build-eracommons }}
+
       - name: Destroy Terraform
         id: destroy
         run: terraform destroy -auto-approve -input=false -lock=false -var 'env=${{ inputs.tier }}' -var 'policy-boundary-arn=arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:policy/PermissionBoundary_PowerUser' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 'build-eracommons=${{ inputs.build-eracommons }}' -var 'build-userinfo=${{ inputs.build-userinfo }}' -var 's3bucket-for-vds-users=${{ inputs.s3bucket }}'
