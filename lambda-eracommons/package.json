@@ -4,6 +4,7 @@
   "main": "lambda.js",
   "scripts": {
     "layer": "mkdir layer && mkdir layer/nodejs && npm i oracledb --prefix ./layer/nodejs && npm i oracledb-prebuilt-for-lambda --prefix ./layer/nodejs && mv layer/nodejs/lib layer/. && cd layer && zip -r oracledb-layer.zip lib nodejs/node_modules && cd ..",
+    "layerzip": "rm -rf ../lambda-zip/oracledb-layer.zip && cp layer/oracledb-layer.zip ../lambda-zip/oracledb-layer.zip",
     "zip": "rm -rf lambda-eracommons.zip && zip -r lambda-eracommons.zip package.json src",
     "zip3": "rm -rf node_modules && rm -rf lambda-userapi.zip && npm install --only='prod' && zip -r lambda-userapiV3.zip node_modules src/lambda.js src/eracommonsapiV3.js",
     "test": "jest unit --coverage"

@@ -77,6 +77,13 @@ jobs:
           echo Build eraCommons project - ${{ inputs.build-eracommons }}
           echo Build userInfoApi project - ${{ inputs.build-userinfo }}
       
+      - name: build lambda Oracle db layer
+        if: (inputs.build-eracommons == false) && (inputs.build-userinfo == false)
+        working-directory: lambda-eracommons
+        run: |
+          npm run layer
+          npm run layerzip
+        
       - name: Setup AWS configuration
         uses: aws-actions/configure-aws-credentials@master
         with:
