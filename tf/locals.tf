@@ -79,42 +79,42 @@ EOF
     "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
   ]
 
-  lambda_vds_users_delta_role_policies = [
+  lambda_vds_users_delta_role_policies = (var.build-userinfo) ? [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
     "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
     "arn:aws:iam::aws:policy/AmazonAthenaFullAccess",
-    "${aws_iam_policy.iam_access_s3[0].arn}"
-  ]
+    aws_iam_policy.iam_access_s3[0].arn
+  ] : []
 
-  lambda_load_from_vds_role_policies = [
+  lambda_load_from_vds_role_policies = (var.build-userinfo) ? [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
     "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
-    "${aws_iam_policy.iam_access_s3[0].arn}"
-  ]
+    aws_iam_policy.iam_access_s3[0].arn
+  ] : []
 
-  lambda_prepare_s3_for_vds_role_policies = [
+  lambda_prepare_s3_for_vds_role_policies = (var.build-userinfo) ? [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
-    "${aws_iam_policy.iam_access_s3[0].arn}"
-  ]
+    aws_iam_policy.iam_access_s3[0].arn
+  ] : []
 
-  lambda_vds-delta-to-sqs_role_policies = [
+  lambda_vds-delta-to-sqs_role_policies = (var.build-userinfo) ? [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
-    "${aws_iam_policy.iam_access_s3[0].arn}",
+    aws_iam_policy.iam_access_s3[0].arn,
     "arn:aws:iam::aws:policy/AmazonSQSFullAccess"
-  ]
+  ] : []
 
-  lambda_sqs-delta-to-db_role_policies = [
+  lambda_sqs-delta-to-db_role_policies = (var.build-userinfo) ? [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
     "arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole"
-  ]
+  ] : []
 }
 
 # -----------------------------------------------------------------------------
