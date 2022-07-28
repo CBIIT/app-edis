@@ -14,7 +14,6 @@ on:
       tier:
         description: 'Deployment tier'
         required: true
-        default: dev2
       s3bucket:
         description: 'S3 bucket to use for deployment'
         required: true

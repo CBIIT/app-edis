@@ -30,7 +30,7 @@ resource "aws_iam_policy" "iam_access_ddb" {
 }
 
 resource "aws_iam_role" "iam_access_ddb" {
-  name               = "${var.must-be-role-prefix}-api-gateway-user-api-ddb-${var.env}"
+  name               = "${var.must-be-role-prefix}-api-gateway-userinfo-ddb-${var.env}"
   assume_role_policy = data.aws_iam_policy_document.assume_role_api_gateway_service.json
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
