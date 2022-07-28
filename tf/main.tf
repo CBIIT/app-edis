@@ -341,7 +341,7 @@ resource "aws_glue_catalog_table" "edis-athena-current" {
 # Global API Gateway resource
 resource "aws_iam_role" "api_gateway" {
   count = (!var.build-userinfo && !var.build-eracommons) ? 1 : 0
-  name               = "${var.role-prefix}-edis-api-gateway-role"
+  name               = "${var.role-prefix}-api-gateway-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role_api_gateway_service.json
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
