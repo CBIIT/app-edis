@@ -82,7 +82,12 @@ jobs:
         working-directory: lambda-eracommons
         run: |
           npm run layer
-          aws s3 cp layer/oracledb-layer.zip s3://${{ inputs.s3bucket }}/api-edis-tf-state/oracledb-layer.zip
+        
+      - name: upload lambda Oracle db layer to S3 bucket
+        if: (inputs.build-eracommons == false) && (inputs.build-userinfo == false)
+        working-directory: lambda-eracommons
+        run: |
+          aws s3 cp layer/oracledb-layer.zip "s3://${{ inputs.s3bucket }}/api-edis-tf-state/oracledb-layer.zip"
         
       - name: Setup AWS configuration
         uses: aws-actions/configure-aws-credentials@master
