@@ -363,7 +363,7 @@ resource "aws_lambda_layer_version" "oracledb" {
   s3_key = "api-edis-tf-state/oracledb-layer.zip"
   compatible_runtimes = ["nodejs10.x","nodejs12.x","nodejs14.x"]
   description = "OracleDB lambda layer to connect to Oracle database"
-  source_code_hash = filebase64sha256("../lambda-eracommons/layer/oracledb-layer.zip")
+#  source_code_hash = filebase64sha256("../lambda-eracommons/layer/oracledb-layer.zip")
 }
 
 
