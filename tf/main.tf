@@ -359,10 +359,11 @@ resource "aws_api_gateway_account" "api_gateway" {
 resource "aws_lambda_layer_version" "oracledb" {
   count = (!var.build-userinfo && !var.build-eracommons) ? 1 : 0
   layer_name = "edis-oracle-db-layer"
-  filename = "../lambda-zip/oracledb-layer.zip"
+  s3_bucket = var.s3bucket-for-vds-users
+  s3_key = "api-edis-tf-state/oracledb-layer.zip"
   compatible_runtimes = ["nodejs10.x","nodejs12.x","nodejs14.x"]
   description = "OracleDB lambda layer to connect to Oracle database"
-  source_code_hash = filebase64sha256("../lambda-zip/oracledb-layer.zip")
+  source_code_hash = filebase64sha256("../lambda-eracommons/layer/oracledb-layer.zip")
 }
 
 
