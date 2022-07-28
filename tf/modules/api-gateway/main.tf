@@ -34,10 +34,6 @@ resource "aws_lambda_function_event_invoke_config" "auth_lambda" {
   maximum_retry_attempts = 0
 }
 
-resource "aws_api_gateway_account" "api_gateway" {
-  cloudwatch_role_arn = aws_iam_role.api_gateway.arn
-}
-
 resource "aws_api_gateway_rest_api" "api_gateway" {
   name        = "${var.app}-${var.api-gateway-name}-${var.env}"
   description = "${var.env} - ${var.app-description}"

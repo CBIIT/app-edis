@@ -144,3 +144,16 @@ data "template_file" "api_userinfo_swagger" {
     lambda_invoke_arn = module.lambda-userinfo-api[0].invoke_arn
   }
 }
+
+data "aws_iam_policy_document" "assume_role_api_gateway_service" {
+  statement {
+    sid     = ""
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["apigateway.amazonaws.com"]
+    }
+  }
+}
+

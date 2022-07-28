@@ -11,7 +11,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_vds" {
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "FunctionName": "${module.lambda-prepare-s3-for-vds.arn}:$LATEST",
+        "FunctionName": "${module.lambda-prepare-s3-for-vds[0].arn}:$LATEST",
         "Payload": {
           "src": "prev_tmp"
         }
@@ -35,7 +35,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_vds" {
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "FunctionName": "${module.lambda-prepare-s3-for-vds.arn}:$LATEST",
+        "FunctionName": "${module.lambda-prepare-s3-for-vds[0].arn}:$LATEST",
         "Payload": {
           "src": "prev",
           "dst": "prev_tmp"
@@ -64,7 +64,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_vds" {
           "src": "current",
           "dst": "prev"
         },
-        "FunctionName": "${module.lambda-prepare-s3-for-vds.arn}:$LATEST"
+        "FunctionName": "${module.lambda-prepare-s3-for-vds[0].arn}:$LATEST"
       },
       "Retry": [
         {
@@ -205,7 +205,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_vds" {
             "OutputPath": "$.Payload",
             "Parameters": {
               "Payload.$": "$",
-              "FunctionName": "${module.lambda-load-from-vds.arn}:$LATEST"
+              "FunctionName": "${module.lambda-load-from-vds[0].arn}:$LATEST"
             },
             "Retry": [
               {
@@ -241,7 +241,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_vds" {
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "FunctionName": "${module.lambda-vds-users-delta.arn}:$LATEST"
+        "FunctionName": "${module.lambda-vds-users-delta[0].arn}:$LATEST"
       },
       "Retry": [
         {
@@ -263,7 +263,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_vds" {
       "OutputPath": "$.Payload",
       "Parameters": {
         "Payload.$": "$",
-        "FunctionName": "${module.lambda-vds-delta-to-sqs.arn}:$LATEST"
+        "FunctionName": "${module.lambda-vds-delta-to-sqs[0].arn}:$LATEST"
       },
       "Retry": [
         {
@@ -284,7 +284,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_vds" {
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "FunctionName": "${module.lambda-prepare-s3-for-vds.arn}:$LATEST",
+        "FunctionName": "${module.lambda-prepare-s3-for-vds[0].arn}:$LATEST",
         "Payload": {
           "src": "current"
         }
@@ -308,7 +308,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_vds" {
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "FunctionName": "${module.lambda-prepare-s3-for-vds.arn}:$LATEST",
+        "FunctionName": "${module.lambda-prepare-s3-for-vds[0].arn}:$LATEST",
         "Payload": {
           "src": "prev",
           "dst": "current"
@@ -333,7 +333,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_vds" {
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "FunctionName": "${module.lambda-prepare-s3-for-vds.arn}:$LATEST",
+        "FunctionName": "${module.lambda-prepare-s3-for-vds[0].arn}:$LATEST",
         "Payload": {
           "src": "prev_tmp",
           "dst": "prev"
@@ -375,7 +375,7 @@ resource "aws_sfn_state_machine" "edis_sfn_rollback" {
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "FunctionName": "${module.lambda-prepare-s3-for-vds.arn}:$LATEST",
+        "FunctionName": "${module.lambda-prepare-s3-for-vds[0].arn}:$LATEST",
         "Payload": {
           "src": "current"
         }
@@ -399,7 +399,7 @@ resource "aws_sfn_state_machine" "edis_sfn_rollback" {
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "FunctionName": "${module.lambda-prepare-s3-for-vds.arn}:$LATEST",
+        "FunctionName": "${module.lambda-prepare-s3-for-vds[0].arn}:$LATEST",
         "Payload": {
           "src": "prev",
           "dst": "current"
@@ -424,7 +424,7 @@ resource "aws_sfn_state_machine" "edis_sfn_rollback" {
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "FunctionName": "${module.lambda-prepare-s3-for-vds.arn}:$LATEST",
+        "FunctionName": "${module.lambda-prepare-s3-for-vds[0].arn}:$LATEST",
         "Payload": {
           "src": "prev_tmp",
           "dst": "prev"

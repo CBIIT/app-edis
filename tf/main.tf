@@ -29,6 +29,22 @@ module "lambda-era-commons-api" {
   api_gateway_rest_api_id        = module.api-gateway-era-commons[0].rest_api_id
 }
 
+module "api-gateway-era-commons" {
+  count = (var.build-eracommons) ? 1 : 0
+  depends_on          = [module.ddb-extusers]
+  source              = "./modules/api-gateway"
+  env                 = var.env
+  must-be-role-prefix = var.role-prefix
+  must-be-policy-arn  = var.policy-boundary-arn
+  okta-issuer         = lookup(local.OktaMap, var.env).issuer
+  app                 = "edis"
+  app-description     = "Enterprise Data & Integration Services Web Services for eRA Commons users"
+  api-swagger         = data.template_file.api_era-commons-swagger[0].rendered
+  api-resource-policy = local.era_commons_resource_policy
+  api-gateway-name    = "era-commons"
+  resource_tag_name   = "edis"
+}
+
 module "ddb-userinfo" {
   count = (var.build-userinfo) ? 1 : 0
   source              = "./modules/ddb-userinfo"
@@ -60,22 +76,6 @@ module "lambda-userinfo-api" {
   security_group_ids = [ var.vpcsg ]
 }
 
-module "api-gateway-era-commons" {
-  count = (var.build-eracommons) ? 1 : 0
-  depends_on          = [module.ddb-extusers]
-  source              = "./modules/api-gateway"
-  env                 = var.env
-  must-be-role-prefix = var.role-prefix
-  must-be-policy-arn  = var.policy-boundary-arn
-  okta-issuer         = lookup(local.OktaMap, var.env).issuer
-  app                 = "edis"
-  app-description     = "Enterprise Data & Integration Services Web Services for eRA Commons users"
-  api-swagger         = data.template_file.api_era-commons-swagger[0].rendered
-  api-resource-policy = local.era_commons_resource_policy
-  api-gateway-name    = "era-commons"
-  resource_tag_name   = "edis"
-}
-
 module "api-gateway-userinfo" {
   count = (var.build-userinfo) ? 1 : 0
   source              = "./modules/api-gateway"
@@ -92,6 +92,7 @@ module "api-gateway-userinfo" {
 }
 
 module "lambda-vds-users-delta" {
+  count = (var.build-userinfo) ? 1 : 0
   source              = "./modules/lambda"
   env                 = var.env
   must-be-role-prefix = var.role-prefix
@@ -113,6 +114,7 @@ module "lambda-vds-users-delta" {
 }
 
 module "lambda-load-from-vds" {
+  count = (var.build-userinfo) ? 1 : 0
   source              = "./modules/lambda"
   depends_on = [aws_iam_policy.iam_access_s3]
   env                 = var.env
@@ -138,6 +140,7 @@ module "lambda-load-from-vds" {
 }
 
 module "lambda-prepare-s3-for-vds" {
+  count = (var.build-userinfo) ? 1 : 0
   source              = "./modules/lambda"
   depends_on = [aws_iam_policy.iam_access_s3]
   env                 = var.env
@@ -158,6 +161,7 @@ module "lambda-prepare-s3-for-vds" {
 }
 
   module "lambda-vds-delta-to-sqs" {
+    count = (var.build-userinfo) ? 1 : 0
     source              = "./modules/lambda"
     depends_on = [aws_iam_policy.iam_access_s3]
     env                 = var.env
@@ -178,6 +182,7 @@ module "lambda-prepare-s3-for-vds" {
 }
 
 module "lambda-sqs-delta-to-db" {
+  count = (var.build-userinfo) ? 1 : 0
   source               = "./modules/lambda"
   env                  = var.env
   must-be-role-prefix  = var.role-prefix
@@ -198,6 +203,7 @@ module "lambda-sqs-delta-to-db" {
 }
 
 resource "aws_sqs_queue" "edis-sqs" {
+  count = (var.build-userinfo) ? 1 : 0
   name = "edis-vds-delta-queue-${var.env}"
   visibility_timeout_seconds = 7200
   max_message_size = 262144
@@ -219,7 +225,7 @@ resource "aws_sqs_queue" "edis-sqs" {
       "Sid": "__sender_statement",
       "Effect": "Allow",
       "Principal": {
-        "AWS": "${module.lambda-vds-delta-to-sqs.lambda_role_arn}"
+        "AWS": "${module.lambda-vds-delta-to-sqs[0].lambda_role_arn}"
       },
       "Action": "SQS:SendMessage",
       "Resource": "arn:aws:sqs:us-east-1:${data.aws_caller_identity._.account_id}:edis-vds-delta-queue-${var.env}"
@@ -228,7 +234,7 @@ resource "aws_sqs_queue" "edis-sqs" {
       "Sid": "__receiver_statement",
       "Effect": "Allow",
       "Principal": {
-        "AWS": "${module.lambda-sqs-delta-to-db.lambda_role_arn}"
+        "AWS": "${module.lambda-sqs-delta-to-db[0].lambda_role_arn}"
       },
       "Action": [
         "SQS:ChangeMessageVisibility",
@@ -243,19 +249,22 @@ EOF
 }
 
 resource "aws_lambda_event_source_mapping" "edis-sqs" {
+  count = (var.build-userinfo) ? 1 : 0
   batch_size = 2
-  event_source_arn = aws_sqs_queue.edis-sqs.arn
+  event_source_arn = aws_sqs_queue.edis-sqs[0].arn
   enabled = true
-  function_name = module.lambda-sqs-delta-to-db.arn
+  function_name = module.lambda-sqs-delta-to-db[0].arn
 }
 
 resource "aws_athena_database" "edis-athena" {
+  count = (var.build-userinfo) ? 1 : 0
   bucket = var.s3bucket-for-vds-users
   name   = "vdsdb_${var.env}"
 }
 
 resource "aws_glue_catalog_table" "edis-athena-prev" {
-  database_name = aws_athena_database.edis-athena.name
+  count = (var.build-userinfo) ? 1 : 0
+  database_name = aws_athena_database.edis-athena[0].name
   name          = "prevp_t"
   table_type = "EXTERNAL_TABLE"
   parameters = {
@@ -292,7 +301,8 @@ resource "aws_glue_catalog_table" "edis-athena-prev" {
 }
 
 resource "aws_glue_catalog_table" "edis-athena-current" {
-  database_name = aws_athena_database.edis-athena.name
+  count = (var.build-userinfo) ? 1 : 0
+  database_name = aws_athena_database.edis-athena[0].name
   name          = "currentp_t"
   table_type = "EXTERNAL_TABLE"
   parameters = {
@@ -327,4 +337,22 @@ resource "aws_glue_catalog_table" "edis-athena-current" {
     }
   }
 }
+
+# Global API Gateway resource
+resource "aws_iam_role" "api_gateway" {
+  count = (!var.build-userinfo && !var.build-eracommons) ? 1 : 0
+  name               = "${var.role-prefix}-edis-api-gateway-role"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_api_gateway_service.json
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+  ]
+  path                 = "/"
+  permissions_boundary = var.policy-boundary-arn
+}
+
+resource "aws_api_gateway_account" "api_gateway" {
+  count = (!var.build-userinfo && !var.build-eracommons) ? 1 : 0
+  cloudwatch_role_arn = aws_iam_role.api_gateway[0].arn
+}
+
 
