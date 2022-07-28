@@ -355,4 +355,14 @@ resource "aws_api_gateway_account" "api_gateway" {
   cloudwatch_role_arn = aws_iam_role.api_gateway[0].arn
 }
 
+# Global Lambda OracleDB Layer
+resource "aws_lambda_layer_version" "oracledb" {
+  count = (!var.build-userinfo && !var.build-eracommons) ? 1 : 0
+  layer_name = "edis-oracle-db-layer"
+  filename = "../lambda-zip/oracledb-layer.zip"
+  compatible_runtimes = ["nodejs10.x","nodejs12.x","nodejs14.x"]
+  description = "OracleDB lambda layer to connect to Oracle database"
+  source_code_hash = filebase64sha256(file("../lambda-zip/oracledb-layer.zip"))
+}
+
 
