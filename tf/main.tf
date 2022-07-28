@@ -362,7 +362,7 @@ resource "aws_lambda_layer_version" "oracledb" {
   filename = "../lambda-zip/oracledb-layer.zip"
   compatible_runtimes = ["nodejs10.x","nodejs12.x","nodejs14.x"]
   description = "OracleDB lambda layer to connect to Oracle database"
-  source_code_hash = filebase64sha256(file("../lambda-zip/oracledb-layer.zip"))
+  source_code_hash = filebase64sha256("../lambda-zip/oracledb-layer.zip")
 }
 
 
