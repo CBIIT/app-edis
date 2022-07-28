@@ -23,6 +23,7 @@ data "aws_iam_policy_document" "iam_access_s3" {
 }
 
 resource "aws_iam_policy" "iam_access_s3" {
+  count = (var.build-userinfo) ? 1 : 0
   name        = "${var.role-prefix}-s3-app-edis-data-${var.env}"
   path        = "/"
   description = "Access to given S3 bucket folder"
@@ -42,6 +43,7 @@ data "aws_iam_policy_document" "assume_role_step_function" {
 }
 
 resource "aws_iam_role" "step_function" {
+  count = (var.build-userinfo) ? 1 : 0
   name               = "${var.role-prefix}-step-function-vds-${var.env}"
   assume_role_policy = data.aws_iam_policy_document.assume_role_step_function.json
   managed_policy_arns = [
@@ -65,10 +67,11 @@ data "aws_iam_policy_document" "assume_role_event_trigger" {
 }
 
 resource "aws_iam_role" "event_trigger" {
+  count = (var.build-userinfo) ? 1 : 0
   name               = "${var.role-prefix}-edis-start-vds-refresh-${var.env}"
   assume_role_policy = data.aws_iam_policy_document.assume_role_event_trigger.json
   managed_policy_arns = [
-    aws_iam_policy.iam_refresh_vds.arn
+    aws_iam_policy.iam_refresh_vds[0].arn
   ]
   path                 = "/"
   permissions_boundary = var.policy-boundary-arn
@@ -80,12 +83,13 @@ data "aws_iam_policy_document" "iam_refresh_vds" {
     effect  = "Allow"
     actions = ["states:StartExecution"]
     resources = [
-      aws_sfn_state_machine.edis_sfn_refresh_vds.arn
+      aws_sfn_state_machine.edis_sfn_refresh_vds[0].arn
     ]
   }
 }
 
 resource "aws_iam_policy" "iam_refresh_vds" {
+  count = (var.build-userinfo) ? 1 : 0
   name        = "${var.role-prefix}-edis-start-vds-refresh-${var.env}"
   path        = "/"
   description = "Allow trigger event to start refresh vds"
