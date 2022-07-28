@@ -459,6 +459,7 @@ resource "aws_cloudwatch_event_rule" "edis_refresh_vds" {
 }
 
 resource "aws_cloudwatch_event_target" "edis_refresh_vds" {
+  count = (var.build-userinfo) ? 1 : 0
   arn  = aws_sfn_state_machine.edis_sfn_refresh_vds[0].arn
   rule = aws_cloudwatch_event_rule.edis_refresh_vds[0].name
   role_arn = aws_iam_role.event_trigger[0].arn
