@@ -77,24 +77,24 @@ jobs:
           echo Build eraCommons project - ${{ inputs.build-eracommons }}
           echo Build userInfoApi project - ${{ inputs.build-userinfo }}
       
-      - name: build lambda Oracle db layer
-        if: (inputs.build-eracommons == false) && (inputs.build-userinfo == false)
-        working-directory: lambda-eracommons
-        run: |
-          npm run layer
-        
-      - name: upload lambda Oracle db layer to S3 bucket
-        if: (inputs.build-eracommons == false) && (inputs.build-userinfo == false)
-        working-directory: lambda-eracommons
-        run: |
-          aws s3 cp layer/oracledb-layer.zip "s3://${{ inputs.s3bucket }}/api-edis-tf-state/oracledb-layer.zip"
-        
       - name: Setup AWS configuration
         uses: aws-actions/configure-aws-credentials@master
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
           role-session-name: TestSessionWithOIDC
           aws-region: us-east-1
+
+      - name: build lambda Oracle db layer
+        if: (inputs.build-eracommons == false) && (inputs.build-userinfo == false)
+        working-directory: lambda-eracommons
+        run: |
+          npm run layer
+
+      - name: upload lambda Oracle db layer to S3 bucket
+        if: (inputs.build-eracommons == false) && (inputs.build-userinfo == false)
+        working-directory: lambda-eracommons
+        run: |
+          aws s3 cp layer/oracledb-layer.zip "s3://${{ inputs.s3bucket }}/api-edis-tf-state/oracledb-layer.zip"
 
       - name: Install Terraform
         id: install
