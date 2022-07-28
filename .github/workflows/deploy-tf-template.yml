@@ -108,6 +108,12 @@ jobs:
         working-directory: tf/
         if: ${{ inputs.build-userinfo && !inputs.build-eracommons }} 
 
+      - name: Init Terraform for account wide
+        id: initAccountWide
+        run: terraform init -backend-config="bucket=${{ inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/api-edis-${{ inputs.tier }}" -backend-config="region=us-east-1"
+        working-directory: tf/
+        if: ${{ !inputs.build-userinfo && !inputs.build-eracommons }}
+
       - name: Validate Terraform
         id: validate
         run: terraform validate
