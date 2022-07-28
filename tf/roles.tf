@@ -70,9 +70,9 @@ resource "aws_iam_role" "event_trigger" {
   count = (var.build-userinfo) ? 1 : 0
   name               = "${var.role-prefix}-edis-start-vds-refresh-${var.env}"
   assume_role_policy = data.aws_iam_policy_document.assume_role_event_trigger.json
-  managed_policy_arns = [
+  managed_policy_arns = (var.build-userinfo) ? [
     aws_iam_policy.iam_refresh_vds[0].arn
-  ]
+  ] : []
   path                 = "/"
   permissions_boundary = var.policy-boundary-arn
 }
@@ -82,9 +82,9 @@ data "aws_iam_policy_document" "iam_refresh_vds" {
     sid     = "executeStep"
     effect  = "Allow"
     actions = ["states:StartExecution"]
-    resources = [
+    resources = (var.build-userinfo) ? [
       aws_sfn_state_machine.edis_sfn_refresh_vds[0].arn
-    ]
+    ] : []
   }
 }
 
