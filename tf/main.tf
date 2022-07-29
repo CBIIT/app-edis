@@ -78,7 +78,6 @@ resource "aws_cloudwatch_event_target" "edis_refresh_eracommons" {
   count = (var.build-eracommons) ? 1 : 0
   arn  = module.lambda-eracommons[0].arn
   rule = aws_cloudwatch_event_rule.edis_refresh_eracommons[0].name
-  role_arn = aws_iam_role.refresh_eracommons_trigger[0].arn
 }
 
 module "ddb-userinfo" {

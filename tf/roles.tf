@@ -96,39 +96,4 @@ resource "aws_iam_role" "refresh_vds_trigger" {
   permissions_boundary = var.policy-boundary-arn
 }
 
-data "aws_iam_policy_document" "iam_refresh_eracommons" {
-  statement {
-    sid     = "executeLambda"
-    effect  = "Allow"
-    actions = [
-      "lambda:InvokeFunction",
-      "lambda:InvokeAsync",
-      "lambda:InvokeFunctionUrl"
-    ]
-    resources = (var.build-eracommons) ? [
-      module.lambda-eracommons[0].arn
-    ] : []
-  }
-}
-
-resource "aws_iam_policy" "iam_refresh_eracommons" {
-  count = (var.build-eracommons) ? 1 : 0
-  name        = "${var.role-prefix}-edis-start-eracommons-refresh-${var.env}"
-  path        = "/"
-  description = "Allow trigger event to start refresh eracommons Lambda function"
-  policy      = data.aws_iam_policy_document.iam_refresh_eracommons.json
-}
-
-resource "aws_iam_role" "refresh_eracommons_trigger" {
-  count = (var.build-eracommons) ? 1 : 0
-  name               = "${var.role-prefix}-edis-start-eracommons-refresh-${var.env}"
-  assume_role_policy = data.aws_iam_policy_document.assume_role_event_trigger.json
-  managed_policy_arns = (var.build-eracommons) ? [
-    aws_iam_policy.iam_refresh_eracommons[0].arn
-  ] : []
-  path                 = "/"
-  permissions_boundary = var.policy-boundary-arn
-}
-
-
 
