@@ -106,7 +106,7 @@ data "aws_iam_policy_document" "iam_refresh_eracommons" {
       "lambda:InvokeFunctionUrl"
     ]
     resources = (var.build-eracommons) ? [
-      module.lambda-eracommons.arn
+      module.lambda-eracommons[0].arn
     ] : []
   }
 }
