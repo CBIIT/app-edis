@@ -50,3 +50,7 @@ output "ddb-extusers-name" {
 output "iam-access-ddb-role-arn" {
   value = aws_iam_role.iam_access_ddb.arn
 }
+
+output "iam-access-ddb-policy-arn" {
+  value = aws_iam_policy.iam_access_ddb.arn
+}

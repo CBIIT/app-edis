@@ -89,11 +89,6 @@ jobs:
         working-directory: lambda-eracommons
         run: |
           npm run layer
-
-      - name: upload lambda Oracle db layer to S3 bucket
-        if: (inputs.build-eracommons == false) && (inputs.build-userinfo == false)
-        working-directory: lambda-eracommons
-        run: |
           aws s3 cp layer/oracledb-layer.zip "s3://${{ inputs.s3bucket }}/api-edis-tf-state/oracledb-layer.zip"
 
       - name: Install Terraform
@@ -101,6 +96,10 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with: 
           terraform_wrapper: false
+      
+      - name: Get Oracle Lambda Layer ARN
+        id: dblayer
+        run: echo "::set-output name=arn::$(aws lambda list-layer-versions --layer-name edis-oracle-db-layer --region us-east-1 --query 'LayerVersions[0].LayerVersionArn')"
 
       - name: Init Terraform for both eRAcommons and UserInfo 
         id: initBoth
@@ -133,10 +132,10 @@ jobs:
 
       - name: Planning Terraform
         id: plan
-        run: terraform plan -var 'env=${{ inputs.tier }}' -var 'policy-boundary-arn=arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:policy/PermissionBoundary_PowerUser' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 'build-eracommons=${{ inputs.build-eracommons }}' -var 'build-userinfo=${{ inputs.build-userinfo }}' -var 's3bucket-for-vds-users=${{ inputs.s3bucket }}'
+        run: terraform plan -var 'env=${{ inputs.tier }}' -var 'policy-boundary-arn=arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:policy/PermissionBoundary_PowerUser' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 'build-eracommons=${{ inputs.build-eracommons }}' -var 'build-userinfo=${{ inputs.build-userinfo }}' -var 's3bucket-for-vds-users=${{ inputs.s3bucket }}' -var 'oracle-db-layer-arn=${{ steps.dblayer.outputs.arn }}'
         working-directory: tf/
 
       - name: Terraform Deployment
         id: apply
-        run: terraform apply -auto-approve -input=false -lock=false -var 'env=${{ inputs.tier }}' -var 'policy-boundary-arn=arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:policy/PermissionBoundary_PowerUser' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 'build-eracommons=${{ inputs.build-eracommons }}' -var 'build-userinfo=${{ inputs.build-userinfo }}' -var 's3bucket-for-vds-users=${{ inputs.s3bucket }}'
+        run: terraform apply -auto-approve -input=false -lock=false -var 'env=${{ inputs.tier }}' -var 'policy-boundary-arn=arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:policy/PermissionBoundary_PowerUser' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 'build-eracommons=${{ inputs.build-eracommons }}' -var 'build-userinfo=${{ inputs.build-userinfo }}' -var 's3bucket-for-vds-users=${{ inputs.s3bucket }}'  -var 'oracle-db-layer-arn=${{ steps.dblayer.outputs.arn }}'
         working-directory: tf/

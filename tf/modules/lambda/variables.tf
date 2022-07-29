@@ -64,6 +64,12 @@ variable "lambda-managed-policies" {
   }
 }
 
+variable "lambda-layers" {
+  description = "List of lambda layers to attach to lambda"
+  type        = map(string)
+  default     = null
+}
+
 variable "security_group_ids" {
   description = "List of EC2 security groups ids for Lambda function inside VPC"
   type = list(string)

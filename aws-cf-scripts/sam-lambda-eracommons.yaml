@@ -52,7 +52,7 @@ Resources:
         - '-'
         - - lambda-era-commons
           - !Ref Environment
-      CodeUri: ../lambda-eracommons/lambda-eracommons.zip
+      CodeUri: ../lambda-zip/lambda-eracommons.zip
       Handler: src/lambda.handler
       Runtime: nodejs12.x
       MemorySize: 2048

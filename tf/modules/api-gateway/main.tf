@@ -26,7 +26,7 @@ resource "aws_lambda_function" "auth_lambda" {
   tags = {
     app = var.app
   }
-  filename = "../lambda-zip/lambda-auth/lambda-auth.zip"
+  filename = "../lambda-zip/lambda-auth.zip"
 }
 
 resource "aws_lambda_function_event_invoke_config" "auth_lambda" {

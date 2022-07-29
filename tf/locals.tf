@@ -115,6 +115,19 @@ EOF
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
     "arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole"
   ] : []
+
+  lambda_eracommons_role_policies = (var.build-eracommons) ? [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaENIManagementAccess",
+    "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
+    module.ddb-extusers.iam-access-ddb-policy-arn
+  ] : []
+  
+
+  lambda-eracommons-layers = (var.oracle-db-layer-arn) ? [
+    var.oracle-db-layer-arn
+  ] : []
 }
 
 # -----------------------------------------------------------------------------

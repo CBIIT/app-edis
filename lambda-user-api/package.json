@@ -4,7 +4,7 @@
   "main": "lambda.js",
   "scripts": {
     "start": "sam local start-api -d 5859 -t sam-template.yaml",
-    "zip": "rm -rf node_modules && rm -rf ../lambda-zip/lambda-user-api/lambda-user-api.zip && npm install --only='prod' && zip -r ../lambda-zip/lambda-user-api/lambda-user-api.zip node_modules src/*",
+    "zip": "rm -rf node_modules && rm -rf ../lambda-zip/lambda-user-api.zip && npm install --only='prod' && zip -r ../lambda-zip/lambda-user-api.zip node_modules src/*",
     "test": "jest unit --coverage"
   },
   "dependencies": {
