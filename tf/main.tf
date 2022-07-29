@@ -65,6 +65,8 @@ module "lambda-eracommons" {
   })
   lambda-managed-policies        = { for idx, val in local.lambda_eracommons_role_policies: idx => val }
   lambda-layers = local.lambda-eracommons-layers
+  subnet_ids = [ var.subnet1, var.subnet2 ]
+  security_group_ids = [ var.vpcsg ]
 }
 
 resource "aws_cloudwatch_event_rule" "edis_refresh_eracommons" {
