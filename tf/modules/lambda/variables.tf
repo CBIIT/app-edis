@@ -66,7 +66,7 @@ variable "lambda-managed-policies" {
 
 variable "lambda-layers" {
   description = "List of lambda layers to attach to lambda"
-  type        = map(string)
+  type        = list(string)
   default     = null
 }
 
