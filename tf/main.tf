@@ -80,6 +80,14 @@ resource "aws_cloudwatch_event_target" "edis_refresh_eracommons" {
   rule = aws_cloudwatch_event_rule.edis_refresh_eracommons[0].name
 }
 
+resource "aws_lambda_permission" "edis_refresh_eracommons" {
+  count         = var.build-eracommons ? 1 : 0
+  principal     = "events.amazonaws.com"
+  action        = "lambda:InvokeFunction"
+  function_name = module.lambda-eracommons[0].name
+  source_arn = aws_cloudwatch_event_rule.edis_refresh_eracommons[0].arn 
+}
+
 module "ddb-userinfo" {
   count = (var.build-userinfo) ? 1 : 0
   source              = "./modules/ddb-userinfo"
