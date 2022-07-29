@@ -64,7 +64,7 @@ module "lambda-eracommons" {
     TABLE     = module.ddb-extusers[0].ddb-extusers-name
   })
   lambda-managed-policies        = { for idx, val in local.lambda_eracommons_role_policies: idx => val }
-  lambda-layers = { for idx, val in local.lambda-eracommons-layers: idx => val }
+  lambda-layers = local.lambda-eracommons-layers
 }
 
 resource "aws_cloudwatch_event_rule" "edis_refresh_eracommons" {
