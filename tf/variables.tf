@@ -47,3 +47,9 @@ variable "s3bucket-for-vds-users" {
   type = string
   description = "S3 Bucket name to load users info from VDS"
 }
+
+variable "oracle-db-layer-arn" {
+  type = string
+  description = "ARN of the latest version of oracle db lambda layer"
+  default = null
+}

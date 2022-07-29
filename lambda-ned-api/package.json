@@ -4,7 +4,7 @@
   "main": "lambda.js",
   "scripts": {
     "start": "sam local start-api -d 5859 -t sam-template.yaml",
-    "zip": "rm -rf node_modules && rm -rf ../lambda-zip/lambda-ned-api/lambda-ned-api.zip && npm install --only='prod' && zip -r ../lambda-zip/lambda-ned-api/lambda-ned-api.zip node_modules src/lambda.js src/nedApiRoutes.js",
+    "zip": "rm -rf node_modules && rm -rf ../lambda-zip/lambda-ned-api.zip && npm install --only='prod' && zip -r ../lambda-zip/lambda-ned-api.zip node_modules src/lambda.js src/nedApiRoutes.js",
     "test": "jest unit --coverage"
   },
   "dependencies": {

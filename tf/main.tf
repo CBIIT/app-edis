@@ -18,7 +18,7 @@ module "lambda-era-commons-api" {
   region              = "us-east-1"
   app                 = "edis"
   lambda-name         = "era-commons-api"
-  file-name           = "../lambda-zip/lambda-userapi/lambda-userapi.zip"
+  file-name           = "../lambda-zip/lambda-eracommons-api.zip"
   lambda-description  = "Lambda function contains eRA Commons External Users Info REST APIs implementation."
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
@@ -43,6 +43,42 @@ module "api-gateway-era-commons" {
   api-resource-policy = local.era_commons_resource_policy
   api-gateway-name    = "era-commons"
   resource_tag_name   = "edis"
+}
+
+module "lambda-eracommons" {
+  count = (var.build-eracommons) ? 1 : 0
+  depends_on          = [module.ddb-extusers]
+  source              = "./modules/lambda"
+  env                 = var.env
+  must-be-role-prefix = var.role-prefix
+  must-be-policy-arn  = var.policy-boundary-arn
+  resource_tag_name   = "edis"
+  region              = "us-east-1"
+  app                 = "edis"
+  lambda-name         = "era-commons-refresh"
+  file-name           = "../lambda-zip/lambda-eracommons.zip"
+  lambda-description  = "Lambda function aceeses Oracle eRA Commons and refreshes Dynamo DB table."
+  lambda-env-variables = tomap({
+    LOG_LEVEL = "info"
+    SECRET    = "era-commons-connect-${var.env}"
+    TABLE     = module.ddb-extusers[0].ddb-extusers-name
+  })
+  lambda-managed-policies        = { for idx, val in local.lambda_eracommons_role_policies: idx => val }
+  lambda-layers = { for idx, val in local.lambda-eracommons-layers: idx => val }
+}
+
+resource "aws_cloudwatch_event_rule" "edis_refresh_eracommons" {
+  count = (var.build-eracommons) ? 1 : 0
+  name = "edis-eracommons-refresh-${var.env}"
+  description = "Start Lambda Function to refresh eRA Commons user data"
+  schedule_expression = "cron(0 12 * * ? *)"
+}
+
+resource "aws_cloudwatch_event_target" "edis_refresh_eracommons" {
+  count = (var.build-eracommons) ? 1 : 0
+  arn  = module.lambda-eracommons[0].arn
+  rule = aws_cloudwatch_event_rule.edis_refresh_eracommons[0].name
+  role_arn = aws_iam_role.refresh_eracommons_trigger[0].arn
 }
 
 module "ddb-userinfo" {

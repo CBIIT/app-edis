@@ -137,7 +137,7 @@ Resources:
         - '-'
         - - lambda-edis-user-api
           - !Ref Environment
-      CodeUri: ../lambda-zip/lambda-userapi/lambda-userapi.zip
+      CodeUri: ../lambda-zip/lambda-eracommons-api.zip
       Handler: src/lambda.handler
       Runtime: nodejs12.x
       MemorySize: 2048
