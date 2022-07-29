@@ -29,7 +29,7 @@ resource "aws_lambda_function" "lambda" {
     security_group_ids = var.security_group_ids
     subnet_ids         = var.subnet_ids
   }
-  layers = (var.lambda-layers) ? values(var.lambda-layers) : null
+  layers = (var.lambda-layers != null) ? values(var.lambda-layers) : null
 }
 
 resource "aws_lambda_function_event_invoke_config" "lambda" {

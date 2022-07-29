@@ -121,11 +121,11 @@ EOF
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
     "arn:aws:iam::aws:policy/service-role/AWSLambdaENIManagementAccess",
     "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
-    module.ddb-extusers.iam-access-ddb-policy-arn
+    module.ddb-extusers[0].iam-access-ddb-policy-arn
   ] : []
   
 
-  lambda-eracommons-layers = (var.oracle-db-layer-arn) ? [
+  lambda-eracommons-layers = (var.oracle-db-layer-arn != null) ? [
     var.oracle-db-layer-arn
   ] : []
 }
