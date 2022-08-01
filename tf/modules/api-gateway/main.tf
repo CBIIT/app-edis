@@ -61,7 +61,7 @@ resource "aws_api_gateway_rest_api_policy" "api_gateway" {
 }
 
 resource "aws_cloudwatch_log_group" "api_gateway" {
-  name              = "business_apps-${var.app}-${var.api-gateway-name}-${var.env}-accesslogs"
+  name              = "${var.app}-${var.api-gateway-name}-apigateway-accesslogs-${var.env}"
   retention_in_days = 90
 }
 
