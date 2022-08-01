@@ -101,3 +101,8 @@ variable "api_gateway_rest_api_id" {
   type        = string
   default     = null
 }
+
+variable "log-retention-in-days" {
+  description = "Number of days you want to retain log events, 0 means never expire.  Default is 120 days"
+  default = "120"
+}

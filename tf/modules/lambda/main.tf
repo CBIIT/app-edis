@@ -5,7 +5,13 @@
 
 data "aws_caller_identity" "_" {}
 
+resource "aws_cloudwatch_log_group" "lambda" {
+  name = "/aws/lambda/${var.app}-${var.lambda-name}-${var.env}"
+  retention_in_days = var.log-retention-in-days
+}
+
 resource "aws_lambda_function" "lambda" {
+  depends_on = [aws_cloudwatch_log_group.lambda]
   function_name = "${var.app}-${var.lambda-name}-${var.env}"
   role          = aws_iam_role.iam_for_lambda.arn
   description   = var.lambda-description
