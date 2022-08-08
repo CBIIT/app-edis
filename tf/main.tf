@@ -108,7 +108,7 @@ module "lambda-userinfo-api" {
   region              = "us-east-1"
   app                 = "edis"
   lambda-name         = "userinfo-api"
-  file-name           = "../lambda-zip/lambda-user-api/lambda-user-api.zip"
+  file-name           = "../lambda-zip/lambda-user-api.zip"
   lambda-description  = "Lambda function contains NED and VDS users info REST APIs implementation."
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
