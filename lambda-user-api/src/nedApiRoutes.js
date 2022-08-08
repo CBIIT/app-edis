@@ -16,7 +16,9 @@ let soapClientForChanges; // Soap Client for NED Changes
 
 function nedRoutes(app, opts) {
 
-    app.post('/ByName', async (req, res) => {
+    // We use post instead of get to allow to pass characters like apostrophe, which NIH network does not allow in URL string
+    app.post('/userByName', async (req, res) => {
+        console.info('/userapi/ned/userByName', req.body);
         try {
             if (req.body.Testing) {
                 console.info(`Return in Testing mode`);
@@ -27,9 +29,10 @@ function nedRoutes(app, opts) {
             res.status(500).send(error);
         }
     });
-    app.post('/ByNIHid', async (req, res) => {
+    app.get('/userByNIHid/{id}', async (req, res) => {
+        console.info('/userapi/ned/userByNIHid', req.params);
         try {
-            const nihId = req.body.nihid;
+            const nihId = req.params.id;
 
             if (nihId === undefined) {
                 res.status(400).send('nihid is not defined.');
@@ -37,7 +40,7 @@ function nedRoutes(app, opts) {
             else if (!isNum.test(nihId)) {
                 res.status(400).send('nihid is not numeric.');
             }
-            else if (req.body.Testing) {
+            else if (req.params.Testing) {
                 console.info(`Return in Testing mode`);
                 res.json({ 'Success': true});
             }
@@ -48,36 +51,39 @@ function nedRoutes(app, opts) {
             res.status(500).send(error);
         }
     });
-    app.post('/ByIDAccount', async (req, res) => {
+    app.get('/userByIDAccount/{id}', async (req, res) => {
+        console.info('/userapi/ned/userByIDAccount', req.params);
         try {
-            if (req.body.Testing) {
+            if (req.params.Testing) {
                 console.info(`Return in Testing mode`);
                 return { 'Success': true};
             }
-            res.json(await getByADAccount(req.body.Identifier));
+            res.json(await getByADAccount(req.params.id));
         } catch (error) {
             res.status(500).send(error);
         }
     });
-    app.post('/ByIc', async (req, res) => {
+    app.get('/usersByIc/{ic}', async (req, res) => {
+        console.info('/userapi/ned/usersByIc', req.params);
         try {
-            if (req.body.Testing) {
+            if (req.params.Testing) {
                 console.info(`Return in Testing mode`);
                 return { 'Success': true};
             }
-            res.json(await getByIc(req.body.IcoreSite));
+            res.json(await getByIc(req.params.ic));
         } catch (error) {
             res.status(500).send(error);
         }
     });
-    app.post('/changesByIc', async (req, res) => {
+    app.get('/changesByIc/{ic}', async (req, res) => {
+        console.info('/userapi/ned/changesByIc', req.params);
         try {
-            if (req.body.Testing) {
+            if (req.params.Testing) {
                 console.info(`Return in Testing mode - no actual call is performed`);
                 return { 'Success': true};
             }
-            res.json(await getChangesByIc(req.body.IcoreSite,
-                req.body.From_Date, req.body.From_Time, req.body.To_Date, req.body.To_Time));
+            res.json(await getChangesByIc(req.params.ic,
+                req.params.From_Date, req.params.From_Time, req.params.To_Date, req.params.To_Time));
         } catch (error) {
             res.status(500).send(error);
         }

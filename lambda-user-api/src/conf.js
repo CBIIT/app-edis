@@ -61,7 +61,7 @@ const conf = {
             'managedObjects',
             'memberOf',
             'NIHCREATETIMESTAMP',
-            'NIHCREATORSNAME',
+            // 'NIHCREATORSNAME',
             'NIHMODIFYTIMESTAMP',
             'NIHMODIFIERSNAME',
             'NIHDIRENTRYEFFECTIVEDATE',
