@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  description: Enterprise Data & Integration Services Web Services - **NED RESR Web Service**
+  description: Enterprise Data & Integration Services Web Services - **NED REST Web Service**
   version: "0.1.0"
   title: User REST Web Service API
   # put the contact info for your development or API team
@@ -30,8 +30,8 @@ paths:
     get:
       tags:
         - clients
-      summary: VDS User record by the given NIH id (UNIQUEIDENTIFIER)
-      operationId: getUserById
+      summary: Get VDS User record by the given NIH id (UNIQUEIDENTIFIER)
+      operationId: getVDSUserByNIHId
       description: |
         Get VDS User record(s) that satisfied NIH ID criteria
       parameters:
@@ -54,8 +54,8 @@ paths:
     get:
       tags:
         - clients
-      summary: VDS user records by the given IC
-      operationId: getVdsUsersByIc
+      summary: List VDS user records by the given IC
+      operationId: listVDSUsersByIC
       description: |
         Get VDS user records that satisfied IC criteria
       parameters: 
@@ -216,10 +216,10 @@ paths:
     get:
       tags:
         - clients
-      summary: NED Person NIH IDs by the given IC
-      operationId: getChangesByIc
+      summary: List NED Changes for the given IC
+      operationId: getNEDChangesByIC
       description: |
-        Get NED Person NIH IDs that satisfy given IC criteria
+        List NED Change records that satisfy given IC criteria
       parameters:
         - name: ic
           in: path
