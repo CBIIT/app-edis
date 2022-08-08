@@ -254,7 +254,7 @@ resource "aws_sqs_queue" "edis-sqs" {
   max_message_size = 262144
   policy = <<EOF
 {
-  "Version": "2008-10-17",
+  "Version": "2012-10-17",
   "Id": "__default_policy_ID",
   "Statement": [
     {
