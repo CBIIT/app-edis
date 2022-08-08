@@ -248,10 +248,15 @@ module "lambda-sqs-delta-to-db" {
 }
 
 resource "aws_sqs_queue" "edis-sqs" {
-  count = (var.build-userinfo) ? 1 : 0
-  name = "edis-vds-delta-queue-${var.env}"
+  count                      = (var.build-userinfo) ? 1 : 0
+  name                       = "edis-vds-delta-queue-${var.env}"
   visibility_timeout_seconds = 7200
-  max_message_size = 262144
+  max_message_size           = 262144
+}
+
+resource "aws_sqs_queue_policy" "edis-sqs" {
+  count     = (var.build-userinfo) ? 1 : 0
+  queue_url = aws_sqs_queue.edis-sqs[0].id
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -264,7 +269,7 @@ resource "aws_sqs_queue" "edis-sqs" {
         "AWS": "arn:aws:iam::${data.aws_caller_identity._.account_id}:root"
       },
       "Action": "SQS:*",
-      "Resource": "arn:aws:sqs:us-east-1:${data.aws_caller_identity._.account_id}:edis-vds-delta-queue-${var.env}"
+      "Resource": "${aws_sqs_queue.edis-sqs[0].arn}"
     },
     {
       "Sid": "__sender_statement",
@@ -273,7 +278,7 @@ resource "aws_sqs_queue" "edis-sqs" {
         "AWS": "${module.lambda-vds-delta-to-sqs[0].lambda_role_arn}"
       },
       "Action": "SQS:SendMessage",
-      "Resource": "arn:aws:sqs:us-east-1:${data.aws_caller_identity._.account_id}:edis-vds-delta-queue-${var.env}"
+      "Resource": "${aws_sqs_queue.edis-sqs[0].arn}"
     },
     {
       "Sid": "__receiver_statement",
@@ -286,7 +291,7 @@ resource "aws_sqs_queue" "edis-sqs" {
         "SQS:DeleteMessage",
         "SQS:ReceiveMessage"
       ],
-      "Resource": "arn:aws:sqs:us-east-1:${data.aws_caller_identity._.account_id}:edis-vds-delta-queue-${var.env}"
+      "Resource": "${aws_sqs_queue.edis-sqs[0].arn}"
     }
   ]
 }
