@@ -26,21 +26,21 @@ tags:
     description: Operations available to clients - service to service
 
 paths:
-  /userapi/vds/userById:
-    post:
+  /userapi/vds/userById/{id}:
+    get:
       tags:
         - clients
       summary: VDS User record by the given NIH id (UNIQUEIDENTIFIER)
       operationId: getUserById
       description: |
         Get VDS User record(s) that satisfied NIH ID criteria
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                id:
-                  type: string
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: user NIH ID
+          schema:
+            type: string
       responses:
         '200':
           $ref: '#/components/responses/vdsresponse'
@@ -50,7 +50,7 @@ paths:
         timeoutInMillis: 29000
         type: aws_proxy
 
-  /userapi/vds/usersByIc:
+  /userapi/vds/usersByIc/{ic}:
     get:
       tags:
         - clients
@@ -59,9 +59,10 @@ paths:
       description: |
         Get VDS user records that satisfied IC criteria
       parameters: 
-        - name: Identifier
-          in: query
+        - name: ic
+          in: path
           description: IC
+          required: true
           schema:
             type: string
             example: 'NCI'
@@ -76,34 +77,181 @@ paths:
         '200':
           $ref: '#/components/responses/vdsUsersByIcResponse'
       x-amazon-apigateway-integration:
-        uri: ${lambda_invoke_arn}
+        type: aws
         httpMethod: POST
+        uri: ${ddb_action_query}
+        credentials: ${ddb_role_arn}
         timeoutInMillis: 29000
-        type: aws_proxy
+        passthroughBehavior: when_no_templates
+        cacheKeyParameters:
+          - method.request.path.ic
+          - method.request.querystring.lastEvaluatedKey
+        requestTemplates:
+          application/json: |-
+            #set($ic = $input.params('ic'))
+            #set($lastEvaluatedKey = $input.params('lastEvaluatedKey'))
+            {
+              "TableName": "${users_table_name}",
+              "IndexName": "icIndex",
+              "KeyConditionExpression": "NIHORGACRONYM = :ic",
+              "ExpressionAttributeValues": {
+                ":ic": { "S": "$ic" }
+              }
+            #if($lastEvaluatedKey != "")
+              , "ExclusiveStartKey": { "NEDId": { "S": "$lastEvaluatedKey" } }
+            #end
+            }
+        responses:
+          2\d{2}:
+            statusCode: 200
+            responseTemplates:
+              application/json: |-
+                #set ($inputRoot = $input.path('$'))
+                #set ($lastEvaluatedKey = $inputRoot.LastEvaluatedKey.NEDId.S)
+                {
+                  "count": $inputRoot.Count,
+                #if($lastEvaluatedKey != "")
+                  "lastEvaluatedKey": "$lastEvaluatedKey",
+                #end
+                  "items": [
+                #foreach($elem in $inputRoot.Items)
+                    {
+            "UNIQUEIDENTIFIER": "$elem.UNIQUEIDENTIFIER.S",
+            "NIHDUPUID": "$elem.NIHDUPUID.S",
+            "NIHADACCTREQ": "$elem.NIHADACCTREQ.S",
+            "NIHSSOUSERNAME": "$elem.NIHSSOUSERNAME.S",
+            "distinguishedName": "$elem.distinguishedName.S",
+            "NIHADMAILBOXREQ": "$elem.NIHADMAILBOXREQ.S",
+            "NIHPRIMARYSMTP": "$elem.NIHPRIMARYSMTP.S",
+            "MAIL": "$elem.MAIL.S",
+            "proxyAddresses": "$elem.proxyAddresses.SS",
+            "displayName": "$elem.displayName.S",
+            "PERSONALTITLE": "$elem.PERSONALTITLE.S",
+            "GIVENNAME": "$elem.GIVENNAME.S",
+            "NIHCOMMONGIVENNAME": "$elem.NIHCOMMONGIVENNAME.S",
+            "NIHNOMIDDLENAME": "$elem.NIHNOMIDDLENAME.S",
+            "MIDDLENAME": "$elem.MIDDLENAME.S",
+            "NIHCOMMONMIDDLENAM": "$elem.NIHCOMMONMIDDLENAM.S",
+            "NIHMIXCASESN": "$elem.NIHMIXCASESN.S",
+            "NIHMIXCASECOMMONSN": "$elem.NIHMIXCASECOMMONSN.S",
+            "SN": "$elem.SN.S",
+            "NIHCOMMONSN": "$elem.NIHCOMMONSN.S",
+            "GENERATIONQUALIF": "$elem.GENERATIONQUALIF.S",
+            "NIHCOMMONGENQUALIF": "$elem.NIHCOMMONGENQUALIF.S",
+            "NIHSUFFIXQUALIFIER": "$elem.NIHSUFFIXQUALIFIER.S",
+            "TITLE": "$elem.TITLE.S",
+            "NIHIPD": "$elem.NIHIPD.S",
+            "NIHBADGETITLE": "$elem.NIHBADGETITLE.S",
+            "NIHIDBADGEEXPDATE": "$elem.NIHIDBADGEEXPDATE.S",
+            "NIHSAC": "$elem.NIHSAC.S",
+            "NIHPrivacyAwarenessCompDate": "$elem.NIHPrivacyAwarenessCompDate.S",
+            "PrivacyAwarenessRefresherCompDate": "$elem.PrivacyAwarenessRefresherCompDate.S",
+            "NIHInformationSecurityAwarenessCompDate": "$elem.NIHInformationSecurityAwarenessCompDate.S",
+            "InformationSecurityRefresherCompDate": "$elem.InformationSecurityRefresherCompDate.S",
+            "description": "$elem.description.S",
+            "ORGANIZATIONALSTAT": "$elem.ORGANIZATIONALSTAT.S",
+            "NIHSUBORGSTATUS": "$elem.NIHSUBORGSTATUS.S",
+            "NIHSUMMERSTATUS": "$elem.NIHSUMMERSTATUS.S",
+            "NIHORGPATH": "$elem.NIHORGPATH.S",
+            "NIHPHYSICALADDRESS": "$elem.NIHPHYSICALADDRESS.S",
+            "NIHORGACRONYM": "$elem.NIHORGACRONYM.S",
+            "NIHSERVAO": "$elem.NIHSERVAO.S",
+            "MANAGER": "$elem.MANAGER.S",
+            "NIHCOTRID": "$elem.NIHCOTRID.S",
+            "NIHPOC": "$elem.NIHPOC.S",
+            "NIHCOMPANYNAME": "$elem.NIHCOMPANYNAME.S",
+            "NIHCOMPANYPHONE": "$elem.NIHCOMPANYPHONE.S",
+            "countryCode": "$elem.countryCode.S",
+            "TELEPHONENUMBER": "$elem.TELEPHONENUMBER.S",
+            "MOBILETELEPHONENUM": "$elem.MOBILETELEPHONENUM.S",
+            "mobile": "$elem.mobile.S",
+            "ipPhone": "$elem.ipPhone.S",
+            "NIHSITE": "$elem.NIHSITE.S",
+            "L": "$elem.L.S",
+            "BUILDINGNAME": "$elem.BUILDINGNAME.S",
+            "ROOMNUMBER": "$elem.ROOMNUMBER.S",
+            "POSTALADDRESS": "$elem.POSTALADDRESS.S",
+            "NIHIDBADGELESS6MOS": "$elem.NIHIDBADGELESS6MOS.S",
+            "managedObjects": "$elem.managedObjects.S",
+            "memberOf": "$elem.memberOf.SS",
+            "NIHCREATETIMESTAMP": "$elem.NIHCREATETIMESTAMP.S",
+            "NIHMODIFYTIMESTAMP": "$elem.NIHMODIFYTIMESTAMP.S",
+            "NIHMODIFIERSNAME": "$elem.NIHMODIFIERSNAME.S",
+            "NIHDIRENTRYEFFECTIVEDATE": "$elem.NIHDIRENTRYEFFECTIVEDATE.S",
+            "NIHDIRENTRYEXPIRATIONDATE": "$elem.NIHDIRENTRYEXPIRATIONDATE.S"
+            "userAccountControl"
+                      "USER_ID": "$elem.USER_ID.S",
+                      "PERSON_ID": $elem.PERSON_ID.N,
+                      "FIRST_NAME": "$elem.FIRST_NAME.S",
+                      "LAST_NAME": "$elem.LAST_NAME.S",
+                      "NAME_PREFIX": "$elem.NAME_PREFIX.S",
+                      "MI_NAME": "$elem.MI_NAME.S",
+                      "NAME_SUFFIX": "$elem.NAME_SUFFIX.S",
+                      "EMAIL": "$elem.EMAIL.S",
+                      "ORG_NAME": "$elem.ORG_NAME.S",
+                      "ORG_ID": $elem.ORG_ID.N,
+                      "ORG_ADDRESS_1": "$elem.LINE_1_ADDR.S",
+                      "ORG_ADDRESS_2": "$elem.LINE_2_ADDR.S",
+                      "ORG_ADDRESS_3": "$elem.LINE_3_ADDR.S",
+                      "ORG_ADDRESS_4": "$elem.LINE_4_ADDR.S",
+                      "ORG_ADDRESS_5": "$elem.LINE_5_ADDR.S",
+                      "CITY": "$elem.CITY.S",
+                      "STATE": "$elem.STATE.S",
+                      "PHONE_NUMBER": "$elem.PHONE_NUMBER.S",
+                      "ORG_EMAIL": "$elem.ORG_EMAIL.S",
+                      "ACCOUNT_CREATED_DATE": "$elem.ACCOUNT_CREATED_DATE.S",
+                      "ACCOUNT_UPDATED_DATE": "$elem.ACCOUNT_UPDATED_DATE.S",
+                      "STATUS_CODE": $elem.STATUS_CODE.N,
+                      "STATUS_DESC": "$elem.STATUS_DESCRIP.S",
+                      "LAST_UPDATED_DAY": "$elem.LAST_UPDATED_DAY.S",
+                      "LOGINGOV_USER_ID": "$elem.LOGINGOV_USER_ID.S",
+                      "ALIAS_DESCRIP": "$elem.ALIAS_DESCRIP.S"
+                    }#if($foreach.hasNext),#end
+
+                #end
+                  ]
+                }
 
   /userapi/ned/changesByIc:
-    post:
+    get:
       tags:
         - clients
       summary: NED Person NIH IDs by the given IC
       operationId: getChangesByIc
       description: |
         Get NED Person NIH IDs that satisfy given IC criteria
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                IcoreSite:
-                  type: string
-                From_Date:
-                  type: string
-                From_Time:
-                  type: string
-                To_Date:
-                  type: string
-                To_Time:
-                  type: string
+      parameters:
+        - name: ic
+          in: path
+          description: IC
+          required: true
+          schema:
+            type: string
+            example: 'NCI'
+        - name: From_Date
+          in: query
+          required: false
+          schema: 
+            type: string
+            example: 2022-03-01
+        - name: From_Time
+          in: query
+          required: false
+          schema: 
+            type: string
+            example: 00:00:00
+        - name: To_Date
+          in: query
+          required: false
+          schema: 
+            type: string
+            example: 2022-03-01
+        - name: To_Time
+          in: query
+          required: false
+          schema: 
+            type: string
+            example: 00:00:00
       responses:
         '200':
           $ref: '#/components/responses/ChangesByIcResponse'
@@ -196,155 +344,96 @@ components:
     VDSUser:
       type: object
       properties:
-        NIHADMAILBOXREQ:
-          type: string
-          example: Y
-        NIHIDBADGEEXPDATE:
-          type: string
-          example: 2026-11-12 00:00:00.0
-        NIHPOC:
-          type: string
-          example: 0010123456
-        NIHSSOUSERNAME:
-          type: string
-          example: smithj
-        BUILDINGNAME:
-          type: string
-          example: FDC 123
-        NIHPHYSICALADDRESS:
-          type: string
-          example: FDC 123 BG RM 119$431 WOOD STREET$FREDERICK MD 21702
-        MIDDLENAME:
-          type: string
-          example: Joseph
-        NIHDIRENTRYEFFECTIVEDATE:
-          type: string
-          example: 2009-01-14 00:00:00.0
-        distinguishedName:
-          type: string
-          example: CN=smithj,OU=Users,OU=NCI-Frederick,OU=NIH,OU=AD,DC=nih,DC=gov
-        MAIL:
-          type: string
-          example: smithj@mail.gov
-        NIHSAC:
-          type: string
-          example: HNCB45
-        NIHMIXCASESN:
-          type: string
-          example: John
-        NIHCREATORSNAME:
-          type: string
-          example: 0010012345
         UNIQUEIDENTIFIER:
           type: string
           example: 0011234567
-        NIHPRIMARYSMTP:
-          type: string
-          example: johnj@mail.gov
         NIHDUPUID:
           type: string
           example: 0013312345
-        NIHSUBORGSTATUS:
+        NIHADACCTREQ:
           type: string
-          example: CONTRACTOR
-        PERSONALTITLE:
+          example: Y
+        NIHSSOUSERNAME:
           type: string
-          example: Mr
-        NIHCREATETIMESTAMP:
+          example: smithj
+        distinguishedName:
           type: string
-          example: 2009-01-14 14:12:30.0
-        L:
+          example: CN=smithj,OU=Users,OU=NCI-Frederick,OU=NIH,OU=AD,DC=nih,DC=gov
+        NIHADMAILBOXREQ:
           type: string
-          example: Frederick
-        NIHCOTRID:
+          example: Y
+        NIHPRIMARYSMTP:
           type: string
-          example: 0010123456
-        managedObjects:
+          example: johnj@mail.gov
+        MAIL:
           type: string
-          example: CN=NCI-Frederick Rees alarms,OU=Distribution Lists,OU=Messaging,OU=NCI-Frederick,OU=NIH,OU=AD,DC=nih,DC=gov
-        ipPhone:
-          type: string
-          example: (301) 111-1111
-        NIHMODIFYTIMESTAMP:
-          type: string
-          example: 2021-12-27 10:25:49.0
-        POSTALADDRESS:
-          type: string
-          example: BG 111 RM 119$1050 BOYLES STREET$FREDERICK MD 21702
-        ORGANIZATIONALSTAT:
-          type: string
-          example: CONTRACTOR
-        NIHSITE:
-          type: string
-          example: MD-FCR
-        countryCode:
-          type: string
-          example: 123
-        ROOMNUMBER:
-          type: string
-          example: 123
-        NIHCOMPANYNAME:
-          type: string
-          example: FFRDC FNLCR LBR (Leidos Biomedical Research Inc.)
-        TELEPHONENUMBER:
-          type: string
-          example: +1 301 111 1111
+          example: smithj@mail.gov
         proxyAddresses:
           type: array
-          items: 
+          items:
             type: string
-          example: 
+          example:
             - smtp:smithj@nci.gov
             - X500:/O=NIH/OU=NIHEXCHANGE/cn=Recipients/cn=smithj
             - smtp:smithj@nih.mail.onmicrosoft.com
             - smtp:smithj@nih.gov
-        NIHORGACRONYM:
-          type: string
-          example: NCI
-        SN:
-          type: string
-          example: Smith
-        NIHADACCTREQ:
-          type: string
-          example: Y
-        NIHSERVAO:
-          type: string
-          example: 0010101234
-        GIVENNAME:
-          type: string
-          example: John
         displayName:
           type: string
           example: Smith, John (NIH/NCI) [C]
-        memberOf:
-          type: array
-          items: 
-            type: string
-          example:
-            - CN=NIH CONTRACTOR ACCOUNTS,OU=NIH WIDE GROUPS,OU=ADOG,DC=nih,DC=gov
-            - CN=NIH Exchange Users,OU=Groups,OU=CIT,OU=NIH,ou=ad,dc=nih,dc=gov
-            - CN=PrimaryUsers,OU=Accounts,OU=CES,OU=OPS,DC=nih,DC=gov
-        userAccountControl:
+        PERSONALTITLE:
           type: string
-          example: 123
-        NIHORGPATH:
+          example: Mr
+        GIVENNAME:
           type: string
-          example: NCI DCTD DTP NPB
-        NIHGUBORGSTATUS:
+          example: John
+        NIHCOMMONGIVENNAME:
           type: string
-          example: ???
-        NIHSUMMERSTATUS:
+          example: John
+        NIHNOMIDDLENAME:
           type: string
-          example: ???
+          example: N
+        MIDDLENAME:
+          type: string
+          example: Joseph
+        NIHCOMMONMIDDLENAM:
+          type: string
+          example: Joseph
+        NIHMIXCASESN:
+          type: string
+          example: Smith Joseph
+        NIHMIXCASECOMMONSN:
+          type: string
+          example: Smith
+        SN:
+          type: string
+          example: Smith
+        NIHCOMMONSN:
+          type: string
+          example: Smith
+        GENERATIONQUALIF:
+          type: string
+          example: Jr
+        NIHCOMMONGENQUALIF:
+          type: string
+          example: Jr
+        NIHSUFFIXQUALIFIER:
+          type: string
+          example: M.D., PH.D.
+        TITLE:
+          type: string
+          example: Board of Scientific Counselor
+        NIHIPD:
+          type: string
+          example: Other
         NIHBADGETITLE:
           type: string
-          example: ???
-        NIHIDBADGELESS6MOS:
+          example: Physician
+        NIHIDBADGEEXPDATE:
           type: string
-          example: ???
-        NIHVPNRemoteAccess:
+          example: 2026-11-12 00:00:00.0
+        NIHSAC:
           type: string
-          example: true
+          example: HNCB45
         NIHPrivacyAwarenessCompDate:
           type: string
         PrivacyAwarenessRefresherCompDate:
@@ -353,3 +442,104 @@ components:
           type: string
         InformationSecurityRefresherCompDate:
           type: string
+        description:
+          type: string
+          example: This account is Enabled by iam.nih.gov, because the Background Investigation Adjudication is complete, or is in the process of Mailbox creation
+        ORGANIZATIONALSTAT:
+          type: string
+          example: CONTRACTOR
+        NIHSUBORGSTATUS:
+          type: string
+          example: CONTRACTOR
+        NIHSUMMERSTATUS:
+          type: string
+          example: N
+        NIHORGPATH:
+          type: string
+          example: NCI DCTD DTP NPB
+        NIHPHYSICALADDRESS:
+          type: string
+          example: FDC 123 BG RM 119$431 WOOD STREET$FREDERICK MD 21702
+        NIHORGACRONYM:
+          type: string
+          example: NCI
+        NIHSERVAO:
+          type: string
+          example: 0010101234
+        MANAGER:
+          type: string
+          example: 987654321
+        NIHCOTRID:
+          type: string
+          example: 0010123456
+        NIHPOC:
+          type: string
+          example: 0010123456
+        NIHCOMPANYNAME:
+          type: string
+          example: FFRDC FNLCR LBR (Leidos Biomedical Research Inc.)
+        NIHCOMPANYPHONE:
+          type: string
+          example: + 1 111 123 4567
+        countryCode:
+          type: string
+          example: 111
+        TELEPHONENUMBER:
+          type: string
+          example: +1 301 111 1111
+        MOBILETELEPHONENUM:
+          type: string
+          example: +1 301 123 4567
+        mobile:
+          type: string
+          example: 301.123.4567
+        ipPhone:
+          type: string
+          example: (301) 111-1111
+        NIHSITE:
+          type: string
+          example: MD-FCR
+        L:
+          type: string
+          example: Frederick
+        BUILDINGNAME:
+          type: string
+          example: FDC 123
+        ROOMNUMBER:
+          type: string
+          example: 123
+        POSTALADDRESS:
+          type: string
+          example: BG 111 RM 119$1050 BOYLES STREET$FREDERICK MD 21702
+        NIHIDBADGELESS6MOS:
+          type: string
+          example: N
+        managedObjects:
+          type: string
+          example: CN=NCI-Frederick Rees alarms,OU=Distribution Lists,OU=Messaging,OU=NCI-Frederick,OU=NIH,OU=AD,DC=nih,DC=gov
+        memberOf:
+          type: array
+          items:
+            type: string
+          example:
+            - CN=NIH CONTRACTOR ACCOUNTS,OU=NIH WIDE GROUPS,OU=ADOG,DC=nih,DC=gov
+            - CN=NIH Exchange Users,OU=Groups,OU=CIT,OU=NIH,ou=ad,dc=nih,dc=gov
+            - CN=PrimaryUsers,OU=Accounts,OU=CES,OU=OPS,DC=nih,DC=gov
+        NIHCREATETIMESTAMP:
+          type: string
+          example: 2009-01-14 14:12:30.0
+        NIHMODIFYTIMESTAMP:
+          type: string
+          example: 2021-12-27 10:25:49.0
+        NIHMODIFIERSNAME:
+          type: string
+          example: 123456789
+        NIHDIRENTRYEFFECTIVEDATE:
+          type: string
+          example: 2009-01-14 00:00:00.0
+        NIHDIRENTRYEXPIRATIONDATE:
+          type: string
+          example: 2009-01-14 00:00:00.0
+        userAccountControl:
+          type: string
+          example: 123

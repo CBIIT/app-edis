@@ -12,25 +12,32 @@ let tlsOptions;
 
 function vdsRoutes(app, opts) {
 
-    app.post('/userById', async (req, res) => {
+    app.get('/userById/:id', async (req, res) => {
+        console.info('/userapi/vds/userById', req.params);
         try {
-            if (req.body.Testing) {
+            const id = req.params.id;
+            if (req.params.Testing) {
                 console.info(`Return in Testing mode`);
-                return { 'Success': true};
+                res.json({ 'Success': true});
             }
-            res.json(await getUsers(req.body.id, '*'));
+            else
+            {
+                res.json(await getUsers(id, '*'));
+            }
         } catch (error) {
+            console.error(error);
             res.status(500).send(error);
         }
     });
-    app.get('/usersByIc', async (req, res) => {
+    app.get('/usersByIc/:ic', async (req, res) => {
+        console.info('/userapi/vds/usersByIc', req.params);
         try {
-            const ic = req.query.Identifier;
+            const ic = req.params.ic;
 
             if (ic === undefined) {
-                res.status(400).send('Identifier is not defined.');
+                res.status(400).send('IC is not defined.');
             }
-            else if (req.body.Testing) {
+            else if (req.params.Testing) {
                 console.info(`Return in Testing mode`);
                 res.json({ 'Success': true});
             }
@@ -49,10 +56,10 @@ const getUsers = async (userId, ic) => {
 
         const nciSubFilter = '(NIHORGACRONYM=' + ic + ')';
         const filter = userId ? ('(&(UNIQUEIDENTIFIER=' + userId + ')' + nciSubFilter + ')') : nciSubFilter;
-
+        console.info('getUsers()', userId, ic, nciSubFilter, filter);
         var userSearchOptions = {
             scope: 'sub',
-            attributes: conf.vds.user_attributes,
+            attributes: conf.vds.userAttributes,
             filter: filter,
             paged: true
         };
@@ -67,7 +74,7 @@ const getUsers = async (userId, ic) => {
                 return reject(Error(err.message));
             }
             var users = [];
-            console.info('starting search');
+            console.info('starting search', filter);
             ldapClient.search(conf.vds.searchBase, userSearchOptions, function (err, ldapRes) {
                 if (err) {
                     console.error(err);
