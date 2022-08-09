@@ -98,7 +98,7 @@ paths:
                 ":ic": { "S": "$ic" }
               }
             #if($lastEvaluatedKey != "")
-              , "ExclusiveStartKey": { "NEDId": { "S": "$lastEvaluatedKey" } }
+              , "ExclusiveStartKey": { "NEDId": { "S": "$lastEvaluatedKey" }, "NIHORGACRONYM": { "S": "$ic" } }
             #end
             }
         responses:

@@ -40,7 +40,7 @@ function nedRoutes(app, opts) {
             else if (!isNum.test(nihId)) {
                 res.status(400).send('nihid is not numeric.');
             }
-            else if (req.params.Testing) {
+            else if (req.query.Testing) {
                 console.info(`Return in Testing mode`);
                 res.json({ 'Success': true});
             }
@@ -54,7 +54,7 @@ function nedRoutes(app, opts) {
     app.get('/userByIDAccount/:id', async (req, res) => {
         console.info('/userapi/ned/userByIDAccount', req.params);
         try {
-            if (req.params.Testing) {
+            if (req.query.Testing) {
                 console.info(`Return in Testing mode`);
                 return { 'Success': true};
             }
@@ -66,7 +66,7 @@ function nedRoutes(app, opts) {
     app.get('/usersByIc/:ic', async (req, res) => {
         console.info('/userapi/ned/usersByIc', req.params);
         try {
-            if (req.params.Testing) {
+            if (req.query.Testing) {
                 console.info(`Return in Testing mode`);
                 return { 'Success': true};
             }
@@ -78,12 +78,12 @@ function nedRoutes(app, opts) {
     app.get('/changesByIc/:ic', async (req, res) => {
         console.info('/userapi/ned/changesByIc', req.params);
         try {
-            if (req.params.Testing) {
+            if (req.query.Testing) {
                 console.info(`Return in Testing mode - no actual call is performed`);
                 return { 'Success': true};
             }
             res.json(await getChangesByIc(req.params.ic,
-                req.params.From_Date, req.params.From_Time, req.params.To_Date, req.params.To_Time));
+                req.query.From_Date, req.query.From_Time, req.query.To_Date, req.query.To_Time));
         } catch (error) {
             res.status(500).send(error);
         }
