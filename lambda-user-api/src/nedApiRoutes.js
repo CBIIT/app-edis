@@ -29,7 +29,7 @@ function nedRoutes(app, opts) {
             res.status(500).send(error);
         }
     });
-    app.get('/userByNIHid/{id}', async (req, res) => {
+    app.get('/userByNIHid/:id', async (req, res) => {
         console.info('/userapi/ned/userByNIHid', req.params);
         try {
             const nihId = req.params.id;
@@ -51,7 +51,7 @@ function nedRoutes(app, opts) {
             res.status(500).send(error);
         }
     });
-    app.get('/userByIDAccount/{id}', async (req, res) => {
+    app.get('/userByIDAccount/:id', async (req, res) => {
         console.info('/userapi/ned/userByIDAccount', req.params);
         try {
             if (req.params.Testing) {
@@ -63,7 +63,7 @@ function nedRoutes(app, opts) {
             res.status(500).send(error);
         }
     });
-    app.get('/usersByIc/{ic}', async (req, res) => {
+    app.get('/usersByIc/:ic', async (req, res) => {
         console.info('/userapi/ned/usersByIc', req.params);
         try {
             if (req.params.Testing) {
@@ -75,7 +75,7 @@ function nedRoutes(app, opts) {
             res.status(500).send(error);
         }
     });
-    app.get('/changesByIc/{ic}', async (req, res) => {
+    app.get('/changesByIc/:ic', async (req, res) => {
         console.info('/userapi/ned/changesByIc', req.params);
         try {
             if (req.params.Testing) {
