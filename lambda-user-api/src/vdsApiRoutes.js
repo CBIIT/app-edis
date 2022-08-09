@@ -16,7 +16,7 @@ function vdsRoutes(app, opts) {
         console.info('/userapi/vds/userById', req.params);
         try {
             const id = req.params.id;
-            if (req.params.Testing) {
+            if (req.query.Testing) {
                 console.info(`Return in Testing mode`);
                 res.json({ 'Success': true});
             }
@@ -37,7 +37,7 @@ function vdsRoutes(app, opts) {
             if (ic === undefined) {
                 res.status(400).send('IC is not defined.');
             }
-            else if (req.params.Testing) {
+            else if (req.query.Testing) {
                 console.info(`Return in Testing mode`);
                 res.json({ 'Success': true});
             }
