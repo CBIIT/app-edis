@@ -245,6 +245,9 @@ async function sqsSend(chunk, marker, counter) {
     console.debug('Finished in test retrieval mode');
     return;
   }
+  if (chunk.length === 0) {
+    return;
+  }
   const start = '' + (counter - chunk.length);
   const end = '' + counter;
   const sChunk = JSON.stringify({
@@ -286,7 +289,9 @@ async function sqsSendDeleted(chunk, marker, counter) {
     console.debug('Finished in test deleted mode');
     return;
   }
-
+  if (chunk.length === 0) {
+    return;
+  }
   const start = '' + (counter - chunk.length);
   const end = '' + counter;
   const params = {
