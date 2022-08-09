@@ -32,10 +32,10 @@ module.exports.handler = async (event, context) => {
       const start = record.messageAttributes.start.stringValue;
       const end = record.messageAttributes.end.stringValue;
       console.info('Lambda-sqs-batch-to-db to process', action, marker, start, end);
-      if (action === 'update' && table !== 'T') {
+      if (action === 'update' && table !== 'T' && cmd.data.length > 0) {
         await dbUpdate(cmd.data);
         console.info('Update db records has been successful in range', marker, start, end);
-      } else if (action === 'delete' && table !== 'T') {
+      } else if (action === 'delete' && table !== 'T' && cmd.data.length > 0) {
         await dbUpdateDeleted(cmd.data, marker);
         console.info('Archive db records has been successful in range', marker, start, end);
       }
