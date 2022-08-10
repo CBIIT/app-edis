@@ -1,32 +1,39 @@
 locals {
-  OktaMap = tomap({
+  tier_conf = tomap({
     dev = {
       issuer   = "https://nih-nci.oktapreview.com/oauth2/aus13y2f31cSMywhw0h8"
       audience = "api://default"
+      step_cron = "cron(45 1 * * ? *)"
     }
     dev2 = {
       issuer   = "https://nih-nci.oktapreview.com/oauth2/aus13y2f31cSMywhw0h8"
       audience = "api://default"
+      step_cron = "cron(55 1 * * ? *)"
     }
     dev3 = {
       issuer   = "https://nih-nci.oktapreview.com/oauth2/aus13y2f31cSMywhw0h8"
       audience = "api://default"
+      step_cron = "cron(55 1 * * ? *)"
     }
     test = {
       issuer   = "https://nih-nci.oktapreview.com/oauth2/aus13y2f31cSMywhw0h8"
       audience = "api://default"
+      step_cron = "cron(15 1 * * ? *)"
     }
     qa = {
       issuer   = "https://nih-nci.oktapreview.com/oauth2/aus13y2f31cSMywhw0h8"
       audience = "api://default"
+      step_cron = "cron(20 1 * * ? *)"
     }
     stage = {
       issuer   = "https://iam.cancer.gov/oauth2/ausb533gx0oJEKboc297"
       audience = "api://default"
+      step_cron = "cron(15 1 * * ? *)"
     }
     prod = {
       issuer   = "https://iam.cancer.gov/oauth2/ausb533gx0oJEKboc297"
       audience = "api://default"
+      step_cron = "cron(20 1 * * ? *)"
     }
   })
 

@@ -455,7 +455,7 @@ resource "aws_cloudwatch_event_rule" "edis_refresh_vds" {
   count = (var.build-userinfo) ? 1 : 0
   name = "edis-vds-refresh-${var.env}"
   description = "Start Step Function to refresh VDS user data"
-  schedule_expression = "cron(30 1 * * ? *)"
+  schedule_expression = lookup(local.tier_conf, var.env).step_cron
 }
 
 resource "aws_cloudwatch_event_target" "edis_refresh_vds" {
