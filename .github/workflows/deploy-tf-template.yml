@@ -78,6 +78,9 @@ jobs:
           echo Build userInfoApi project - ${{ inputs.build-userinfo }}
       
       - name: Setup AWS configuration
+        env: 
+          OIDC_ROLE: ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
+        if: "${{ env.OIDC_ROLE != '' }}"
         uses: aws-actions/configure-aws-credentials@master
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
