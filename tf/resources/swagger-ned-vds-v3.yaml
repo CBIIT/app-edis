@@ -26,6 +26,55 @@ tags:
     description: Operations available to clients - service to service
 
 paths:
+  /userapi/ned/changesByIc/{ic}:
+    get:
+      tags:
+        - clients
+      summary: List NED Changes for the given IC
+      operationId: getNEDChangesByIC
+      description: |
+        List NED Change records that satisfy given IC criteria
+      parameters:
+        - name: ic
+          in: path
+          description: IC
+          required: true
+          schema:
+            type: string
+            example: 'NCI'
+        - name: From_Date
+          in: query
+          required: false
+          schema:
+            type: string
+            example: 2022-03-01
+        - name: From_Time
+          in: query
+          required: false
+          schema:
+            type: string
+            example: 00:00:00
+        - name: To_Date
+          in: query
+          required: false
+          schema:
+            type: string
+            example: 2022-03-01
+        - name: To_Time
+          in: query
+          required: false
+          schema:
+            type: string
+            example: 00:00:00
+      responses:
+        '200':
+          $ref: '#/components/responses/ChangesByIcResponse'
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn  }
+        httpMethod: POST
+        timeoutInMillis: 29000
+        type: aws_proxy
+
   /userapi/vds/userById/{id}:
     get:
       tags:
@@ -212,54 +261,6 @@ paths:
                   ]
                 }
 
-  /userapi/ned/changesByIc/{ic}:
-    get:
-      tags:
-        - clients
-      summary: List NED Changes for the given IC
-      operationId: getNEDChangesByIC
-      description: |
-        List NED Change records that satisfy given IC criteria
-      parameters:
-        - name: ic
-          in: path
-          description: IC
-          required: true
-          schema:
-            type: string
-            example: 'NCI'
-        - name: From_Date
-          in: query
-          required: false
-          schema: 
-            type: string
-            example: 2022-03-01
-        - name: From_Time
-          in: query
-          required: false
-          schema: 
-            type: string
-            example: 00:00:00
-        - name: To_Date
-          in: query
-          required: false
-          schema: 
-            type: string
-            example: 2022-03-01
-        - name: To_Time
-          in: query
-          required: false
-          schema: 
-            type: string
-            example: 00:00:00
-      responses:
-        '200':
-          $ref: '#/components/responses/ChangesByIcResponse'
-      x-amazon-apigateway-integration:
-        uri: ${lambda_invoke_arn  }
-        httpMethod: POST
-        timeoutInMillis: 29000
-        type: aws_proxy
 
 components:
   responses: 
