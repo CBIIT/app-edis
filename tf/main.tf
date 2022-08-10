@@ -36,7 +36,7 @@ module "api-gateway-era-commons" {
   env                 = var.env
   must-be-role-prefix = var.role-prefix
   must-be-policy-arn  = var.policy-boundary-arn
-  okta-issuer         = lookup(local.OktaMap, var.env).issuer
+  okta-issuer         = lookup(local.tier_conf, var.env).issuer
   app                 = "edis"
   app-description     = "Enterprise Data & Integration Services Web Services for eRA Commons users"
   api-swagger         = data.template_file.api_era-commons-swagger[0].rendered
@@ -127,7 +127,7 @@ module "api-gateway-userinfo" {
   env                 = var.env
   must-be-role-prefix = var.role-prefix
   must-be-policy-arn  = var.policy-boundary-arn
-  okta-issuer         = lookup(local.OktaMap, var.env).issuer
+  okta-issuer         = lookup(local.tier_conf, var.env).issuer
   app                 = "edis"
   app-description     = "Enterprise Data & Integration Services Web Services for NED and VDS user info"
   api-swagger         = data.template_file.api_userinfo_swagger[0].rendered
