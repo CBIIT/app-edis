@@ -27,6 +27,11 @@ on:
       vpcsg:
         description: 'VPC Security Group id'
         required: true
+      host-runner:
+        type: string
+        required: false
+        description: 'Selected self hosted (nci-self-hosted) of github hosted () runner'
+        default: 'ubuntu-latest'
 
 jobs:
   deployment:
@@ -42,6 +47,7 @@ jobs:
       vpcsg: ${{ github.event.inputs.vpcsg }}
       build-eracommons: false
       build-userinfo: true
+      host-runner: ${{ github.event.inputs.host-runner }}
     secrets: inherit
 
     permissions:
