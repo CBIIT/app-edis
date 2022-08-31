@@ -2,7 +2,7 @@ import {inject, injectable} from "inversify"
 import {apiController, Controller, GET, pathParam, queryParam} from "ts-lambda-api"
 import {GetNEDChangesByIC200Response} from "../model/getNEDChangesByIC200Response";
 import {Client, createClientAsync} from "soap";
-import {WSSecurity} from "wssecurity";
+const WSSecurity = require("wssecurity");
 import {Config} from "../conf/Config";
 
 
@@ -36,6 +36,7 @@ export class NedController extends Controller {
             return await this._getChangesByIc(ic, fromDate, fromTime, toDate, toTime);
 
         } catch (error) {
+            console.error(error);
             this.response.status(500).send(error);
         }
     }

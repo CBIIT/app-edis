@@ -1,13 +1,14 @@
 // This is the entrypoint for the package
 import * as path from "path"
 import {ApiLambdaApp, ApiRequest, LogLevel} from "ts-lambda-api";
-import {GetSecretValueCommand, SecretsManagerClient, GetSecretValueCommandInput} from "@aws-sdk/client-secrets-manager";
+import {SecretsManager} from "aws-sdk";
 import {Config} from "./conf/Config";
+import {GetSecretValueRequest} from "aws-sdk/clients/secretsmanager";
 
 const SECRET: string = process.env.SECRET || 'era-commons-connect';
 
 const appConfig = new Config();
-const secretsClient = new SecretsManagerClient({ region: 'us-east-1'});
+const secretsClient = new SecretsManager({ region: 'us-east-1'});
 
 appConfig.base = "/userapi/v1";
 appConfig.version = "v1";
@@ -35,11 +36,10 @@ export async function handler(event: ApiRequest, context: any) {
 }
 
 async function getSecretParameters() {
-    const input: GetSecretValueCommandInput = {
+    const input: GetSecretValueRequest = {
         SecretId: SECRET
     }
-    const command = new GetSecretValueCommand(input);
-    const data = await secretsClient.send(command);
+    const data = await secretsClient.getSecretValue(input).promise();
     if (data) {
         if (data.SecretString) {
             return JSON.parse(data.SecretString);
