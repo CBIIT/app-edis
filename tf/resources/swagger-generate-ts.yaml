@@ -1,0 +1,115 @@
+openapi: 3.0.0
+info:
+  description: Enterprise Data & Integration Services Web Services - **NED REST Web Service**
+  version: "0.1.0"
+  title: User REST Web Service API
+  # put the contact info for your development or API team
+  contact:
+    email: NCICBIITBizAppsSupportLowTier@mail.nih.gov
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+x-amazon-apigateway-request-validators:
+  all:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params:
+    validateRequestBody: true
+    validateRequestParameters: true
+  body:
+    validateRequestBody: true
+    validateRequestParameters: false
+
+# tags are used for organizing operations
+tags:
+  - name: clients
+    description: Operations available to clients - service to service
+
+paths:
+  /userapi/ned/changesByIc/{ic}:
+    get:
+      tags:
+        - clients
+      summary: List NED Changes for the given IC
+      operationId: getNEDChangesByIC
+      description: |
+        List NED Change records that satisfy given IC criteria
+      parameters:
+        - name: ic
+          in: path
+          description: IC
+          required: true
+          schema:
+            type: string
+            example: 'NCI'
+        - name: From_Date
+          in: query
+          required: false
+          schema:
+            type: string
+            example: 2022-03-01
+        - name: From_Time
+          in: query
+          required: false
+          schema:
+            type: string
+            example: 00:00:00
+        - name: To_Date
+          in: query
+          required: false
+          schema:
+            type: string
+            example: 2022-03-01
+        - name: To_Time
+          in: query
+          required: false
+          schema:
+            type: string
+            example: 00:00:00
+      responses:
+        '200':
+          $ref: '#/components/responses/ChangesByIcResponse'
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn  }
+        httpMethod: POST
+        timeoutInMillis: 29000
+        type: aws_proxy
+
+components:
+  responses: 
+    ChangesByIcResponse:
+      description: Response with a list of NED Changes records
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              NUMBER_OF_RECORDS:
+                type: integer
+                description: number of NED Changes records in response
+              NED_CHANGES_RECORD:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NEDChangeRecord'
+
+  schemas:
+
+    NEDChangeRecord:
+      type: object
+      properties:
+        NIHSITE:
+          type: string
+        ACTION_DATE:
+          type: string
+        ACTION:
+          type: string
+        UNIQUEIDENTIFIER:
+          type: string
+        ACTION_TIME:
+          type: string
+        SN:
+          type: string
+        NIHORGACRONYM:
+          type: string
+        GIVENNAME:
+          type: string

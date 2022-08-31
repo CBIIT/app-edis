@@ -1,0 +1,20 @@
+{
+  "name": "generate-ts-swagger",
+  "version": "1.0.0",
+  "scripts": {
+    "_clean": "rm -rf node_modules",
+    "build": "npm run _clean && npm install && tsc && npm run _clean && npm install --production && cp -r node_modules ./dist/node_modules",
+    "zip": "npm run build && cd dist && zip -r ../../lambda-zip/generate-ts-swagger.zip *"
+  },
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.159.0",
+    "soap": "^0.45.0",
+    "ts-lambda-api": "^2.3.4",
+    "wssecurity": "^0.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.7.13",
+    "swagger-js-codegen": "^1.13.0",
+    "typescript": "^4.8.2"
+  }
+}
