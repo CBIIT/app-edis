@@ -45,12 +45,11 @@ on:
         type: boolean
         default: false
       host-runner:
-        type: string
-        required: false
         description: 'Selected self hosted (nci-self-hosted) of github hosted () runner'
+        required: true
+        type: string
         default: 'ubuntu-latest'
 
-}
 jobs:
   # This workflow contains a single job called "build"
   build:
