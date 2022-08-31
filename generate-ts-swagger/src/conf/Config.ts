@@ -7,6 +7,7 @@ export class Config extends AppConfig{
     public ned?: NedConfig;
 
     public initConfiguration(configuration: any): void {
+        this.ned = new NedConfig();
         this.ned.wsdl = configuration.ned_wsdl;
         this.ned.wsdl_changes = configuration.ned_wsdl_changes;
         this.ned.user = configuration.ned_user;

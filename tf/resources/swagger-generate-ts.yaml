@@ -26,7 +26,7 @@ tags:
     description: Operations available to clients - service to service
 
 paths:
-  /userapi/ned/changesByIc/{ic}:
+  /userapi/v1/ned/changesByIc/{ic}:
     get:
       tags:
         - clients
