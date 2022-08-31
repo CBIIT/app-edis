@@ -168,9 +168,9 @@ module "api-gateway-generate-ts" {
   okta-issuer         = lookup(local.tier_conf, var.env).issuer
   app                 = "edis"
   app-description     = "Enterprise Data & Integration Services Web Services for NED w Typescript"
-  api-swagger         = data.template_file.api_userinfo_swagger[0].rendered
+  api-swagger         = data.template_file.api_generate_ts_swagger[0].rendered
   api-resource-policy = local.era_commons_resource_policy
-  api-gateway-name    = "userinfo"
+  api-gateway-name    = "generatets"
   resource_tag_name   = "edis"
 }
 
