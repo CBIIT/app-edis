@@ -4,16 +4,16 @@
   "scripts": {
     "_clean_modules": "rm -rf node_modules",
     "_clean": "npm run _clean_modules && rm -rf dist",
-    "build": "npm run _clean && npm install && tsc && npm run _clean_modules && npm install --production && cp -r node_modules ./dist/node_modules",
+    "build": "npm run _clean && npm install && tsc && npm run _clean_modules && npm install --only='prod' && cp -r node_modules ./dist/node_modules",
     "zip": "npm run build && cd dist && zip -r ../../lambda-zip/generate-ts-swagger.zip *"
   },
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.159.0",
     "soap": "^0.45.0",
     "ts-lambda-api": "^2.3.4",
     "wssecurity": "^0.2.4"
   },
   "devDependencies": {
+    "aws-sdk": "2.820.0",
     "@types/node": "^18.7.13",
     "swagger-js-codegen": "^1.13.0",
     "typescript": "^4.8.2"
