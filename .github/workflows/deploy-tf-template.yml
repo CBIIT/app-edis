@@ -44,12 +44,18 @@ on:
         required: true
         type: boolean
         default: false
+      host-runner:
+        type: string
+        required: false
+        description: 'Selected self hosted (nci-self-hosted) of github hosted () runner'
+        default: 'ubuntu-latest'
 
+}
 jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.host-runner }}
     
     environment: ${{ inputs.envt }}
 
