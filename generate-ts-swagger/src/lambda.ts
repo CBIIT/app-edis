@@ -10,7 +10,7 @@ const SECRET: string = process.env.SECRET || 'era-commons-connect';
 const appConfig = new Config();
 const secretsClient = new SecretsManager({ region: 'us-east-1'});
 
-appConfig.base = "/userapi/v1";
+appConfig.base = "/generatets/v1";
 appConfig.version = "v1";
 appConfig.serverLogger.level = LogLevel.debug;
 
