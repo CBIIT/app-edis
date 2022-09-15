@@ -1,5 +1,14 @@
 import {inject, injectable} from "inversify"
-import {apiController, Controller, GET, pathParam, queryParam} from "ts-lambda-api"
+import {
+    api,
+    apiController,
+    apiOperation,
+    apiResponse,
+    Controller, controllerNoAuth,
+    GET,
+    pathParam,
+    queryParam
+} from "ts-lambda-api"
 import {GetNEDChangesByIC200Response} from "../model/getNEDChangesByIC200Response";
 import {Client, createClientAsync} from "soap";
 const WSSecurity = require("wssecurity");
@@ -7,6 +16,8 @@ import {Config} from "../conf/Config";
 
 
 @apiController("/ned")
+@api("NED APIs Controller", "API endpoints to retrieve data from NED")
+@controllerNoAuth
 @injectable()
 export class NedController extends Controller {
     
@@ -20,6 +31,8 @@ export class NedController extends Controller {
 
 
     @GET("/changesByIc/:ic")
+    @apiOperation({ name: "List NED Changes for the given IC", description: "List NED Change records that satisfy given IC criteria"})
+    @apiResponse(200, {class: GetNEDChangesByIC200Response  })
     public async  getChangesByIC(
         @pathParam("ic") ic: string,
         @queryParam("fromDate") fromDate?: string,
