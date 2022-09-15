@@ -3,7 +3,7 @@
 const AWSXRay = require('aws-xray-sdk-core')
 const {conf} = require("./conf");
 const ldap = require('ldapjs');
-const {convertBase64Fields} = require("./util")
+const {convertBase64Fields, getProvidedEmail} = require("./util")
 
 const AWS = AWSXRay.captureAWS(require('aws-sdk'))
 AWS.config.update({ region: "us-east-1"});
@@ -90,6 +90,7 @@ const getUsers = async (userId, ic) => {
                         console.info(counter + ' records found and counting...');
                     }
                     let obj = convertBase64Fields(entry);
+                    obj['providedEmail'] = getProvidedEmail(obj);
                     users.push(obj);
                 });
                 ldapRes.on('searchReference', function () { });
