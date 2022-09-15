@@ -22,4 +22,28 @@ function convertBase64Fields(entry) {
 
 };
 
-module.exports = { convertBase64Fields };
+function getProvidedEmail(entry) {
+    let result = null;
+
+    const proxyEmails = entry.proxyAddresses;
+    if (proxyEmails) {
+        if (Array.isArray(proxyEmails)) {
+            proxyEmails.forEach(email => {
+                const data = email.split(':');
+                if (data[0] === 'SMTP') {
+                    result = data[1];
+                }
+            });
+        } else {
+            const data = proxyEmails.split(':');
+            if (data[0] === 'SMTP') {
+                result = data[1];
+            }
+        }
+    }
+    if (result == null) result = obj.MAIL;
+    if (result == null) return obj.NIHPRIMARYSMTP;
+    return result;
+}
+
+module.exports = { convertBase64Fields, getProvidedEmail };

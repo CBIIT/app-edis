@@ -2,7 +2,7 @@
 
 const {conf} = require("./conf");
 const ldap = require('ldapjs');
-const {convertBase64Fields, sleep} = require("./util")
+const {convertBase64Fields, sleep, getProvidedEmail} = require("./util")
 const {AndFilter, EqualityFilter, SubstringFilter, NotFilter, OrFilter} = require("ldapjs/lib/filters");
 
 let tlsOptions;
@@ -101,6 +101,7 @@ const getUsers = async (ic, divisions, includeDivs, pageCallBack, s3Entry) => {
                         console.info(counter + ' records found and counting...');
                     }
                     let obj = convertBase64Fields(entry);
+                    obj['providedEmail'] = getProvidedEmail(obj);
                     users.push(obj);
                 });
                 ldapRes.on('searchReference', function (reference) {

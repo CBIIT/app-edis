@@ -40,11 +40,10 @@ function formatDate(date) {
     );
 }
 
-function getEmail(obj) {
-
+function getProvidedEmail(entry) {
     let result = null;
 
-    const proxyEmails = obj.proxyAddresses;
+    const proxyEmails = entry.proxyAddresses;
     if (proxyEmails) {
         if (Array.isArray(proxyEmails)) {
             proxyEmails.forEach(email => {
@@ -60,8 +59,10 @@ function getEmail(obj) {
             }
         }
     }
+    if (result == null) result = obj.MAIL;
+    if (result == null) return obj.NIHPRIMARYSMTP;
     return result;
-};
+}
 
 function getBuilding(obj) {
 
