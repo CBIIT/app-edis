@@ -17,11 +17,16 @@ export class GetNEDChangesByIC200Response {
     /**
     * number of NED Changes records in response
     */
-    'nUMBEROFRECORDS'?: number;
-    'nEDCHANGESRECORD'?: Array<NEDChangeRecord>;
+    public NUMBER_OF_RECORDS?: number;
+    public NED_CHANGES_RECORD?: Array<NEDChangeRecord>;
 
-    static discriminator: string | undefined = undefined;
-
+    public static example(): GetNEDChangesByIC200Response {
+        let r = new GetNEDChangesByIC200Response();
+        r.NUMBER_OF_RECORDS = 1
+        r.NED_CHANGES_RECORD = new Array<NEDChangeRecord>()
+        r.NED_CHANGES_RECORD.push(NEDChangeRecord.example())
+        return r;
+    }
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
             "name": "nUMBEROFRECORDS",

@@ -13,6 +13,7 @@ const secretsClient = new SecretsManager({ region: 'us-east-1'});
 appConfig.base = "/generatets/v1";
 appConfig.version = "v1";
 appConfig.serverLogger.level = LogLevel.debug;
+appConfig.openApi.enabled = true
 
 let configuration;
 

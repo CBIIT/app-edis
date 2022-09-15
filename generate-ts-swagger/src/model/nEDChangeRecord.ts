@@ -10,18 +10,16 @@
  * Do not edit the class manually.
  */
 
-import { RequestFile } from './models';
-
 export class NEDChangeRecord {
-    'nIHSITE'?: string;
-    'aCTIONDATE'?: string;
-    'aCTION'?: string;
-    'uNIQUEIDENTIFIER'?: string;
-    'aCTIONTIME'?: string;
-    'sN'?: string;
-    'nIHORGACRONYM'?: string;
-    'gIVENNAME'?: string;
-
+    public NIHSITE?: string;
+    public ACTIONDATE?: string;
+    public ACTION?: string;
+    public UNIQUEIDENTIFIER?: string;
+    public ACTIONTIME?: string;
+    public SN?: string;
+    public NIHORGACRONYM?: string;
+    public GIVENNAME?: string;
+ 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
@@ -68,6 +66,19 @@ export class NEDChangeRecord {
 
     static getAttributeTypeMap() {
         return NEDChangeRecord.attributeTypeMap;
+    }
+
+    public static example(): NEDChangeRecord {
+        let r = new NEDChangeRecord()
+        r.NIHSITE = 'MD-BC'
+        r.ACTIONDATE = '2022-08-01'
+        r.ACTION = 'modified'
+        r.UNIQUEIDENTIFIER = '1234567890'
+        r.ACTIONTIME = '00:01:01'
+        r.SN = 'Smith'
+        r.NIHORGACRONYM = 'NCI'
+        r.GIVENNAME = 'MIKE'
+        return r
     }
 }
 

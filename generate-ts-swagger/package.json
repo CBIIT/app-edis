@@ -4,8 +4,11 @@
   "scripts": {
     "_clean_modules": "rm -rf node_modules",
     "_clean": "npm run _clean_modules && rm -rf dist",
-    "build": "npm run _clean && npm install && tsc && npm run _clean_modules && npm install --only='prod' && cp -r node_modules ./dist/node_modules",
-    "zip": "npm run build && cd dist && zip -r ../../lambda-zip/generate-ts-swagger.zip *"
+    "build-prod": "npm run _clean && npm install && tsc && npm run _clean_modules && npm install --only='prod' && cp -r node_modules ./dist/node_modules",
+    "zip-prod": "npm run build-prod && cd dist && zip -r ../../lambda-zip/generate-ts-swagger.zip *",
+    "local": "npm run _clean && npm install && tsc && cp -r node_modules ./dist/node_modules",
+    "swagger": "npm run local && mkdir -p out && cd dist && node swagger.js '../out'",
+    "test": "jest"
   },
   "dependencies": {
     "soap": "^0.45.0",
@@ -13,9 +16,17 @@
     "wssecurity": "^0.2.4"
   },
   "devDependencies": {
-    "aws-sdk": "2.820.0",
+    "@types/jest": "^29.0.0",
+    "@types/js-yaml": "^4.0.5",
     "@types/node": "^18.7.13",
+    "aws-sdk": "2.820.0",
+    "jest": "^29.0.2",
+    "js-yaml": "^4.1.0",
     "swagger-js-codegen": "^1.13.0",
+    "ts-jest": "^29.0.0",
+    "ts-lambda-api-local": "^2.3.1",
+    "ts-node": "^10.9.1",
+    "typed-rest-client": "^1.8.9",
     "typescript": "^4.8.2"
   }
 }
