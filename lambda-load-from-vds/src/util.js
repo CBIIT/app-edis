@@ -59,8 +59,8 @@ function getProvidedEmail(entry) {
             }
         }
     }
-    if (result == null) result = obj.MAIL;
-    if (result == null) return obj.NIHPRIMARYSMTP;
+    if (result == null) result = entry.MAIL;
+    if (result == null) return entry.NIHPRIMARYSMTP;
     return result;
 }
 
