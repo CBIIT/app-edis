@@ -20,7 +20,7 @@ function convertBase64Fields(entry) {
 
     return obj;
 
-};
+}
 
 function getProvidedEmail(entry) {
     let result = null;
@@ -41,8 +41,8 @@ function getProvidedEmail(entry) {
             }
         }
     }
-    if (result == null) result = obj.MAIL;
-    if (result == null) return obj.NIHPRIMARYSMTP;
+    if (result == null) result = entry.MAIL;
+    if (result == null) return entry.NIHPRIMARYSMTP;
     return result;
 }
 
