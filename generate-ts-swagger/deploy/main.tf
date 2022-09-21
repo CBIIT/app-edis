@@ -16,7 +16,7 @@ module "lambda-generate-ts-api" {
   })
   lambda-managed-policies        = { for idx, val in local.lambda_generate_ts_api_role_policies: idx => val }
   create_api_gateway_integration = true
-  api_gateway_rest_api_id        = module.api-gateway-generate-ts[0].rest_api_id
+  api_gateway_rest_api_id        = module.api-gateway-generate-ts.rest_api_id
   subnet_ids = [ var.subnet1, var.subnet2 ]
   security_group_ids = [ var.vpcsg ]
 }
