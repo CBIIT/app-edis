@@ -45,7 +45,6 @@ resource "aws_api_gateway_request_validator" "_" {
 locals {
   endpoints = [
     {
-      parent_index = -1,
       path_part = "generatets"
     },
     {
@@ -76,7 +75,8 @@ locals {
 
 resource "aws_api_gateway_resource" "generate_ts" {
   for_each = { for idx, val in local.endpoints: idx => val }
-  parent_id   = (each.value.parent_index < 0) ? module.api-gateway-generate-ts.root_resource_id : aws_api_gateway_resource.generate_ts[each.value.parent_index].id 
+  depends_on = (each.value.parent_index) ? [ aws_api_gateway_integration.generate_ts[each.value.parent_index] ] : [ module.api-gateway-generate-ts ]
+  parent_id   = (each.value.parent_index) ? aws_api_gateway_resource.generate_ts[each.value.parent_index].id : module.api-gateway-generate-ts.root_resource_id 
   path_part   = each.value.path_part
   rest_api_id = module.api-gateway-generate-ts.rest_api_id
 }
