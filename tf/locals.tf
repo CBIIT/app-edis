@@ -86,13 +86,6 @@ EOF
     "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
   ]
 
-  lambda_generate_ts_api_role_policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
-    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
-    "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
-  ]
-
   lambda_vds_users_delta_role_policies = (var.build-userinfo) ? [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
@@ -172,15 +165,6 @@ data "template_file" "api_userinfo_swagger" {
     ddb_action_query    = "arn:aws:apigateway:us-east-1:dynamodb:action/Query"
     ddb_role_arn        = module.ddb-userinfo[0].iam-access-ddb-role-arn
     users_table_name    = module.ddb-userinfo[0].ddb-name
-  }
-}
-
-data "template_file" "api_generate_ts_swagger" {
-  template = file("resources/swagger-generate-ts.yaml")
-  count = (var.build-userinfo) ? 1 : 0
-
-  vars = {
-    lambda_invoke_arn = module.lambda-generate-ts-api[0].invoke_arn
   }
 }
 
