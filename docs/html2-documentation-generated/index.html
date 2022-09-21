@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>eRA Commons User API</title>
+  <title>User REST Web Service API</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="UTF-8" />
@@ -689,126 +689,338 @@
   <script>
     // Script section to load models into a JS Var
     var defs = {}
-            defs["User"] = {
-  "required" : [ "ACCOUNT_CREATED_DATE", "EMAIL", "STATUS_CODE", "STATUS_DESC", "USER_ID" ],
+            defs["inline_response_200"] = {
   "type" : "object",
   "properties" : {
-    "USER_ID" : {
-      "type" : "string",
-      "format" : "string",
-      "example" : "ABDOUL9092"
-    },
-    "EMAIL" : {
-      "type" : "string",
-      "example" : "abdoul9092@company.com"
-    },
-    "NAME_PREFFIX" : {
-      "type" : "string",
-      "example" : "Dr"
-    },
-    "FIRST_NAME" : {
-      "type" : "string",
-      "example" : "Luis"
-    },
-    "MI_NAME" : {
-      "type" : "string",
-      "example" : "Simon"
-    },
-    "LAST_NAME" : {
-      "type" : "string",
-      "example" : "Abdou"
-    },
-    "NAME_SUFFIX" : {
-      "type" : "string",
-      "example" : "Jr"
-    },
-    "STATUS_CODE" : {
+    "NUMBER_OF_RECORDS" : {
       "type" : "integer",
-      "example" : 1
+      "description" : "number of NED Changes records in response"
     },
-    "STATUS_DESC" : {
-      "type" : "string",
-      "example" : "Active"
-    },
-    "ACCOUNT_CREATED_DATE" : {
-      "type" : "string",
-      "format" : "date-time",
-      "example" : "2016-08-29T09:12:33.001Z"
-    },
-    "ACCOUNT_UPDATED_DATE" : {
-      "type" : "string",
-      "format" : "date-time",
-      "example" : "2016-08-29T09:12:33.001Z"
-    },
-    "ORG_ID" : {
-      "type" : "integer",
-      "example" : 846901
-    },
-    "ORG_NAME" : {
-      "type" : "string",
-      "example" : "UNIVERSITY OF CAPE TOWN"
-    },
-    "ORG_ADDRESS_1" : {
-      "type" : "string",
-      "example" : "UNIVERSITY OF CAPE TOWN"
-    },
-    "ORG_ADDRESS_2" : {
-      "type" : "string",
-      "example" : "RESEARCH & INNOVATION"
-    },
-    "ORG_ADDRESS_3" : {
-      "type" : "string",
-      "example" : "2 Rhodes Avenue"
-    },
-    "ORG_ADDRESS_4" : {
-      "type" : "string",
-      "example" : "Mowbray, CAPE TOWN 7700, SOUTH AFRICA"
-    },
-    "ORG_ADDRESS_5" : {
-      "type" : "string",
-      "example" : " "
-    },
-    "CITY" : {
-      "type" : "string",
-      "example" : "RONDEBOSCH"
-    },
-    "STATE" : {
-      "type" : "string",
-      "example" : " "
-    },
-    "PHONE_NUMBER" : {
-      "type" : "string",
-      "example" : "27211234567"
-    },
-    "ORG_EMAIL" : {
-      "type" : "string",
-      "example" : "First.Last@uct.ac.za"
-    },
-    "LOGINGOV_USER_ID" : {
-      "type" : "string",
-      "example" : "12345-67890-12234-45678"
-    }
-  }
-};
-            defs["Users"] = {
-  "type" : "object",
-  "properties" : {
-    "count" : {
-      "type" : "integer"
-    },
-    "error" : {
-      "type" : "string",
-      "description" : "Error message if not empty - rest of the fields are zeros"
-    },
-    "items" : {
+    "NED_CHANGES_RECORD" : {
       "type" : "array",
       "items" : {
-        "$ref" : "#/components/schemas/User"
+        "$ref" : "#/components/schemas/NEDChangeRecord"
       }
     }
   }
 };
-            defs["UsersChunk"] = {
+            defs["inline_response_200_1"] = {
+  "type" : "object",
+  "properties" : {
+    "NumberOfRecords" : {
+      "type" : "integer",
+      "description" : "number of VDS User objects in response"
+    },
+    "User" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/VDSUser"
+      }
+    }
+  },
+  "xml" : {
+    "name" : "vdsuser",
+    "wrapped" : true
+  }
+};
+            defs["NEDChangeRecord"] = {
+  "type" : "object",
+  "properties" : {
+    "NIHSITE" : {
+      "type" : "string"
+    },
+    "ACTION_DATE" : {
+      "type" : "string"
+    },
+    "ACTION" : {
+      "type" : "string"
+    },
+    "UNIQUEIDENTIFIER" : {
+      "type" : "string"
+    },
+    "ACTION_TIME" : {
+      "type" : "string"
+    },
+    "SN" : {
+      "type" : "string"
+    },
+    "NIHORGACRONYM" : {
+      "type" : "string"
+    },
+    "GIVENNAME" : {
+      "type" : "string"
+    }
+  }
+};
+            defs["VDSUser"] = {
+  "type" : "object",
+  "properties" : {
+    "UNIQUEIDENTIFIER" : {
+      "type" : "string",
+      "example" : "11234567"
+    },
+    "NIHDUPUID" : {
+      "type" : "string",
+      "example" : "13312345"
+    },
+    "NIHADACCTREQ" : {
+      "type" : "string",
+      "example" : "Y"
+    },
+    "NIHSSOUSERNAME" : {
+      "type" : "string",
+      "example" : "smithj"
+    },
+    "distinguishedName" : {
+      "type" : "string",
+      "example" : "CN=smithj,OU=Users,OU=NCI-Frederick,OU=NIH,OU=AD,DC=nih,DC=gov"
+    },
+    "NIHADMAILBOXREQ" : {
+      "type" : "string",
+      "example" : "Y"
+    },
+    "NIHPRIMARYSMTP" : {
+      "type" : "string",
+      "example" : "johnj@mail.gov"
+    },
+    "MAIL" : {
+      "type" : "string",
+      "example" : "smithj@mail.gov"
+    },
+    "proxyAddresses" : {
+      "type" : "array",
+      "example" : [ "smtp:smithj@nci.gov", "X500:/O=NIH/OU=NIHEXCHANGE/cn=Recipients/cn=smithj", "smtp:smithj@nih.mail.onmicrosoft.com", "smtp:smithj@nih.gov" ],
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "displayName" : {
+      "type" : "string",
+      "example" : "Smith, John (NIH/NCI) [C]"
+    },
+    "PERSONALTITLE" : {
+      "type" : "string",
+      "example" : "Mr"
+    },
+    "GIVENNAME" : {
+      "type" : "string",
+      "example" : "John"
+    },
+    "NIHCOMMONGIVENNAME" : {
+      "type" : "string",
+      "example" : "John"
+    },
+    "NIHNOMIDDLENAME" : {
+      "type" : "string",
+      "example" : "N"
+    },
+    "MIDDLENAME" : {
+      "type" : "string",
+      "example" : "Joseph"
+    },
+    "NIHCOMMONMIDDLENAM" : {
+      "type" : "string",
+      "example" : "Joseph"
+    },
+    "NIHMIXCASESN" : {
+      "type" : "string",
+      "example" : "Smith Joseph"
+    },
+    "NIHMIXCASECOMMONSN" : {
+      "type" : "string",
+      "example" : "Smith"
+    },
+    "SN" : {
+      "type" : "string",
+      "example" : "Smith"
+    },
+    "NIHCOMMONSN" : {
+      "type" : "string",
+      "example" : "Smith"
+    },
+    "GENERATIONQUALIF" : {
+      "type" : "string",
+      "example" : "Jr"
+    },
+    "NIHCOMMONGENQUALIF" : {
+      "type" : "string",
+      "example" : "Jr"
+    },
+    "NIHSUFFIXQUALIFIER" : {
+      "type" : "string",
+      "example" : "M.D., PH.D."
+    },
+    "TITLE" : {
+      "type" : "string",
+      "example" : "Board of Scientific Counselor"
+    },
+    "NIHIPD" : {
+      "type" : "string",
+      "example" : "Other"
+    },
+    "NIHBADGETITLE" : {
+      "type" : "string",
+      "example" : "Physician"
+    },
+    "NIHIDBADGEEXPDATE" : {
+      "type" : "string",
+      "example" : "2026-11-12T00:00:00.000Z"
+    },
+    "NIHSAC" : {
+      "type" : "string",
+      "example" : "HNCB45"
+    },
+    "NIHPrivacyAwarenessCompDate" : {
+      "type" : "string"
+    },
+    "PrivacyAwarenessRefresherCompDate" : {
+      "type" : "string"
+    },
+    "NIHInformationSecurityAwarenessCompDate" : {
+      "type" : "string"
+    },
+    "InformationSecurityRefresherCompDate" : {
+      "type" : "string"
+    },
+    "description" : {
+      "type" : "string",
+      "example" : "This account is Enabled by iam.nih.gov, because the Background Investigation Adjudication is complete, or is in the process of Mailbox creation"
+    },
+    "ORGANIZATIONALSTAT" : {
+      "type" : "string",
+      "example" : "CONTRACTOR"
+    },
+    "NIHSUBORGSTATUS" : {
+      "type" : "string",
+      "example" : "CONTRACTOR"
+    },
+    "NIHSUMMERSTATUS" : {
+      "type" : "string",
+      "example" : "N"
+    },
+    "NIHORGPATH" : {
+      "type" : "string",
+      "example" : "NCI DCTD DTP NPB"
+    },
+    "NIHPHYSICALADDRESS" : {
+      "type" : "string",
+      "example" : "FDC 123 BG RM 119$431 WOOD STREET$FREDERICK MD 21702"
+    },
+    "NIHORGACRONYM" : {
+      "type" : "string",
+      "example" : "NCI"
+    },
+    "NIHSERVAO" : {
+      "type" : "string",
+      "example" : "10101234"
+    },
+    "MANAGER" : {
+      "type" : "string",
+      "example" : "987654321"
+    },
+    "NIHCOTRID" : {
+      "type" : "string",
+      "example" : "10123456"
+    },
+    "NIHPOC" : {
+      "type" : "string",
+      "example" : "10123456"
+    },
+    "NIHCOMPANYNAME" : {
+      "type" : "string",
+      "example" : "FFRDC FNLCR LBR (Leidos Biomedical Research Inc.)"
+    },
+    "NIHCOMPANYPHONE" : {
+      "type" : "string",
+      "example" : "+ 1 111 123 4567"
+    },
+    "countryCode" : {
+      "type" : "string",
+      "example" : "111"
+    },
+    "TELEPHONENUMBER" : {
+      "type" : "string",
+      "example" : "+1 301 111 1111"
+    },
+    "MOBILETELEPHONENUM" : {
+      "type" : "string",
+      "example" : "+1 301 123 4567"
+    },
+    "mobile" : {
+      "type" : "string",
+      "example" : "301.123.4567"
+    },
+    "ipPhone" : {
+      "type" : "string",
+      "example" : "(301) 111-1111"
+    },
+    "NIHSITE" : {
+      "type" : "string",
+      "example" : "MD-FCR"
+    },
+    "L" : {
+      "type" : "string",
+      "example" : "Frederick"
+    },
+    "BUILDINGNAME" : {
+      "type" : "string",
+      "example" : "FDC 123"
+    },
+    "ROOMNUMBER" : {
+      "type" : "string",
+      "example" : "123"
+    },
+    "POSTALADDRESS" : {
+      "type" : "string",
+      "example" : "BG 111 RM 119$1050 BOYLES STREET$FREDERICK MD 21702"
+    },
+    "NIHIDBADGELESS6MOS" : {
+      "type" : "string",
+      "example" : "N"
+    },
+    "managedObjects" : {
+      "type" : "string",
+      "example" : "CN=NCI-Frederick Rees alarms,OU=Distribution Lists,OU=Messaging,OU=NCI-Frederick,OU=NIH,OU=AD,DC=nih,DC=gov"
+    },
+    "memberOf" : {
+      "type" : "array",
+      "example" : [ "CN=NIH CONTRACTOR ACCOUNTS,OU=NIH WIDE GROUPS,OU=ADOG,DC=nih,DC=gov", "CN=NIH Exchange Users,OU=Groups,OU=CIT,OU=NIH,ou=ad,dc=nih,dc=gov", "CN=PrimaryUsers,OU=Accounts,OU=CES,OU=OPS,DC=nih,DC=gov" ],
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "NIHCREATETIMESTAMP" : {
+      "type" : "string",
+      "example" : "2009-01-14T14:12:30.000Z"
+    },
+    "NIHMODIFYTIMESTAMP" : {
+      "type" : "string",
+      "example" : "2021-12-27T10:25:49.000Z"
+    },
+    "NIHMODIFIERSNAME" : {
+      "type" : "string",
+      "example" : "123456789"
+    },
+    "NIHDIRENTRYEFFECTIVEDATE" : {
+      "type" : "string",
+      "example" : "2009-01-14T00:00:00.000Z"
+    },
+    "NIHDIRENTRYEXPIRATIONDATE" : {
+      "type" : "string",
+      "example" : "2009-01-14T00:00:00.000Z"
+    },
+    "userAccountControl" : {
+      "type" : "string",
+      "example" : "123"
+    },
+    "providedEmail" : {
+      "type" : "string",
+      "description" : "Email calculated based on three fields (by priority) - proxyAddresses, MAIL, NIHPRIMARYSMTP",
+      "example" : "smithj@mail.gov"
+    }
+  }
+};
+            defs["VDSUsersChunk"] = {
   "type" : "object",
   "properties" : {
     "count" : {
@@ -825,7 +1037,7 @@
     "items" : {
       "type" : "array",
       "items" : {
-        "$ref" : "#/components/schemas/User"
+        "$ref" : "#/components/schemas/VDSUser"
       }
     }
   }
@@ -847,26 +1059,14 @@
             <li class="nav-fixed nav-header active" data-group="_"><a href="#api-_">API Summary</a></li>
 
                   <li class="nav-header" data-group="Clients"><a href="#api-Clients">API Methods - Clients</a></li>
-                    <li data-group="Clients" data-name="getUserByDate" class="">
-                      <a href="#api-Clients-getUserByDate">getUserByDate</a>
+                    <li data-group="Clients" data-name="getNEDChangesByIC" class="">
+                      <a href="#api-Clients-getNEDChangesByIC">getNEDChangesByIC</a>
                     </li>
-                    <li data-group="Clients" data-name="getUserByDateFromDdb" class="">
-                      <a href="#api-Clients-getUserByDateFromDdb">getUserByDateFromDdb</a>
+                    <li data-group="Clients" data-name="getVDSUserByNIHId" class="">
+                      <a href="#api-Clients-getVDSUserByNIHId">getVDSUserByNIHId</a>
                     </li>
-                    <li data-group="Clients" data-name="getUserByLogingovUserIdFromDdb" class="">
-                      <a href="#api-Clients-getUserByLogingovUserIdFromDdb">getUserByLogingovUserIdFromDdb</a>
-                    </li>
-                    <li data-group="Clients" data-name="getUserByUserId" class="">
-                      <a href="#api-Clients-getUserByUserId">getUserByUserId</a>
-                    </li>
-                    <li data-group="Clients" data-name="getUserByUserIdFromDdb" class="">
-                      <a href="#api-Clients-getUserByUserIdFromDdb">getUserByUserIdFromDdb</a>
-                    </li>
-                    <li data-group="Clients" data-name="getUsers" class="">
-                      <a href="#api-Clients-getUsers">getUsers</a>
-                    </li>
-                    <li data-group="Clients" data-name="getUsersFromDdb" class="">
-                      <a href="#api-Clients-getUsersFromDdb">getUsersFromDdb</a>
+                    <li data-group="Clients" data-name="listVDSUsersByIC" class="">
+                      <a href="#api-Clients-listVDSUsersByIC">listVDSUsersByIC</a>
                     </li>
           </ul>
         </nav>
@@ -874,366 +1074,59 @@
       <div id="content">
         <div id="project">
           <div class="pull-left">
-            <h1>eRA Commons User API</h1>
+            <h1>User REST Web Service API</h1>
           </div>
           <div class="clearfix"></div>
         </div>
         <div id="header">
           <div id="api-_">
             <h2 id="welcome-to-apidoc">API and SDK Documentation</h2>
-              <div class="app-desc">Version: 0.3.2</div>
+              <div class="app-desc">Version: 0.1.0</div>
             <hr>
-            <div>Enterprise Data &amp; Integration Services Web Services - <strong>eRA Commons User Service</strong></div>
+            <div>Enterprise Data &amp; Integration Services Web Services - <strong>NED REST Web Service</strong></div>
           </div>
         </div>
         <div id="sections">
                 <section id="api-Clients">
                   <h1>Clients</h1>
-                    <div id="api-Clients-getUserByDate">
-                      <article id="api-Clients-getUserByDate-0" data-group="User" data-name="getUserByDate" data-version="0">
+                    <div id="api-Clients-getNEDChangesByIC">
+                      <article id="api-Clients-getNEDChangesByIC-0" data-group="User" data-name="getNEDChangesByIC" data-version="0">
                         <div class="pull-left">
-                          <h1>getUserByDate</h1>
-                          <p>Get External User Records for a given date</p>
+                          <h1>getNEDChangesByIC</h1>
+                          <p>List NED Changes for the given IC</p>
                         </div>
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Get external eRA Commons user records by given date</p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/eracommonsapi/v1/users/date/{date}</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Clients-getUserByDate-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByDate-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByDate-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Clients-getUserByDate-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Clients-getUserByDate-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByDate-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Clients-getUserByDate-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Clients-getUserByDate-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByDate-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByDate-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByDate-0-python">Python</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Clients-getUserByDate-0-curl">
-                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
--H "Accept: application/json"\
-"//eracommonsapi/v1/users/date/{date}"</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-Clients-getUserByDate-0-java">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.ClientsApi;
-
-import java.io.File;
-import java.util.*;
-
-public class ClientsApiExample {
-
-    public static void main(String[] args) {
-        
-        ClientsApi apiInstance = new ClientsApi();
-        String date = date_example; // String | Date in format YYYY-MM-DD
-        try {
-            Users result = apiInstance.getUserByDate(date);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#getUserByDate");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-Clients-getUserByDate-0-android">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ClientsApi;
-
-public class ClientsApiExample {
-
-    public static void main(String[] args) {
-        ClientsApi apiInstance = new ClientsApi();
-        String date = date_example; // String | Date in format YYYY-MM-DD
-        try {
-            Users result = apiInstance.getUserByDate(date);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#getUserByDate");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-Clients-getUserByDate-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-Clients-getUserByDate-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *date = date_example; // Date in format YYYY-MM-DD
-
-ClientsApi *apiInstance = [[ClientsApi alloc] init];
-
-// Get External User Records for a given date
-[apiInstance getUserByDateWith:date
-              completionHandler: ^(Users output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUserByDate-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var ERaCommonsUserApi = require('e_ra_commons_user_api');
-
-var api = new ERaCommonsUserApi.ClientsApi()
-var date = date_example; // {{String}} Date in format YYYY-MM-DD
-
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-api.getUserByDate(date, callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-Clients-getUserByDate-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-Clients-getUserByDate-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-
-namespace Example
-{
-    public class getUserByDateExample
-    {
-        public void main()
-        {
-
-            var apiInstance = new ClientsApi();
-            var date = date_example;  // String | Date in format YYYY-MM-DD
-
-            try
-            {
-                // Get External User Records for a given date
-                Users result = apiInstance.getUserByDate(date);
-                Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
-                Debug.Print("Exception when calling ClientsApi.getUserByDate: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUserByDate-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-$api_instance = new Swagger\Client\ApiClientsApi();
-$date = date_example; // String | Date in format YYYY-MM-DD
-
-try {
-    $result = $api_instance->getUserByDate($date);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling ClientsApi->getUserByDate: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUserByDate-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::SwaggerClient::Configuration;
-use WWW::SwaggerClient::ClientsApi;
-
-my $api_instance = WWW::SwaggerClient::ClientsApi->new();
-my $date = date_example; # String | Date in format YYYY-MM-DD
-
-eval { 
-    my $result = $api_instance->getUserByDate(date => $date);
-    print Dumper($result);
-};
-if ($@) {
-    warn "Exception when calling ClientsApi->getUserByDate: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUserByDate-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import swagger_client
-from swagger_client.rest import ApiException
-from pprint import pprint
-
-# create an instance of the API class
-api_instance = swagger_client.ClientsApi()
-date = date_example # String | Date in format YYYY-MM-DD
-
-try: 
-    # Get External User Records for a given date
-    api_response = api_instance.get_user_by_date(date)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling ClientsApi->getUserByDate: %s\n" % e)</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Parameters</h2>
-
-                            <div class="methodsubtabletitle">Path parameters</div>
-                            <table id="methodsubtable">
-                                <tr>
-                                  <th width="150px">Name</th>
-                                  <th>Description</th>
-                                </tr>
-                                  <tr><td style="width:150px;">date*</td>
-                                  <td>
-                                  
-                                  
-                                      <div id="d2e199_getUserByDate_date">
-                                          <div class="json-schema-view">
-                                              <div class="primitive">
-                                                  <span class="type">
-                                                      String
-                                                  </span>
-                                  
-                                                      <div class="inner description">
-                                                          Date in format YYYY-MM-DD
-                                                      </div>
-                                              </div>
-                                                  <div class="inner required">
-                                                      Required
-                                                  </div>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  </tr>
-                            </table>
-
-
-
-
-
-                          <h2>Responses</h2>
-                            <h3> Status: 200 - JSON formatted records of the user information </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-getUserByDate-200-schema">Schema</a>
-                                </li>
-
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-getUserByDate-200-schema">
-                                  <div id='responses-getUserByDate-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "JSON formatted records of the user information",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/Users"
-      }
-    }
-  }
-};
-                                        var schema = schemaWrapper.content["application/json"].schema;
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else {
-                                          schemaWrapper.components = {};
-                                          schemaWrapper.components.schemas = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        //console.log(JSON.stringify(schema));
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-getUserByDate-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-getUserByDate-200-schema-200');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-getUserByDate-200-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-
-                            <h3> Status: 400 - bad input parameter </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                            </div>
-
-                        </article>
-                      </div>
-                      <hr>
-                    <div id="api-Clients-getUserByDateFromDdb">
-                      <article id="api-Clients-getUserByDateFromDdb-0" data-group="User" data-name="getUserByDateFromDdb" data-version="0">
-                        <div class="pull-left">
-                          <h1>getUserByDateFromDdb</h1>
-                          <p>Get External User Records for a given date straight from Dynamo DB</p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked">Get external eRA Commons user records *for a given date* straight from Dynamo DB  
-You have to check the result for existence of LastEvaluatedKey property and  
-loop your request passing it&#x27;s value (&#x60;&#x60;&#x60;?lastEvaluatedKey&#x3D;xxx&#x60;&#x60;&#x60;) as query parameter  
-until the final result does not contain LastEvaluatedKey property
+                        <p class="marked">List NED Change records that satisfy given IC criteria
 </p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/eracommonsapi/v2/users/date/{date}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/userapi/ned/changesByIc/{ic}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
                         <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Clients-getUserByDateFromDdb-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByDateFromDdb-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByDateFromDdb-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Clients-getUserByDateFromDdb-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Clients-getUserByDateFromDdb-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByDateFromDdb-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Clients-getUserByDateFromDdb-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Clients-getUserByDateFromDdb-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByDateFromDdb-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByDateFromDdb-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByDateFromDdb-0-python">Python</a></li>
+                          <li class="active"><a href="#examples-Clients-getNEDChangesByIC-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Clients-getNEDChangesByIC-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Clients-getNEDChangesByIC-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Clients-getNEDChangesByIC-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Clients-getNEDChangesByIC-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Clients-getNEDChangesByIC-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Clients-getNEDChangesByIC-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Clients-getNEDChangesByIC-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Clients-getNEDChangesByIC-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Clients-getNEDChangesByIC-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Clients-getNEDChangesByIC-0-python">Python</a></li>
                         </ul>
 
                         <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Clients-getUserByDateFromDdb-0-curl">
+                          <div class="tab-pane active" id="examples-Clients-getNEDChangesByIC-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"//eracommonsapi/v2/users/date/{date}?lastEvaluatedKey="</code></pre>
+"//userapi/ned/changesByIc/{ic}?From_Date=&From_Time=&To_Date=&To_Time="</code></pre>
                           </div>
-                          <div class="tab-pane" id="examples-Clients-getUserByDateFromDdb-0-java">
+                          <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
 import io.swagger.client.auth.*;
 import io.swagger.client.model.*;
@@ -1247,52 +1140,64 @@ public class ClientsApiExample {
     public static void main(String[] args) {
         
         ClientsApi apiInstance = new ClientsApi();
-        String date = date_example; // String | Date in format YYYY-MM-DD
-        String lastEvaluatedKey = lastEvaluatedKey_example; // String | optional Last Evaluated Key from previous request's result
+        String ic = ic_example; // String | IC
+        String fromDate = fromDate_example; // String | 
+        String fromTime = fromTime_example; // String | 
+        String toDate = toDate_example; // String | 
+        String toTime = toTime_example; // String | 
         try {
-            UsersChunk result = apiInstance.getUserByDateFromDdb(date, lastEvaluatedKey);
+            inline_response_200 result = apiInstance.getNEDChangesByIC(ic, fromDate, fromTime, toDate, toTime);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#getUserByDateFromDdb");
+            System.err.println("Exception when calling ClientsApi#getNEDChangesByIC");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
 
-                          <div class="tab-pane" id="examples-Clients-getUserByDateFromDdb-0-android">
+                          <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-android">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ClientsApi;
 
 public class ClientsApiExample {
 
     public static void main(String[] args) {
         ClientsApi apiInstance = new ClientsApi();
-        String date = date_example; // String | Date in format YYYY-MM-DD
-        String lastEvaluatedKey = lastEvaluatedKey_example; // String | optional Last Evaluated Key from previous request's result
+        String ic = ic_example; // String | IC
+        String fromDate = fromDate_example; // String | 
+        String fromTime = fromTime_example; // String | 
+        String toDate = toDate_example; // String | 
+        String toTime = toTime_example; // String | 
         try {
-            UsersChunk result = apiInstance.getUserByDateFromDdb(date, lastEvaluatedKey);
+            inline_response_200 result = apiInstance.getNEDChangesByIC(ic, fromDate, fromTime, toDate, toTime);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#getUserByDateFromDdb");
+            System.err.println("Exception when calling ClientsApi#getNEDChangesByIC");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
   <!--
-  <div class="tab-pane" id="examples-Clients-getUserByDateFromDdb-0-groovy">
+  <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-groovy">
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
-                            <div class="tab-pane" id="examples-Clients-getUserByDateFromDdb-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *date = date_example; // Date in format YYYY-MM-DD
-String *lastEvaluatedKey = lastEvaluatedKey_example; // optional Last Evaluated Key from previous request's result (optional)
+                            <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">String *ic = ic_example; // IC
+String *fromDate = fromDate_example; //  (optional)
+String *fromTime = fromTime_example; //  (optional)
+String *toDate = toDate_example; //  (optional)
+String *toTime = toTime_example; //  (optional)
 
 ClientsApi *apiInstance = [[ClientsApi alloc] init];
 
-// Get External User Records for a given date straight from Dynamo DB
-[apiInstance getUserByDateFromDdbWith:date
-    lastEvaluatedKey:lastEvaluatedKey
-              completionHandler: ^(UsersChunk output, NSError* error) {
+// List NED Changes for the given IC
+[apiInstance getNEDChangesByICWith:ic
+    fromDate:fromDate
+    fromTime:fromTime
+    toDate:toDate
+    toTime:toTime
+              completionHandler: ^(inline_response_200 output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -1303,13 +1208,16 @@ ClientsApi *apiInstance = [[ClientsApi alloc] init];
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-getUserByDateFromDdb-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var ERaCommonsUserApi = require('e_ra_commons_user_api');
+                            <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var UserRestWebServiceApi = require('user_rest_web_service_api');
 
-var api = new ERaCommonsUserApi.ClientsApi()
-var date = date_example; // {{String}} Date in format YYYY-MM-DD
+var api = new UserRestWebServiceApi.ClientsApi()
+var ic = ic_example; // {{String}} IC
 var opts = { 
-  'lastEvaluatedKey': lastEvaluatedKey_example // {{String}} optional Last Evaluated Key from previous request's result
+  'fromDate': fromDate_example, // {{String}} 
+  'fromTime': fromTime_example, // {{String}} 
+  'toDate': toDate_example, // {{String}} 
+  'toTime': toTime_example // {{String}} 
 };
 var callback = function(error, data, response) {
   if (error) {
@@ -1318,14 +1226,14 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.getUserByDateFromDdb(date, opts, callback);
+api.getNEDChangesByIC(ic, opts, callback);
 </code></pre>
                             </div>
 
-                            <!--<div class="tab-pane" id="examples-Clients-getUserByDateFromDdb-0-angular">
+                            <!--<div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-angular">
               <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
             </div>-->
-                            <div class="tab-pane" id="examples-Clients-getUserByDateFromDdb-0-csharp">
+                            <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-csharp">
                               <pre class="prettyprint"><code class="language-cs">using System;
 using System.Diagnostics;
 using IO.Swagger.Api;
@@ -1334,24 +1242,27 @@ using IO.Swagger.Model;
 
 namespace Example
 {
-    public class getUserByDateFromDdbExample
+    public class getNEDChangesByICExample
     {
         public void main()
         {
 
             var apiInstance = new ClientsApi();
-            var date = date_example;  // String | Date in format YYYY-MM-DD
-            var lastEvaluatedKey = lastEvaluatedKey_example;  // String | optional Last Evaluated Key from previous request's result (optional) 
+            var ic = ic_example;  // String | IC
+            var fromDate = fromDate_example;  // String |  (optional) 
+            var fromTime = fromTime_example;  // String |  (optional) 
+            var toDate = toDate_example;  // String |  (optional) 
+            var toTime = toTime_example;  // String |  (optional) 
 
             try
             {
-                // Get External User Records for a given date straight from Dynamo DB
-                UsersChunk result = apiInstance.getUserByDateFromDdb(date, lastEvaluatedKey);
+                // List NED Changes for the given IC
+                inline_response_200 result = apiInstance.getNEDChangesByIC(ic, fromDate, fromTime, toDate, toTime);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
             {
-                Debug.Print("Exception when calling ClientsApi.getUserByDateFromDdb: " + e.Message );
+                Debug.Print("Exception when calling ClientsApi.getNEDChangesByIC: " + e.Message );
             }
         }
     }
@@ -1359,42 +1270,48 @@ namespace Example
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-getUserByDateFromDdb-0-php">
+                            <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiClientsApi();
-$date = date_example; // String | Date in format YYYY-MM-DD
-$lastEvaluatedKey = lastEvaluatedKey_example; // String | optional Last Evaluated Key from previous request's result
+$ic = ic_example; // String | IC
+$fromDate = fromDate_example; // String | 
+$fromTime = fromTime_example; // String | 
+$toDate = toDate_example; // String | 
+$toTime = toTime_example; // String | 
 
 try {
-    $result = $api_instance->getUserByDateFromDdb($date, $lastEvaluatedKey);
+    $result = $api_instance->getNEDChangesByIC($ic, $fromDate, $fromTime, $toDate, $toTime);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling ClientsApi->getUserByDateFromDdb: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling ClientsApi->getNEDChangesByIC: ', $e->getMessage(), PHP_EOL;
 }
 ?></code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-getUserByDateFromDdb-0-perl">
+                            <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-perl">
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ClientsApi;
 
 my $api_instance = WWW::SwaggerClient::ClientsApi->new();
-my $date = date_example; # String | Date in format YYYY-MM-DD
-my $lastEvaluatedKey = lastEvaluatedKey_example; # String | optional Last Evaluated Key from previous request's result
+my $ic = ic_example; # String | IC
+my $fromDate = fromDate_example; # String | 
+my $fromTime = fromTime_example; # String | 
+my $toDate = toDate_example; # String | 
+my $toTime = toTime_example; # String | 
 
 eval { 
-    my $result = $api_instance->getUserByDateFromDdb(date => $date, lastEvaluatedKey => $lastEvaluatedKey);
+    my $result = $api_instance->getNEDChangesByIC(ic => $ic, fromDate => $fromDate, fromTime => $fromTime, toDate => $toDate, toTime => $toTime);
     print Dumper($result);
 };
 if ($@) {
-    warn "Exception when calling ClientsApi->getUserByDateFromDdb: $@\n";
+    warn "Exception when calling ClientsApi->getNEDChangesByIC: $@\n";
 }</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-getUserByDateFromDdb-0-python">
+                            <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-python">
                               <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
 import time
 import swagger_client
@@ -1403,15 +1320,18 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.ClientsApi()
-date = date_example # String | Date in format YYYY-MM-DD
-lastEvaluatedKey = lastEvaluatedKey_example # String | optional Last Evaluated Key from previous request's result (optional)
+ic = ic_example # String | IC
+fromDate = fromDate_example # String |  (optional)
+fromTime = fromTime_example # String |  (optional)
+toDate = toDate_example # String |  (optional)
+toTime = toTime_example # String |  (optional)
 
 try: 
-    # Get External User Records for a given date straight from Dynamo DB
-    api_response = api_instance.get_user_by_date_from_ddb(date, lastEvaluatedKey=lastEvaluatedKey)
+    # List NED Changes for the given IC
+    api_response = api_instance.get_ned_changes_by_ic(ic, fromDate=fromDate, fromTime=fromTime, toDate=toDate, toTime=toTime)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling ClientsApi->getUserByDateFromDdb: %s\n" % e)</code></pre>
+    print("Exception when calling ClientsApi->getNEDChangesByIC: %s\n" % e)</code></pre>
                             </div>
                           </div>
 
@@ -1423,11 +1343,11 @@ except ApiException as e:
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
-                                  <tr><td style="width:150px;">date*</td>
+                                  <tr><td style="width:150px;">ic*</td>
                                   <td>
                                   
                                   
-                                      <div id="d2e199_getUserByDateFromDdb_date">
+                                      <div id="d2e199_getNEDChangesByIC_ic">
                                           <div class="json-schema-view">
                                               <div class="primitive">
                                                   <span class="type">
@@ -1435,7 +1355,7 @@ except ApiException as e:
                                                   </span>
                                   
                                                       <div class="inner description">
-                                                          Date in format YYYY-MM-DD
+                                                          IC
                                                       </div>
                                               </div>
                                                   <div class="inner required">
@@ -1456,1271 +1376,65 @@ except ApiException as e:
                                 <th width="150px">Name</th>
                                 <th>Description</th>
                               </tr>
-                                <tr><td style="width:150px;">lastEvaluatedKey</td>
+                                <tr><td style="width:150px;">From_Date</td>
                                 <td>
                                 
                                 
-                                    <div id="d2e199_getUserByDateFromDdb_lastEvaluatedKey">
+                                    <div id="d2e199_getNEDChangesByIC_fromDate">
                                         <div class="json-schema-view">
                                             <div class="primitive">
                                                 <span class="type">
                                                     String
                                                 </span>
                                 
-                                                    <div class="inner description">
-                                                        optional Last Evaluated Key from previous request&#x27;s result
-                                                    </div>
                                             </div>
                                         </div>
                                     </div>
                                 </td>
                                 </tr>
-                            </table>
-
-                          <h2>Responses</h2>
-                            <h3> Status: 200 - JSON formatted records of the user information </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-getUserByDateFromDdb-200-schema">Schema</a>
-                                </li>
-
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-getUserByDateFromDdb-200-schema">
-                                  <div id='responses-getUserByDateFromDdb-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "JSON formatted records of the user information",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/UsersChunk"
-      }
-    }
-  }
-};
-                                        var schema = schemaWrapper.content["application/json"].schema;
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else {
-                                          schemaWrapper.components = {};
-                                          schemaWrapper.components.schemas = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        //console.log(JSON.stringify(schema));
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-getUserByDateFromDdb-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-getUserByDateFromDdb-200-schema-200');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-getUserByDateFromDdb-200-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-
-                            <h3> Status: 400 - bad input parameter </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                            </div>
-
-                        </article>
-                      </div>
-                      <hr>
-                    <div id="api-Clients-getUserByLogingovUserIdFromDdb">
-                      <article id="api-Clients-getUserByLogingovUserIdFromDdb-0" data-group="User" data-name="getUserByLogingovUserIdFromDdb" data-version="0">
-                        <div class="pull-left">
-                          <h1>getUserByLogingovUserIdFromDdb</h1>
-                          <p>Get External User Record for given LOGIN.GOV USER ID straight from Dynamo DB</p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked">Get external eRA Commons user record by LOGIN.GOV USER_ID straight from Dynamo DB</p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/eracommonsapi/v2/logingovuser/{logingovUserId}</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByLogingovUserIdFromDdb-0-python">Python</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-curl">
-                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
--H "Accept: application/json"\
-"//eracommonsapi/v2/logingovuser/{logingovUserId}"</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-java">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.ClientsApi;
-
-import java.io.File;
-import java.util.*;
-
-public class ClientsApiExample {
-
-    public static void main(String[] args) {
-        
-        ClientsApi apiInstance = new ClientsApi();
-        String logingovUserId = logingovUserId_example; // String | LOGIN.GOV User ID
-        try {
-            User result = apiInstance.getUserByLogingovUserIdFromDdb(logingovUserId);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#getUserByLogingovUserIdFromDdb");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-android">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ClientsApi;
-
-public class ClientsApiExample {
-
-    public static void main(String[] args) {
-        ClientsApi apiInstance = new ClientsApi();
-        String logingovUserId = logingovUserId_example; // String | LOGIN.GOV User ID
-        try {
-            User result = apiInstance.getUserByLogingovUserIdFromDdb(logingovUserId);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#getUserByLogingovUserIdFromDdb");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *logingovUserId = logingovUserId_example; // LOGIN.GOV User ID
-
-ClientsApi *apiInstance = [[ClientsApi alloc] init];
-
-// Get External User Record for given LOGIN.GOV USER ID straight from Dynamo DB
-[apiInstance getUserByLogingovUserIdFromDdbWith:logingovUserId
-              completionHandler: ^(User output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var ERaCommonsUserApi = require('e_ra_commons_user_api');
-
-var api = new ERaCommonsUserApi.ClientsApi()
-var logingovUserId = logingovUserId_example; // {{String}} LOGIN.GOV User ID
-
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-api.getUserByLogingovUserIdFromDdb(logingovUserId, callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-
-namespace Example
-{
-    public class getUserByLogingovUserIdFromDdbExample
-    {
-        public void main()
-        {
-
-            var apiInstance = new ClientsApi();
-            var logingovUserId = logingovUserId_example;  // String | LOGIN.GOV User ID
-
-            try
-            {
-                // Get External User Record for given LOGIN.GOV USER ID straight from Dynamo DB
-                User result = apiInstance.getUserByLogingovUserIdFromDdb(logingovUserId);
-                Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
-                Debug.Print("Exception when calling ClientsApi.getUserByLogingovUserIdFromDdb: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-$api_instance = new Swagger\Client\ApiClientsApi();
-$logingovUserId = logingovUserId_example; // String | LOGIN.GOV User ID
-
-try {
-    $result = $api_instance->getUserByLogingovUserIdFromDdb($logingovUserId);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling ClientsApi->getUserByLogingovUserIdFromDdb: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::SwaggerClient::Configuration;
-use WWW::SwaggerClient::ClientsApi;
-
-my $api_instance = WWW::SwaggerClient::ClientsApi->new();
-my $logingovUserId = logingovUserId_example; # String | LOGIN.GOV User ID
-
-eval { 
-    my $result = $api_instance->getUserByLogingovUserIdFromDdb(logingovUserId => $logingovUserId);
-    print Dumper($result);
-};
-if ($@) {
-    warn "Exception when calling ClientsApi->getUserByLogingovUserIdFromDdb: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUserByLogingovUserIdFromDdb-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import swagger_client
-from swagger_client.rest import ApiException
-from pprint import pprint
-
-# create an instance of the API class
-api_instance = swagger_client.ClientsApi()
-logingovUserId = logingovUserId_example # String | LOGIN.GOV User ID
-
-try: 
-    # Get External User Record for given LOGIN.GOV USER ID straight from Dynamo DB
-    api_response = api_instance.get_user_by_logingov_user_id_from_ddb(logingovUserId)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling ClientsApi->getUserByLogingovUserIdFromDdb: %s\n" % e)</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Parameters</h2>
-
-                            <div class="methodsubtabletitle">Path parameters</div>
-                            <table id="methodsubtable">
-                                <tr>
-                                  <th width="150px">Name</th>
-                                  <th>Description</th>
-                                </tr>
-                                  <tr><td style="width:150px;">logingovUserId*</td>
-                                  <td>
-                                  
-                                  
-                                      <div id="d2e199_getUserByLogingovUserIdFromDdb_logingovUserId">
-                                          <div class="json-schema-view">
-                                              <div class="primitive">
-                                                  <span class="type">
-                                                      String
-                                                  </span>
-                                  
-                                                      <div class="inner description">
-                                                          LOGIN.GOV User ID
-                                                      </div>
-                                              </div>
-                                                  <div class="inner required">
-                                                      Required
-                                                  </div>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  </tr>
-                            </table>
-
-
-
-
-
-                          <h2>Responses</h2>
-                            <h3> Status: 200 - JSON formatted record of the user information </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-getUserByLogingovUserIdFromDdb-200-schema">Schema</a>
-                                </li>
-
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-getUserByLogingovUserIdFromDdb-200-schema">
-                                  <div id='responses-getUserByLogingovUserIdFromDdb-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "JSON formatted record of the user information",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/User"
-      }
-    }
-  }
-};
-                                        var schema = schemaWrapper.content["application/json"].schema;
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else {
-                                          schemaWrapper.components = {};
-                                          schemaWrapper.components.schemas = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        //console.log(JSON.stringify(schema));
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-getUserByLogingovUserIdFromDdb-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-getUserByLogingovUserIdFromDdb-200-schema-200');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-getUserByLogingovUserIdFromDdb-200-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-
-                            <h3> Status: 400 - bad input parameter </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                            </div>
-
-                        </article>
-                      </div>
-                      <hr>
-                    <div id="api-Clients-getUserByUserId">
-                      <article id="api-Clients-getUserByUserId-0" data-group="User" data-name="getUserByUserId" data-version="0">
-                        <div class="pull-left">
-                          <h1>getUserByUserId</h1>
-                          <p>External User Information</p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked">Get external eRA Commons user record by USER_ID</p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/eracommonsapi/v1/user/{userID}</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Clients-getUserByUserId-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByUserId-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByUserId-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Clients-getUserByUserId-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Clients-getUserByUserId-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByUserId-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Clients-getUserByUserId-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Clients-getUserByUserId-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByUserId-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByUserId-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByUserId-0-python">Python</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Clients-getUserByUserId-0-curl">
-                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
--H "Accept: application/json"\
-"//eracommonsapi/v1/user/{userID}"</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-Clients-getUserByUserId-0-java">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.ClientsApi;
-
-import java.io.File;
-import java.util.*;
-
-public class ClientsApiExample {
-
-    public static void main(String[] args) {
-        
-        ClientsApi apiInstance = new ClientsApi();
-        String userID = userID_example; // String | User ID
-        try {
-            User result = apiInstance.getUserByUserId(userID);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#getUserByUserId");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-Clients-getUserByUserId-0-android">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ClientsApi;
-
-public class ClientsApiExample {
-
-    public static void main(String[] args) {
-        ClientsApi apiInstance = new ClientsApi();
-        String userID = userID_example; // String | User ID
-        try {
-            User result = apiInstance.getUserByUserId(userID);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#getUserByUserId");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-Clients-getUserByUserId-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-Clients-getUserByUserId-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *userID = userID_example; // User ID
-
-ClientsApi *apiInstance = [[ClientsApi alloc] init];
-
-// External User Information
-[apiInstance getUserByUserIdWith:userID
-              completionHandler: ^(User output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUserByUserId-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var ERaCommonsUserApi = require('e_ra_commons_user_api');
-
-var api = new ERaCommonsUserApi.ClientsApi()
-var userID = userID_example; // {{String}} User ID
-
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-api.getUserByUserId(userID, callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-Clients-getUserByUserId-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-Clients-getUserByUserId-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-
-namespace Example
-{
-    public class getUserByUserIdExample
-    {
-        public void main()
-        {
-
-            var apiInstance = new ClientsApi();
-            var userID = userID_example;  // String | User ID
-
-            try
-            {
-                // External User Information
-                User result = apiInstance.getUserByUserId(userID);
-                Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
-                Debug.Print("Exception when calling ClientsApi.getUserByUserId: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUserByUserId-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-$api_instance = new Swagger\Client\ApiClientsApi();
-$userID = userID_example; // String | User ID
-
-try {
-    $result = $api_instance->getUserByUserId($userID);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling ClientsApi->getUserByUserId: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUserByUserId-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::SwaggerClient::Configuration;
-use WWW::SwaggerClient::ClientsApi;
-
-my $api_instance = WWW::SwaggerClient::ClientsApi->new();
-my $userID = userID_example; # String | User ID
-
-eval { 
-    my $result = $api_instance->getUserByUserId(userID => $userID);
-    print Dumper($result);
-};
-if ($@) {
-    warn "Exception when calling ClientsApi->getUserByUserId: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUserByUserId-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import swagger_client
-from swagger_client.rest import ApiException
-from pprint import pprint
-
-# create an instance of the API class
-api_instance = swagger_client.ClientsApi()
-userID = userID_example # String | User ID
-
-try: 
-    # External User Information
-    api_response = api_instance.get_user_by_user_id(userID)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling ClientsApi->getUserByUserId: %s\n" % e)</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Parameters</h2>
-
-                            <div class="methodsubtabletitle">Path parameters</div>
-                            <table id="methodsubtable">
-                                <tr>
-                                  <th width="150px">Name</th>
-                                  <th>Description</th>
-                                </tr>
-                                  <tr><td style="width:150px;">userID*</td>
-                                  <td>
-                                  
-                                  
-                                      <div id="d2e199_getUserByUserId_userID">
-                                          <div class="json-schema-view">
-                                              <div class="primitive">
-                                                  <span class="type">
-                                                      String
-                                                  </span>
-                                  
-                                                      <div class="inner description">
-                                                          User ID
-                                                      </div>
-                                              </div>
-                                                  <div class="inner required">
-                                                      Required
-                                                  </div>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  </tr>
-                            </table>
-
-
-
-
-
-                          <h2>Responses</h2>
-                            <h3> Status: 200 - JSON formatted record of the user information </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-getUserByUserId-200-schema">Schema</a>
-                                </li>
-
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-getUserByUserId-200-schema">
-                                  <div id='responses-getUserByUserId-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "JSON formatted record of the user information",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/User"
-      }
-    }
-  }
-};
-                                        var schema = schemaWrapper.content["application/json"].schema;
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else {
-                                          schemaWrapper.components = {};
-                                          schemaWrapper.components.schemas = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        //console.log(JSON.stringify(schema));
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-getUserByUserId-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-getUserByUserId-200-schema-200');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-getUserByUserId-200-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-
-                            <h3> Status: 400 - bad input parameter </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                            </div>
-
-                        </article>
-                      </div>
-                      <hr>
-                    <div id="api-Clients-getUserByUserIdFromDdb">
-                      <article id="api-Clients-getUserByUserIdFromDdb-0" data-group="User" data-name="getUserByUserIdFromDdb" data-version="0">
-                        <div class="pull-left">
-                          <h1>getUserByUserIdFromDdb</h1>
-                          <p>Get External User Record for given USER ID straight from Dynamo DB</p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked">Get external eRA Commons user record by USER_ID straight from Dynamo DB</p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/eracommonsapi/v2/user/{userID}</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Clients-getUserByUserIdFromDdb-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByUserIdFromDdb-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByUserIdFromDdb-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Clients-getUserByUserIdFromDdb-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Clients-getUserByUserIdFromDdb-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByUserIdFromDdb-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Clients-getUserByUserIdFromDdb-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Clients-getUserByUserIdFromDdb-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByUserIdFromDdb-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByUserIdFromDdb-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Clients-getUserByUserIdFromDdb-0-python">Python</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Clients-getUserByUserIdFromDdb-0-curl">
-                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
--H "Accept: application/json"\
-"//eracommonsapi/v2/user/{userID}"</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-Clients-getUserByUserIdFromDdb-0-java">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.ClientsApi;
-
-import java.io.File;
-import java.util.*;
-
-public class ClientsApiExample {
-
-    public static void main(String[] args) {
-        
-        ClientsApi apiInstance = new ClientsApi();
-        String userID = userID_example; // String | User ID
-        try {
-            User result = apiInstance.getUserByUserIdFromDdb(userID);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#getUserByUserIdFromDdb");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-Clients-getUserByUserIdFromDdb-0-android">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ClientsApi;
-
-public class ClientsApiExample {
-
-    public static void main(String[] args) {
-        ClientsApi apiInstance = new ClientsApi();
-        String userID = userID_example; // String | User ID
-        try {
-            User result = apiInstance.getUserByUserIdFromDdb(userID);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#getUserByUserIdFromDdb");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-Clients-getUserByUserIdFromDdb-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-Clients-getUserByUserIdFromDdb-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *userID = userID_example; // User ID
-
-ClientsApi *apiInstance = [[ClientsApi alloc] init];
-
-// Get External User Record for given USER ID straight from Dynamo DB
-[apiInstance getUserByUserIdFromDdbWith:userID
-              completionHandler: ^(User output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUserByUserIdFromDdb-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var ERaCommonsUserApi = require('e_ra_commons_user_api');
-
-var api = new ERaCommonsUserApi.ClientsApi()
-var userID = userID_example; // {{String}} User ID
-
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-api.getUserByUserIdFromDdb(userID, callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-Clients-getUserByUserIdFromDdb-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-Clients-getUserByUserIdFromDdb-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-
-namespace Example
-{
-    public class getUserByUserIdFromDdbExample
-    {
-        public void main()
-        {
-
-            var apiInstance = new ClientsApi();
-            var userID = userID_example;  // String | User ID
-
-            try
-            {
-                // Get External User Record for given USER ID straight from Dynamo DB
-                User result = apiInstance.getUserByUserIdFromDdb(userID);
-                Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
-                Debug.Print("Exception when calling ClientsApi.getUserByUserIdFromDdb: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUserByUserIdFromDdb-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-$api_instance = new Swagger\Client\ApiClientsApi();
-$userID = userID_example; // String | User ID
-
-try {
-    $result = $api_instance->getUserByUserIdFromDdb($userID);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling ClientsApi->getUserByUserIdFromDdb: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUserByUserIdFromDdb-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::SwaggerClient::Configuration;
-use WWW::SwaggerClient::ClientsApi;
-
-my $api_instance = WWW::SwaggerClient::ClientsApi->new();
-my $userID = userID_example; # String | User ID
-
-eval { 
-    my $result = $api_instance->getUserByUserIdFromDdb(userID => $userID);
-    print Dumper($result);
-};
-if ($@) {
-    warn "Exception when calling ClientsApi->getUserByUserIdFromDdb: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUserByUserIdFromDdb-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import swagger_client
-from swagger_client.rest import ApiException
-from pprint import pprint
-
-# create an instance of the API class
-api_instance = swagger_client.ClientsApi()
-userID = userID_example # String | User ID
-
-try: 
-    # Get External User Record for given USER ID straight from Dynamo DB
-    api_response = api_instance.get_user_by_user_id_from_ddb(userID)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling ClientsApi->getUserByUserIdFromDdb: %s\n" % e)</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Parameters</h2>
-
-                            <div class="methodsubtabletitle">Path parameters</div>
-                            <table id="methodsubtable">
-                                <tr>
-                                  <th width="150px">Name</th>
-                                  <th>Description</th>
-                                </tr>
-                                  <tr><td style="width:150px;">userID*</td>
-                                  <td>
-                                  
-                                  
-                                      <div id="d2e199_getUserByUserIdFromDdb_userID">
-                                          <div class="json-schema-view">
-                                              <div class="primitive">
-                                                  <span class="type">
-                                                      String
-                                                  </span>
-                                  
-                                                      <div class="inner description">
-                                                          User ID
-                                                      </div>
-                                              </div>
-                                                  <div class="inner required">
-                                                      Required
-                                                  </div>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  </tr>
-                            </table>
-
-
-
-
-
-                          <h2>Responses</h2>
-                            <h3> Status: 200 - JSON formatted record of the user information </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-getUserByUserIdFromDdb-200-schema">Schema</a>
-                                </li>
-
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-getUserByUserIdFromDdb-200-schema">
-                                  <div id='responses-getUserByUserIdFromDdb-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "JSON formatted record of the user information",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/User"
-      }
-    }
-  }
-};
-                                        var schema = schemaWrapper.content["application/json"].schema;
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else {
-                                          schemaWrapper.components = {};
-                                          schemaWrapper.components.schemas = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        //console.log(JSON.stringify(schema));
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-getUserByUserIdFromDdb-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-getUserByUserIdFromDdb-200-schema-200');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-getUserByUserIdFromDdb-200-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-
-                            <h3> Status: 400 - bad input parameter </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
-                            </div>
-
-                        </article>
-                      </div>
-                      <hr>
-                    <div id="api-Clients-getUsers">
-                      <article id="api-Clients-getUsers-0" data-group="User" data-name="getUsers" data-version="0">
-                        <div class="pull-left">
-                          <h1>getUsers</h1>
-                          <p>Get external users records within date range</p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked">Get external eRA Commons user records that have changed within given date range
-For example - https://localhost/eracommonsapi/v1/users?from&#x3D;2021-05-01&amp;to&#x3D;2021-05-01
-(retrieve user records for the given date interval)
-</p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/eracommonsapi/v1/users</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Clients-getUsers-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Clients-getUsers-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Clients-getUsers-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Clients-getUsers-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Clients-getUsers-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Clients-getUsers-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Clients-getUsers-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Clients-getUsers-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Clients-getUsers-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Clients-getUsers-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Clients-getUsers-0-python">Python</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Clients-getUsers-0-curl">
-                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
--H "Accept: application/json"\
-"//eracommonsapi/v1/users?from=&to="</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-Clients-getUsers-0-java">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.ClientsApi;
-
-import java.io.File;
-import java.util.*;
-
-public class ClientsApiExample {
-
-    public static void main(String[] args) {
-        
-        ClientsApi apiInstance = new ClientsApi();
-        date from = 2013-10-20; // date | start date range
-        date to = 2013-10-20; // date | end date range
-        try {
-            array[User] result = apiInstance.getUsers(from, to);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#getUsers");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-Clients-getUsers-0-android">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ClientsApi;
-
-public class ClientsApiExample {
-
-    public static void main(String[] args) {
-        ClientsApi apiInstance = new ClientsApi();
-        date from = 2013-10-20; // date | start date range
-        date to = 2013-10-20; // date | end date range
-        try {
-            array[User] result = apiInstance.getUsers(from, to);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#getUsers");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-Clients-getUsers-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-Clients-getUsers-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">date *from = 2013-10-20; // start date range (optional)
-date *to = 2013-10-20; // end date range (optional)
-
-ClientsApi *apiInstance = [[ClientsApi alloc] init];
-
-// Get external users records within date range
-[apiInstance getUsersWith:from
-    to:to
-              completionHandler: ^(array[User] output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUsers-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var ERaCommonsUserApi = require('e_ra_commons_user_api');
-
-var api = new ERaCommonsUserApi.ClientsApi()
-var opts = { 
-  'from': 2013-10-20, // {{date}} start date range
-  'to': 2013-10-20 // {{date}} end date range
-};
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-api.getUsers(opts, callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-Clients-getUsers-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-Clients-getUsers-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-
-namespace Example
-{
-    public class getUsersExample
-    {
-        public void main()
-        {
-
-            var apiInstance = new ClientsApi();
-            var from = 2013-10-20;  // date | start date range (optional) 
-            var to = 2013-10-20;  // date | end date range (optional) 
-
-            try
-            {
-                // Get external users records within date range
-                array[User] result = apiInstance.getUsers(from, to);
-                Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
-                Debug.Print("Exception when calling ClientsApi.getUsers: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUsers-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-$api_instance = new Swagger\Client\ApiClientsApi();
-$from = 2013-10-20; // date | start date range
-$to = 2013-10-20; // date | end date range
-
-try {
-    $result = $api_instance->getUsers($from, $to);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling ClientsApi->getUsers: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUsers-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::SwaggerClient::Configuration;
-use WWW::SwaggerClient::ClientsApi;
-
-my $api_instance = WWW::SwaggerClient::ClientsApi->new();
-my $from = 2013-10-20; # date | start date range
-my $to = 2013-10-20; # date | end date range
-
-eval { 
-    my $result = $api_instance->getUsers(from => $from, to => $to);
-    print Dumper($result);
-};
-if ($@) {
-    warn "Exception when calling ClientsApi->getUsers: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getUsers-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import swagger_client
-from swagger_client.rest import ApiException
-from pprint import pprint
-
-# create an instance of the API class
-api_instance = swagger_client.ClientsApi()
-from = 2013-10-20 # date | start date range (optional)
-to = 2013-10-20 # date | end date range (optional)
-
-try: 
-    # Get external users records within date range
-    api_response = api_instance.get_users(from=from, to=to)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling ClientsApi->getUsers: %s\n" % e)</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Parameters</h2>
-
-
-
-
-
-                            <div class="methodsubtabletitle">Query parameters</div>
-                            <table id="methodsubtable">
-                              <tr>
-                                <th width="150px">Name</th>
-                                <th>Description</th>
-                              </tr>
-                                <tr><td style="width:150px;">from</td>
+                                <tr><td style="width:150px;">From_Time</td>
                                 <td>
                                 
                                 
-                                    <div id="d2e199_getUsers_from">
+                                    <div id="d2e199_getNEDChangesByIC_fromTime">
                                         <div class="json-schema-view">
                                             <div class="primitive">
                                                 <span class="type">
-                                                    date
+                                                    String
                                                 </span>
-                                                    <span class="format">
-                                                        (date)
-                                                    </span>
                                 
-                                                    <div class="inner description">
-                                                        start date range
-                                                    </div>
                                             </div>
                                         </div>
                                     </div>
                                 </td>
                                 </tr>
-                                <tr><td style="width:150px;">to</td>
+                                <tr><td style="width:150px;">To_Date</td>
                                 <td>
                                 
                                 
-                                    <div id="d2e199_getUsers_to">
+                                    <div id="d2e199_getNEDChangesByIC_toDate">
                                         <div class="json-schema-view">
                                             <div class="primitive">
                                                 <span class="type">
-                                                    date
+                                                    String
                                                 </span>
-                                                    <span class="format">
-                                                        (date)
-                                                    </span>
                                 
-                                                    <div class="inner description">
-                                                        end date range
-                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                                <tr><td style="width:150px;">To_Time</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_getNEDChangesByIC_toTime">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
                                             </div>
                                         </div>
                                     </div>
@@ -2729,30 +1443,26 @@ except ApiException as e:
                             </table>
 
                           <h2>Responses</h2>
-                            <h3> Status: 200 - JSON formatted records of the user information </h3>
+                            <h3> Status: 200 - Response with a list of NED Changes records </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-getUsers-200-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-getNEDChangesByIC-200-schema">Schema</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-getUsers-200-schema">
-                                  <div id='responses-getUsers-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-getNEDChangesByIC-200-schema">
+                                  <div id='responses-getNEDChangesByIC-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
-  "description" : "JSON formatted records of the user information",
+  "description" : "Response with a list of NED Changes records",
   "content" : {
     "application/json" : {
       "schema" : {
-        "type" : "array",
-        "items" : {
-          "$ref" : "#/components/schemas/User"
-        },
-        "x-content-type" : "application/json"
+        "$ref" : "#/components/schemas/inline_response_200"
       }
     }
   }
@@ -2770,69 +1480,58 @@ except ApiException as e:
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-getUsers-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-getUsers-200-schema-200');
+                                        $('#responses-getNEDChangesByIC-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-getNEDChangesByIC-200-schema-200');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-getUsers-200-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-getNEDChangesByIC-200-schema-data' type='hidden' value=''></input>
                                 </div>
-                            </div>
-
-                            <h3> Status: 400 - bad input parameter </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
                             </div>
 
                         </article>
                       </div>
                       <hr>
-                    <div id="api-Clients-getUsersFromDdb">
-                      <article id="api-Clients-getUsersFromDdb-0" data-group="User" data-name="getUsersFromDdb" data-version="0">
+                    <div id="api-Clients-getVDSUserByNIHId">
+                      <article id="api-Clients-getVDSUserByNIHId-0" data-group="User" data-name="getVDSUserByNIHId" data-version="0">
                         <div class="pull-left">
-                          <h1>getUsersFromDdb</h1>
-                          <p>Get External User Records for date range straight from Dynamo DB</p>
+                          <h1>getVDSUserByNIHId</h1>
+                          <p>Get VDS User record by the given NIH id (UNIQUEIDENTIFIER)</p>
                         </div>
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Get external eRA Commons user records *for date range* straight from Dynamo DB  
-You have to check the result for existence of LastEvaluatedKey property and  
-loop your request passing it&#x27;s value (&#x60;&#x60;&#x60;?lastEvaluatedKey&#x3D;xxx&#x60;&#x60;&#x60;) as query parameter  
-until the final result does not contain LastEvaluatedKey property
+                        <p class="marked">Get VDS User record(s) that satisfied NIH ID criteria
 </p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/eracommonsapi/v2/users</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/userapi/vds/userById/{id}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
                         <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Clients-getUsersFromDdb-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Clients-getUsersFromDdb-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Clients-getUsersFromDdb-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Clients-getUsersFromDdb-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Clients-getUsersFromDdb-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Clients-getUsersFromDdb-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Clients-getUsersFromDdb-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Clients-getUsersFromDdb-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Clients-getUsersFromDdb-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Clients-getUsersFromDdb-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Clients-getUsersFromDdb-0-python">Python</a></li>
+                          <li class="active"><a href="#examples-Clients-getVDSUserByNIHId-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-python">Python</a></li>
                         </ul>
 
                         <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Clients-getUsersFromDdb-0-curl">
+                          <div class="tab-pane active" id="examples-Clients-getVDSUserByNIHId-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Accept: application/json"\
-"//eracommonsapi/v2/users?from=&to=&lastEvaluatedKey="</code></pre>
+"//userapi/vds/userById/{id}"</code></pre>
                           </div>
-                          <div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-java">
+                          <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
 import io.swagger.client.auth.*;
 import io.swagger.client.model.*;
@@ -2846,56 +1545,349 @@ public class ClientsApiExample {
     public static void main(String[] args) {
         
         ClientsApi apiInstance = new ClientsApi();
-        date from = 2013-10-20; // date | start date range
-        date to = 2013-10-20; // date | end date range
-        String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
+        String id = id_example; // String | user NIH ID
         try {
-            UsersChunk result = apiInstance.getUsersFromDdb(from, to, lastEvaluatedKey);
+            inline_response_200_1 result = apiInstance.getVDSUserByNIHId(id);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#getUsersFromDdb");
+            System.err.println("Exception when calling ClientsApi#getVDSUserByNIHId");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
 
-                          <div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-android">
+                          <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-android">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ClientsApi;
 
 public class ClientsApiExample {
 
     public static void main(String[] args) {
         ClientsApi apiInstance = new ClientsApi();
-        date from = 2013-10-20; // date | start date range
-        date to = 2013-10-20; // date | end date range
-        String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
+        String id = id_example; // String | user NIH ID
         try {
-            UsersChunk result = apiInstance.getUsersFromDdb(from, to, lastEvaluatedKey);
+            inline_response_200_1 result = apiInstance.getVDSUserByNIHId(id);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#getUsersFromDdb");
+            System.err.println("Exception when calling ClientsApi#getVDSUserByNIHId");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
   <!--
-  <div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-groovy">
+  <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-groovy">
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
-                            <div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">date *from = 2013-10-20; // start date range (optional)
-date *to = 2013-10-20; // end date range (optional)
+                            <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">String *id = id_example; // user NIH ID
+
+ClientsApi *apiInstance = [[ClientsApi alloc] init];
+
+// Get VDS User record by the given NIH id (UNIQUEIDENTIFIER)
+[apiInstance getVDSUserByNIHIdWith:id
+              completionHandler: ^(inline_response_200_1 output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var UserRestWebServiceApi = require('user_rest_web_service_api');
+
+var api = new UserRestWebServiceApi.ClientsApi()
+var id = id_example; // {{String}} user NIH ID
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getVDSUserByNIHId(id, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class getVDSUserByNIHIdExample
+    {
+        public void main()
+        {
+
+            var apiInstance = new ClientsApi();
+            var id = id_example;  // String | user NIH ID
+
+            try
+            {
+                // Get VDS User record by the given NIH id (UNIQUEIDENTIFIER)
+                inline_response_200_1 result = apiInstance.getVDSUserByNIHId(id);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling ClientsApi.getVDSUserByNIHId: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$api_instance = new Swagger\Client\ApiClientsApi();
+$id = id_example; // String | user NIH ID
+
+try {
+    $result = $api_instance->getVDSUserByNIHId($id);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling ClientsApi->getVDSUserByNIHId: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::ClientsApi;
+
+my $api_instance = WWW::SwaggerClient::ClientsApi->new();
+my $id = id_example; # String | user NIH ID
+
+eval { 
+    my $result = $api_instance->getVDSUserByNIHId(id => $id);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling ClientsApi->getVDSUserByNIHId: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# create an instance of the API class
+api_instance = swagger_client.ClientsApi()
+id = id_example # String | user NIH ID
+
+try: 
+    # Get VDS User record by the given NIH id (UNIQUEIDENTIFIER)
+    api_response = api_instance.get_vds_user_by_nih_id(id)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ClientsApi->getVDSUserByNIHId: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">id*</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_getVDSUserByNIHId_id">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                                      <div class="inner description">
+                                                          user NIH ID
+                                                      </div>
+                                              </div>
+                                                  <div class="inner required">
+                                                      Required
+                                                  </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - Response with a list of VDS User objects </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-getVDSUserByNIHId-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-getVDSUserByNIHId-200-schema">
+                                  <div id='responses-getVDSUserByNIHId-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "Response with a list of VDS User objects",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/inline_response_200_1"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-getVDSUserByNIHId-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-getVDSUserByNIHId-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-getVDSUserByNIHId-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Clients-listVDSUsersByIC">
+                      <article id="api-Clients-listVDSUsersByIC-0" data-group="User" data-name="listVDSUsersByIC" data-version="0">
+                        <div class="pull-left">
+                          <h1>listVDSUsersByIC</h1>
+                          <p>List VDS user records by the given IC</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Get VDS user records that satisfied IC criteria
+</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/userapi/vds/usersByIc/{ic}</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Clients-listVDSUsersByIC-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Clients-listVDSUsersByIC-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Clients-listVDSUsersByIC-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Clients-listVDSUsersByIC-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Clients-listVDSUsersByIC-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Clients-listVDSUsersByIC-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Clients-listVDSUsersByIC-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Clients-listVDSUsersByIC-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Clients-listVDSUsersByIC-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Clients-listVDSUsersByIC-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Clients-listVDSUsersByIC-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Clients-listVDSUsersByIC-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Accept: application/json"\
+"//userapi/vds/usersByIc/{ic}?lastEvaluatedKey="</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.ClientsApi;
+
+import java.io.File;
+import java.util.*;
+
+public class ClientsApiExample {
+
+    public static void main(String[] args) {
+        
+        ClientsApi apiInstance = new ClientsApi();
+        String ic = ic_example; // String | IC
+        String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
+        try {
+            VDSUsersChunk result = apiInstance.listVDSUsersByIC(ic, lastEvaluatedKey);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ClientsApi#listVDSUsersByIC");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ClientsApi;
+
+public class ClientsApiExample {
+
+    public static void main(String[] args) {
+        ClientsApi apiInstance = new ClientsApi();
+        String ic = ic_example; // String | IC
+        String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
+        try {
+            VDSUsersChunk result = apiInstance.listVDSUsersByIC(ic, lastEvaluatedKey);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ClientsApi#listVDSUsersByIC");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">String *ic = ic_example; // IC
 String *lastEvaluatedKey = lastEvaluatedKey_example; // Last Evaluated Key from previous request (optional)
 
 ClientsApi *apiInstance = [[ClientsApi alloc] init];
 
-// Get External User Records for date range straight from Dynamo DB
-[apiInstance getUsersFromDdbWith:from
-    to:to
+// List VDS user records by the given IC
+[apiInstance listVDSUsersByICWith:ic
     lastEvaluatedKey:lastEvaluatedKey
-              completionHandler: ^(UsersChunk output, NSError* error) {
+              completionHandler: ^(VDSUsersChunk output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -2906,13 +1898,12 @@ ClientsApi *apiInstance = [[ClientsApi alloc] init];
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var ERaCommonsUserApi = require('e_ra_commons_user_api');
+                            <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var UserRestWebServiceApi = require('user_rest_web_service_api');
 
-var api = new ERaCommonsUserApi.ClientsApi()
+var api = new UserRestWebServiceApi.ClientsApi()
+var ic = ic_example; // {{String}} IC
 var opts = { 
-  'from': 2013-10-20, // {{date}} start date range
-  'to': 2013-10-20, // {{date}} end date range
   'lastEvaluatedKey': lastEvaluatedKey_example // {{String}} Last Evaluated Key from previous request
 };
 var callback = function(error, data, response) {
@@ -2922,14 +1913,14 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.getUsersFromDdb(opts, callback);
+api.listVDSUsersByIC(ic, opts, callback);
 </code></pre>
                             </div>
 
-                            <!--<div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-angular">
+                            <!--<div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-angular">
               <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
             </div>-->
-                            <div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-csharp">
+                            <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-csharp">
                               <pre class="prettyprint"><code class="language-cs">using System;
 using System.Diagnostics;
 using IO.Swagger.Api;
@@ -2938,25 +1929,24 @@ using IO.Swagger.Model;
 
 namespace Example
 {
-    public class getUsersFromDdbExample
+    public class listVDSUsersByICExample
     {
         public void main()
         {
 
             var apiInstance = new ClientsApi();
-            var from = 2013-10-20;  // date | start date range (optional) 
-            var to = 2013-10-20;  // date | end date range (optional) 
+            var ic = ic_example;  // String | IC
             var lastEvaluatedKey = lastEvaluatedKey_example;  // String | Last Evaluated Key from previous request (optional) 
 
             try
             {
-                // Get External User Records for date range straight from Dynamo DB
-                UsersChunk result = apiInstance.getUsersFromDdb(from, to, lastEvaluatedKey);
+                // List VDS user records by the given IC
+                VDSUsersChunk result = apiInstance.listVDSUsersByIC(ic, lastEvaluatedKey);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
             {
-                Debug.Print("Exception when calling ClientsApi.getUsersFromDdb: " + e.Message );
+                Debug.Print("Exception when calling ClientsApi.listVDSUsersByIC: " + e.Message );
             }
         }
     }
@@ -2964,44 +1954,42 @@ namespace Example
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-php">
+                            <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
 $api_instance = new Swagger\Client\ApiClientsApi();
-$from = 2013-10-20; // date | start date range
-$to = 2013-10-20; // date | end date range
+$ic = ic_example; // String | IC
 $lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
 
 try {
-    $result = $api_instance->getUsersFromDdb($from, $to, $lastEvaluatedKey);
+    $result = $api_instance->listVDSUsersByIC($ic, $lastEvaluatedKey);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling ClientsApi->getUsersFromDdb: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling ClientsApi->listVDSUsersByIC: ', $e->getMessage(), PHP_EOL;
 }
 ?></code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-perl">
+                            <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-perl">
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ClientsApi;
 
 my $api_instance = WWW::SwaggerClient::ClientsApi->new();
-my $from = 2013-10-20; # date | start date range
-my $to = 2013-10-20; # date | end date range
+my $ic = ic_example; # String | IC
 my $lastEvaluatedKey = lastEvaluatedKey_example; # String | Last Evaluated Key from previous request
 
 eval { 
-    my $result = $api_instance->getUsersFromDdb(from => $from, to => $to, lastEvaluatedKey => $lastEvaluatedKey);
+    my $result = $api_instance->listVDSUsersByIC(ic => $ic, lastEvaluatedKey => $lastEvaluatedKey);
     print Dumper($result);
 };
 if ($@) {
-    warn "Exception when calling ClientsApi->getUsersFromDdb: $@\n";
+    warn "Exception when calling ClientsApi->listVDSUsersByIC: $@\n";
 }</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-getUsersFromDdb-0-python">
+                            <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-python">
                               <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
 import time
 import swagger_client
@@ -3010,21 +1998,49 @@ from pprint import pprint
 
 # create an instance of the API class
 api_instance = swagger_client.ClientsApi()
-from = 2013-10-20 # date | start date range (optional)
-to = 2013-10-20 # date | end date range (optional)
+ic = ic_example # String | IC
 lastEvaluatedKey = lastEvaluatedKey_example # String | Last Evaluated Key from previous request (optional)
 
 try: 
-    # Get External User Records for date range straight from Dynamo DB
-    api_response = api_instance.get_users_from_ddb(from=from, to=to, lastEvaluatedKey=lastEvaluatedKey)
+    # List VDS user records by the given IC
+    api_response = api_instance.list_vds_users_by_ic(ic, lastEvaluatedKey=lastEvaluatedKey)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling ClientsApi->getUsersFromDdb: %s\n" % e)</code></pre>
+    print("Exception when calling ClientsApi->listVDSUsersByIC: %s\n" % e)</code></pre>
                             </div>
                           </div>
 
                           <h2>Parameters</h2>
 
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">ic*</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_listVDSUsersByIC_ic">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                                      <div class="inner description">
+                                                          IC
+                                                      </div>
+                                              </div>
+                                                  <div class="inner required">
+                                                      Required
+                                                  </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
 
 
 
@@ -3035,55 +2051,11 @@ except ApiException as e:
                                 <th width="150px">Name</th>
                                 <th>Description</th>
                               </tr>
-                                <tr><td style="width:150px;">from</td>
-                                <td>
-                                
-                                
-                                    <div id="d2e199_getUsersFromDdb_from">
-                                        <div class="json-schema-view">
-                                            <div class="primitive">
-                                                <span class="type">
-                                                    date
-                                                </span>
-                                                    <span class="format">
-                                                        (date)
-                                                    </span>
-                                
-                                                    <div class="inner description">
-                                                        start date range
-                                                    </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                </tr>
-                                <tr><td style="width:150px;">to</td>
-                                <td>
-                                
-                                
-                                    <div id="d2e199_getUsersFromDdb_to">
-                                        <div class="json-schema-view">
-                                            <div class="primitive">
-                                                <span class="type">
-                                                    date
-                                                </span>
-                                                    <span class="format">
-                                                        (date)
-                                                    </span>
-                                
-                                                    <div class="inner description">
-                                                        end date range
-                                                    </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                </tr>
                                 <tr><td style="width:150px;">lastEvaluatedKey</td>
                                 <td>
                                 
                                 
-                                    <div id="d2e199_getUsersFromDdb_lastEvaluatedKey">
+                                    <div id="d2e199_listVDSUsersByIC_lastEvaluatedKey">
                                         <div class="json-schema-view">
                                             <div class="primitive">
                                                 <span class="type">
@@ -3101,26 +2073,26 @@ except ApiException as e:
                             </table>
 
                           <h2>Responses</h2>
-                            <h3> Status: 200 - JSON formatted records of the users information </h3>
+                            <h3> Status: 200 - Response with a list of User Records for given IC </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-getUsersFromDdb-200-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-listVDSUsersByIC-200-schema">Schema</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-getUsersFromDdb-200-schema">
-                                  <div id='responses-getUsersFromDdb-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-listVDSUsersByIC-200-schema">
+                                  <div id='responses-listVDSUsersByIC-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
-  "description" : "JSON formatted records of the users information",
+  "description" : "Response with a list of User Records for given IC",
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/UsersChunk"
+        "$ref" : "#/components/schemas/VDSUsersChunk"
       }
     }
   }
@@ -3138,23 +2110,15 @@ except ApiException as e:
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-getUsersFromDdb-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-getUsersFromDdb-200-schema-200');
+                                        $('#responses-listVDSUsersByIC-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-listVDSUsersByIC-200-schema-200');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-getUsersFromDdb-200-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-listVDSUsersByIC-200-schema-data' type='hidden' value=''></input>
                                 </div>
-                            </div>
-
-                            <h3> Status: 400 - bad input parameter </h3>
-
-                            <ul class="nav nav-tabs nav-tabs-examples" >
-                            </ul>
-
-                            <div class="tab-content" style='margin-bottom: 10px;'>
                             </div>
 
                         </article>
@@ -3169,7 +2133,7 @@ except ApiException as e:
                   <div class="app-desc">Contact Info: <a href="NCICBIITBizAppsSupportLowTier@mail.nih.gov">NCICBIITBizAppsSupportLowTier@mail.nih.gov</a></div>
               </p>
                 <div class="license-info">Apache 2.0</div>
-                <div class="license-url">http://www.apache.org/licenses/LICENSE-2.0.html</div>
+                <div class="license-url">https://www.apache.org/licenses/LICENSE-2.0.html</div>
             </div>
           </div>
       </div>
@@ -4261,6 +3225,11 @@ except ApiException as e:
       this.open = open;
       this.options = options;
       this.isCollapsed = open <= 0;
+  
+      if (this.schema.type == undefined && this.schema.$ref) {
+        const elements = this.schema.$ref.split('/');
+        this.schema = defs[elements.pop()];
+      }
   
       // if schema is an empty object which means any JOSN
       this.isAny = typeof schema === 'object' && !Array.isArray(schema) && !Object.keys(schema).filter(function (k) {

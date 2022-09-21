@@ -5,7 +5,8 @@
     "_clean_modules": "rm -rf node_modules",
     "_clean": "npm run _clean_modules && rm -rf dist",
     "build-prod": "npm run _clean && npm install && tsc && npm run _clean_modules && npm install --only='prod' && cp -r node_modules ./dist/node_modules",
-    "zip-prod": "npm run build-prod && cd dist && zip -r ../../lambda-zip/generate-ts-swagger.zip *",
+    "zip": "npm run build-prod && cd dist && zip -r ../../lambda-zip/generate-ts-swagger.zip *",
+    "zip-prod": "npm run build-prod && mkdir -p out && cd dist && zip -r ../out/generate-ts-swagger.zip *",
     "local": "npm run _clean && npm install && tsc && cp -r node_modules ./dist/node_modules",
     "swagger": "npm run local && mkdir -p out && cd dist && node swagger.js '../out'",
     "test": "jest"
