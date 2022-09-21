@@ -100,11 +100,11 @@ resource "aws_api_gateway_integration" "generate_ts" {
   timeout_milliseconds = 29000
 }
 
-resource "aws_lambda_permission" "generate_ts" {
-  for_each = { for idx, val in local.methods: idx => val }
-  statement_id  = "AllowExecutionFromAPIGateway"
-  action        = "lambda:InvokeFunction"
-  function_name = module.lambda-generate-ts-api.name
-  principal     = "apigateway.amazonaws.com"
-  source_arn = "arn:aws:execute-api:us-east-1:${data.aws_caller_identity._.account_id}:${module.api-gateway-generate-ts.rest_api_id}/*/${aws_api_gateway_method.generate_ts[each.key].http_method}${aws_api_gateway_resource.generate_ts[each.value.endpoint_index].path}"
-}
+#resource "aws_lambda_permission" "generate_ts" {
+#  for_each = { for idx, val in local.methods: idx => val }
+#  statement_id  = "AllowExecutionFromAPIGateway"
+#  action        = "lambda:InvokeFunction"
+#  function_name = module.lambda-generate-ts-api.name
+#  principal     = "apigateway.amazonaws.com"
+#  source_arn = "arn:aws:execute-api:us-east-1:${data.aws_caller_identity._.account_id}:${module.api-gateway-generate-ts.rest_api_id}/*/${aws_api_gateway_method.generate_ts[each.key].http_method}${aws_api_gateway_resource.generate_ts[each.value.endpoint_index].path}"
+#}
