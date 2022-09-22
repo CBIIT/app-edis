@@ -43,6 +43,7 @@ module "api-gateway-era-commons" {
   api-resource-policy = local.era_commons_resource_policy
   api-gateway-name    = "era-commons"
   resource_tag_name   = "edis"
+  auth_lambda_file_name = "../lambda-zip/lambda-auth.zip"
 }
 
 module "lambda-eracommons" {
@@ -134,6 +135,7 @@ module "api-gateway-userinfo" {
   api-resource-policy = local.era_commons_resource_policy
   api-gateway-name    = "userinfo"
   resource_tag_name   = "edis"
+  auth_lambda_file_name = "../lambda-zip/lambda-auth.zip"
 }
 
 #module "lambda-generate-ts-api" {
