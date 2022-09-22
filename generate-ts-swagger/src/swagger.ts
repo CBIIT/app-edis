@@ -15,7 +15,7 @@ const table = args[0];
 let appConfig = new AppConfig()
 
 appConfig.name = "User REST Web Service API";
-appConfig.base = "/generatets/v1";
+// appConfig.base = "/generatets/v1";
 appConfig.version = "0.1.0";
 appConfig.openApi.enabled = true
 appConfig.openApi.useAuthentication = false
@@ -27,7 +27,7 @@ let httpClient = restClient.client;
 
 async function generate() {
     await app.runServer([])
-    let response: HttpClientResponse = await httpClient.get("http://localhost:8080/generatets/v1/open-api.json")
+    let response: HttpClientResponse = await httpClient.get("http://localhost:8080/open-api.json")
     let body = await response.readBody();
     let jsonBody = JSON.parse(body);
     Object.entries(jsonBody['paths']).forEach(([key, path]) => {
