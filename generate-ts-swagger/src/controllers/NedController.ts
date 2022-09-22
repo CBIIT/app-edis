@@ -15,7 +15,7 @@ const WSSecurity = require("wssecurity");
 import {Config} from "../conf/Config";
 
 
-@apiController("/ned")
+@apiController("/generatets/v1/ned")
 @api("NED APIs Controller", "API endpoints to retrieve data from NED")
 @controllerNoAuth
 @injectable()
