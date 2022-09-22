@@ -33,6 +33,7 @@ module "api-gateway-generate-ts" {
   api-resource-policy = local.era_commons_resource_policy
   api-gateway-name    = "generatets"
   resource_tag_name   = "edis"
+  auth_lambda_file_name = "../../lambda-zip/lambda-auth.zip"
 }
 
 resource "aws_api_gateway_request_validator" "_" {

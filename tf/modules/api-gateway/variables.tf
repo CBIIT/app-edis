@@ -15,6 +15,10 @@ variable "resource_tag_name" {
   description = "Value of tag 'Name' for cost/resource tracking"
 }
 
+variable "auth_lambda_file_name" {
+  description = "Path to the zip file for Authentication Lambda"
+}
+
 #---------------------------------------
 # API Gateway: required
 #---------------------------------------
