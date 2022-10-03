@@ -113,7 +113,7 @@ module "lambda-userinfo-api" {
   lambda-description  = "Lambda function contains NED and VDS users info REST APIs implementation."
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
-    SECRET    = "era-commons-connect"
+    SECRET    = lookup(local.tier_conf, var.env).secret
   })
   lambda-managed-policies        = { for idx, val in local.lambda_userinfo_api_role_policies: idx => val }
   create_api_gateway_integration = true
@@ -213,7 +213,7 @@ module "lambda-load-from-vds" {
   lambda-description  = "Lambda function to load VDS users into S3 bucket"
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
-    SECRET    = "era-commons-connect"
+    SECRET    = lookup(local.tier_conf, var.env).secret
     S3BUCKET  = var.s3bucket-for-vds-users
     S3FOLDER  = "app-edis-data-${var.env}"
   })
