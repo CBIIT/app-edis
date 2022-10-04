@@ -60,6 +60,11 @@ async function dbUpdate(chunk) {
       }
     });
   }
+
+  if (batch.length === 0) {
+    return; // nothing to update
+  }
+
   const params = {
     RequestItems: {
       [table]: batch
@@ -92,6 +97,10 @@ async function dbUpdateDeleted(chunk, marker) {
     batch.push({
       NEDId: id
     });
+  }
+  
+  if (batch.length === 0) {
+    return; // nothing to archive
   }
   const params = {
     RequestItems: {
