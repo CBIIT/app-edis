@@ -46,7 +46,7 @@ on:
         type: string
       build_number:
         description: 'Build Workflow number'
-        required: true
+        required: false
         type: string
 
   workflow_call: 
@@ -90,7 +90,7 @@ on:
         type: string
       build_number:
         description: 'Build Workflow number'
-        required: true
+        required: false
         type: string
 
 jobs:
