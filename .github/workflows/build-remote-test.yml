@@ -123,4 +123,4 @@ jobs:
         with:
           name: edis-built
           path: |
-            generate-ts-swagger/out/*.*
+            ./*/generate-ts-swagger/out/*.*
