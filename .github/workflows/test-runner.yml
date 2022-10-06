@@ -2,18 +2,30 @@
 
 name: Test nci-self-hosted Runner 
 
+
+
+
 # Controls when the workflow will run
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
   workflow_call:
+# Inputs for the workflow
+    inputs:
+      host-runner:
+        type: string
+        required: true
+        description: 'Selected self hosted (nci-self-hosted) of github hosted () runner'
+        default: 'nci-hosted-runner'
+
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: [nci-self-hosted]
+    runs-on: ${{ inputs.host-runner }}
+    #[nci-self-hosted]
 
     permissions: 
       packages: write
