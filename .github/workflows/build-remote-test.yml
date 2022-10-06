@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Remote Repo - Deploy
+name: Remote Repo - Build
 
 # Controls when the workflow will run
 on:
@@ -39,15 +39,6 @@ on:
         required: true
         type: string
         default: 'ubuntu-latest'
-      workflow:
-        description: 'Build Workflow yml'
-        default: build-remote-test.yml
-        required: true
-        type: string
-      build_number:
-        description: 'Build Workflow number'
-        required: true
-        type: string
 
   workflow_call: 
     inputs:
@@ -83,15 +74,6 @@ on:
         required: true
         type: string
         default: 'ubuntu-latest'
-      workflow:
-        description: 'Build Workflow yml'
-        default: build-remote-test.yml
-        required: true
-        type: string
-      build_number:
-        description: 'Build Workflow number'
-        required: true
-        type: string
 
 jobs:
   # This workflow contains a single job called "build"
@@ -125,57 +107,20 @@ jobs:
           echo Security Group - ${{ inputs.vpcsg }}
           echo Secret - ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
 
-      - name: download pre-built resources
-        uses: dawidd6/action-download-artifact@v2
+      - name: generate swagger file
+        working-directory: generate-ts-swagger
+        run: |
+          npm run swagger
+
+      - name: build lambda zip file
+        working-directory: generate-ts-swagger
+        run: |
+          npm run zip-prod
+
+      #Store the created zip files as artifacts
+      - name: store-artifacts
+        uses: actions/upload-artifact@v3
         with:
-          workflow: ${{ inputs.workflow }}
-          workflow_conclusion: success
-          repo: CBIIT/app-edis
-          run_number: ${{ inputs.build_number }}
           name: edis-built
-          
-      #      - name: generate swagger file
-#        working-directory: generate-ts-swagger
-#        run: |
-#          npm run swagger
-#
-#      - name: build lambda zip file
-#        working-directory: generate-ts-swagger
-#        run: |
-#          npm run zip-prod
-
-      - name: Setup AWS configuration
-        env: 
-          OIDC_ROLE: ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
-        if: "${{ env.OIDC_ROLE != '' }}"
-        uses: aws-actions/configure-aws-credentials@master
-        with:
-          role-to-assume: ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
-          role-session-name: TestSessionWithOIDC
-          aws-region: us-east-1
-
-      - name: Install Terraform
-        id: install
-        uses: hashicorp/setup-terraform@v2
-        with: 
-          terraform_wrapper: false
-      
-      - name: Init Terraform 
-        id: init
-        run: terraform init -backend-config="bucket=${{ inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/api-edis-generate-ts-${{ inputs.tier }}" -backend-config="region=us-east-1"
-        working-directory: generate-ts-swagger/deploy/
-
-      - name: Validate Terraform
-        id: validate
-        run: terraform validate
-        working-directory: generate-ts-swagger/deploy/
-
-      - name: Planning Terraform
-        id: plan
-        run: terraform plan -var 'env=${{ inputs.tier }}' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}'
-        working-directory: generate-ts-swagger/deploy/
-
-      - name: Terraform Deployment
-        id: apply
-        run: terraform apply -auto-approve -input=false -lock=false -var 'env=${{ inputs.tier }}' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}'
-        working-directory: generate-ts-swagger/deploy/
+          path: |
+            generate-ts-swagger/out/*.*
