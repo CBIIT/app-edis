@@ -12,7 +12,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "soap": "^0.45.0",
+    "soap": "^0.43.0",
     "ts-lambda-api": "^2.3.4",
     "wssecurity": "^0.2.4"
   },

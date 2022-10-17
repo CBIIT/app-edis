@@ -85,6 +85,7 @@ export class NedController extends Controller {
     
     async _getSoapClientForNedChanges() {
         if (!this.soapClientForChanges) {
+            console.debug('createClientAsync() for ', this.conf.ned.wsdl_changes);
             this.soapClientForChanges = await createClientAsync(this.conf.ned.wsdl_changes);
             this.soapClientForChanges.setSecurity(this._getWsSecurity_v7());
         }
