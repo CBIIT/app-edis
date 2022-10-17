@@ -1,12 +1,12 @@
 
-resource "build" "swagger" {
+resource "null_resource" "swagger" {
   provisioner "local-exec" {
     command = "npm run swagger"
     working_dir = "../"
   }
 }
 
-resource "build" "lambda-zip" {
+resource "null_resource" "lambda-zip" {
   provisioner "local-exec" {
     command = "npm run zip-prod"
     working_dir = "../"
@@ -14,7 +14,7 @@ resource "build" "lambda-zip" {
 }
 
 module "lambda-generate-ts-api" {
-  depends_on = [build.lambda-zip]
+  depends_on = [null_resource.lambda-zip]
   source              = "../../tf/modules/lambda"
   env                 = var.env
   must-be-role-prefix = var.role-prefix
@@ -37,7 +37,7 @@ module "lambda-generate-ts-api" {
 }
 
 module "api-gateway-generate-ts" {
-  depends_on = [build.swagger]
+  depends_on = [null_resource.swagger]
   source              = "../../tf/modules/api-gateway"
   env                 = var.env
   must-be-role-prefix = var.role-prefix
