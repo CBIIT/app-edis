@@ -68,16 +68,16 @@ jobs:
         with: 
           terraform_wrapper: false
       
+      - name: Init Terraform 
+        id: init
+        run: terraform init
+        working-directory: generate-ts-swagger/deploy_test/
+
       - name: Terraform Providers
         id: providers
         run: terraform providers
         working-directory: generate-ts-swagger/deploy_test/
       
-      - name: Init Terraform 
-        id: init
-        run: terraform init -backend-config="bucket=${{ inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/test-generate-ts" -backend-config="region=us-east-1"
-        working-directory: generate-ts-swagger/deploy_test/
-
       - name: Validate Terraform
         id: validate
         run: terraform validate
