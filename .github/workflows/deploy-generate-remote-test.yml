@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Remote Repo - Build and Deploy
+name: Remote Repo - Deploy
 
 # Controls when the workflow will run
 on:
@@ -39,6 +39,15 @@ on:
         required: true
         type: string
         default: 'ubuntu-latest'
+      workflow:
+        description: 'Build Workflow yml'
+        default: build-remote-test.yml
+        required: true
+        type: string
+      build_number:
+        description: 'Build Workflow number'
+        required: false
+        type: string
 
   workflow_call: 
     inputs:
@@ -74,6 +83,15 @@ on:
         required: true
         type: string
         default: 'ubuntu-latest'
+      workflow:
+        description: 'Build Workflow yml'
+        default: build-remote-test.yml
+        required: true
+        type: string
+      build_number:
+        description: 'Build Workflow number'
+        required: false
+        type: string
 
 jobs:
   # This workflow contains a single job called "build"
@@ -107,15 +125,24 @@ jobs:
           echo Security Group - ${{ inputs.vpcsg }}
           echo Secret - ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
 
-      - name: generate swagger file
-        working-directory: generate-ts-swagger
-        run: |
-          npm run swagger
-
-      - name: build lambda zip file
-        working-directory: generate-ts-swagger
-        run: |
-          npm run zip-prod
+      - name: download pre-built resources
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: ${{ inputs.workflow }}
+          workflow_conclusion: success
+          repo: CBIIT/app-edis
+          run_number: ${{ inputs.build_number }}
+          name: edis-built
+          
+      #      - name: generate swagger file
+#        working-directory: generate-ts-swagger
+#        run: |
+#          npm run swagger
+#
+#      - name: build lambda zip file
+#        working-directory: generate-ts-swagger
+#        run: |
+#          npm run zip-prod
 
       - name: Setup AWS configuration
         env: 
