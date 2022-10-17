@@ -1,21 +1,6 @@
 
-resource "null_resource" "swagger" {
-  provisioner "local-exec" {
-    command = "npm run swagger"
-    working_dir = "../"
-  }
-}
-
-resource "null_resource" "lambda-zip" {
-  depends_on = [null_resource.swagger]
-  provisioner "local-exec" {
-    command = "npm run zip-prod"
-    working_dir = "../"
-  }
-}
-
 module "lambda-generate-ts-api" {
-  depends_on = [null_resource.lambda-zip]
+  depends_on = [data.external.lambda-zip]
   source              = "../../tf/modules/lambda"
   env                 = var.env
   must-be-role-prefix = var.role-prefix
@@ -24,7 +9,7 @@ module "lambda-generate-ts-api" {
   region              = "us-east-1"
   app                 = "edis"
   lambda-name         = "generate-ts-api"
-  file-name           = "../out/generate-ts-swagger.zip"
+  file-name           = data.external.lambda-zip.result.lambda_zip
   lambda-description  = "Lambda function contains NED REST APIs implementation using Typescript."
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
@@ -38,7 +23,7 @@ module "lambda-generate-ts-api" {
 }
 
 module "api-gateway-generate-ts" {
-  depends_on = [null_resource.swagger]
+  depends_on = [data.external.swagger]
   source              = "../../tf/modules/api-gateway"
   env                 = var.env
   must-be-role-prefix = var.role-prefix
