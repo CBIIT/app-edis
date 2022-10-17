@@ -5,7 +5,7 @@ name: _Test OIDC provider
 # Controls when the workflow will run
 on:
   # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  [workflow_dispatch,workflow_call]:
     inputs: 
           tier:
             description: 'Environment tier'
