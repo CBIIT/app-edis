@@ -107,15 +107,15 @@ jobs:
           echo Security Group - ${{ inputs.vpcsg }}
           echo Secret - ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
 
-      - name: generate swagger file
-        working-directory: generate-ts-swagger
-        run: |
-          npm run swagger
-
-      - name: build lambda zip file
-        working-directory: generate-ts-swagger
-        run: |
-          npm run zip-prod
+#      - name: generate swagger file
+#        working-directory: generate-ts-swagger
+#        run: |
+#          npm run swagger
+#
+#      - name: build lambda zip file
+#        working-directory: generate-ts-swagger
+#        run: |
+#          npm run zip-prod
 
       - name: Setup AWS configuration
         env: 
