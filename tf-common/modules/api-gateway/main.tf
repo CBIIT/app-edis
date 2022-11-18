@@ -6,7 +6,7 @@
 
 # Lambda Authorizer
 resource "aws_lambda_function" "auth_lambda" {
-  count         = var.auth_lambda_file_name ? 1 : 0
+  count         = var.auth_lambda_file_name == "" ? 0 : 1
   function_name = "${var.app}-${var.api-gateway-name}-auth-${var.env}"
   role          = aws_iam_role.auth_lambda.arn
   description   = "Lambda function with basic authorization."
@@ -31,7 +31,7 @@ resource "aws_lambda_function" "auth_lambda" {
 }
 
 resource "aws_lambda_function_event_invoke_config" "auth_lambda" {
-  count                  = var.auth_lambda_file_name ? 1 : 0
+  count                  = var.auth_lambda_file_name == "" ? 0 : 1
   function_name          = aws_lambda_function.auth_lambda[0].function_name
   maximum_retry_attempts = 0
 }
