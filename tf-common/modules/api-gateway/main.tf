@@ -51,7 +51,7 @@ resource "aws_api_gateway_deployment" "api_gateway" {
 }
 
 resource "aws_api_gateway_authorizer" "api_gateway" {
-  count          = var.auth_lambda_file_name ? 1 : 0
+  count          = var.auth_lambda_file_name == "" ? 0 : 1
   name           = "${var.app}-${var.api-gateway-name}-${var.env}-authorizer"
   rest_api_id    = aws_api_gateway_rest_api.api_gateway.id
   authorizer_uri = aws_lambda_function.auth_lambda[0].invoke_arn
