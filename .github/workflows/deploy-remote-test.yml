@@ -22,18 +22,10 @@ on:
         required: true
         type: string
         default: cf-templates-woyzwinjenjf-us-east-1
-      subnet1:
-        description: 'VPC Subnet 1 id'
-        required: true
-        type: string
-      subnet2:
-        description: 'VPC Subnet 2 id'
-        required: true
-        type: string
-      vpcsg:
-        description: 'VPC Security Group id'
-        required: true
-        type: string
+      tfVarString:
+        description: 'terraform variables string (example: -var env=dev -var subnet1=subnet-409a0424 -var subnet2=subnet-4f35f112 -var vpcsg=sg-00b8785da61d5f64d)'
+        required: false
+        default: ''
       artifact_repo:
         description: 'Artifacts Build repo'
         default: CBIIT/app-edis
@@ -42,16 +34,16 @@ on:
       artifact_workflow:
         description: 'Artifacts Build Workflow yml'
         default: build-remote-test.yml
-        required: true
+        required: false
         type: string
       artifact_build:
         description: 'Artifacts Build Workflow number'
-        required: true
+        required: false
         type: string
       artifact_name:
         description: 'Artifacts name'
         default: edis-built
-        required: true
+        required: false
         type: string
       host-runner:
         description: 'Selected self hosted (nci-self-hosted) of github hosted () runner'
@@ -76,18 +68,10 @@ on:
         required: true
         type: string
         default: cf-templates-woyzwinjenjf-us-east-1
-      subnet1:
-        description: 'VPC Subnet 1 id'
-        required: true
-        type: string
-      subnet2:
-        description: 'VPC Subnet 2 id'
-        required: true
-        type: string
-      vpcsg:
-        description: 'VPC Security Group id'
-        required: true
-        type: string
+      tfVarString:
+        description: 'terraform variables string (example: -var env=dev -var subnet1=subnet-409a0424 -var subnet2=subnet-4f35f112 -var vpcsg=sg-00b8785da61d5f64d)'
+        required: false
+        default: ''
       artifact_repo:
         description: 'Artifacts Build repo'
         default: CBIIT/app-edis
@@ -192,10 +176,10 @@ jobs:
 
       - name: Planning Terraform
         id: plan
-        run: terraform plan -var 'env=${{ inputs.tier }}' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}'
+        run: terraform plan ${{ inputs.tfVarString }}
         working-directory: generate-ts-swagger/deploy_w_artifacts/
 
       - name: Terraform Deployment
         id: apply
-        run: terraform apply -auto-approve -input=false -lock=false -var 'env=${{ inputs.tier }}' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}'
+        run: terraform apply -auto-approve -input=false -lock=false ${{ inputs.tfVarString }}
         working-directory: generate-ts-swagger/deploy_w_artifacts/
