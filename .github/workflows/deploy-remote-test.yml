@@ -24,6 +24,7 @@ on:
         default: cf-templates-woyzwinjenjf-us-east-1
       tfVarString:
         description: 'terraform variables string (example: -var env=dev -var subnet1=subnet-409a0424 -var subnet2=subnet-4f35f112 -var vpcsg=sg-00b8785da61d5f64d)'
+        type: string
         required: false
         default: ''
       artifact_repo:
@@ -70,6 +71,7 @@ on:
         default: cf-templates-woyzwinjenjf-us-east-1
       tfVarString:
         description: 'terraform variables string (example: -var env=dev -var subnet1=subnet-409a0424 -var subnet2=subnet-4f35f112 -var vpcsg=sg-00b8785da61d5f64d)'
+        type: string
         required: false
         default: ''
       artifact_repo:
