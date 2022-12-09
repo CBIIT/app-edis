@@ -1,6 +1,5 @@
 
 module "lambda-generate-ts-api" {
-  depends_on = [data.external.lambda-zip]
   source              = "../../tf/modules/lambda"
   env                 = var.env
   must-be-role-prefix = var.role-prefix
