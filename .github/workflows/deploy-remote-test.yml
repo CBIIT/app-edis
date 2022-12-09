@@ -123,7 +123,7 @@ jobs:
       - name: download pre-built resources
         uses: dawidd6/action-download-artifact@v2
         with:
-          workflow: ${{ inputs.artifacts_workflow }}
+          workflow: ${{ inputs.artifact_workflow }}
           workflow_conclusion: success
           repo: ${{ inputs.artifact_repo }}
           run_number: ${{ inputs.artifact_build }}
