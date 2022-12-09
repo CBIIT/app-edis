@@ -125,7 +125,7 @@ jobs:
         with:
           workflow: ${{ inputs.artifacts_workflow }}
           workflow_conclusion: success
-          repo: ${{ inputs.artifacts_repo }}
+          repo: ${{ inputs.artifact_repo }}
           run_number: ${{ inputs.artifact_build }}
           name: ${{ inputs.artifact_name }}
       
