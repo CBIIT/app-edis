@@ -1,13 +1,9 @@
 'use strict'
 
-const AWSXRay = require('aws-xray-sdk-core')
 const soap = require('soap');
 const WSSecurity = require('wssecurity');
 const {conf} = require("./conf");
 const isNum = new RegExp('^[0-9]+$');
-
-const AWS = AWSXRay.captureAWS(require('aws-sdk'))
-AWS.config.update({ region: "us-east-1"});
 
 let wsSecurity_v7;        // Soap security
 let soapClient;           // Soap Client for GET By endpoints
@@ -168,8 +164,10 @@ async function getChangesByIc(ic, fromDate, fromTime, toDate, toTime) {
 
 async function _getSoapClient() {
     if (!soapClient) {
+        console.debug('About to get soap client', conf.ned.wsdl)
         soapClient = await soap.createClientAsync(conf.ned.wsdl);
         soapClient.setSecurity(_getWsSecurity_v7());
+        console.debug('Soap client has been created', conf.ned.wsdl)
     }
     return soapClient;
 }

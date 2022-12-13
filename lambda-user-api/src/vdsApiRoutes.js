@@ -1,12 +1,9 @@
 'use strict'
 
-const AWSXRay = require('aws-xray-sdk-core')
 const {conf} = require("./conf");
 const ldap = require('ldapjs');
 const {convertBase64Fields, getProvidedEmail} = require("./util")
 
-const AWS = AWSXRay.captureAWS(require('aws-sdk'))
-AWS.config.update({ region: "us-east-1"});
 
 let tlsOptions;
 

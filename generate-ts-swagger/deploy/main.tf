@@ -1,6 +1,6 @@
 
 module "lambda-generate-ts-api" {
-  depends_on = [data.external.lambda-zip]
+#  depends_on = [data.external.lambda-zip]
   source              = "../../tf/modules/lambda"
   env                 = var.env
   must-be-role-prefix = var.role-prefix
@@ -9,7 +9,7 @@ module "lambda-generate-ts-api" {
   region              = "us-east-1"
   app                 = "edis"
   lambda-name         = "generate-ts-api"
-  file-name           = data.external.lambda-zip.result.lambda_zip
+  file-name           = "../artifacts/generate-ts-swagger.zip"
   lambda-description  = "Lambda function contains NED REST APIs implementation using Typescript."
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
@@ -23,7 +23,7 @@ module "lambda-generate-ts-api" {
 }
 
 module "api-gateway-generate-ts" {
-  depends_on = [data.external.swagger]
+#  depends_on = [data.external.swagger]
   source              = "../../tf/modules/api-gateway"
   env                 = var.env
   must-be-role-prefix = var.role-prefix

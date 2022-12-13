@@ -87,26 +87,26 @@ EOF
 # -----------------------------------------------------------------------------
 data "aws_caller_identity" "_" {}
 
-data "external" "swagger" {
-  program = ["bash", "-c", <<EOT
-(npm run swagger) >&2 && echo "{\"swagger_file\": \"../out/generate-ts-swagger.yml\"}"
-EOT
-  ]
-  working_dir = "../"
-}
+#data "external" "swagger" {
+#  program = ["bash", "-c", <<EOT
+#(npm run swagger) >&2 && echo "{\"swagger_file\": \"../out/generate-ts-swagger.yml\"}"
+#EOT
+#  ]
+#  working_dir = "../"
+#}
 
-data "external" "lambda-zip" {
-  depends_on = [data.external.swagger]
-  program = ["bash", "-c", <<EOT
-(npm run zip-prod) >&2 && echo "{\"lambda_zip\": \"../out/generate-ts-swagger.zip\"}"
-EOT
-  ]
-  working_dir = "../"
-}
+#data "external" "lambda-zip" {
+#  depends_on = [data.external.swagger]
+#  program = ["bash", "-c", <<EOT
+#(npm run zip-prod) >&2 && echo "{\"lambda_zip\": \"../out/generate-ts-swagger.zip\"}"
+#EOT
+#  ]
+#  working_dir = "../"
+#}
 
 data "template_file" "api_generate_ts_swagger" {
-  depends_on = [data.external.swagger]
-  template = file(data.external.swagger.result.swagger_file)
+#  depends_on = [data.external.swagger]
+  template = file("../artifacts/generate-ts-swagger.yml")
   vars = {
     lambda_invoke_arn = module.lambda-generate-ts-api.invoke_arn
   }
