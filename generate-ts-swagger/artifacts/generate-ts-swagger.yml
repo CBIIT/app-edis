@@ -1,0 +1,150 @@
+openapi: 3.0.0
+info:
+  title: User REST Web Service API
+  version: 0.1.0
+paths:
+  /generatets/v1/ned/changesByIc/{ic}:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                example: |-
+                  {
+                    "NUMBER_OF_RECORDS": 1,
+                    "NED_CHANGES_RECORD": [
+                      {
+                        "NIHSITE": "MD-BC",
+                        "ACTIONDATE": "2022-08-01",
+                        "ACTION": "modified",
+                        "UNIQUEIDENTIFIER": "1234567890",
+                        "ACTIONTIME": "00:01:01",
+                        "SN": "Smith",
+                        "NIHORGACRONYM": "NCI",
+                        "GIVENNAME": "MIKE"
+                      }
+                    ]
+                  }
+                properties:
+                  NUMBER_OF_RECORDS:
+                    type: number
+                    example: 1
+                  NED_CHANGES_RECORD:
+                    type: array
+                    example: |-
+                      [
+                        {
+                          "NIHSITE": "MD-BC",
+                          "ACTIONDATE": "2022-08-01",
+                          "ACTION": "modified",
+                          "UNIQUEIDENTIFIER": "1234567890",
+                          "ACTIONTIME": "00:01:01",
+                          "SN": "Smith",
+                          "NIHORGACRONYM": "NCI",
+                          "GIVENNAME": "MIKE"
+                        }
+                      ]
+                    items:
+                      type: object
+                      example: |-
+                        {
+                          "NIHSITE": "MD-BC",
+                          "ACTIONDATE": "2022-08-01",
+                          "ACTION": "modified",
+                          "UNIQUEIDENTIFIER": "1234567890",
+                          "ACTIONTIME": "00:01:01",
+                          "SN": "Smith",
+                          "NIHORGACRONYM": "NCI",
+                          "GIVENNAME": "MIKE"
+                        }
+                      properties:
+                        NIHSITE:
+                          type: string
+                          example: MD-BC
+                        ACTIONDATE:
+                          type: string
+                          example: '2022-08-01'
+                        ACTION:
+                          type: string
+                          example: modified
+                        UNIQUEIDENTIFIER:
+                          type: string
+                          example: '1234567890'
+                        ACTIONTIME:
+                          type: string
+                          example: '00:01:01'
+                        SN:
+                          type: string
+                          example: Smith
+                        NIHORGACRONYM:
+                          type: string
+                          example: NCI
+                        GIVENNAME:
+                          type: string
+                          example: MIKE
+              example: |-
+                {
+                  "NUMBER_OF_RECORDS": 1,
+                  "NED_CHANGES_RECORD": [
+                    {
+                      "NIHSITE": "MD-BC",
+                      "ACTIONDATE": "2022-08-01",
+                      "ACTION": "modified",
+                      "UNIQUEIDENTIFIER": "1234567890",
+                      "ACTIONTIME": "00:01:01",
+                      "SN": "Smith",
+                      "NIHORGACRONYM": "NCI",
+                      "GIVENNAME": "MIKE"
+                    }
+                  ]
+                }
+          description: ''
+        default:
+          content:
+            application/json: {}
+          description: ''
+      summary: List NED Changes for the given IC
+      description: List NED Change records that satisfy given IC criteria
+      parameters:
+        - in: path
+          name: ic
+          schema: {}
+          required: true
+        - in: query
+          name: fromDate
+          schema: {}
+        - in: query
+          name: fromTime
+          schema: {}
+        - in: query
+          name: toDate
+          schema: {}
+        - in: query
+          name: toTime
+          schema: {}
+        - in: query
+          name: Testing
+          schema: {}
+      tags:
+        - NED APIs Controller
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn}
+        httpMethod: POST
+        timeoutInMillis: 29000
+        type: aws_proxy
+components:
+  schemas: {}
+  responses: {}
+  parameters: {}
+  examples: {}
+  requestBodies: {}
+  headers: {}
+  securitySchemes: {}
+  links: {}
+  callbacks: {}
+tags:
+  - description: API endpoints to retrieve data from NED
+    name: NED APIs Controller
+servers: []
