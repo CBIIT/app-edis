@@ -304,7 +304,8 @@ module "lambda-load-from-nv-props" {
     LOG_LEVEL = "info"
     SECRET    = lookup(local.tier_conf, var.env).secret
     S3BUCKET  = var.s3bucket-for-vds-users
-    S3FOLDER  = "app-edis-data-nv-props-${var.env}"
+    S3FOLDER  = "app-edis-data-${var.env}/nv-props/current"
+    S3FILE  = "storage.parquet"
   })
   lambda-managed-policies        = { for idx, val in local.lambda_load_from_vds_role_policies: idx => val }
   lambda-layers = local.lambda-eracommons-layers
