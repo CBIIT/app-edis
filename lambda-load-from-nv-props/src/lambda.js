@@ -46,7 +46,7 @@ async function getSecretParameters() {
 //TODO
 const schema = new parquet.ParquetSchema({
     id: { type: 'UTF8'},
-    NIHORGPATH: { type: 'UTF8'},
+    CURR_NED_ID: { type: 'UTF8'},
     content: { type: 'UTF8'}
 });
 
@@ -101,6 +101,7 @@ async function populateToS3Bucket(s3Entry, rows) {
             console.debug('Append row...', prop.ASSET_KEY)
             await s3Entry.writer.appendRow({
                 id: '' + prop.ASSET_KEY,
+                CURR_NED_ID: '' + prop.CURR_NED_ID,
                 content: JSON.stringify(prop)});
             // console.debug('Append row... done', prop.ASSET_KEY)
         }
