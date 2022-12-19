@@ -20,10 +20,10 @@ const client = new AWS.SecretsManager({
 
 // Environment variables
 const logLevel = process.env['LOG_LEVEL'];
-const bucket   = process.env['S3BUCKET'];
-const folder   = process.env['S3FOLDER'];
-const current = 'current_props';
-const key = folder + '/' + current + '/' + 'storage.parquet';
+const s3bucket   = process.env['S3BUCKET'];
+const s3folder   = process.env['S3FOLDER'];
+const s3file   = process.env['S3FILE'];
+const s3key = s3folder + '/' + s3file;
 
 // Set the console log level
 if (logLevel && logLevel === 'info') {
@@ -68,7 +68,10 @@ module.exports.handler = async (event, context) => {
             connectString: conf.nv.connectString
         }, PROPSQL);
         console.debug("getProps...done. Records retrieved", result.rows.length );
-        const s3Entry = { key: key }
+        const s3Entry = 
+            { bucket: s3bucket,
+              key: s3key
+            }
 
         await populateToS3Bucket(s3Entry, result.rows);
         await closeWriteStreams(s3Entry);
@@ -89,7 +92,7 @@ async function populateToS3Bucket(s3Entry, rows) {
     try {
         //prepare single s3 bucket
         console.info('Created write stream for', s3Entry.key);
-        const {writeStream, uploadPromise} = createWriteStream(bucket, s3Entry.key);
+        const {writeStream, uploadPromise} = createWriteStream(s3Entry.bucket, s3Entry.key);
         s3Entry.writeStream = writeStream;
         s3Entry.uploadPromise = uploadPromise;
 
@@ -105,7 +108,7 @@ async function populateToS3Bucket(s3Entry, rows) {
                 content: JSON.stringify(prop)});
             // console.debug('Append row... done', prop.ASSET_KEY)
         }
-        console.info('Properties upload...done', counter);
+        console.info('Properties upload...done', rows.length);
     } catch (err) {
         console.error('Properties upload error',err); //TODO
     }
