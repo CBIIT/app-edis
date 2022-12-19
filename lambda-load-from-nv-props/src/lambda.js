@@ -100,7 +100,7 @@ async function populateToS3Bucket(s3Entry, rows) {
 
             console.debug('Append row...', prop.ASSET_KEY)
             await s3Entry.writer.appendRow({
-                id: prop.ASSET_KEY,
+                id: '' + prop.ASSET_KEY,
                 content: JSON.stringify(prop)});
             // console.debug('Append row... done', prop.ASSET_KEY)
         }
