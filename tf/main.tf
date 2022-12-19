@@ -287,6 +287,33 @@ module "lambda-sqs-delta-to-db" {
   lambda_timeout          = 900
 }
 
+module "lambda-load-from-nv-props" {
+  count = (var.build-userinfo) ? 1 : 0
+  source              = "./modules/lambda"
+  depends_on = [aws_iam_policy.iam_access_s3]
+  env                 = var.env
+  must-be-role-prefix = var.role-prefix
+  must-be-policy-arn  = var.policy-boundary-arn
+  resource_tag_name   = "edis"
+  region              = "us-east-1"
+  app                 = "edis"
+  lambda-name         = "load-from-nv-props"
+  file-name           = "../lambda-zip/lambda-load-from-nv-props.zip"
+  lambda-description  = "Lambda function to load nVision properties into S3 bucket"
+  lambda-env-variables = tomap({
+    LOG_LEVEL = "info"
+    SECRET    = lookup(local.tier_conf, var.env).secret
+    S3BUCKET  = var.s3bucket-for-vds-users
+    S3FOLDER  = "app-edis-data-nv-props-${var.env}"
+  })
+  lambda-managed-policies        = { for idx, val in local.lambda_load_from_vds_role_policies: idx => val }
+  lambda-layers = local.lambda-eracommons-layers
+  subnet_ids = [ var.subnet1, var.subnet2 ]
+  security_group_ids = [ var.vpcsg ]
+  lambda_timeout = 900
+  max-retry = 1
+}
+
 resource "aws_sqs_queue" "edis-sqs" {
   count                      = (var.build-userinfo) ? 1 : 0
   name                       = "edis-vds-delta-queue-${var.env}"
