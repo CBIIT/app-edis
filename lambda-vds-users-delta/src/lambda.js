@@ -32,6 +32,12 @@ module.exports.handler = async (event, context) => {
     context.callbackWaitsForEmptyEventLoop = false;
     console.debug('Lambda-athena-vds-user-delta', event);
     
+    //Overwrite athena express configuration from event values (optional)
+    if (event['DB_NAME'] !== undefined && event['S3SUBFOLDER'] !== undefined) {
+        athenaExpressConfig.db = event['DB_NAME'];
+        athenaExpressConfig.s3 = 's3://' + s3bucket + '/' + s3folder + '/' +  event['S3SUBFOLDER'] + '/delta/';
+    }
+    
     try {
         const athenaExpress = new AthenaExpress(athenaExpressConfig);
         let query = 'select content from (\n' +
