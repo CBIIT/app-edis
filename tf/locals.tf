@@ -116,7 +116,7 @@ EOF
     aws_iam_policy.iam_access_s3[0].arn
   ] : []
 
-  lambda_vds-delta-to-sqs_role_policies = (var.build-userinfo) ? [
+  lambda_delta-to-sqs_role_policies = (var.build-userinfo) ? [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
     aws_iam_policy.iam_access_s3[0].arn,
