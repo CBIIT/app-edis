@@ -476,6 +476,66 @@ resource "aws_glue_catalog_table" "edis-athena-current" {
   }
 }
 
+resource "aws_glue_catalog_table" "edis-athena-nvprops-prev" {
+  count = (var.build-userinfo) ? 1 : 0
+  database_name = aws_athena_database.edis-athena[0].name
+  name          = "nvprops_prev_t"
+  table_type = "EXTERNAL_TABLE"
+  parameters = {
+    EXTERNAL = "TRUE"
+  }
+  storage_descriptor {
+    location = "s3://${var.s3bucket-for-vds-users}/app-edis-data-${var.env}/nv-props/prev/"
+    input_format = "org.apache.hadoop.mapred.TextInputFormat"
+    output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
+    ser_de_info {
+      name = "my-serde"
+      serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+      parameters = {
+        "serialization.format" = 1
+      }
+    }
+    columns {
+      name = "id"
+      type = "string"
+    }
+    columns {
+      name = "content"
+      type = "string"
+    }
+  }
+}
+
+resource "aws_glue_catalog_table" "edis-athena-nvprops-current" {
+  count = (var.build-userinfo) ? 1 : 0
+  database_name = aws_athena_database.edis-athena[0].name
+  name          = "nvprops-current_t"
+  table_type = "EXTERNAL_TABLE"
+  parameters = {
+    EXTERNAL = "TRUE"
+  }
+  storage_descriptor {
+    location = "s3://${var.s3bucket-for-vds-users}/app-edis-data-${var.env}/nv-props/current/"
+    input_format = "org.apache.hadoop.mapred.TextInputFormat"
+    output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
+    ser_de_info {
+      name = "my-serde"
+      serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+      parameters = {
+        "serialization.format" = 1
+      }
+    }
+    columns {
+      name = "id"
+      type = "string"
+    }
+    columns {
+      name = "content"
+      type = "string"
+    }
+  }
+}
+
 # Global API Gateway resource
 resource "aws_iam_role" "api_gateway" {
   count = (!var.build-userinfo && !var.build-eracommons) ? 1 : 0
