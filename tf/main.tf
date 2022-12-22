@@ -262,7 +262,27 @@ module "lambda-prepare-s3-for-vds" {
       LOG_LEVEL = "info"
       SQS_URL     = "https://sqs.us-east-1.amazonaws.com/${data.aws_caller_identity._.account_id}/edis-vds-delta-queue-${var.env}"
     })
-    lambda-managed-policies        = { for idx, val in local.lambda_vds-delta-to-sqs_role_policies: idx => val }
+    lambda-managed-policies        = { for idx, val in local.lambda_delta-to-sqs_role_policies: idx => val }
+    lambda_timeout = 900
+}
+
+  module "lambda-delta-to-sqs" {
+    count = (var.build-userinfo) ? 1 : 0
+    source              = "./modules/lambda"
+    depends_on = [aws_iam_policy.iam_access_s3]
+    env                 = var.env
+    must-be-role-prefix = var.role-prefix
+    must-be-policy-arn  = var.policy-boundary-arn
+    resource_tag_name   = "edis"
+    region              = "us-east-1"
+    app                 = "edis"
+    lambda-name         = "delta-to-sqs"
+    file-name           = "../lambda-zip/lambda-delta-to-sqs.zip"
+    lambda-description  = "Lambda function to send updated records from S3 bucket into SQS"
+    lambda-env-variables = tomap({
+      LOG_LEVEL = "info"
+    })
+    lambda-managed-policies        = { for idx, val in local.lambda_delta-to-sqs_role_policies: idx => val }
     lambda_timeout = 900
 }
 
