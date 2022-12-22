@@ -13,7 +13,8 @@ const logLevel = process.env['LOG_LEVEL'];
 const s3bucket = process.env['S3BUCKET'];
 const s3folder = process.env['S3FOLDER'];
 const db       = process.env['DB_NAME'];
-
+let current_t  = process.env['DB_CURRENT_T'] || 'currentp_t';
+let prev_t     = process.env['DB_PREV_T']    || 'prevp_t';
 
 const athenaExpressConfig = {
     aws: AWS,
@@ -33,23 +34,31 @@ module.exports.handler = async (event, context) => {
     console.debug('Lambda-athena-vds-user-delta', event);
     
     //Overwrite athena express configuration from event values (optional)
-    if (event['DB_NAME'] !== undefined && event['S3SUBFOLDER'] !== undefined) {
+    if (event['DB_NAME'] !== undefined) {
         athenaExpressConfig.db = event['DB_NAME'];
+    }
+    if (event['S3SUBFOLDER'] !== undefined) {
         athenaExpressConfig.s3 = 's3://' + s3bucket + '/' + s3folder + '/' +  event['S3SUBFOLDER'] + '/delta/';
+    }
+    if (event['DB_CURRENT_T'] !== undefined) {
+        current_t = event['DB_CURRENT_T'];
+    }
+    if (event['DB_PREV_T'] !== undefined) {
+        prev_t = event['DB_PREV_T'];
     }
     
     try {
         const athenaExpress = new AthenaExpress(athenaExpressConfig);
         let query = 'select content from (\n' +
-            'select id, content from "currentp_t"\n' +
+            'select id, content from "' + current_t + '"\n' +
             'except\n' +
-            'select id, content from "prevp_t")';
+            'select id, content from "' + prev_t + '")';
         const deltaResults = await athenaExpress.query(query);
         console.info('New and changed delta:', deltaResults);
         
-        query = 'select id from "prevp_t"\n' +
+        query = 'select id from "' + prev_t + '"\n' +
             'except\n' +
-            'select id from "currentp_t"';
+            'select id from "' + current_t + '"';
         const deletedResults = await athenaExpress.query(query);
         console.info('Deleted delta:', deletedResults);
 
