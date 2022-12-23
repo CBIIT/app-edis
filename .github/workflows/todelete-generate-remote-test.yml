@@ -56,5 +56,15 @@ jobs:
           workflow: build-remote-test.yml
           run_number: ${{ inputs.run_number }}
           
+      - name: download pre-built resources
+        if: (inputs.run_number == '') && (inputs.run_id == '')
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build-remote-test.yml
+          workflow_conclusion: success
+          repo: CBIIT/app-edis
+          run_number: 4
+          name: generate-ts-swagger
+
       - name: Display artifacts
         run: ls -R
