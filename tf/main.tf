@@ -509,7 +509,7 @@ resource "aws_glue_catalog_table" "edis-athena-nvprops-prev" {
 resource "aws_glue_catalog_table" "edis-athena-nvprops-current" {
   count = (var.build-userinfo) ? 1 : 0
   database_name = aws_athena_database.edis-athena[0].name
-  name          = "nvprops-current_t"
+  name          = "nvprops_current_t"
   table_type = "EXTERNAL_TABLE"
   parameters = {
     EXTERNAL = "TRUE"
