@@ -12,14 +12,9 @@ on:
         required: true
         type: string
         default: 'ubuntu-latest'
-      workflow:
-        description: 'Build Workflow yml'
-        default: build-remote-test.yml
+      run_id:
+        description: 'Run ID'
         required: true
-        type: string
-      build_number:
-        description: 'Build Workflow number'
-        required: false
         type: string
 
 
@@ -45,11 +40,9 @@ jobs:
       - name: download pre-built resources
         uses: dawidd6/action-download-artifact@v2
         with:
-          workflow: ${{ inputs.workflow }}
           workflow_conclusion: success
           repo: CBIIT/app-edis
-          run_number: ${{ inputs.build_number }}
-          name: generate-ts-swagger
+          run_id: ${{ inputs.run_id }}
           
       - name: Display artifacts
         run: ls -R
