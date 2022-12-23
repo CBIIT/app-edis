@@ -43,7 +43,7 @@ on:
         type: string
       artifact_name:
         description: 'Artifacts name'
-        default: edis-built
+        default: generate-ts-swagger
         required: false
         type: string
       host-runner:
@@ -90,7 +90,7 @@ on:
         type: string
       artifact_name:
         description: 'Artifacts name'
-        default: edis-built
+        default: generate-ts-swagger
         required: true
         type: string
       host-runner:

@@ -49,7 +49,7 @@ jobs:
           workflow_conclusion: success
           repo: CBIIT/app-edis
           run_number: ${{ inputs.build_number }}
-          name: edis-built
+          name: generate-ts-swagger
           
       - name: Display artifacts
         run: ls -R
