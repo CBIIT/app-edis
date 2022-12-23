@@ -52,9 +52,8 @@ jobs:
 
       #Store the created zip files as artifacts
       - name: store-artifacts
-        working-directory: generate-ts-swagger
         uses: actions/upload-artifact@v3
         with:
-          name: generate-ts-swagger
+          name: built-artifacts
           path: |
-            ./out/*.*
+            generate-ts-swagger/out/*.*
