@@ -88,7 +88,7 @@ EOF
 data "aws_caller_identity" "_" {}
 
 data "template_file" "api_generate_ts_swagger" {
-  template = file("../out/generate-ts-swagger.yml")
+  template = file("../../built-artifacts/generate-ts-swagger.yml")
   vars = {
     lambda_invoke_arn = module.lambda-generate-ts-api.invoke_arn
   }

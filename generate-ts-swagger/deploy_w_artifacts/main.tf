@@ -8,7 +8,7 @@ module "lambda-generate-ts-api" {
   region              = "us-east-1"
   app                 = "edis"
   lambda-name         = "generate-ts-api"
-  file-name           = "../out/generate-ts-swagger.zip"
+  file-name           = "../../built-artifacts/generate-ts-swagger.zip"
   lambda-description  = "Lambda function contains NED REST APIs implementation using Typescript."
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
