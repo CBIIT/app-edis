@@ -54,7 +54,7 @@ jobs:
       - name: store-artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: generate-ts-swagger
+#          name: generate-ts-swagger
           path: |
             ./generate-ts-swagger/out/*.*
             README.md
