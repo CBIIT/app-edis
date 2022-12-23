@@ -32,18 +32,8 @@ on:
         default: CBIIT/app-edis
         required: true
         type: string
-      artifact_workflow:
-        description: 'Artifacts Build Workflow yml'
-        default: build-remote-test.yml
-        required: false
-        type: string
       artifact_build:
-        description: 'Artifacts Build Workflow number'
-        required: false
-        type: string
-      artifact_name:
-        description: 'Artifacts name'
-        default: generate-ts-swagger
+        description: 'Artifacts Run ID'
         required: false
         type: string
       host-runner:
@@ -79,13 +69,8 @@ on:
         default: CBIIT/app-edis
         required: true
         type: string
-      artifact_workflow:
-        description: 'Artifacts Build Workflow yml'
-        default: build-remote-test.yml
-        required: true
-        type: string
       artifact_build:
-        description: 'Artifacts Build Workflow number'
+        description: 'Artifacts Run ID'
         required: true
         type: string
       artifact_name:
@@ -123,11 +108,9 @@ jobs:
       - name: download pre-built resources
         uses: dawidd6/action-download-artifact@v2
         with:
-          workflow: ${{ inputs.artifact_workflow }}
           workflow_conclusion: success
           repo: ${{ inputs.artifact_repo }}
-          run_number: ${{ inputs.artifact_build }}
-          name: ${{ inputs.artifact_name }}
+          run_id: ${{ inputs.artifact_build }}
       
       # Runs a set of commands using the runners shell
       - name: Workflow Parameters
