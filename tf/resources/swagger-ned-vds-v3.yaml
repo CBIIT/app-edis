@@ -262,6 +262,67 @@ paths:
                   ]
                 }
 
+  /userapi/nv/props:
+    get:
+      tags:
+        - clients
+      summary: List all nVision user properties
+      operationId: listNVProperties
+      description: |
+        Get all nVision property records
+      parameters:
+        - name: lastEvaluatedKey
+          in: query
+          description: Last Evaluated Key from previous request
+          required: false
+          schema:
+            type: string
+            example: '12345'
+      responses:
+        '200':
+          $ref: '#/components/responses/nvPropsResponse'
+      x-amazon-apigateway-integration:
+        type: aws
+        httpMethod: POST
+        uri: ${ddb_action_scan}
+        credentials: ${prop_ddb_role_arn}
+        timeoutInMillis: 29000
+        passthroughBehavior: when_no_templates
+        cacheKeyParameters:
+          - method.request.querystring.lastEvaluatedKey
+        requestTemplates:
+          application/json: |-
+            #set($lastEvaluatedKey = $input.params('lastEvaluatedKey'))
+            {
+              "TableName": "${props_table_name}"
+            #if($lastEvaluatedKey != "")
+              , "ExclusiveStartKey": { "NEDId": { "S": "$lastEvaluatedKey" } }
+            #end
+            }
+        responses:
+          2\d{2}:
+            statusCode: 200
+            responseTemplates:
+              application/json: |-
+                #set ($inputRoot = $input.path('$'))
+                #set ($lastEvaluatedKey = $inputRoot.LastEvaluatedKey.NEDId.S)
+                {
+                  "count": $inputRoot.Count,
+                #if($lastEvaluatedKey != "")
+                  "lastEvaluatedKey": "$lastEvaluatedKey",
+                #end
+                  "items": [
+                #foreach($elem in $inputRoot.Items)
+                    {
+                      "UNIQUEIDENTIFIER": "$elem.UNIQUEIDENTIFIER.S",
+                      "NIHDUPUID": "$elem.NIHDUPUID.S",
+                      ...
+                      "providedEmail": "$elem.providedEmail.S"
+                    }#if($foreach.hasNext),#end
+
+                #end
+                  ]
+                }
 
 components:
   responses: 
