@@ -179,7 +179,9 @@ data "template_file" "api_userinfo_swagger" {
     ddb_action_scan     = "arn:aws:apigateway:us-east-1:dynamodb:action/Scan"
     ddb_action_query    = "arn:aws:apigateway:us-east-1:dynamodb:action/Query"
     ddb_role_arn        = module.ddb-userinfo[0].iam-access-ddb-role-arn
+    prop_ddb_role_arn   = module.ddb-userinfo[0].iam-access-nv-props-ddb-role-arn
     users_table_name    = module.ddb-userinfo[0].ddb-name
+    props_table_name    = module.ddb-userinfo[0].nv-props-ddb-name
   }
 }
 
