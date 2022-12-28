@@ -301,38 +301,12 @@ module "lambda-sqs-delta-to-db" {
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
     TABLE     = module.ddb-userinfo[0].ddb-name
+    TABLE_KEY = "NEDId"
     SQS_URL     = "https://sqs.us-east-1.amazonaws.com/${data.aws_caller_identity._.account_id}/edis-vds-delta-queue-${var.env}"
+    PURGE_DELETED = "false"
   })
   lambda-managed-policies = {for idx, val in local.lambda_sqs-delta-to-db_role_policies : idx => val}
   lambda_timeout          = 900
-}
-
-module "lambda-load-from-nv-props" {
-  count = (var.build-userinfo) ? 1 : 0
-  source              = "./modules/lambda"
-  depends_on = [aws_iam_policy.iam_access_s3]
-  env                 = var.env
-  must-be-role-prefix = var.role-prefix
-  must-be-policy-arn  = var.policy-boundary-arn
-  resource_tag_name   = "edis"
-  region              = "us-east-1"
-  app                 = "edis"
-  lambda-name         = "load-from-nv-props"
-  file-name           = "../lambda-zip/lambda-load-from-nv-props.zip"
-  lambda-description  = "Lambda function to load nVision properties into S3 bucket"
-  lambda-env-variables = tomap({
-    LOG_LEVEL = "info"
-    SECRET    = lookup(local.tier_conf, var.env).secret
-    S3BUCKET  = var.s3bucket-for-vds-users
-    S3FOLDER  = "app-edis-data-${var.env}/nv-props/current"
-    S3FILE  = "storage.parquet"
-  })
-  lambda-managed-policies        = { for idx, val in local.lambda_load_from_vds_role_policies: idx => val }
-  lambda-layers = local.lambda-eracommons-layers
-  subnet_ids = [ var.subnet1, var.subnet2 ]
-  security_group_ids = [ var.vpcsg ]
-  lambda_timeout = 900
-  max-retry = 1
 }
 
 resource "aws_sqs_queue" "edis-sqs" {
@@ -467,66 +441,6 @@ resource "aws_glue_catalog_table" "edis-athena-current" {
     }
     columns {
       name = "division"
-      type = "string"
-    }
-    columns {
-      name = "content"
-      type = "string"
-    }
-  }
-}
-
-resource "aws_glue_catalog_table" "edis-athena-nvprops-prev" {
-  count = (var.build-userinfo) ? 1 : 0
-  database_name = aws_athena_database.edis-athena[0].name
-  name          = "nvprops_prev_t"
-  table_type = "EXTERNAL_TABLE"
-  parameters = {
-    EXTERNAL = "TRUE"
-  }
-  storage_descriptor {
-    location = "s3://${var.s3bucket-for-vds-users}/app-edis-data-${var.env}/nv-props/prev/"
-    input_format = "org.apache.hadoop.mapred.TextInputFormat"
-    output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
-    ser_de_info {
-      name = "my-serde"
-      serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
-      parameters = {
-        "serialization.format" = 1
-      }
-    }
-    columns {
-      name = "id"
-      type = "string"
-    }
-    columns {
-      name = "content"
-      type = "string"
-    }
-  }
-}
-
-resource "aws_glue_catalog_table" "edis-athena-nvprops-current" {
-  count = (var.build-userinfo) ? 1 : 0
-  database_name = aws_athena_database.edis-athena[0].name
-  name          = "nvprops_current_t"
-  table_type = "EXTERNAL_TABLE"
-  parameters = {
-    EXTERNAL = "TRUE"
-  }
-  storage_descriptor {
-    location = "s3://${var.s3bucket-for-vds-users}/app-edis-data-${var.env}/nv-props/current/"
-    input_format = "org.apache.hadoop.mapred.TextInputFormat"
-    output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
-    ser_de_info {
-      name = "my-serde"
-      serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
-      parameters = {
-        "serialization.format" = 1
-      }
-    }
-    columns {
-      name = "id"
       type = "string"
     }
     columns {

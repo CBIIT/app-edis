@@ -5,6 +5,8 @@ const DynamoDB = require('aws-sdk/clients/dynamodb')
 // Environment variables
 const logLevel = process.env['LOG_LEVEL'];
 const table    = process.env['TABLE'];
+const table_key = process.env['TABLE_KEY'];
+const purge = process.env['PURGE_DELETED'];
 
 // Set the console log level
 if (logLevel && logLevel === 'info') {
@@ -36,7 +38,11 @@ module.exports.handler = async (event, context) => {
         await dbUpdate(cmd.data);
         console.info('Update db records has been successful in range', marker, start, end);
       } else if (action === 'delete' && table !== 'T' && cmd.data.length > 0) {
-        await dbUpdateDeleted(cmd.data, marker);
+        if (purge === 'true') {
+          await dbDelete(cmd.data);
+        } else {
+          await dbUpdateDeleted(cmd.data, marker);
+        }
         console.info('Archive db records has been successful in range', marker, start, end);
       }
     }
@@ -74,6 +80,36 @@ async function dbUpdate(chunk) {
   console.debug('db refresh result ', data);
 }
 
+async function dbDelete(chunk) {
+  if (table === 'T') {
+    console.debug('Finished in test retrieval mode');
+    return;
+  }
+  console.debug('Deleting data from DynamoDb table',  table, 'with chunk', chunk.length);
+  let batch = [];
+  for (const id of chunk) {
+    batch.push({
+      DeleteRequest : {
+        Key: {
+          [table_key]: id
+        }
+      }
+    });
+  }
+
+  if (batch.length === 0) {
+    return; // nothing to update
+  }
+
+  const params = {
+    RequestItems: {
+      [table]: batch
+    }
+  };
+  const data = await processItems(params);
+  console.debug('db delete result ', data);
+}
+
 async function processItems(params) {
   
   const result = await docClient.batchWrite(params).promise();
@@ -95,7 +131,7 @@ async function dbUpdateDeleted(chunk, marker) {
   let batch = [];
   for (const id of chunk) {
     batch.push({
-      NEDId: id
+      [table_key]: id
     });
   }
   

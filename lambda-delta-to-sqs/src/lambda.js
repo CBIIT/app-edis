@@ -23,7 +23,7 @@ const SQS = new AWS.SQS();
  * {
  *     delta   -  S3 key to "delta" csv file 
  *     deleted - S3 key to "deleted" csv file
- *     sqs_url - URL for SQS queue
+ *     sqs_url_key - environment variable name to select URL for SQS queue
  * }
  */
 module.exports.handler = async (event, context) => {
@@ -32,7 +32,15 @@ module.exports.handler = async (event, context) => {
 
   const deltaS3path = event['delta'];
   const deltaS3deleted = event['deleted'];
-  const sqsQueueUrl = event['sqs_url'];
+  const sqs_url_key = event['sqs_url_key'];
+  
+  let sqsQueueUrl = '';
+  if (sqs_url_key !== undefined && sqs_url_key !== '') {
+    sqsQueueUrl = process.env[sqs_url_key] || '';
+  }
+  if (sqsQueueUrl === '') {
+    throw new Error('Event parameter sqs_url_key is missing or incorrect: ' + sqs_url_key);
+  }
 
 // Create a refresh mark as YYYYMMddHH
   const marker = formatDate(new Date());
