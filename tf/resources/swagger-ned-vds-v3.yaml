@@ -314,8 +314,8 @@ paths:
                   "items": [
                 #foreach($elem in $inputRoot.Items)
                     {
-                      "UNIQUEIDENTIFIER": "$elem.UNIQUEIDENTIFIER.S",
-                      "NIHDUPUID": "$elem.NIHDUPUID.S",
+                      "ACCESS_KEY": "$elem.ACCESS_KEY.S",
+                      "NIH_CURR_ID": "$elem.NIH_CURR_ID.S",
                       ...
                       "providedEmail": "$elem.providedEmail.S"
                     }#if($foreach.hasNext),#end
@@ -365,6 +365,24 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/VDSUsersChunk'
+
+    nvPropsResponse:
+      description: Response with a list of nVision Properties objects
+      content:
+        application/json:
+          schema:
+            type: object
+            xml:
+              wrapped: true
+              name: nvprop
+            properties:
+              NumberOfRecords:
+                type: integer
+                description: number of nVision Properties objects in response
+              User:
+                type: array
+                items:
+                  $ref: '#/components/schemas/nVProperty'
 
   schemas:
 
@@ -610,3 +628,13 @@ components:
           description: Email calculated based on three fields (by priority) - proxyAddresses, MAIL, NIHPRIMARYSMTP 
           type: string
           example: smithj@mail.gov
+
+    nVProperty:
+      type: object
+      properties:
+        ACCESS_KEY:
+          type: string
+          example: 0011234567
+        NED_CURR_ID:
+          type: string
+          example: 0013312345
