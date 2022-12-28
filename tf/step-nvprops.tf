@@ -116,7 +116,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_nv_props" {
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "FunctionName": "${module.lambda-vds-users-delta[0].arn}:$LATEST"
+        "FunctionName": "${module.lambda-vds-users-delta[0].arn}:$LATEST",
         "Payload": {
           "DB_NAME": "vdsdb_dev",
           "S3SUBFOLDER": "nv-props",
