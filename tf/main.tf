@@ -281,6 +281,8 @@ module "lambda-prepare-s3-for-vds" {
     lambda-description  = "Lambda function to send updated records from S3 bucket into SQS"
     lambda-env-variables = tomap({
       LOG_LEVEL = "info"
+      VDS_SQS_URL     = "https://sqs.us-east-1.amazonaws.com/${data.aws_caller_identity._.account_id}/edis-vds-delta-queue-${var.env}"
+      NVPROPS_SQS_URL = "https://sqs.us-east-1.amazonaws.com/${data.aws_caller_identity._.account_id}/edis-nv-props-delta-queue-${var.env}"
     })
     lambda-managed-policies        = { for idx, val in local.lambda_delta-to-sqs_role_policies: idx => val }
     lambda_timeout = 900
