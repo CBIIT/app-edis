@@ -79,7 +79,7 @@ data "aws_iam_policy_document" "iam_refresh_vds" {
 
 resource "aws_iam_policy" "iam_refresh_vds" {
   count = (var.build-userinfo) ? 1 : 0
-  name        = "${var.role-prefix}-edis-start-vds-refresh-${var.env}"
+  name        = "${var.role-prefix}-start-vds-refresh-${var.env}"
   path        = "/"
   description = "Allow trigger event to start refresh vds"
   policy      = data.aws_iam_policy_document.iam_refresh_vds.json
@@ -87,7 +87,7 @@ resource "aws_iam_policy" "iam_refresh_vds" {
 
 resource "aws_iam_role" "refresh_vds_trigger" {
   count = (var.build-userinfo) ? 1 : 0
-  name               = "${var.role-prefix}-edis-start-vds-refresh-${var.env}"
+  name               = "${var.role-prefix}-start-vds-refresh-${var.env}"
   assume_role_policy = data.aws_iam_policy_document.assume_role_event_trigger.json
   managed_policy_arns = (var.build-userinfo) ? [
     aws_iam_policy.iam_refresh_vds[0].arn
@@ -96,4 +96,33 @@ resource "aws_iam_role" "refresh_vds_trigger" {
   permissions_boundary = var.policy-boundary-arn
 }
 
+data "aws_iam_policy_document" "iam_refresh_nv_props" {
+  statement {
+    sid     = "executeStep"
+    effect  = "Allow"
+    actions = ["states:StartExecution"]
+    resources = (var.build-userinfo) ? [
+      aws_sfn_state_machine.edis_sfn_refresh_nv_props[0].arn
+    ] : []
+  }
+}
+
+resource "aws_iam_policy" "iam_refresh_nv_props" {
+  count = (var.build-userinfo) ? 1 : 0
+  name        = "${var.role-prefix}-start-nv-props-refresh-${var.env}"
+  path        = "/"
+  description = "Allow trigger event to start refresh nVision properties"
+  policy      = data.aws_iam_policy_document.iam_refresh_nv_props.json
+}
+
+resource "aws_iam_role" "refresh_nv_props_trigger" {
+  count = (var.build-userinfo) ? 1 : 0
+  name               = "${var.role-prefix}-start-nv-props-refresh-${var.env}"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_event_trigger.json
+  managed_policy_arns = (var.build-userinfo) ? [
+    aws_iam_policy.iam_refresh_nv_props[0].arn
+  ] : []
+  path                 = "/"
+  permissions_boundary = var.policy-boundary-arn
+}
 

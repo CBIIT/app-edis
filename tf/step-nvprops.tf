@@ -120,7 +120,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_nv_props" {
         "Payload": {
           "DB_NAME": "vdsdb_dev",
           "S3SUBFOLDER": "nv-props",
-          "DB_CURRENT_T": "nvprops-current_t",
+          "DB_CURRENT_T": "nvprops_current_t",
           "DB_PREV_T": "nvprops_prev_t"
         }
       },
