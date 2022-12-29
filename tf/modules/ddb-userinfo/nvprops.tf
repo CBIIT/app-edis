@@ -1,12 +1,12 @@
 
 resource "aws_dynamodb_table" "nvprops_table" {
   name           = "nvprops-${var.env}"
-  hash_key       = "ACCESS_KEY"
+  hash_key       = "ASSET_KEY"
   billing_mode   = "PAY_PER_REQUEST"
 
 
   attribute {
-    name = "ACCESS_KEY"
+    name = "ASSET_KEY"
     type = "S"
   }
   attribute {
@@ -16,7 +16,7 @@ resource "aws_dynamodb_table" "nvprops_table" {
 
   global_secondary_index {
     hash_key        = "CURR_NED_ID"
-    range_key       = "ACCESS_KEY"
+    range_key       = "ASSET_KEY"
     name            = "nedidIndex"
     projection_type = "ALL"
   }
