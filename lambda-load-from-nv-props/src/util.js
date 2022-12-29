@@ -19,6 +19,9 @@ function convertForDynamoDB(row) {
     if (res['ASSET_KEY'] === undefined) {
         res['ASSET_KEY'] = 'UNKNOWN';
     }
+    else {
+        res['ASSET_KEY'] = '' + res['ASSET_KEY']; // convert to string
+    }
     return res;
 }
 
