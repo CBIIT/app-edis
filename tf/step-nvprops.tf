@@ -258,5 +258,5 @@ resource "aws_cloudwatch_event_target" "edis_refresh_nv_props" {
   count = (var.build-userinfo) ? 1 : 0
   arn  = aws_sfn_state_machine.edis_sfn_refresh_nv_props[0].arn
   rule = aws_cloudwatch_event_rule.edis_refresh_nv_props[0].name
-  role_arn = aws_iam_role.refresh_vds_trigger[0].arn
+  role_arn = aws_iam_role.refresh_nv_props_trigger[0].arn
 }
