@@ -31,16 +31,7 @@ function padTo2Digits(num) {
 }
 
 function formatDate(date) {
-    return (
-        [
-            date.getFullYear(),
-            padTo2Digits(date.getMonth() + 1),
-            padTo2Digits(date.getDate()),
-            padTo2Digits(date.getHours()),
-            padTo2Digits(date.getMinutes()),
-            padTo2Digits(date.getSeconds()),
-        ].join('')
-    );
+    return date.toISOString();
 }
 
 function cleanString(str) {
