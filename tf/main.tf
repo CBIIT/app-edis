@@ -100,7 +100,7 @@ module "ddb-userinfo" {
 }
 
 module "lambda-userinfo-api" {
-  count = (var.build-userinfo) ? 1 : 0
+  count = (var.build-userinfo) ? 0 : 0
   source              = "./modules/lambda"
   env                 = var.env
   must-be-role-prefix = var.role-prefix
@@ -123,7 +123,7 @@ module "lambda-userinfo-api" {
 }
 
 module "api-gateway-userinfo" {
-  count = (var.build-userinfo) ? 1 : 0
+  count = (var.build-userinfo) ? 0 : 0
   source              = "./modules/api-gateway"
   env                 = var.env
   must-be-role-prefix = var.role-prefix
