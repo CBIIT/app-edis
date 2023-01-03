@@ -99,44 +99,44 @@ module "ddb-userinfo" {
   must-be-policy-arn  = var.policy-boundary-arn
 }
 
-module "lambda-userinfo-api" {
-  count = (var.build-userinfo) ? 0 : 0
-  source              = "./modules/lambda"
-  env                 = var.env
-  must-be-role-prefix = var.role-prefix
-  must-be-policy-arn  = var.policy-boundary-arn
-  resource_tag_name   = "edis"
-  region              = "us-east-1"
-  app                 = "edis"
-  lambda-name         = "userinfo-api"
-  file-name           = "../lambda-zip/lambda-user-api.zip"
-  lambda-description  = "Lambda function contains NED and VDS users info REST APIs implementation."
-  lambda-env-variables = tomap({
-    LOG_LEVEL = "info"
-    SECRET    = lookup(local.tier_conf, var.env).secret
-  })
-  lambda-managed-policies        = { for idx, val in local.lambda_userinfo_api_role_policies: idx => val }
-  create_api_gateway_integration = true
-  api_gateway_rest_api_id        = module.api-gateway-userinfo[0].rest_api_id
-  subnet_ids = [ var.subnet1, var.subnet2 ]
-  security_group_ids = [ var.vpcsg ]
-}
-
-module "api-gateway-userinfo" {
-  count = (var.build-userinfo) ? 0 : 0
-  source              = "./modules/api-gateway"
-  env                 = var.env
-  must-be-role-prefix = var.role-prefix
-  must-be-policy-arn  = var.policy-boundary-arn
-  okta-issuer         = lookup(local.tier_conf, var.env).issuer
-  app                 = "edis"
-  app-description     = "Enterprise Data & Integration Services Web Services for NED and VDS user info"
-  api-swagger         = data.template_file.api_userinfo_swagger[0].rendered
-  api-resource-policy = local.era_commons_resource_policy
-  api-gateway-name    = "userinfo"
-  resource_tag_name   = "edis"
-  auth_lambda_file_name = "../lambda-zip/lambda-auth.zip"
-}
+#module "lambda-userinfo-api" {
+#  count = (var.build-userinfo) ? 0 : 0
+#  source              = "./modules/lambda"
+#  env                 = var.env
+#  must-be-role-prefix = var.role-prefix
+#  must-be-policy-arn  = var.policy-boundary-arn
+#  resource_tag_name   = "edis"
+#  region              = "us-east-1"
+#  app                 = "edis"
+#  lambda-name         = "userinfo-api"
+#  file-name           = "../lambda-zip/lambda-user-api.zip"
+#  lambda-description  = "Lambda function contains NED and VDS users info REST APIs implementation."
+#  lambda-env-variables = tomap({
+#    LOG_LEVEL = "info"
+#    SECRET    = lookup(local.tier_conf, var.env).secret
+#  })
+#  lambda-managed-policies        = { for idx, val in local.lambda_userinfo_api_role_policies: idx => val }
+#  create_api_gateway_integration = true
+#  api_gateway_rest_api_id        = module.api-gateway-userinfo[0].rest_api_id
+#  subnet_ids = [ var.subnet1, var.subnet2 ]
+#  security_group_ids = [ var.vpcsg ]
+#}
+#
+#module "api-gateway-userinfo" {
+#  count = (var.build-userinfo) ? 0 : 0
+#  source              = "./modules/api-gateway"
+#  env                 = var.env
+#  must-be-role-prefix = var.role-prefix
+#  must-be-policy-arn  = var.policy-boundary-arn
+#  okta-issuer         = lookup(local.tier_conf, var.env).issuer
+#  app                 = "edis"
+#  app-description     = "Enterprise Data & Integration Services Web Services for NED and VDS user info"
+#  api-swagger         = data.template_file.api_userinfo_swagger[0].rendered
+#  api-resource-policy = local.era_commons_resource_policy
+#  api-gateway-name    = "userinfo"
+#  resource_tag_name   = "edis"
+#  auth_lambda_file_name = "../lambda-zip/lambda-auth.zip"
+#}
 
 #module "lambda-generate-ts-api" {
 #  count = (var.build-userinfo) ? 1 : 0
