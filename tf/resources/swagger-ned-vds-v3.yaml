@@ -384,6 +384,144 @@ paths:
                   ]
                 }
 
+  /userapi/nv/props/user/{nihId}:
+    get:
+      tags:
+        - clients
+      summary: List all nVision properties for given user
+      operationId: listNVPropertiesByUserId
+      description: |
+        Get all nVision property records for given user NIH ID
+      parameters:
+        - name: nihId
+          in: path
+          description: User NIH ID
+          required: true
+          schema:
+            type: string
+            example: '01234567890'
+        - name: lastEvaluatedKey
+          in: query
+          description: Last Evaluated Key from previous request
+          required: false
+          schema:
+            type: string
+            example: '12345'
+      responses:
+        '200':
+          $ref: '#/components/responses/nvPropsResponse'
+      x-amazon-apigateway-integration:
+        type: aws
+        httpMethod: POST
+        uri: ${ddb_action_query}
+        credentials: ${prop_ddb_role_arn}
+        timeoutInMillis: 29000
+        passthroughBehavior: when_no_templates
+        cacheKeyParameters:
+          - method.request.path.nihId
+          - method.request.querystring.lastEvaluatedKey
+        requestTemplates:
+          application/json: |-
+            #set($nihId = $input.params('nihId'))
+            #set($lastEvaluatedKey = $input.params('lastEvaluatedKey'))
+            {
+              "TableName": "${props_table_name}",
+              "IndexName": "nedidIndex",
+              "KeyConditionExpression": "CURR_NED_ID = :nihId",
+              "ExpressionAttributeValues": {
+                ":nihId": { "S": "$nihId" }
+              }
+
+            #if($lastEvaluatedKey != "")
+              , "ExclusiveStartKey": { "ASSET_KEY": { "S": "$lastEvaluatedKey" } }
+              , "ExclusiveStartKey": { "ASSET_KEY": { "S": "$lastEvaluatedKey" }, "CURR_NED_ID": { "S": "$nihId" } }
+            #end
+            }
+        responses:
+          2\d{2}:
+            statusCode: 200
+            responseTemplates:
+              application/json: |-
+                #set ($inputRoot = $input.path('$'))
+                #set ($lastEvaluatedKey = $inputRoot.LastEvaluatedKey.ASSET_KEY.S)
+                {
+                  "count": $inputRoot.Count,
+                #if($lastEvaluatedKey != "")
+                  "lastEvaluatedKey": "$lastEvaluatedKey",
+                #end
+                  "items": [
+                #foreach($elem in $inputRoot.Items)
+                    {
+                      "PRIMARY_CONTACT_FULL_NM": "$elem.PRIMARY_CONTACT_FULL_NM.S",
+                      "LOCATION_FULL_STR": "$elem.LOCATION_FULL_STR.S",
+                      "SUPERVISOR_FULL_NAME": "$elem.SUPERVISOR_FULL_NAME.S",
+                      "PATIENT_CARE_FLG": "$elem.PATIENT_CARE_FLG.S",
+                      "PRIMARY_CONTACT_LOCATION": "$elem.PRIMARY_CONTACT_LOCATION.S",
+                      "ACCTBLE_USER_FULL_LOCATION": "$elem.ACCTBLE_USER_FULL_LOCATION.S",
+                      "SUPERVISOR_FULL_LOCATION": "$elem.SUPERVISOR_FULL_LOCATION.S",
+                      "OFFICIAL_NM": "$elem.OFFICIAL_NM.S",
+                      "WRKF_KEY": "$elem.WRKF_KEY.N",
+                      "SUPERVISOR_WRKF_KEY": "$elem.SUPERVISOR_WRKF_KEY.N",
+                      "CURRENT_FLG": "$elem.CURRENT_FLG.S",
+                      "ASSET_VALUE_KEY": "$elem.ASSET_VALUE_KEY.N",
+                      "ASSET_KEY": "$elem.ASSET_KEY.S",
+                      "INTEREST_ASSET_KEY": "$elem.INTEREST_ASSET_KEY.N",
+                      "INITIAL_EVENT_KEY": "$elem.INITIAL_EVENT_KEY.N",
+                      "EVENT_KEY": "$elem.EVENT_KEY.N",
+                      "ACTIVITY_STATUS_DESC": "$elem.ACTIVITY_STATUS_DESC.S",
+                      "ASSET_TYP_CD": "$elem.ASSET_TYP_CD.S",
+                      "IC_CD": "$elem.IC_CD.S",
+                      "ORG_CD": "$elem.ORG_CD.S",
+                      "MANUFACTURER_NM": "$elem.MANUFACTURER_NM.S",
+                      "MODEL_NBR": "$elem.MODEL_NBR.S",
+                      "SERIAL_NBR": "$elem.SERIAL_NBR.S",
+                      "FULL_NAME": "$elem.FULL_NAME.S",
+                      "CURR_NED_ID": "$elem.CURR_NED_ID.S",
+                      "ORIG_NED_ID": "$elem.ORIG_NED_ID.S",
+                      "PO_NBR": "$elem.PO_NBR.S",
+                      "ACQUISITION_DT": "$elem.ACQUISITION_DT.S",
+                      "LAST_INVENTORY_DT": "$elem.LAST_INVENTORY_DT.S",
+                      "SENSITIVE_FLG": "$elem.SENSITIVE_FLG.S",
+                      "ASSET_TYP_DESC": "$elem.ASSET_TYP_DESC.S",
+                      "ACQUISITION_COST": "$elem.ACQUISITION_COST.N",
+                      "AGRMNT_ID": "$elem.AGRMNT_ID.S",
+                      "LAST_INVENTORY_RESOLUTION": "$elem.LAST_INVENTORY_RESOLUTION.S",
+                      "UNCAPITALIZED_REASON_CD": "$elem.UNCAPITALIZED_REASON_CD.S",
+                      "UNCAPITALIZED_REASON_DESC": "$elem.UNCAPITALIZED_REASON_DESC.S",
+                      "CONDITION_DESC": "$elem.CONDITION_DESC.S",
+                      "EVENT_DT": "$elem.EVENT_DT.S",
+                      "EVENT_TYP_DESC": "$elem.EVENT_TYP_DESC.S",
+                      "PERSONAL_CUSTODY_FLG": "$elem.PERSONAL_CUSTODY_FLG.S",
+                      "SERVICE_LIFE": "$elem.SERVICE_LIFE.S",
+                      "ASSET_DECAL_NBR": "$elem.ASSET_DECAL_NBR.S",
+                      "CAPITAL_FLG": "$elem.CAPITAL_FLG.S",
+                      "APPROPRIATION_CD": "$elem.APPROPRIATION_CD.S",
+                      "ACCUMULATED_DEPRECIATION": "$elem.ACCUMULATED_DEPRECIATION.S",
+                      "MONTHLY_DEPRECIATION": "$elem.MONTHLY_DEPRECIATION.N",
+                      "YTD_DEPRECIATION": "$elem.YTD_DEPRECIATION.N",
+                      "ASSET_VALUE": "$elem.ASSET_VALUE.N",
+                      "OTHER_USER": "$elem.OTHER_USER.S",
+                      "OLD_ASSET_ID": "$elem.OLD_ASSET_ID.S",
+                      "RESPONSIBILITY_BEGIN_DT": "$elem.RESPONSIBILITY_BEGIN_DT.S",
+                      "NON_STANDARD_DESC": "$elem.NON_STANDARD_DESC.S",
+                      "WARRANTY_EXPIRATION_DT": "$elem.WARRANTY_EXPIRATION_DT.S",
+                      "LOCATION_OFFSITE_DESC": "$elem.LOCATION_OFFSITE_DESC.S",
+                      "LOCATION_ADDRESS_LINE_1": "$elem.LOCATION_ADDRESS_LINE_1.S",
+                      "LOCATION_ADDRESS_LINE_2": "$elem.LOCATION_ADDRESS_LINE_2.S",
+                      "LOCATION_ADDRESS_LINE_3": "$elem.LOCATION_ADDRESS_LINE_3.S",
+                      "LOCATION_CITY_NM": "$elem.LOCATION_CITY_NM.S",
+                      "LOCATION_STATE_CD": "$elem.LOCATION_STATE_CD.S",
+                      "LOCATION_STATE_NM": "$elem.LOCATION_STATE_NM.S",
+                      "LOCATION_COUNTRY_NM": "$elem.LOCATION_COUNTRY_NM.S",
+                      "LOCATION_COUNTY_NM": "$elem.LOCATION_COUNTY_NM.S",
+                      "LOCATION_POSTAL_CD": "$elem.LOCATION_POSTAL_CD.S",
+                      "FLAG_1": "$elem.FLAG_1.S"
+                    }#if($foreach.hasNext),#end
+
+                #end
+                  ]
+                }
+
 components:
   responses: 
     vdsresponse:
