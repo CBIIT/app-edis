@@ -40,10 +40,11 @@ function formatDate(date) {
     );
 }
 
-function getProvidedEmail(entry) {
+function getEmail(obj) {
+
     let result = null;
 
-    const proxyEmails = entry.proxyAddresses;
+    const proxyEmails = obj.proxyAddresses;
     if (proxyEmails) {
         if (Array.isArray(proxyEmails)) {
             proxyEmails.forEach(email => {
@@ -59,6 +60,12 @@ function getProvidedEmail(entry) {
             }
         }
     }
+    return result;
+}
+
+function getProvidedEmail(entry) {
+    let result = getEmail(entry);
+
     if (result == null) result = entry.MAIL;
     if (result == null) return entry.NIHPRIMARYSMTP;
     return result;
@@ -71,7 +78,7 @@ function getBuilding(obj) {
     } else {
         return 'N/A';
     }
-};
+}
 
 function getDivision(obj) {
 
@@ -94,10 +101,10 @@ function getDivision(obj) {
 
     return result;
 
-};
+}
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-module.exports = { convertBase64Fields, padTo2Digits, formatDate, getProvidedEmail, getBuilding, getDivision, sleep };
+module.exports = { convertBase64Fields, padTo2Digits, formatDate, getEmail, getProvidedEmail, getBuilding, getDivision, sleep };

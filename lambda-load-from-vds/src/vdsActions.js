@@ -2,7 +2,7 @@
 
 const {conf} = require("./conf");
 const ldap = require('ldapjs');
-const {convertBase64Fields, sleep, getProvidedEmail} = require("./util")
+const {convertBase64Fields, sleep, getProvidedEmail, getDivision, getEmail, getBuilding} = require("./util")
 const {AndFilter, EqualityFilter, SubstringFilter, NotFilter, OrFilter} = require("ldapjs/lib/filters");
 
 let tlsOptions;
@@ -101,7 +101,29 @@ const getUsers = async (ic, divisions, includeDivs, pageCallBack, s3Entry) => {
                         console.info(counter + ' records found and counting...');
                     }
                     let obj = convertBase64Fields(entry);
+                    // Enhance user record with additional fields including timestamp
+                    obj['NEDId'] = '' + obj.UNIQUEIDENTIFIER;
+                    obj['FirstName'] = obj.GIVENNAME;
+                    obj['MiddleName'] = obj.MIDDLENAME;
+                    obj['LastName'] = obj.NIHMIXCASESN;
+                    obj['Email'] = getEmail(obj);
+                    obj['Phone'] = obj.TELEPHONENUMBER;
+                    obj['Classification'] = obj.ORGANIZATIONALSTAT;
+                    obj['SAC'] = obj.NIHSAC;
+                    obj['AdministrativeOfficerId'] = obj.NIHSERVAO;
+                    obj['COTRId'] = obj.NIHCOTRID;
+                    obj['ManagerId'] = obj.MANAGER;
+                    obj['Locality'] = obj.L;
+                    obj['PointOfContactId'] = obj.NIHPOC;
+                    obj['Division'] = getDivision(obj);
+                    obj['Locality'] = obj.L;
+                    obj['Site'] = obj.NIHSITE;
+                    obj['Building'] = getBuilding(obj);
+                    obj['Room'] = obj.ROOMNUMBER;
                     obj['providedEmail'] = getProvidedEmail(obj);
+                    for (const attr of conf.vds.excludedAttributes) {
+                        delete obj[attr];
+                    }
                     users.push(obj);
                 });
                 ldapRes.on('searchReference', function (reference) {

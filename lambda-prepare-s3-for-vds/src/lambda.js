@@ -1,5 +1,5 @@
 'use strict'
-const { conf } = require('./conf');
+// const { conf } = require('./conf');
 // const { formatDate } = require("./util");
 
 const AWS = require('aws-sdk'),
@@ -114,7 +114,7 @@ module.exports.handler = async (event, context, callback) => {
 
         // Finally returns a list of ICs to be loaded from VDS
         console.info('Move files from', fromPrefix, '...done');
-        callback(null, conf); // TBD
+        callback(null, {});
     } catch (error) {
         console.error('error lambda handler',error);
         throw error;
