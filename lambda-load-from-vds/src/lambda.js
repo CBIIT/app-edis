@@ -99,13 +99,6 @@ module.exports.handler = async (event, context) => {
 async function processVdsUsers(users, counter, s3Entry) {
     const prefix = 'processVdsUsers(' + counter + ') - ';
     console.debug(prefix + 'Processing ' + users.length + ' users' );
-    users.forEach(user => {
-        for (const attr of conf.vds.excludedAttributes) {
-            delete user[attr];
-        }
-        user.NEDId = '' + user.UNIQUEIDENTIFIER;
-
-    });
     await batchUpload(users, counter, s3Entry);
 }
 

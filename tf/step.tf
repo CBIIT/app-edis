@@ -263,8 +263,11 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_vds" {
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "Payload.$": "$",
-        "FunctionName": "${module.lambda-vds-delta-to-sqs[0].arn}:$LATEST"
+        "FunctionName": "${module.lambda-delta-to-sqs[0].arn}:$LATEST",
+        "Payload": {
+          "delta.$": "$.delta",
+          "deleted.$": "$.deleted",
+          "sqs_url_key": "VDS_SQS_URL"
       },
       "Retry": [
         {
