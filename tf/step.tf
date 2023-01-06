@@ -268,6 +268,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_vds" {
           "delta.$": "$.delta",
           "deleted.$": "$.deleted",
           "sqs_url_key": "VDS_SQS_URL"
+        }
       },
       "Retry": [
         {
