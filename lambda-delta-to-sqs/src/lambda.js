@@ -43,7 +43,7 @@ module.exports.handler = async (event, context) => {
   }
 
 // Create a refresh mark as YYYYMMddHH
-  const marker = formatDate(new Date());
+  const marker = '' + formatDate(new Date());
 
   // Step 1 - send to SQS chunks with new or updated records from S3 delta csv file 
   await processRecords(sqsQueueUrl, deltaS3path, marker, 'update');
@@ -94,7 +94,7 @@ async function processRecords(sqsQueueUrl, s3url, marker, action)
       }
 
       // Enhance record with timestamp
-      row.tsImport = marker;
+      row['tsImport'] = marker;
 
       // push user for bulk update
       const userSize = Buffer.byteLength(JSON.stringify(row), 'utf8'); 
