@@ -80,24 +80,29 @@ async function processRecords(sqsQueueUrl, s3url, marker, action)
     });
 
 
-    for await (const rec of rl) {
+    for (const rec of rl) {
       if (counter < 0) {
         counter++;
         continue; // skip the header
       }
-      let row;
-      try {
-        row = processLine(rec, counter);
-      } catch (e) {
-        console.error('Parsing error', e);
-        throw e;
+      let sRow;
+      if (action === 'update') {
+        try {
+          const row = processLine(rec, counter);
+          // Enhance record with timestamp
+          row['tsImport'] = marker;
+          sRow = JSON.stringify(row);
+        } catch (e) {
+          console.error('Parsing error', e);
+          throw e;
+        }
+      }
+      else {
+        sRow = rec.slice(1, -1);
       }
 
-      // Enhance record with timestamp
-      row['tsImport'] = marker;
-
       // push user for bulk update
-      const userSize = Buffer.byteLength(JSON.stringify(row), 'utf8'); 
+      const userSize = Buffer.byteLength(sRow, 'utf8'); 
       msgSize +=  userSize + 1; // comma between user definitions
       const overflow = msgSize >= maxMessageSize; 
       if (!overflow) {
@@ -148,7 +153,6 @@ function decodeS3URL(path) {
 /**
  * Convert a string from S3 delta file into JSON user data
  * @param line - given input string 
- * @param counter - current counter (for logging purposes)
  * @returns {any} - enhanced user JSON record
  */
 function processLine(line) {
@@ -158,8 +162,7 @@ function processLine(line) {
   //   console.debug('unprocessed record', line);
   // }
   try {
-    const rec = JSON.parse(line);
-    return rec;
+    return JSON.parse(line);
   }
   catch (e) {
     console.error('JSON parse failed for record', counter);
