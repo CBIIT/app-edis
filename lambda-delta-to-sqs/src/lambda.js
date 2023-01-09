@@ -80,7 +80,7 @@ async function processRecords(sqsQueueUrl, s3url, marker, action)
     });
 
 
-    for (const rec of rl) {
+    for await (const rec of rl) {
       if (counter < 0) {
         counter++;
         continue; // skip the header
