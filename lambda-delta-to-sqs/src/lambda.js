@@ -85,10 +85,11 @@ async function processRecords(sqsQueueUrl, s3url, marker, action)
         counter++;
         continue; // skip the header
       }
+      let row;
       let sRow;
       if (action === 'update') {
         try {
-          const row = processLine(rec, counter);
+          row = processLine(rec, counter);
           // Enhance record with timestamp
           row['tsImport'] = marker;
           sRow = JSON.stringify(row);
@@ -98,7 +99,8 @@ async function processRecords(sqsQueueUrl, s3url, marker, action)
         }
       }
       else {
-        sRow = rec.slice(1, -1);
+        row = rec.slice(1, -1);
+        sRow = row;
       }
 
       // push user for bulk update
