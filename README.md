@@ -4,7 +4,7 @@
 
 The project contains the following modules:
 * **aws-cf-scripts** - Set of cloud formation configuration templates to deploy and configure AWS resources
-* **install-cloudguru** - Set of shell scripts to deploy and configure AWS resources with Cloud Formation stacks
+* **install-scripts** - Set of shell scripts to deploy and configure AWS resources with Cloud Formation stacks
 * **load-nedorg-data** - nodejs application to load DynamoDB database with sample data from csv file
 * **lambda-auth** - nodejs based Lambda authorizer function to authenticate and authorize the client that invokes API endpoints
 * **lambda-userapi** - lightweight (*lambda-api* framework) nodejs based Lambda function to execute REST API endpoints

@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "lambda.js",
   "scripts": {
-    "zip": "rm -rf node_modules && rm -rf ../lambda-zip/lambda-delta-to-sqs.zip && npm install --only='prod' && zip -r ../lambda-zip/lambda-delta-to-sqs.zip node_modules src/*"
+    "zip": "rm -rf node_modules && rm -rf ../lambda-zip/lambda-delta-to-sqs.zip && npm install --only='prod' && zip -r ../lambda-zip/lambda-delta-to-sqs.zip node_modules src/*",
+    "build-prod": "rm -rf node_modules && npm install --only='prod'",
+    "zip-prod": "mkdir -p out && rm -rf out/lambda-delta-to-sqs.zip && zip -r -q out/lambda-delta-to-sqs.zip node_modules src/*"
   },
   "devDependencies": {
     "aws-sdk": "2.820.0",

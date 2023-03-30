@@ -1,11 +1,13 @@
 {
-  "name": "refresh-vds-users-2-ddb",
+  "name": "lambda-load-from-nv-props",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "zip": "rm -rf node_modules && rm -rf ../lambda-zip/lambda-load-from-nv-props.zip && npm install --only='prod' && zip -r ../lambda-zip/lambda-load-from-nv-props.zip node_modules src/*"
+    "zip": "rm -rf node_modules && rm -rf ../lambda-zip/lambda-load-from-nv-props.zip && npm install --only='prod' && zip -r ../lambda-zip/lambda-load-from-nv-props.zip node_modules src/*",
+    "build-prod": "rm -rf node_modules && npm install --only='prod'",
+    "zip-prod": "mkdir -p out && rm -rf out/lambda-load-from-nv-props.zip && zip -r -q out/lambda-load-from-nv-props.zip node_modules src/*"
   },
   "keywords": [],
   "author": "",
