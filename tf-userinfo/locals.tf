@@ -99,7 +99,7 @@ EOF
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
     "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
     "arn:aws:iam::aws:policy/AmazonAthenaFullAccess",
-    aws_iam_policy.iam_access_s3[0].arn
+    aws_iam_policy.iam_access_s3.arn
   ]
 
   lambda_load_from_vds_role_policies = [
@@ -107,19 +107,19 @@ EOF
     "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
     "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
-    aws_iam_policy.iam_access_s3[0].arn
+    aws_iam_policy.iam_access_s3.arn
   ]
 
   lambda_prepare_s3_for_vds_role_policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
-    aws_iam_policy.iam_access_s3[0].arn
+    aws_iam_policy.iam_access_s3.arn
   ]
 
   lambda_delta-to-sqs_role_policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
-    aws_iam_policy.iam_access_s3[0].arn,
+    aws_iam_policy.iam_access_s3.arn,
     "arn:aws:iam::aws:policy/AmazonSQSFullAccess"
   ]
 
@@ -147,13 +147,13 @@ data "template_file" "api_userinfo_swagger" {
   template = file("resources/swagger-ned-vds-v3.yaml")
 
   vars = {
-    lambda_invoke_arn = module.lambda-userinfo-api[0].invoke_arn
+    lambda_invoke_arn = module.lambda-userinfo-api.invoke_arn
     ddb_action_scan     = "arn:aws:apigateway:us-east-1:dynamodb:action/Scan"
     ddb_action_query    = "arn:aws:apigateway:us-east-1:dynamodb:action/Query"
-    ddb_role_arn        = module.ddb-userinfo[0].iam-access-ddb-role-arn
-    prop_ddb_role_arn   = module.ddb-userinfo[0].iam-access-nv-props-ddb-role-arn
-    users_table_name    = module.ddb-userinfo[0].ddb-name
-    props_table_name    = module.ddb-userinfo[0].nv-props-ddb-name
+    ddb_role_arn        = module.ddb-userinfo.iam-access-ddb-role-arn
+    prop_ddb_role_arn   = module.ddb-userinfo.iam-access-nv-props-ddb-role-arn
+    users_table_name    = module.ddb-userinfo.ddb-name
+    props_table_name    = module.ddb-userinfo.nv-props-ddb-name
   }
 }
 
