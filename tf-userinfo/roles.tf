@@ -86,7 +86,7 @@ resource "aws_iam_role" "refresh_vds_trigger" {
   name               = "${local.power-user-prefix}-start-vds-refresh-${var.env}"
   assume_role_policy = data.aws_iam_policy_document.assume_role_event_trigger.json
   managed_policy_arns = [
-    aws_iam_policy.iam_refresh_vds[0].arn
+    aws_iam_policy.iam_refresh_vds.arn
   ]
   path                 = "/"
   permissions_boundary = local.policy-boundary-arn
