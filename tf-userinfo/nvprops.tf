@@ -127,7 +127,7 @@ resource "aws_lambda_event_source_mapping" "edis-nv-props-sqs" {
 # Athena "nvprops_prev_t" table for previous nVision properties records
 #
 resource "aws_glue_catalog_table" "edis-athena-nvprops-prev" {
-  database_name = aws_athena_database.edis-athena[0].name
+  database_name = aws_athena_database.edis-athena.name
   name          = "nvprops_prev_t"
   table_type = "EXTERNAL_TABLE"
   parameters = {
