@@ -160,7 +160,7 @@ module "lambda-sqs-delta-to-db" {
   region               = "us-east-1"
   app                  = "edis"
   lambda-name          = "sqs-delta-to-db"
-  file-name           = abspath("../built-artifacts/lambda-sqs-delta-to-db/out/lambda-sqs-delta-to-db.zip")
+  file-name           = abspath("../built-artifacts/lambda-sqs-batch-to-db/out/lambda-sqs-delta-to-db.zip")
   lambda-description   = "Lambda function to receive updated VDS user records from SQS and load into DynamoDB"
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
