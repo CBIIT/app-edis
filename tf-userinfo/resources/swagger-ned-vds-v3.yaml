@@ -74,8 +74,6 @@ paths:
         httpMethod: POST
         timeoutInMillis: 29000
         type: aws_proxy
-      security:
-        - request-authorizer: []
 
   /userapi/vds/userById/{id}:
     get:
@@ -100,8 +98,6 @@ paths:
         httpMethod: POST
         timeoutInMillis: 29000
         type: aws_proxy
-      security:
-        - request-authorizer: []
 
   /userapi/vds/usersByIc/{ic}:
     get:
@@ -265,8 +261,6 @@ paths:
                 #end
                   ]
                 }
-      security:
-        - request-authorizer: []
 
   /userapi/nv/props:
     get:
@@ -389,8 +383,6 @@ paths:
                 #end
                   ]
                 }
-      security:
-        - request-authorizer: []
 
   /userapi/nv/props/user/{nihId}:
     get:
@@ -529,8 +521,6 @@ paths:
                 #end
                   ]
                 }
-      security:
-        - request-authorizer: []
 
 components:
   responses: 
@@ -1033,15 +1023,3 @@ components:
         FLAG_1:
           type: string
           example:
-
-  securitySchemes:
-    request-authorizer:
-      type: apiKey
-      name: Authorization
-      in: header
-      x-amazon-apigateway-authtype: oauth2
-      x-amazon-apigateway-authorizer:
-        type: token
-        authorizerCredentials: ${auth_role}
-        authorizerUri: ${auth_lambda_invoke_arn}
-        authorizerResultTtlInSeconds: 300

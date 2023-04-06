@@ -74,7 +74,7 @@ module.exports.handler = async (event, context) => {
     const includeDivisions = !!(event.includeDivisions);
     const subKey = event.name ? event.name : ic;
     const s3Entry = {
-        key: folder + '/current/' + 'storage_' + subKey + '.parquet'
+        key: folder + '/' + 'storage_' + subKey + '.parquet'
     }
     
     try {
