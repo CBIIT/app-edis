@@ -27,7 +27,7 @@ resource "aws_lambda_function" "lambda" {
   }
   tags = {
     Tier = var.env
-    Name = var.resource_tag_name
+    App = var.resource_tag_name
   }
   filename = var.file-name
   source_code_hash = filebase64sha256("${var.file-name}")

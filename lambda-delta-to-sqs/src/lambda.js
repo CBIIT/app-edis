@@ -106,7 +106,7 @@ async function processRecords(sqsQueueUrl, s3url, marker, action)
       // push user for bulk update
       const userSize = Buffer.byteLength(sRow, 'utf8'); 
       msgSize +=  userSize + 1; // comma between user definitions
-      const overflow = msgSize >= maxMessageSize; 
+      const overflow = msgSize >= maxMessageSize - 12; // 12 bytes for surrounding { data: <chunk> }
       if (!overflow) {
         bulkBuffer.push(row);
         counter++;

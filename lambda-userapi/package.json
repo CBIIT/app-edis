@@ -11,6 +11,8 @@
     "zip": "rm -rf node_modules && rm -rf ../lambda-zip/lambda-eracommons-api.zip && npm install --only='prod' && zip -r ../lambda-zip/lambda-eracommons-api.zip node_modules src/lambda.js src/eracommonsapi.js",
     "ziplocal": "rm -rf node_modules && rm -rf lambda-eracommons-api.zip && npm install --only='prod' && zip -r lambda-eracommons-api.zip node_modules src/lambda.js src/eracommonsapi.js",
     "zip3": "rm -rf node_modules && rm -rf lambda-userapiV3.zip && npm install --only='prod' && zip -r lambda-userapiV3.zip node_modules src/lambda.js src/eracommonsapiV3.js",
+    "build-prod": "rm -rf node_modules && npm install --only='prod'",
+    "zip-prod": "mkdir -p out && rm -rf out/lambda-eracommons-api.zip && zip -r -q out/lambda-eracommons-api.zip node_modules src/lambda.js src/eracommonsapi.js",
     "test": "jest unit --coverage"
   },
   "dependencies": {

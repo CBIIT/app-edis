@@ -8,6 +8,8 @@
     "zip": "rm -rf ../lambda-zip/lambda-eracommons.zip && zip -r ../lambda-zip/lambda-eracommons.zip package.json src/*",
     "ziplocal": "rm -rf lambda-eracommons.zip && zip -r lambda-eracommons.zip package.json src",
     "ziplocalV3": "rm -rf node_modules && rm -rf lambda-eracommons-api.zip && npm install --only='prod' && zip -r lambda-userapiV3.zip node_modules src/lambda.js src/eracommonsapiV3.js",
+    "build-prod": "rm -rf node_modules && npm install --only='prod'",
+    "zip-prod": "mkdir -p out && rm -rf out/lambda-eracommons-api.zip && zip -r -q out/lambda-eracommons.zip package.json src/*",
     "test": "jest unit --coverage"
   },
   "devDependencies": {

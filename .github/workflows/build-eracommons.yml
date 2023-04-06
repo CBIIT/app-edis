@@ -1,0 +1,79 @@
+# Workflow to build artifacts for userinfo API
+
+name: 1e - eRACommons - Build
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      host-runner:
+        description: 'Selected self hosted (nci-self-hosted) of github hosted () runner'
+        required: true
+        type: string
+        default: 'ubuntu-latest'
+
+  workflow_call: 
+    inputs:
+      host-runner:
+        description: 'Selected self hosted (nci-self-hosted) of github hosted () runner'
+        required: true
+        type: string
+        default: 'ubuntu-latest'
+
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ${{ inputs.host-runner }}
+    
+    permissions:
+      packages: write
+      id-token: write
+      contents: write
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Repository Checkout
+        uses: actions/checkout@v3
+        with: 
+          repository: CBIIT/app-edis
+
+      - name: setup node 14
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14.15.4
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@cbiit'
+
+      - name: build lambda-eracommons-api
+        working-directory: lambda-userapi
+        run: |
+          npm run build-prod
+          npm run zip-prod
+          ls -la out
+
+      - name: build lambda-auth
+        working-directory: lambda-auth
+        run: |
+          npm run build-prod
+          npm run zip-prod
+          ls -la out
+
+      - name: build lambda-eracommons
+        working-directory: lambda-eracommons
+        run: |
+          npm run build-prod
+          npm run zip-prod
+          ls -la out
+
+      #Store the created zip files as artifacts
+      - name: store-artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: built-artifacts
+          path: |
+            lambda-userapi/out/*.zip
+            lambda-auth/out/*.zip
+            lambda-eracommons/out/*.zip
