@@ -70,6 +70,18 @@ module "lambda-userinfo-auth" {
   create_api_gateway_integration = false
 }
 
+resource "aws_lambda_permission" "_" {
+  principal     = "apigateway.amazonaws.com"
+  action        = "lambda:InvokeFunction"
+  function_name = module.lambda-userinfo-auth.arn
+
+  source_arn = "arn:aws:execute-api:us-east-1:${
+    data.aws_caller_identity._.account_id
+    }:${
+    module.api-gateway-userinfo.rest_api_id
+  }/*"
+}
+
 module "lambda-vds-users-delta" {
   source              = "../tf-lib/modules/lambda"
   env                 = var.env
