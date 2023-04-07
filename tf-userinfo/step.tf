@@ -241,7 +241,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_vds" {
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "FunctionName": "${module.lambda-vds-users-delta.arn}:$LATEST"
+        "FunctionName": "${module.lambda-vds-users-delta.arn}:$LATEST",
         "Payload": {
           "DB_NAME": "vdsdb_dev",
           "S3SUBFOLDER": "vds",
