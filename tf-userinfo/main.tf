@@ -29,19 +29,45 @@ module "lambda-userinfo-api" {
   security_group_ids = [ var.vpcsg ]
 }
 
+resource "aws_iam_role" "invocation_role" {
+  name = "${local.power-user-prefix}-apigwy-userinfo-auth-${var.env}"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_api_gateway_service.json
+  path = "/"
+  permissions_boundary = local.policy-boundary-arn
+}
 module "api-gateway-userinfo" {
+  depends_on = [ module.lambda-userinfo-auth ]
   source              = "../tf-lib/modules/api-gateway"
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
   must-be-policy-arn  = local.policy-boundary-arn
-  okta-issuer         = lookup(local.tier_conf, var.env).issuer
   app                 = "edis"
   app-description     = "Enterprise Data & Integration Services Web Services for NED and VDS user info"
   api-swagger         = data.template_file.api_userinfo_swagger.rendered
   api-resource-policy = local.api_gateway_resource_policy
   api-gateway-name    = "userinfo"
   resource_tag_name   = "edis"
-  auth_lambda_file_name = abspath("../built-artifacts/lambda-auth/out/lambda-auth.zip")
+}
+
+module "lambda-userinfo-auth" {
+  source              = "../tf-lib/modules/lambda"
+  env                 = var.env
+  must-be-role-prefix = local.power-user-prefix
+  must-be-policy-arn  = local.policy-boundary-arn
+  resource_tag_name   = "edis"
+  region              = "us-east-1"
+  app                 = "edis"
+  lambda-name         = "userinfo-auth"
+  file-name           = abspath("../built-artifacts/lambda-auth/out/lambda-auth.zip")
+  lambda-description  = "Lambda function to run Athena query to get VDS users delta for refresh."
+  lambda-env-variables = tomap({
+    LOG_LEVEL = "info"
+    "AUDIENCE"  = "api://default"
+    "ISSUER"    = lookup(local.tier_conf, var.env).issuer
+
+  })
+  lambda-managed-policies        = { for idx, val in local.lambda_userinfo_auth_policies: idx => val }
+  create_api_gateway_integration = false
 }
 
 module "lambda-vds-users-delta" {

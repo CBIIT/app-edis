@@ -5,37 +5,6 @@
 
 data "aws_caller_identity" "_" {}
 
-# Lambda Authorizer
-resource "aws_lambda_function" "auth_lambda" {
-  function_name = "${var.app}-${var.api-gateway-name}-auth-${var.env}"
-  role          = aws_iam_role.auth_lambda.arn
-  description   = "Lambda function with basic authorization."
-  handler       = "src/lambda.handler"
-  runtime       = "nodejs12.x"
-  memory_size   = 2048
-  timeout       = 30
-  tracing_config {
-    mode = "Active"
-  }
-  environment {
-    variables = {
-      "LOG_LEVEL" = var.lambda-log-level
-      "AUDIENCE"  = var.okta-audience
-      "ISSUER"    = var.okta-issuer
-    }
-  }
-  filename = var.auth_lambda_file_name
-  tags = {
-    Tier = var.env
-    App = var.resource_tag_name
-  }
-}
-
-resource "aws_lambda_function_event_invoke_config" "auth_lambda" {
-  function_name          = aws_lambda_function.auth_lambda.function_name
-  maximum_retry_attempts = 0
-}
-
 resource "aws_api_gateway_rest_api" "api_gateway" {
   name        = "${var.app}-${var.api-gateway-name}-${var.env}"
   description = "${var.env} - ${var.app-description}"
@@ -52,13 +21,6 @@ resource "aws_api_gateway_rest_api" "api_gateway" {
 resource "aws_api_gateway_deployment" "api_gateway" {
   rest_api_id = aws_api_gateway_rest_api.api_gateway.id
   stage_name = "Stage-snapshot"
-}
-
-resource "aws_api_gateway_authorizer" "api_gateway" {
-  name           = "request-authorizer"
-  rest_api_id    = aws_api_gateway_rest_api.api_gateway.id
-  authorizer_uri = aws_lambda_function.auth_lambda.invoke_arn
-  type           = "TOKEN"
 }
 
 resource "aws_api_gateway_rest_api_policy" "api_gateway" {
@@ -107,15 +69,4 @@ resource "aws_api_gateway_method_settings" "api_gateway" {
   }
 }
 
-resource "aws_lambda_permission" "_" {
-  principal     = "apigateway.amazonaws.com"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.auth_lambda.arn
-
-  source_arn = "arn:aws:execute-api:us-east-1:${
-    data.aws_caller_identity._.account_id
-    }:${
-    aws_api_gateway_rest_api.api_gateway.id
-  }/*"
-}
 
