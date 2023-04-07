@@ -3,6 +3,7 @@
 # and includes lambda authorizer for authorization API calls
 #
 
+data "aws_caller_identity" "_" {}
 
 # Lambda Authorizer
 resource "aws_lambda_function" "auth_lambda" {
@@ -104,5 +105,17 @@ resource "aws_api_gateway_method_settings" "api_gateway" {
     cache_ttl_in_seconds = 300
     caching_enabled      = true
   }
+}
+
+resource "aws_lambda_permission" "_" {
+  principal     = "apigateway.amazonaws.com"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.auth_lambda.arn
+
+  source_arn = "arn:aws:execute-api:us-east-1:${
+    data.aws_caller_identity._.account_id
+    }:${
+    aws_api_gateway_rest_api.api_gateway.id
+  }/*"
 }
 
