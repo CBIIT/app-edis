@@ -86,6 +86,12 @@ locals {
 }
 EOF
 
+  lambda_userinfo_auth_policies = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
+    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
+  ]
+  
   lambda_userinfo_api_role_policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
@@ -154,6 +160,8 @@ data "template_file" "api_userinfo_swagger" {
     prop_ddb_role_arn   = module.ddb-userinfo.iam-access-nv-props-ddb-role-arn
     users_table_name    = module.ddb-userinfo.ddb-name
     props_table_name    = module.ddb-userinfo.nv-props-ddb-name
+    auth_role           = aws_iam_role.invocation_role.arn
+    auth_lambda_invoke_arn = module.lambda-userinfo-auth.invoke_arn
   }
 }
 

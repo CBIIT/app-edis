@@ -15,10 +15,6 @@ variable "resource_tag_name" {
   description = "Value of tag 'Name' for cost/resource tracking"
 }
 
-variable "auth_lambda_file_name" {
-  description = "Path to the zip file for Authentication Lambda"
-}
-
 #---------------------------------------
 # API Gateway: required
 #---------------------------------------
@@ -38,16 +34,6 @@ variable "api-swagger" {
 #---------------------------------------
 # API Gateway: optional
 #---------------------------------------
-
-variable "okta-issuer" {
-  default     = ""
-  description = "URL to OKTA provider authentication server"
-}
-
-variable "okta-audience" {
-  default     = "api://default"
-  description = "AUDIENCE for OKTA provider authentication server"
-}
 
 variable "app-description" {
   default     = ""
