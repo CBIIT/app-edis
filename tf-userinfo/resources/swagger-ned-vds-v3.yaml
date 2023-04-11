@@ -1039,9 +1039,8 @@ components:
       type: apiKey
       name: Authorization
       in: header
-      x-amazon-apigateway-authtype: oauth2
+      x-amazon-apigateway-authtype: custom
       x-amazon-apigateway-authorizer:
         type: token
-        authorizerCredentials: ${auth_role}
         authorizerUri: ${auth_lambda_invoke_arn}
         authorizerResultTtlInSeconds: 300
