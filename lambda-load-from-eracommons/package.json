@@ -1,0 +1,23 @@
+{
+  "name": "lambda-load-from-eracommons",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lambda.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-prod": "rm -rf node_modules && npm install --only='prod'",
+    "zip-prod": "mkdir -p out && rm -rf out/lambda-load-from-eracommons.zip && zip -r -q out/lambda-load-from-eracommons.zip node_modules src/*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "parquetjs": "^0.11.2"
+  },
+  "devDependencies": {
+    "aws-sdk": "latest",
+    "aws-xray-sdk-core": "^3.3.3",
+    "oracledb": "^5.3.0",
+    "oracledb-prebuilt-for-lambda": "^5.3.0"
+  }
+}

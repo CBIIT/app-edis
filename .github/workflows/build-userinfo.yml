@@ -1,6 +1,6 @@
 # Workflow to build artifacts for userinfo API
 
-name: 1u - UserInfo - Build
+name: 2.1 - UserInfo - Build
 
 # Controls when the workflow will run
 on:
