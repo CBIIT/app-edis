@@ -12,7 +12,7 @@ const nedTable = 'nedorgs-dev'
 module.exports = (app, opts) => {
 
     app.get('/org/:sac/children', (req, res) => {
-        const sac = req.params.sac;
+        const sac = req.params.sac.toString();
 
         const params = {
             TableName: nedTable,
