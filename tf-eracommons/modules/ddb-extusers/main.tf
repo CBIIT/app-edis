@@ -1,6 +1,6 @@
 
-resource "aws_dynamodb_table" "extusers-table" {
-  name           = "extusers-${var.env}"
+resource "aws_dynamodb_table" "table" {
+  name           = "${var.table_name}-${var.env}"
   hash_key       = "USER_ID"
   billing_mode   = "PROVISIONED"
   read_capacity  = 5
@@ -39,12 +39,12 @@ resource "aws_dynamodb_table" "extusers-table" {
   }
 }
 
-output "ddb-extusers-arn" {
-  value = aws_dynamodb_table.extusers-table.arn
+output "ddb-table-arn" {
+  value = aws_dynamodb_table.table.arn
 }
 
-output "ddb-extusers-name" {
-  value = aws_dynamodb_table.extusers-table.name
+output "ddb-table-name" {
+  value = aws_dynamodb_table.table.name
 }
 
 output "iam-access-ddb-role-arn" {

@@ -104,7 +104,7 @@ EOF
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
     "arn:aws:iam::aws:policy/service-role/AWSLambdaENIManagementAccess",
     "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
-    module.ddb-extusers.iam-access-ddb-policy-arn
+    module.ddb-era-commons.iam-access-ddb-policy-arn
   ]
 
   lambda-layers = (var.oracle-db-layer-arn != null) ? [
@@ -128,8 +128,8 @@ data "template_file" "api_era-commons-swagger" {
     ddb_action_get_item = "arn:aws:apigateway:us-east-1:dynamodb:action/GetItem"
     ddb_action_scan     = "arn:aws:apigateway:us-east-1:dynamodb:action/Scan"
     ddb_action_query    = "arn:aws:apigateway:us-east-1:dynamodb:action/Query"
-    ddb_role_arn        = module.ddb-extusers.iam-access-ddb-role-arn
-    users_table_name    = module.ddb-extusers.ddb-extusers-name
+    ddb_role_arn        = module.ddb-era-commons.iam-access-ddb-role-arn
+    users_table_name    = module.ddb-era-commons.ddb-table-name
     auth_lambda_invoke_arn = module.lambda-era-commons-auth.invoke_arn
   }
 }
