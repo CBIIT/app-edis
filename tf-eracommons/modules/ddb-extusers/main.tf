@@ -2,9 +2,7 @@
 resource "aws_dynamodb_table" "table" {
   name           = "${var.table_name}-${var.env}"
   hash_key       = "USER_ID"
-  billing_mode   = "PROVISIONED"
-  read_capacity  = 5
-  write_capacity = 5
+  billing_mode   = "PAY_PER_REQUEST"
 
 
   attribute {
@@ -25,8 +23,6 @@ resource "aws_dynamodb_table" "table" {
     range_key       = "USER_ID"
     name            = "dateIndex"
     projection_type = "ALL"
-    read_capacity   = 5
-    write_capacity  = 5
   }
 
   global_secondary_index {
@@ -34,8 +30,6 @@ resource "aws_dynamodb_table" "table" {
     range_key       = "USER_ID"
     name            = "logingovIndex"
     projection_type = "ALL"
-    read_capacity   = 5
-    write_capacity  = 5
   }
 }
 

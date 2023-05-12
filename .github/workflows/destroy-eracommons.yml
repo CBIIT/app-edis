@@ -86,7 +86,7 @@ jobs:
 
       - name: Get Oracle Lambda Layer ARN
         id: dblayer
-        run: echo "name=$(aws lambda list-layer-versions --layer-name app-oracle-db-layer --region us-east-1 --query 'LayerVersions[0].LayerVersionArn' | sed -e 's/^"//' -e 's/"$//')" >> $GITHUB_OUTPUT
+        run: echo "name=$(aws lambda list-layer-versions --layer-name edis-oracle-db-layer --region us-east-1 --query 'LayerVersions[0].LayerVersionArn' | sed -e 's/^"//' -e 's/"$//')" >> $GITHUB_OUTPUT
         
       - name: Init Terraform
         id: initUserInfo
