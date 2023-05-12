@@ -1,5 +1,5 @@
 
-module "ddb-extusers" {
+module "ddb-era-commons" {
   source              = "./modules/ddb-extusers"
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
@@ -7,7 +7,7 @@ module "ddb-extusers" {
 }
 
 module "lambda-era-commons-api" {
-  depends_on          = [module.ddb-extusers]
+  depends_on          = [module.ddb-era-commons]
   source              = "../tf-lib/modules/lambda"
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
@@ -20,7 +20,7 @@ module "lambda-era-commons-api" {
   lambda-description  = "Lambda function contains eRA Commons External Users Info REST APIs implementation."
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
-    TABLE     = module.ddb-extusers.ddb-extusers-name
+    TABLE     = module.ddb-era-commons.ddb-table-name
   })
   lambda-managed-policies        = { for idx, val in local.lambda_era_commons_api_role_policies: idx => val }
   create_api_gateway_integration = true
@@ -28,7 +28,7 @@ module "lambda-era-commons-api" {
 }
 
 module "api-gateway-era-commons" {
-  depends_on          = [module.ddb-extusers]
+  depends_on          = [module.ddb-era-commons]
   source              = "../tf-lib/modules/api-gateway"
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
@@ -75,7 +75,7 @@ resource "aws_lambda_permission" "_" {
 }
 
 module "lambda-era-commons" {
-  depends_on          = [module.ddb-extusers]
+  depends_on          = [module.ddb-era-commons]
   source              = "../tf-lib/modules/lambda"
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
@@ -89,7 +89,7 @@ module "lambda-era-commons" {
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
     SECRET    = "era-commons-connect-${var.env}"
-    TABLE     = module.ddb-extusers.ddb-extusers-name
+    TABLE     = module.ddb-era-commons.ddb-table-name
   })
   lambda-managed-policies        = { for idx, val in local.lambda_era_commons_role_policies: idx => val }
   lambda-layers = local.lambda-layers
