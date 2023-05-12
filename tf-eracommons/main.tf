@@ -49,7 +49,7 @@ module "lambda-era-commons-auth" {
   resource_tag_name   = "edis"
   region              = "us-east-1"
   app                 = "edis"
-  lambda-name         = "eracommons-auth"
+  lambda-name         = "era-commons-auth"
   file-name           = abspath("../built-artifacts/lambda-auth/out/lambda-auth.zip")
   lambda-description  = "Lambda function to run Athena query to get VDS users delta for refresh."
   lambda-env-variables = tomap({
@@ -74,7 +74,7 @@ resource "aws_lambda_permission" "_" {
   }/*"
 }
 
-module "lambda-eracommons" {
+module "lambda-era-commons" {
   depends_on          = [module.ddb-extusers]
   source              = "../tf-lib/modules/lambda"
   env                 = var.env
@@ -98,19 +98,19 @@ module "lambda-eracommons" {
 }
 
 resource "aws_cloudwatch_event_rule" "edis_refresh_eracommons" {
-  name = "edis-eracommons-refresh-${var.env}"
+  name = "edis-era-commons-refresh-${var.env}"
   description = "Start Lambda Function to refresh eRA Commons user data"
   schedule_expression = "cron(0 12 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "edis_refresh_eracommons" {
-  arn  = module.lambda-eracommons.arn
+  arn  = module.lambda-era-commons.arn
   rule = aws_cloudwatch_event_rule.edis_refresh_eracommons.name
 }
 
 resource "aws_lambda_permission" "edis_refresh_eracommons" {
   principal     = "events.amazonaws.com"
   action        = "lambda:InvokeFunction"
-  function_name = module.lambda-eracommons.name
+  function_name = module.lambda-era-commons.name
   source_arn = aws_cloudwatch_event_rule.edis_refresh_eracommons.arn 
 }

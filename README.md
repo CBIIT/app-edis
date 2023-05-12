@@ -104,4 +104,20 @@ cd ..
 ```
 10. Set the scheduler event to run lambda-eracommons Lambda function once a day to refresh the DynamoDB table from eRA Commons database
 
+## eRA Commons resources
+
+| Resource                   | Name                                               | Old Name                                 |
+|----------------------------|----------------------------------------------------|------------------------------------------|
+| DynamoDB table             | extusers-\<tier>                                   | extusers-\<tier>                         |
+| DynamoDB IAM Policy        | power-user-edis-ddb-extusers-read-\<tier>          | none                                     |
+| DynamoDB IAM Role          | power-user-edis-api-gateway-extusers-ddb-\<tier>   | none                                     |
+| Lambda IAM Role            | power-user-edis-lambda-era-commons-api-\<tier>     | lambda-eracommons-\<tier>-role           |
+| Lambda                     | edis-era-commons-api-\<tier>                       | lambda-edis-user-api-\<tier>             |
+| API Gateway                | edis-era-commons-\<tier>                           | eRA Commons User API                     |
+| CloudWatch for API Gateway | edis-era-commons-apigateway-accesslogs-\<tier>     | business_apps-\<tier>-edisapi-accesslogs |
+| Lambda IAM Role            | power-user-edis-lambda-era-commons-auth-\<tier>    | lambda-eracommons-\<tier>-role           |
+| Lambda                     | edis-era-commons-auth-\<tier>                      | lambda-auth-\<tier>                      |
+| Lambda IAM Role            | power-user-edis-lambda-era-commons-refresh-\<tier> | lambda-eracommons-\<tier>-role           |
+| Lambda                     | edis-era-commons-refresh-\<tier>                   | lambda-era-commons-\<tier>               |
+| CloudWatch Event Rule      | edis-era-commons-refresh-\<tier>                   | era-commons-refresh-\<tier>              |
 
