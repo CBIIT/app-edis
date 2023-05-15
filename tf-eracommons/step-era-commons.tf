@@ -61,8 +61,8 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_era_commons" {
       "OutputPath": "$.Payload",
       "Parameters": {
         "Payload": {
-          "src": "nv-props/current",
-          "dst": "nv-props/prev"
+          "src": "era-commons/current",
+          "dst": "era-commons/prev"
         },
         "FunctionName": "${module.lambda-prepare-s3-for-era-commons.arn}:$LATEST"
       },
@@ -80,7 +80,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_era_commons" {
       ],
       "Next": "Load properties data from eRA Commons"
     },
-    "Load properties data from nVision": {
+    "Load properties data from eRA Commons": {
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
