@@ -213,6 +213,10 @@ resource "aws_glue_catalog_table" "edis-athena-era-commons-prev" {
       type = "string"
     }
     columns {
+      name = "LOGINGOV_USER_ID"
+      type = "string"
+    }
+    columns {
       name = "content"
       type = "string"
     }
@@ -242,6 +246,10 @@ resource "aws_glue_catalog_table" "edis-athena-era-commons-current" {
     }
     columns {
       name = "id"
+      type = "string"
+    }
+    columns {
+      name = "LOGINGOV_USER_ID"
       type = "string"
     }
     columns {
