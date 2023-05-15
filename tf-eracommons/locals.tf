@@ -4,49 +4,49 @@ locals {
       issuer   = "https://nih-nci.oktapreview.com/oauth2/aus13y2f31cSMywhw0h8"
       audience = "api://default"
       step_cron = "cron(45 1 * * ? *)"
-      step_nv_props_cron = "cron(45 2 * * ? *)"
+      step_era_commons_cron = "cron(45 2 * * ? *)"
       secret = "era-commons-connect"
     }
     dev2 = {
       issuer   = "https://nih-nci.oktapreview.com/oauth2/aus13y2f31cSMywhw0h8"
       audience = "api://default"
       step_cron = "cron(55 1 * * ? *)"
-      step_nv_props_cron = "cron(55 2 * * ? *)"
+      step_era_commons_cron = "cron(55 2 * * ? *)"
       secret = "era-commons-connect"
     }
     dev3 = {
       issuer   = "https://nih-nci.oktapreview.com/oauth2/aus13y2f31cSMywhw0h8"
       audience = "api://default"
       step_cron = "cron(55 1 * * ? *)"
-      step_nv_props_cron = "cron(55 2 * * ? *)"
+      step_era_commons_cron = "cron(55 2 * * ? *)"
       secret = "era-commons-connect"
     }
     test = {
       issuer   = "https://nih-nci.oktapreview.com/oauth2/aus13y2f31cSMywhw0h8"
       audience = "api://default"
       step_cron = "cron(15 1 * * ? *)"
-      step_nv_props_cron = "cron(15 2 * * ? *)"
+      step_era_commons_cron = "cron(15 2 * * ? *)"
       secret = "era-commons-connect-qa"
     }
     qa = {
       issuer   = "https://nih-nci.oktapreview.com/oauth2/aus13y2f31cSMywhw0h8"
       audience = "api://default"
       step_cron = "cron(20 1 * * ? *)"
-      step_nv_props_cron = "cron(20 2 * * ? *)"
+      step_era_commons_cron = "cron(20 2 * * ? *)"
       secret = "era-commons-connect-qa"
     }
     stage = {
       issuer   = "https://iam.cancer.gov/oauth2/ausb533gx0oJEKboc297"
       audience = "api://default"
       step_cron = "cron(15 1 * * ? *)"
-      step_nv_props_cron = "cron(15 2 * * ? *)"
+      step_era_commons_cron = "cron(15 2 * * ? *)"
       secret = "era-commons-connect-stage"
     }
     prod = {
       issuer   = "https://iam.cancer.gov/oauth2/ausb533gx0oJEKboc297"
       audience = "api://default"
       step_cron = "cron(20 1 * * ? *)"
-      step_nv_props_cron = "cron(20 2 * * ? *)"
+      step_era_commons_cron = "cron(20 2 * * ? *)"
       secret = "era-commons-connect-prod"
     }
   })

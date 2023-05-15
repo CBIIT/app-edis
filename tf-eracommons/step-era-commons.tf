@@ -1,9 +1,9 @@
-resource "aws_sfn_state_machine" "edis_sfn_refresh_nv_props" {
-  name       = "edis-refresh-nv-props-${var.env}"
+resource "aws_sfn_state_machine" "edis_sfn_refresh_era_commons" {
+  name       = "edis-refresh-era-commons-${var.env}"
   role_arn   = aws_iam_role.step_function.arn
   definition = <<EOF
   {
-  "Comment": "State Machine to retrieve properties data from nVision",
+  "Comment": "State Machine to retrieve data from eRA Commons",
   "StartAt": "Cleanup temporary folder",
   "States": {
     "Cleanup temporary folder": {
@@ -11,9 +11,9 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_nv_props" {
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "FunctionName": "${module.lambda-prepare-s3-for-vds.arn}:$LATEST",
+        "FunctionName": "${module.lambda-prepare-s3-for-era-commons.arn}:$LATEST",
         "Payload": {
-          "src": "nv-props/prev_tmp"
+          "src": "era-commons/prev_tmp"
         }
       },
       "Retry": [
@@ -35,10 +35,10 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_nv_props" {
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "FunctionName": "${module.lambda-prepare-s3-for-vds.arn}:$LATEST",
+        "FunctionName": "${module.lambda-prepare-s3-for-era-commons.arn}:$LATEST",
         "Payload": {
-          "src": "nv-props/prev",
-          "dst": "nv-props/prev_tmp"
+          "src": "era-commons/prev",
+          "dst": "era-commons/prev_tmp"
         }
       },
       "Retry": [
@@ -64,7 +64,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_nv_props" {
           "src": "nv-props/current",
           "dst": "nv-props/prev"
         },
-        "FunctionName": "${module.lambda-prepare-s3-for-vds.arn}:$LATEST"
+        "FunctionName": "${module.lambda-prepare-s3-for-era-commons.arn}:$LATEST"
       },
       "Retry": [
         {
@@ -78,14 +78,14 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_nv_props" {
           "BackoffRate": 2
         }
       ],
-      "Next": "Load properties data from nVision"
+      "Next": "Load properties data from eRA Commons"
     },
     "Load properties data from nVision": {
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "FunctionName": "${module.lambda-load-from-nv-props.arn}:$LATEST" 
+        "FunctionName": "${module.lambda-load-from-era-commons.arn}:$LATEST"
       },
       "Retry": [
         {
@@ -105,7 +105,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_nv_props" {
           "ErrorEquals": [
             "States.ALL"
           ],
-          "Comment": "Load properties data from nVision failed",
+          "Comment": "Load properties data from eRA Commons failed",
           "Next": "Clean up current folder"
         }
       ]
@@ -115,12 +115,12 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_nv_props" {
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "FunctionName": "${module.lambda-vds-users-delta.arn}:$LATEST",
+        "FunctionName": "${module.lambda-era-commons-delta.arn}:$LATEST",
         "Payload": {
-          "DB_NAME": "vdsdb_${var.env}",
-          "S3SUBFOLDER": "nv-props",
-          "DB_CURRENT_T": "nvprops_current_t",
-          "DB_PREV_T": "nvprops_prev_t"
+          "DB_NAME": "era_commons_db_${var.env}",
+          "S3SUBFOLDER": "era-commons",
+          "DB_CURRENT_T": "era_commons_current_t",
+          "DB_PREV_T": "era_commons_prev_t"
         }
       },
       "Retry": [
@@ -142,11 +142,11 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_nv_props" {
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "FunctionName": "${module.lambda-delta-to-sqs.arn}:$LATEST",
+        "FunctionName": "${module.lambda-era-commons-delta-to-sqs.arn}:$LATEST",
         "Payload": {
           "delta.$": "$.delta",
           "deleted.$": "$.deleted",
-          "sqs_url_key": "NVPROPS_SQS_URL"
+          "sqs_url_key": "ERA_COMMONS_SQS_URL"
         }
       },
       "Retry": [
@@ -168,9 +168,9 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_nv_props" {
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "FunctionName": "${module.lambda-prepare-s3-for-vds.arn}:$LATEST",
+        "FunctionName": "${module.lambda-prepare-s3-for-era-commons.arn}:$LATEST",
         "Payload": {
-          "src": "nv-props/current"
+          "src": "era-commons/current"
         }
       },
       "Retry": [
@@ -192,10 +192,10 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_nv_props" {
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "FunctionName": "${module.lambda-prepare-s3-for-vds.arn}:$LATEST",
+        "FunctionName": "${module.lambda-prepare-s3-for-era-commons.arn}:$LATEST",
         "Payload": {
-          "src": "nv-props/prev",
-          "dst": "nv-props/current"
+          "src": "era-commons/prev",
+          "dst": "era-commons/current"
         }
       },
       "Retry": [
@@ -217,10 +217,10 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_nv_props" {
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "FunctionName": "${module.lambda-prepare-s3-for-vds.arn}:$LATEST",
+        "FunctionName": "${module.lambda-prepare-s3-for-era-commons.arn}:$LATEST",
         "Payload": {
-          "src": "nv-props/prev_tmp",
-          "dst": "nv-props/prev"
+          "src": "era-commons/prev_tmp",
+          "dst": "era-commons/prev"
         }
       },
       "Retry": [
@@ -239,21 +239,21 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_nv_props" {
     },
     "Fail": {
       "Type": "Fail",
-      "Cause": "nVision load failed"
+      "Cause": "era Commons load failed"
     }
   }
 }
 EOF
 }
 
-resource "aws_cloudwatch_event_rule" "edis_refresh_nv_props" {
-  name = "edis-nv-props-refresh-${var.env}"
-  description = "Start Step Function to refresh nVision properties data"
-  schedule_expression = lookup(local.tier_conf, var.env).step_nv_props_cron
+resource "aws_cloudwatch_event_rule" "edis_refresh_era_commons" {
+  name = "edis-era-commons-refresh-${var.env}"
+  description = "Start Step Function to refresh eRA Commons data"
+  schedule_expression = lookup(local.tier_conf, var.env).step_era_commons_cron
 }
 
-resource "aws_cloudwatch_event_target" "edis_refresh_nv_props" {
-  arn  = aws_sfn_state_machine.edis_sfn_refresh_nv_props.arn
-  rule = aws_cloudwatch_event_rule.edis_refresh_nv_props.name
-  role_arn = aws_iam_role.refresh_nv_props_trigger.arn
+resource "aws_cloudwatch_event_target" "edis_refresh_era_commons" {
+  arn  = aws_sfn_state_machine.edis_sfn_refresh_era_commons.arn
+  rule = aws_cloudwatch_event_rule.edis_refresh_era_commons.name
+  role_arn = aws_iam_role.refresh_era_commons_trigger.arn
 }

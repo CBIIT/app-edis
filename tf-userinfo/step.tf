@@ -243,7 +243,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_vds" {
       "Parameters": {
         "FunctionName": "${module.lambda-vds-users-delta.arn}:$LATEST",
         "Payload": {
-          "DB_NAME": "vdsdb_dev",
+          "DB_NAME": "vdsdb_${var.env}",
           "S3SUBFOLDER": "vds",
           "DB_CURRENT_T": "currentp_t",
           "DB_PREV_T": "prevp_t"
