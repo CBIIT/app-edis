@@ -99,14 +99,6 @@ EOF
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
   ]
 
-  lambda_era_commons_role_policies = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaENIManagementAccess",
-    "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
-    module.ddb-era-commons.iam-access-ddb-policy-arn
-  ]
-
   lambda_load_from_era_commons_role_policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
