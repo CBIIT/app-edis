@@ -107,6 +107,43 @@ EOF
     module.ddb-era-commons.iam-access-ddb-policy-arn
   ]
 
+  lambda_load_from_era_commons_role_policies = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
+    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
+    "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
+    aws_iam_policy.iam_access_s3.arn
+  ]
+
+  lambda_prepare_s3_for_era_commons_role_policies = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
+    aws_iam_policy.iam_access_s3.arn
+  ]
+
+  lambda_era_commons_delta_role_policies = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
+    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
+    "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
+    "arn:aws:iam::aws:policy/AmazonAthenaFullAccess",
+    aws_iam_policy.iam_access_s3.arn
+  ]
+
+  lambda_delta-to-sqs_role_policies = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
+    aws_iam_policy.iam_access_s3.arn,
+    "arn:aws:iam::aws:policy/AmazonSQSFullAccess"
+  ]
+
+  lambda_sqs-delta-to-db_role_policies = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
+    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole"
+  ]
+
   lambda-layers = (var.oracle-db-layer-arn != null) ? [
     var.oracle-db-layer-arn
   ] : []
