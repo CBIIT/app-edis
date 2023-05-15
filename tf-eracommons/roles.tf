@@ -52,3 +52,43 @@ resource "aws_iam_role" "step_function" {
   permissions_boundary = local.policy-boundary-arn
 }
 
+data "aws_iam_policy_document" "assume_role_event_trigger" {
+  statement {
+    sid     = ""
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["events.amazonaws.com"]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "iam_refresh_era_commons" {
+  statement {
+    sid     = "executeStep"
+    effect  = "Allow"
+    actions = ["states:StartExecution"]
+    resources = [
+      aws_sfn_state_machine.edis_sfn_refresh_era_commons.arn
+    ]
+  }
+}
+
+resource "aws_iam_policy" "iam_refresh_era_commons" {
+  name        = "${local.power-user-prefix}-start-era-commons-refresh-${var.env}"
+  path        = "/"
+  description = "Allow trigger event to start refresh eRA Commons data"
+  policy      = data.aws_iam_policy_document.iam_refresh_era_commons.json
+}
+
+resource "aws_iam_role" "refresh_era_commons_trigger" {
+  name               = "${local.power-user-prefix}-start-era-commons-refresh-${var.env}"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_event_trigger.json
+  managed_policy_arns = [
+    aws_iam_policy.iam_refresh_era_commons.arn
+  ]
+  path                 = "/"
+  permissions_boundary = local.policy-boundary-arn
+}
+
