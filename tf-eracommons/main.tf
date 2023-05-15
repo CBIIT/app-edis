@@ -88,7 +88,7 @@ module "lambda-era-commons" {
   lambda-description  = "Lambda function aceeses Oracle eRA Commons and refreshes Dynamo DB table."
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
-    SECRET    = "era-commons-connect-${var.env}"
+    SECRET    = lookup(local.tier_conf, var.env).secret
     TABLE     = module.ddb-era-commons.ddb-table-name
   })
   lambda-managed-policies        = { for idx, val in local.lambda_era_commons_role_policies: idx => val }

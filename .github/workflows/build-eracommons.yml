@@ -61,8 +61,36 @@ jobs:
           npm run zip-prod
           ls -la out
 
-      - name: build lambda-eracommons
-        working-directory: lambda-eracommons
+      - name: build lambda-prepare-s3-for-era-commons
+        working-directory: lambda-prepare-s3-for-vds
+        run: |
+          npm run build-prod
+          npm run zip-prod
+          ls -la out
+
+      - name: build lambda-load-from-era-commons
+        working-directory: lambda-load-from-eracommons
+        run: |
+          npm run build-prod
+          npm run zip-prod
+          ls -la out
+
+      - name: build lambda-vds-users-delta
+        working-directory: lambda-vds-users-delta
+        run: |
+          npm run build-prod
+          npm run zip-prod
+          ls -la out
+
+      - name: build lambda-delta-to-sqs
+        working-directory: lambda-delta-to-sqs
+        run: |
+          npm run build-prod
+          npm run zip-prod
+          ls -la out
+
+      - name: build lambda-sqs-batch-to-db
+        working-directory: lambda-sqs-batch-to-db
         run: |
           npm run build-prod
           npm run zip-prod
@@ -76,4 +104,8 @@ jobs:
           path: |
             lambda-userapi/out/*.zip
             lambda-auth/out/*.zip
-            lambda-eracommons/out/*.zip
+            lambda-prepare-s3-for-vds/out/*.zip
+            lambda-load-from-eracommons/out/*.zip
+            lambda-vds-users-delta/out/*.zip
+            lambda-delta-to-sqs/out/*.zip
+            lambda-sqs-batch-to-db/out/*.zip
