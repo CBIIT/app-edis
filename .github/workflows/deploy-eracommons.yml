@@ -100,10 +100,10 @@ jobs:
 
       - name: Planning Terraform
         id: plan
-        run: terraform plan -var 'env=${{ inputs.tier }}' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 'oracle-db-layer-arn=${{ steps.dblayer.outputs.name }}'
+        run: terraform plan -var 'env=${{ inputs.tier }}' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 's3bucket-for-era-commons-users=${{ inputs.s3bucket }}' -var 'oracle-db-layer-arn=${{ steps.dblayer.outputs.name }}'
         working-directory: tf-eracommons/
 
       - name: Terraform Deployment
         id: apply
-        run: terraform apply -auto-approve -input=false -lock=false -var 'env=${{ inputs.tier }}' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 'oracle-db-layer-arn=${{ steps.dblayer.outputs.name }}'
+        run: terraform apply -auto-approve -input=false -lock=false -var 'env=${{ inputs.tier }}' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 's3bucket-for-era-commons-users=${{ inputs.s3bucket }}' -var 'oracle-db-layer-arn=${{ steps.dblayer.outputs.name }}'
         working-directory: tf-eracommons/
