@@ -13,7 +13,7 @@ module "lambda-load-from-era-commons" {
   app                 = "edis"
   lambda-name         = "load-from-era-commons"
   file-name           = abspath("../built-artifacts/lambda-load-from-eracommons/out/lambda-load-from-eracommons.zip")
-  lambda-description  = "Lambda function to load Users into from eRA Commonsp into S3 bucket"
+  lambda-description  = "Lambda function to load Users into from eRA Commons into S3 bucket"
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
     SECRET    = lookup(local.tier_conf, var.env).secret

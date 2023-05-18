@@ -47,7 +47,7 @@ async function getSecretParameters() {
 
 const schema = new parquet.ParquetSchema({
     id: { type: 'UTF8'},
-    USER_ID: { type: 'UTF8'},
+    LOGINGOV_USER_ID: { type: 'UTF8'},
     content: { type: 'UTF8'}
 });
 
