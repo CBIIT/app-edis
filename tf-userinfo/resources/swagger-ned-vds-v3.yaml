@@ -260,6 +260,7 @@ paths:
                       "LOGINGOV_USER_ID": "$elem.LOGINGOV_USER_ID.S",
                       "ALIAS_DESCRIP": "$elem.ALIAS_DESCRIP.S"
                       "providedEmail": "$elem.providedEmail.S"
+                      "DOC": "$elem.DOC.S"
                     }#if($foreach.hasNext),#end
 
                 #end
@@ -836,6 +837,10 @@ components:
           description: Email calculated based on three fields (by priority) - proxyAddresses, MAIL, NIHPRIMARYSMTP 
           type: string
           example: smithj@mail.gov
+        DOC:
+          description: Calculated DOC value based on NIHSAC and NIHORGPATH
+          type: string
+          example: CBIIT
 
     nVProperty:
       type: object

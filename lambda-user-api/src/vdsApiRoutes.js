@@ -2,7 +2,7 @@
 
 const {conf} = require("./conf");
 const ldap = require('ldapjs');
-const {convertBase64Fields, getProvidedEmail} = require("./util")
+const {convertBase64Fields, getProvidedEmail, getDOC} = require("./util")
 
 
 let tlsOptions;
@@ -88,6 +88,7 @@ const getUsers = async (userId, ic) => {
                     }
                     let obj = convertBase64Fields(entry);
                     obj['providedEmail'] = getProvidedEmail(obj);
+                    obj['DOC'] = getDOC(obj);
                     users.push(obj);
                 });
                 ldapRes.on('searchReference', function () { });
