@@ -46,4 +46,28 @@ function getProvidedEmail(entry) {
     return result;
 }
 
-module.exports = { convertBase64Fields, getProvidedEmail };
+function getDOC(obj) {
+    let emptyResult = '';
+    if (obj && obj.NIHSAC && obj.NIHORGPATH && obj.NIHSAC.startsWith('HNC')) {
+        const orgs = obj.NIHORGPATH.split(" ");
+        if (obj.NIHSAC.charAt(3) === '1') {
+            if (obj.NIHSAC.charAt(4) === '7' && orgs.length > 3) {
+                return orgs[1] + ' ' + orgs[2] + ' ' + orgs[3];
+            }
+            else if orgs.length > 2) {
+                return orgs[1] + ' ' + orgs[2];
+            }
+            else
+            {
+                return emptyResult;
+            }
+        }
+        else if (orgs.length > 1) {
+            return orgs[1];
+        }
+    }
+    return emptyResult;
+}
+
+
+module.exports = { convertBase64Fields, getProvidedEmail, getDOC };

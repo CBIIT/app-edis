@@ -2,7 +2,7 @@
 
 const {conf} = require("./conf");
 const ldap = require('ldapjs');
-const {convertBase64Fields, sleep, getProvidedEmail, getDivision, getEmail, getBuilding} = require("./util")
+const {convertBase64Fields, sleep, getProvidedEmail, getDivision, getEmail, getBuilding, getDOC} = require("./util")
 const {AndFilter, EqualityFilter, SubstringFilter, NotFilter, OrFilter} = require("ldapjs/lib/filters");
 
 let tlsOptions;
@@ -101,7 +101,7 @@ const getUsers = async (ic, divisions, includeDivs, pageCallBack, s3Entry) => {
                         console.info(counter + ' records found and counting...');
                     }
                     let obj = convertBase64Fields(entry);
-                    // Enhance user record with additional fields including timestamp
+                    // Enhance user record with additional fields
                     obj['NEDId'] = '' + obj.UNIQUEIDENTIFIER;
                     obj['FirstName'] = obj.GIVENNAME;
                     obj['MiddleName'] = obj.MIDDLENAME;
@@ -121,6 +121,7 @@ const getUsers = async (ic, divisions, includeDivs, pageCallBack, s3Entry) => {
                     obj['Building'] = getBuilding(obj);
                     obj['Room'] = obj.ROOMNUMBER;
                     obj['providedEmail'] = getProvidedEmail(obj);
+                    obj['DOC'] = getDOC(obj);
                     for (const attr of conf.vds.excludedAttributes) {
                         delete obj[attr];
                     }
