@@ -54,7 +54,7 @@ function getDOC(obj) {
             if (obj.NIHSAC.charAt(4) === '7' && orgs.length > 3) {
                 return orgs[1] + ' ' + orgs[2] + ' ' + orgs[3];
             }
-            else if orgs.length > 2) {
+            else if (orgs.length > 2) {
                 return orgs[1] + ' ' + orgs[2];
             }
             else
