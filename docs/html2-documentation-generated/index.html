@@ -1239,6 +1239,11 @@
       "type" : "string",
       "description" : "Email calculated based on three fields (by priority) - proxyAddresses, MAIL, NIHPRIMARYSMTP",
       "example" : "smithj@mail.gov"
+    },
+    "DOC" : {
+      "type" : "string",
+      "description" : "Calculated DOC value based on NIHSAC and NIHORGPATH",
+      "example" : "CBIIT"
     }
   }
 };
@@ -1351,6 +1356,7 @@
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Clients-getNEDChangesByIC-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Authorization: [[apiKey]]"\
 -H "Accept: application/json"\
 "//userapi/ned/changesByIc/{ic}?From_Date=&From_Time=&To_Date=&To_Time="</code></pre>
                           </div>
@@ -1366,7 +1372,14 @@ import java.util.*;
 public class ClientsApiExample {
 
     public static void main(String[] args) {
-        
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+        // Configure API key authorization: request-authorizer
+        ApiKeyAuth request-authorizer = (ApiKeyAuth) defaultClient.getAuthentication("request-authorizer");
+        request-authorizer.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //request-authorizer.setApiKeyPrefix("Token");
+
         ClientsApi apiInstance = new ClientsApi();
         String ic = ic_example; // String | IC
         String fromDate = fromDate_example; // String | 
@@ -1411,7 +1424,12 @@ public class ClientsApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *ic = ic_example; // IC
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+// Configure API key authorization: (authentication scheme: request-authorizer)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+String *ic = ic_example; // IC
 String *fromDate = fromDate_example; //  (optional)
 String *fromTime = fromTime_example; //  (optional)
 String *toDate = toDate_example; //  (optional)
@@ -1438,6 +1456,13 @@ ClientsApi *apiInstance = [[ClientsApi alloc] init];
 
                             <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var UserRestWebServiceApi = require('user_rest_web_service_api');
+var defaultClient = UserRestWebServiceApi.ApiClient.instance;
+
+// Configure API key authorization: request-authorizer
+var request-authorizer = defaultClient.authentications['request-authorizer'];
+request-authorizer.apiKey = "YOUR API KEY"
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//request-authorizer.apiKeyPrefix['Authorization'] = "Token"
 
 var api = new UserRestWebServiceApi.ClientsApi()
 var ic = ic_example; // {{String}} IC
@@ -1475,6 +1500,11 @@ namespace Example
         public void main()
         {
 
+            // Configure API key authorization: request-authorizer
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
             var apiInstance = new ClientsApi();
             var ic = ic_example;  // String | IC
             var fromDate = fromDate_example;  // String |  (optional) 
@@ -1502,6 +1532,11 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Configure API key authorization: request-authorizer
+Swagger\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// Swagger\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
 $api_instance = new Swagger\Client\ApiClientsApi();
 $ic = ic_example; // String | IC
 $fromDate = fromDate_example; // String | 
@@ -1522,6 +1557,11 @@ try {
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ClientsApi;
+
+# Configure API key authorization: request-authorizer
+$WWW::SwaggerClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::SwaggerClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
 
 my $api_instance = WWW::SwaggerClient::ClientsApi->new();
 my $ic = ic_example; # String | IC
@@ -1545,6 +1585,11 @@ import time
 import swagger_client
 from swagger_client.rest import ApiException
 from pprint import pprint
+
+# Configure API key authorization: request-authorizer
+swagger_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# swagger_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
 
 # create an instance of the API class
 api_instance = swagger_client.ClientsApi()
@@ -1756,6 +1801,7 @@ except ApiException as e:
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Clients-getVDSUserByNIHId-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Authorization: [[apiKey]]"\
 -H "Accept: application/json"\
 "//userapi/vds/userById/{id}"</code></pre>
                           </div>
@@ -1771,7 +1817,14 @@ import java.util.*;
 public class ClientsApiExample {
 
     public static void main(String[] args) {
-        
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+        // Configure API key authorization: request-authorizer
+        ApiKeyAuth request-authorizer = (ApiKeyAuth) defaultClient.getAuthentication("request-authorizer");
+        request-authorizer.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //request-authorizer.setApiKeyPrefix("Token");
+
         ClientsApi apiInstance = new ClientsApi();
         String id = id_example; // String | user NIH ID
         try {
@@ -1808,7 +1861,12 @@ public class ClientsApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *id = id_example; // user NIH ID
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+// Configure API key authorization: (authentication scheme: request-authorizer)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+String *id = id_example; // user NIH ID
 
 ClientsApi *apiInstance = [[ClientsApi alloc] init];
 
@@ -1827,6 +1885,13 @@ ClientsApi *apiInstance = [[ClientsApi alloc] init];
 
                             <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var UserRestWebServiceApi = require('user_rest_web_service_api');
+var defaultClient = UserRestWebServiceApi.ApiClient.instance;
+
+// Configure API key authorization: request-authorizer
+var request-authorizer = defaultClient.authentications['request-authorizer'];
+request-authorizer.apiKey = "YOUR API KEY"
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//request-authorizer.apiKeyPrefix['Authorization'] = "Token"
 
 var api = new UserRestWebServiceApi.ClientsApi()
 var id = id_example; // {{String}} user NIH ID
@@ -1859,6 +1924,11 @@ namespace Example
         public void main()
         {
 
+            // Configure API key authorization: request-authorizer
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
             var apiInstance = new ClientsApi();
             var id = id_example;  // String | user NIH ID
 
@@ -1882,6 +1952,11 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Configure API key authorization: request-authorizer
+Swagger\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// Swagger\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
 $api_instance = new Swagger\Client\ApiClientsApi();
 $id = id_example; // String | user NIH ID
 
@@ -1898,6 +1973,11 @@ try {
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ClientsApi;
+
+# Configure API key authorization: request-authorizer
+$WWW::SwaggerClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::SwaggerClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
 
 my $api_instance = WWW::SwaggerClient::ClientsApi->new();
 my $id = id_example; # String | user NIH ID
@@ -1917,6 +1997,11 @@ import time
 import swagger_client
 from swagger_client.rest import ApiException
 from pprint import pprint
+
+# Configure API key authorization: request-authorizer
+swagger_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# swagger_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
 
 # create an instance of the API class
 api_instance = swagger_client.ClientsApi()
@@ -2053,6 +2138,7 @@ except ApiException as e:
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Clients-listNVProperties-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Authorization: [[apiKey]]"\
 -H "Accept: application/json"\
 "//userapi/nv/props?lastEvaluatedKey="</code></pre>
                           </div>
@@ -2068,7 +2154,14 @@ import java.util.*;
 public class ClientsApiExample {
 
     public static void main(String[] args) {
-        
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+        // Configure API key authorization: request-authorizer
+        ApiKeyAuth request-authorizer = (ApiKeyAuth) defaultClient.getAuthentication("request-authorizer");
+        request-authorizer.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //request-authorizer.setApiKeyPrefix("Token");
+
         ClientsApi apiInstance = new ClientsApi();
         String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
         try {
@@ -2105,7 +2198,12 @@ public class ClientsApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Clients-listNVProperties-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *lastEvaluatedKey = lastEvaluatedKey_example; // Last Evaluated Key from previous request (optional)
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+// Configure API key authorization: (authentication scheme: request-authorizer)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+String *lastEvaluatedKey = lastEvaluatedKey_example; // Last Evaluated Key from previous request (optional)
 
 ClientsApi *apiInstance = [[ClientsApi alloc] init];
 
@@ -2124,6 +2222,13 @@ ClientsApi *apiInstance = [[ClientsApi alloc] init];
 
                             <div class="tab-pane" id="examples-Clients-listNVProperties-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var UserRestWebServiceApi = require('user_rest_web_service_api');
+var defaultClient = UserRestWebServiceApi.ApiClient.instance;
+
+// Configure API key authorization: request-authorizer
+var request-authorizer = defaultClient.authentications['request-authorizer'];
+request-authorizer.apiKey = "YOUR API KEY"
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//request-authorizer.apiKeyPrefix['Authorization'] = "Token"
 
 var api = new UserRestWebServiceApi.ClientsApi()
 var opts = { 
@@ -2157,6 +2262,11 @@ namespace Example
         public void main()
         {
 
+            // Configure API key authorization: request-authorizer
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
             var apiInstance = new ClientsApi();
             var lastEvaluatedKey = lastEvaluatedKey_example;  // String | Last Evaluated Key from previous request (optional) 
 
@@ -2180,6 +2290,11 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Configure API key authorization: request-authorizer
+Swagger\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// Swagger\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
 $api_instance = new Swagger\Client\ApiClientsApi();
 $lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
 
@@ -2196,6 +2311,11 @@ try {
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ClientsApi;
+
+# Configure API key authorization: request-authorizer
+$WWW::SwaggerClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::SwaggerClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
 
 my $api_instance = WWW::SwaggerClient::ClientsApi->new();
 my $lastEvaluatedKey = lastEvaluatedKey_example; # String | Last Evaluated Key from previous request
@@ -2215,6 +2335,11 @@ import time
 import swagger_client
 from swagger_client.rest import ApiException
 from pprint import pprint
+
+# Configure API key authorization: request-authorizer
+swagger_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# swagger_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
 
 # create an instance of the API class
 api_instance = swagger_client.ClientsApi()
@@ -2348,6 +2473,7 @@ except ApiException as e:
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Clients-listNVPropertiesByUserId-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Authorization: [[apiKey]]"\
 -H "Accept: application/json"\
 "//userapi/nv/props/user/{nihId}?lastEvaluatedKey="</code></pre>
                           </div>
@@ -2363,7 +2489,14 @@ import java.util.*;
 public class ClientsApiExample {
 
     public static void main(String[] args) {
-        
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+        // Configure API key authorization: request-authorizer
+        ApiKeyAuth request-authorizer = (ApiKeyAuth) defaultClient.getAuthentication("request-authorizer");
+        request-authorizer.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //request-authorizer.setApiKeyPrefix("Token");
+
         ClientsApi apiInstance = new ClientsApi();
         String nihId = nihId_example; // String | User NIH ID
         String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
@@ -2402,7 +2535,12 @@ public class ClientsApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *nihId = nihId_example; // User NIH ID
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+// Configure API key authorization: (authentication scheme: request-authorizer)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+String *nihId = nihId_example; // User NIH ID
 String *lastEvaluatedKey = lastEvaluatedKey_example; // Last Evaluated Key from previous request (optional)
 
 ClientsApi *apiInstance = [[ClientsApi alloc] init];
@@ -2423,6 +2561,13 @@ ClientsApi *apiInstance = [[ClientsApi alloc] init];
 
                             <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var UserRestWebServiceApi = require('user_rest_web_service_api');
+var defaultClient = UserRestWebServiceApi.ApiClient.instance;
+
+// Configure API key authorization: request-authorizer
+var request-authorizer = defaultClient.authentications['request-authorizer'];
+request-authorizer.apiKey = "YOUR API KEY"
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//request-authorizer.apiKeyPrefix['Authorization'] = "Token"
 
 var api = new UserRestWebServiceApi.ClientsApi()
 var nihId = nihId_example; // {{String}} User NIH ID
@@ -2457,6 +2602,11 @@ namespace Example
         public void main()
         {
 
+            // Configure API key authorization: request-authorizer
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
             var apiInstance = new ClientsApi();
             var nihId = nihId_example;  // String | User NIH ID
             var lastEvaluatedKey = lastEvaluatedKey_example;  // String | Last Evaluated Key from previous request (optional) 
@@ -2481,6 +2631,11 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Configure API key authorization: request-authorizer
+Swagger\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// Swagger\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
 $api_instance = new Swagger\Client\ApiClientsApi();
 $nihId = nihId_example; // String | User NIH ID
 $lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
@@ -2498,6 +2653,11 @@ try {
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ClientsApi;
+
+# Configure API key authorization: request-authorizer
+$WWW::SwaggerClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::SwaggerClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
 
 my $api_instance = WWW::SwaggerClient::ClientsApi->new();
 my $nihId = nihId_example; # String | User NIH ID
@@ -2518,6 +2678,11 @@ import time
 import swagger_client
 from swagger_client.rest import ApiException
 from pprint import pprint
+
+# Configure API key authorization: request-authorizer
+swagger_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# swagger_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
 
 # create an instance of the API class
 api_instance = swagger_client.ClientsApi()
@@ -2681,6 +2846,7 @@ except ApiException as e:
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Clients-listVDSUsersByIC-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Authorization: [[apiKey]]"\
 -H "Accept: application/json"\
 "//userapi/vds/usersByIc/{ic}?lastEvaluatedKey="</code></pre>
                           </div>
@@ -2696,7 +2862,14 @@ import java.util.*;
 public class ClientsApiExample {
 
     public static void main(String[] args) {
-        
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+        // Configure API key authorization: request-authorizer
+        ApiKeyAuth request-authorizer = (ApiKeyAuth) defaultClient.getAuthentication("request-authorizer");
+        request-authorizer.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //request-authorizer.setApiKeyPrefix("Token");
+
         ClientsApi apiInstance = new ClientsApi();
         String ic = ic_example; // String | IC
         String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
@@ -2735,7 +2908,12 @@ public class ClientsApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *ic = ic_example; // IC
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+// Configure API key authorization: (authentication scheme: request-authorizer)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+String *ic = ic_example; // IC
 String *lastEvaluatedKey = lastEvaluatedKey_example; // Last Evaluated Key from previous request (optional)
 
 ClientsApi *apiInstance = [[ClientsApi alloc] init];
@@ -2756,6 +2934,13 @@ ClientsApi *apiInstance = [[ClientsApi alloc] init];
 
                             <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var UserRestWebServiceApi = require('user_rest_web_service_api');
+var defaultClient = UserRestWebServiceApi.ApiClient.instance;
+
+// Configure API key authorization: request-authorizer
+var request-authorizer = defaultClient.authentications['request-authorizer'];
+request-authorizer.apiKey = "YOUR API KEY"
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//request-authorizer.apiKeyPrefix['Authorization'] = "Token"
 
 var api = new UserRestWebServiceApi.ClientsApi()
 var ic = ic_example; // {{String}} IC
@@ -2790,6 +2975,11 @@ namespace Example
         public void main()
         {
 
+            // Configure API key authorization: request-authorizer
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
             var apiInstance = new ClientsApi();
             var ic = ic_example;  // String | IC
             var lastEvaluatedKey = lastEvaluatedKey_example;  // String | Last Evaluated Key from previous request (optional) 
@@ -2814,6 +3004,11 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Configure API key authorization: request-authorizer
+Swagger\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// Swagger\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
 $api_instance = new Swagger\Client\ApiClientsApi();
 $ic = ic_example; // String | IC
 $lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
@@ -2831,6 +3026,11 @@ try {
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ClientsApi;
+
+# Configure API key authorization: request-authorizer
+$WWW::SwaggerClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::SwaggerClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
 
 my $api_instance = WWW::SwaggerClient::ClientsApi->new();
 my $ic = ic_example; # String | IC
@@ -2851,6 +3051,11 @@ import time
 import swagger_client
 from swagger_client.rest import ApiException
 from pprint import pprint
+
+# Configure API key authorization: request-authorizer
+swagger_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# swagger_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
 
 # create an instance of the API class
 api_instance = swagger_client.ClientsApi()
