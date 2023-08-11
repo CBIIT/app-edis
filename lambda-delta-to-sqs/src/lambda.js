@@ -27,7 +27,7 @@ const SQS = new AWS.SQS();
  * }
  */
 module.exports.handler = async (event, context) => {
-  context.callbackWaitsForEmptyEventLoop = false
+  context.callbackWaitsForEmptyEventLoop = false;
   console.info('Lambda-delta-to-sqs', event);
 
   const deltaS3path = event['delta'];
@@ -157,7 +157,7 @@ function decodeS3URL(path) {
  * @param line - given input string 
  * @returns {any} - enhanced user JSON record
  */
-function processLine(line) {
+function processLine(line, counter) {
   line = line.replace(/""/g, '"');
   line = line.slice(1,-1);
   // if (counter < 2) {
@@ -187,7 +187,6 @@ async function sqsSend(sqsQueueUrl, chunk, marker, counter, action) {
     data: chunk
   });
   const sChunkLength = Buffer.byteLength(sChunk, 'urf8');
-  console.info('Sending data into SQS with chunk', chunk.length, 'of', counter, sChunkLength);
 
   const params = {
     MessageBody: sChunk,
@@ -212,6 +211,7 @@ async function sqsSend(sqsQueueUrl, chunk, marker, counter, action) {
     }
   }
   const bodyLength = params.MessageBody.length;
+  console.info('Sending data into SQS with chunk', chunk.length, start, end, sChunkLength, bodyLength);
   const result = await SQS.sendMessage(params).promise();
   console.info('Lambda-delta-to-sqs sent', action, marker, start, end, bodyLength, sChunkLength);
   console.debug('sqs sent result ', result);
