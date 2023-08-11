@@ -7,7 +7,7 @@ const { formatDate } = require('./util')
 
 // Environment variables
 const logLevel = process.env['LOG_LEVEL'];
-const maxMessageSize = process.env['MAX_SIZE'] || 262144;
+const maxMessageSize = process.env['MAX_SIZE'] || 262000;
 
 // Set the console log level
 if (logLevel && logLevel === 'info') {
