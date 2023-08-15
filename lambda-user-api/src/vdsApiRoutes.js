@@ -90,7 +90,7 @@ const getUsers = async (userId, ic) => {
                     obj['providedEmail'] = getProvidedEmail(obj);
                     obj['DOC'] = getDOC(obj);
                     users.push(obj);
-                });Ï
+                });
                 ldapRes.on('searchReference', function () { });
                 ldapRes.on('page', function () {
                     console.info(`page end | ${counter} users fetched`);
