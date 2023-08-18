@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: AWS account wide - Deploy 
+name: 0.1 - AWS account wide - Deploy
 
 # Controls when the workflow will run
 on:
@@ -12,28 +12,66 @@ on:
         required: true
         default: dev
       s3bucket:
-        description: 'S3 bucket to use for deployment'
+        description: 'S3 bucket with Oracle Lambda layer file'
         required: true
         default: cf-templates-woyzwinjenjf-us-east-1
+      host-runner:
+        type: string
+        required: false
+        description: 'Selected self hosted (nci-self-hosted) of github hosted () runner'
+        default: 'ubuntu-latest'
 
 jobs:
   deployment:
-    
     # The type of runner that the job will run on
-    uses: ./.github/workflows/deploy-tf-template.yml
-    with:
-      envt: ${{ github.event.inputs.envt }}
-      tier: "account-wide"
-      s3bucket: ${{ github.event.inputs.s3bucket }}
-      subnet1: "na-subnet1"
-      subnet2: "na-suvnet2"
-      vpcsg: "na-vpcsg"
-      build-eracommons: false
-      build-userinfo: false
-    secrets: inherit
+    runs-on: ${{ inputs.host-runner }}
+
+    environment: ${{ inputs.envt }}
 
     permissions:
       packages: write
       id-token: write
       contents: write
 
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Repository Checkout
+        uses: actions/checkout@v3
+
+      # Runs a set of commands using the runners shell
+      - name: Workflow Parameters
+        run: |
+          echo Environment - ${{ inputs.envt }}
+          echo S3 Bucket - ${{ inputs.s3bucket }}
+          echo Host Runner - ${{ inputs.host-runner }}
+
+      - name: Setup AWS configuration
+        env:
+          OIDC_ROLE: ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
+        if: "${{ env.OIDC_ROLE != '' }}"
+        uses: aws-actions/configure-aws-credentials@master
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
+          role-session-name: TestSessionWithOIDC
+          aws-region: us-east-1
+
+      - name: Init Terraform
+        id: init
+        run: terraform init -backend-config="bucket=${{ inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/api-edis-account-wide" -backend-config="region=us-east-1"
+        working-directory: tf-global/
+
+      - name: Validate Terraform
+        id: validate
+        run: terraform validate
+        working-directory: tf-global/
+
+      - name: Planning Terraform
+        id: plan
+        run: terraform plan -var 's3bucket=${{ inputs.s3bucket }}'
+        working-directory: tf-global/
+
+      - name: Terraform Deployment
+        id: apply
+        run: terraform apply -auto-approve -input=false -lock=false -var 's3bucket=${{ inputs.s3bucket }}'
+        working-directory: tf-global/
