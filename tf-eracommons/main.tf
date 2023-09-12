@@ -53,10 +53,10 @@ module "lambda-era-commons-auth" {
   file-name           = abspath("../built-artifacts/lambda-auth/out/lambda-auth.zip")
   lambda-description  = "Lambda function to run Athena query to get VDS users delta for refresh."
   lambda-env-variables = tomap({
-    LOG_LEVEL = "info"
+    "LOG_LEVEL" = "info"
     "AUDIENCE"  = "api://default"
     "ISSUER"    = lookup(local.tier_conf, var.env).issuer
-
+    "SECRET"    = lookup(local.tier_conf, var.env).secret
   })
   lambda-managed-policies        = { for idx, val in local.lambda_era_commons_auth_policies: idx => val }
   create_api_gateway_integration = false
