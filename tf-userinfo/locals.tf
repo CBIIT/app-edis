@@ -89,8 +89,8 @@ EOF
   lambda_userinfo_auth_policies = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
-    "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
-    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
+    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
+    "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
   ]
   
   lambda_userinfo_api_role_policies = [
