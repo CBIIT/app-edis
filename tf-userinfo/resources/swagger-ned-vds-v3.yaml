@@ -242,7 +242,7 @@ paths:
                       "NAME_SUFFIX": "$elem.NAME_SUFFIX.S",
                       "EMAIL": "$elem.EMAIL.S",
                       "ORG_NAME": "$elem.ORG_NAME.S",
-                      "ORG_ID": $elem.ORG_ID.N,
+                      "ORG_ID": "$elem.ORG_ID.N",
                       "ORG_ADDRESS_1": "$elem.LINE_1_ADDR.S",
                       "ORG_ADDRESS_2": "$elem.LINE_2_ADDR.S",
                       "ORG_ADDRESS_3": "$elem.LINE_3_ADDR.S",

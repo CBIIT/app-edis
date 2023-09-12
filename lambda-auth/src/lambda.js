@@ -1,4 +1,9 @@
+'use strict';
+
 const OktaJwtVerifier = require('@okta/jwt-verifier');
+const {initConfiguration, conf} = require("./conf");
+const { getSecretParameters } = require('./secrets');
+const { authLdap } = require("./ldap-auth");
 
 const oktaJwtVerifier = (process.env.ISSUER && process.env.AUDIENCE) ?
     new OktaJwtVerifier({
@@ -18,6 +23,7 @@ module.exports.handler = async (event, context, callback) => {
     console.debug('Authorization token :', token);
 
     if (token) {
+        // Basic Authentication with NIH Service Account
         if (token.indexOf('Basic') != -1) {
             console.debug('Analysis of Basic Authorization token');
             const base64credentials = token.split(' ')[1];
@@ -26,8 +32,20 @@ module.exports.handler = async (event, context, callback) => {
             console.debug('Ascii credentials are ', credentials);
             const [username, password] = credentials.split(':');
             console.debug('Basic Authentication for ', username);
-            return callback(null, generatePolicy('user', 'Allow', event.methodArn));
+            try {
+                const configuration = await getSecretParameters();
+                // Need to prepare private key here
+                configuration.ad_cert = Buffer.from(configuration.ad_cert.replace(/\\n/g, '\n'), 'utf-8');
+                initConfiguration(configuration);
+                const cnUser = `cn=${username},${conf.ad.serviceAccountsBase}`;
+                await authLdap(cnUser, password);
+            } catch (e) {
+                console.error('Basic Authentication Error', e);
+                return callback(null, generatePolicy('user', 'Deny', event['methodArn']));
+            }
+            return callback(null, generatePolicy('user', 'Allow', event['methodArn']));
         }
+        // OAuth2 authentication
         else if (token.indexOf('Bearer') != -1) {
             console.debug('Analysis of Bearer Authorization token');
             const bearer_token = token.split(' ')[1];
@@ -35,21 +53,21 @@ module.exports.handler = async (event, context, callback) => {
                 try {
                     const jwt = await oktaJwtVerifier.verifyAccessToken(bearer_token, process.env.AUDIENCE);
                     console.debug('OktaJwtVerifier verification:', jwt);
-                    return callback(null, generatePolicy('user', 'Allow', event.methodArn));
+                    return callback(null, generatePolicy('user', 'Allow', event['methodArn']));
 
                 } catch (err) {
                     console.error('OktaJwtVerifier verifyToken is failed:', err);
-                    return callback(null, generatePolicy('user', 'Deny', event.methodArn));
+                    return callback(null, generatePolicy('user', 'Deny', event['methodArn']));
                 }
             }
             else {
                 console.error('OktaJwtVerifier is not defined - check your environment variables: ISSUER and AUDIENCE');
-                return callback(null, generatePolicy('user', 'Deny', event.methodArn));
+                return callback(null, generatePolicy('user', 'Deny', event['methodArn']));
             }
 
         }
     }
-    return callback(null, generatePolicy('user', 'Allow', event.methodArn));
+    return callback(null, generatePolicy('user', 'Deny', event['methodArn']));
 }
 
 function generatePolicy(user, effect, methodArn, username) {

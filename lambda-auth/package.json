@@ -14,7 +14,11 @@
     "zip-prod": "mkdir -p out && rm -rf out/lambda-auth.zip && zip -r -q out/lambda-auth.zip node_modules src/*"
   },
   "dependencies": {
-    "@okta/jwt-verifier": "^2.1.0"
+    "@okta/jwt-verifier": "^2.1.0",
+    "ldapjs-promise": "latest"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "aws-sdk": "latest",
+    "aws-xray-sdk-core": "^3.3.3"
+  }
 }
