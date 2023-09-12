@@ -59,6 +59,8 @@ module "lambda-era-commons-auth" {
     "SECRET"    = lookup(local.tier_conf, var.env).secret
   })
   lambda-managed-policies        = { for idx, val in local.lambda_era_commons_auth_policies: idx => val }
+  subnet_ids = [ var.subnet1, var.subnet2 ]
+  security_group_ids = [ var.vpcsg ]
   create_api_gateway_integration = false
 }
 
