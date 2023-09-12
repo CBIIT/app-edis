@@ -68,6 +68,8 @@ module "lambda-userinfo-auth" {
 
   })
   lambda-managed-policies        = { for idx, val in local.lambda_userinfo_auth_policies: idx => val }
+  subnet_ids = [ var.subnet1, var.subnet2 ]
+  security_group_ids = [ var.vpcsg ]
   create_api_gateway_integration = false
 }
 
