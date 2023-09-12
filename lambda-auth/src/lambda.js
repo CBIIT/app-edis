@@ -39,6 +39,7 @@ module.exports.handler = async (event, context, callback) => {
                 initConfiguration(configuration);
                 const cnUser = `cn=${username},${conf.ad.serviceAccountsBase}`;
                 await authLdap(cnUser, password);
+                console.info('Successful Basic Authentication for ', username);
             } catch (e) {
                 console.error('Basic Authentication Error', e);
                 return callback(null, generatePolicy('user', 'Deny', event['methodArn']));
@@ -53,6 +54,7 @@ module.exports.handler = async (event, context, callback) => {
                 try {
                     const jwt = await oktaJwtVerifier.verifyAccessToken(bearer_token, process.env.AUDIENCE);
                     console.debug('OktaJwtVerifier verification:', jwt);
+                    console.info('Successful Auth2 Token Authentication');
                     return callback(null, generatePolicy('user', 'Allow', event['methodArn']));
 
                 } catch (err) {
