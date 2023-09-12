@@ -524,7 +524,7 @@ paths:
                   "NAME_SUFFIX": "$inputRoot.Items[0].NAME_SUFFIX.S",
                   "EMAIL": "$inputRoot.Items[0].EMAIL.S",
                   "ORG_NAME": "$inputRoot.Items[0].ORG_NAME.S",
-                  "ORG_ID": $inputRoot.Items[0].ORG_ID.N,
+                  "ORG_ID": "$inputRoot.Items[0].ORG_ID.N",
                   "ORG_ADDRESS_1": "$inputRoot.Items[0].LINE_1_ADDR.S",
                   "ORG_ADDRESS_2": "$inputRoot.Items[0].LINE_2_ADDR.S",
                   "ORG_ADDRESS_3": "$inputRoot.Items[0].LINE_3_ADDR.S",
