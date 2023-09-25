@@ -1,6 +1,10 @@
 resource "aws_sfn_state_machine" "edis_sfn_refresh_nv_props" {
   name       = "edis-refresh-nv-props-${var.env}"
   role_arn   = aws_iam_role.step_function.arn
+  tags = {
+    Tier = var.env
+    App = "edis"
+  }
   definition = <<EOF
   {
   "Comment": "State Machine to retrieve properties data from nVision",
@@ -250,6 +254,10 @@ resource "aws_cloudwatch_event_rule" "edis_refresh_nv_props" {
   name = "edis-nv-props-refresh-${var.env}"
   description = "Start Step Function to refresh nVision properties data"
   schedule_expression = lookup(local.tier_conf, var.env).step_nv_props_cron
+  tags = {
+    Tier = var.env
+    App = "edis"
+  }
 }
 
 resource "aws_cloudwatch_event_target" "edis_refresh_nv_props" {
