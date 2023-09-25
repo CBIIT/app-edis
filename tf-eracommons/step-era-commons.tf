@@ -1,6 +1,10 @@
 resource "aws_sfn_state_machine" "edis_sfn_refresh_era_commons" {
   name       = "edis-refresh-era-commons-${var.env}"
   role_arn   = aws_iam_role.step_function.arn
+  tags = {
+    Tier = var.env
+    App = "edis"
+  }
   definition = <<EOF
   {
   "Comment": "State Machine to retrieve data from eRA Commons",
@@ -250,6 +254,10 @@ resource "aws_cloudwatch_event_rule" "edis_refresh_era_commons" {
   name = "edis-era-commons-refresh-${var.env}"
   description = "Start Step Function to refresh eRA Commons data"
   schedule_expression = lookup(local.tier_conf, var.env).step_era_commons_cron
+  tags = {
+    Tier = var.env
+    App = "edis"
+  }
 }
 
 resource "aws_cloudwatch_event_target" "edis_refresh_era_commons" {
