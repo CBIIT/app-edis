@@ -39,7 +39,7 @@ jobs:
       contents: write
 
     env:
-      subnet: ${{ inputs.subnet1 || var.subnet1 }}
+      subnet: ${{ inputs.subnet1 || vars.subnet1 }}
   # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Workflow Parameters
