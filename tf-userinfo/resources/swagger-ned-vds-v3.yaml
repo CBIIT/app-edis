@@ -258,8 +258,8 @@ paths:
                       "STATUS_DESC": "$elem.STATUS_DESCRIP.S",
                       "LAST_UPDATED_DAY": "$elem.LAST_UPDATED_DAY.S",
                       "LOGINGOV_USER_ID": "$elem.LOGINGOV_USER_ID.S",
-                      "ALIAS_DESCRIP": "$elem.ALIAS_DESCRIP.S"
-                      "providedEmail": "$elem.providedEmail.S"
+                      "ALIAS_DESCRIP": "$elem.ALIAS_DESCRIP.S",
+                      "providedEmail": "$elem.providedEmail.S",
                       "DOC": "$elem.DOC.S"
                     }#if($foreach.hasNext),#end
 
