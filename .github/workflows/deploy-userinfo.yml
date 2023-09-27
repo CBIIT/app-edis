@@ -1,7 +1,7 @@
 # This is a basic workflow to help you get started with Actions
 
 name: 2.2 - UserInfo - Deploy
-run-name: UserInfo - Deploy to ${{ inputs.tier }} - build ${{ inputs.build_id }}
+run-name: UserInfo - Deploy - ${{ inputs.tier }} - Build ${{ inputs.build_id }}
 # Controls when the workflow will run
 on:
   # Allows you to run this workflow manually from the Actions tab
