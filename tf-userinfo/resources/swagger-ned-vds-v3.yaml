@@ -201,7 +201,7 @@ paths:
                       "PrivacyAwarenessRefresherCompDate": "$elem.PrivacyAwarenessRefresherCompDate.S",
                       "NIHInformationSecurityAwarenessCompDate": "$elem.NIHInformationSecurityAwarenessCompDate.S",
                       "InformationSecurityRefresherCompDate": "$elem.InformationSecurityRefresherCompDate.S",
-                      "description": "$elem.description.S",
+                      "description": "$util.escapeJavaScript($elem.description.S)",
                       "ORGANIZATIONALSTAT": "$elem.ORGANIZATIONALSTAT.S",
                       "NIHSUBORGSTATUS": "$elem.NIHSUBORGSTATUS.S",
                       "NIHSUMMERSTATUS": "$elem.NIHSUMMERSTATUS.S",
