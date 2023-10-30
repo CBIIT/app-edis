@@ -56,12 +56,12 @@ jobs:
           
       - name: Echo the secret value into variable
         run: |
-          aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString'
+          aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString | fromjson'
 
       - name: Get the secret value into variable
         id: secret-string
         run: |
-          json-contents="$(aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString' | jq '.${{ inputs.key }} = "${{ inputs.val }}"')"
+          json-contents="$(aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString | fromjson' | jq '.${{ inputs.key }} = "${{ inputs.val }}"')"
           echo -E "${json-contents}"
 
 #      - name: Print the variable
