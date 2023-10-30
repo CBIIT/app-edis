@@ -47,6 +47,12 @@ jobs:
           aws-region: us-east-1
           
       - name: Get the secret value into variable
+        id: secret-string
         run: |
-          aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.'
+          echo "ss=$(aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString')" >> $GITHUB_OUTPUT
+
+      - name: Print the variable
+        run: |
+          echo ${{ steps.secret-string.output.ss }}
+          echo ${{ steps.secret-string.output.ss }} | jq '.'
 
