@@ -57,7 +57,7 @@ jobs:
       - name: Get the secret value into variable
         id: secret-string
         run: |
-          aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString | fromjson' | jq '.${{ inputs.key }} = "${{ inputs.val }}"'
+          json-content=`aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString | fromjson' | jq '.${{ inputs.key }} = "${{ inputs.val }}"'`
 #          echo "ss=$json-contents" >> $GITHUB_OUTPUT
 #          echo -E "${json-contents}"
 
