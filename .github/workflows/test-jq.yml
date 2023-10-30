@@ -57,11 +57,11 @@ jobs:
       - name: Get the secret value into variable
         id: secret-string
         run: |
-          json-contents = $(aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString' | jq '.${{ inputs.key }} = ${{ inputs.val }})
-# echo "ss=$(aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString')" >> $GITHUB_OUTPUT
+          json-contents="$(aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString' | jq '.${{ inputs.key }} = ${{ inputs.val }})"
           echo -E "${json-contents}"
 
 #      - name: Print the variable
 #        run: |
 #          echo ${{ steps.secret-string.outputs.ss }} | jq '.'
+# echo "ss=$(aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString')" >> $GITHUB_OUTPUT
 
