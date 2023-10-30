@@ -1,6 +1,7 @@
 # This is a basic workflow to help you get started with Actions
 
-name: _Test Secrets Manager update - ${{ inputs.tier }}
+name: _Test Secrets Manager update
+run-name: _Test Secrets Manager update - ${{ inputs.tier }}
 
 # Controls when the workflow will run
 on:
