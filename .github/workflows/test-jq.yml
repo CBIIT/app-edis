@@ -17,6 +17,14 @@ on:
             description: 'Secrets name'
             required: true
 
+          key:
+            description: 'Secret key'
+            required: true
+
+          val:
+            description: 'Secret value'
+            required: true
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -49,10 +57,11 @@ jobs:
       - name: Get the secret value into variable
         id: secret-string
         run: |
-          echo "ss=$(aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString')" >> $GITHUB_OUTPUT
+          json-contents = $(aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString' | jq '.${{ inputs.key }} = ${{ inputs.val }})
+# echo "ss=$(aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString')" >> $GITHUB_OUTPUT
+          echo -E "${json-contents}"
 
-      - name: Print the variable
-        run: |
-          echo ${{ steps.secret-string.outputs.ss }}
-          echo ${{ steps.secret-string.outputs.ss }} | jq '.'
+#      - name: Print the variable
+#        run: |
+#          echo ${{ steps.secret-string.outputs.ss }} | jq '.'
 
