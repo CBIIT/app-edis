@@ -53,6 +53,6 @@ jobs:
 
       - name: Print the variable
         run: |
-          echo ${{ steps.secret-string.output.ss }}
-          echo ${{ steps.secret-string.output.ss }} | jq '.'
+          echo ${{ steps.secret-string.outputs.ss }}
+          echo ${{ steps.secret-string.outputs.ss }} | jq '.'
 
