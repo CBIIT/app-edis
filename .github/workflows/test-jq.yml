@@ -57,7 +57,10 @@ jobs:
       - name: Get the secret value into variable
         id: secret-string
         run: |
-          JSONCONTENT="`aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString | fromjson' | jq '.${{ inputs.key }} = "${{ inputs.val }}"'`"
+          IKEY=${{inputs.key}}
+          IVALUE=${{inputs.value}}
+          echo "$IKEY $IVALUE"
+          JSONCONTENT="$(aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString | fromjson' |  jq '.'"$IKEY"'='\""$IVALUE"\")"
           echo "ss=$JSONCONTENT" >> $GITHUB_OUTPUT
 #          echo -E "${json-contents}"
 
