@@ -60,7 +60,8 @@ jobs:
           IKEY=${{inputs.key}}
           IVALUE=${{inputs.val}}
           echo "$IKEY $IVALUE"
-          JSONCONTENT="$(aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString | fromjson' |  jq ".$IKEY=\"$IVALUE\"")"
+          JSONCONTENT="$(aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString | fromjson' |  jq ".$IKEY=\"$IVALUE\" | fromjson")"
+          echo "$JSONCONTENT"
           echo "ss=$JSONCONTENT" >> $GITHUB_OUTPUT
 
       - name: Print the variable
