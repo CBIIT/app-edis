@@ -8,7 +8,7 @@ module "lambda-load-from-era-commons" {
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
   must-be-policy-arn  = local.policy-boundary-arn
-  resource_tag_name   = "edis"
+  tags                = local.resource_tags
   region              = "us-east-1"
   app                 = "edis"
   lambda-name         = "load-from-era-commons"
@@ -35,7 +35,7 @@ module "lambda-prepare-s3-for-era-commons" {
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
   must-be-policy-arn  = local.policy-boundary-arn
-  resource_tag_name   = "edis"
+  tags                = local.resource_tags
   region              = "us-east-1"
   app                 = "edis"
   lambda-name         = "prepare-s3-for-era-commons"
@@ -54,7 +54,7 @@ module "lambda-era-commons-delta" {
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
   must-be-policy-arn  = local.policy-boundary-arn
-  resource_tag_name   = "edis"
+  tags                = local.resource_tags
   region              = "us-east-1"
   app                 = "edis"
   lambda-name         = "era-commons-delta"
@@ -76,7 +76,7 @@ module "lambda-era-commons-delta-to-sqs" {
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
   must-be-policy-arn  = local.policy-boundary-arn
-  resource_tag_name   = "edis"
+  tags                = local.resource_tags
   region              = "us-east-1"
   app                 = "edis"
   lambda-name         = "era-commons-delta-to-sqs"
@@ -95,7 +95,7 @@ module "lambda-era-commons-sqs-delta-to-db" {
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
   must-be-policy-arn  = local.policy-boundary-arn
-  resource_tag_name    = "edis"
+  tags                 = local.resource_tags
   region               = "us-east-1"
   app                  = "edis"
   lambda-name          = "era-commons-sqs-delta-to-db"
@@ -119,10 +119,7 @@ resource "aws_sqs_queue" "edis-era-commons-sqs" {
   name                       = "edis-era-commons-delta-queue-${var.env}"
   visibility_timeout_seconds = 7200
   max_message_size           = 262144
-  tags = {
-    Tier = var.env
-    App = "edis"
-  }
+  tags                       = local.resource_tags
 }
 
 #

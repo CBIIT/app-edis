@@ -27,6 +27,7 @@ resource "aws_iam_policy" "iam_access_ddb" {
   path        = "/"
   description = "Access to given ddb table"
   policy      = data.aws_iam_policy_document.iam_access_ddb.json
+  tags        = var.tags
 }
 
 resource "aws_iam_role" "iam_access_ddb" {
@@ -38,4 +39,5 @@ resource "aws_iam_role" "iam_access_ddb" {
   ]
   path                 = "/"
   permissions_boundary = var.must-be-policy-arn
+  tags = var.tags
 }

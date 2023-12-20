@@ -15,3 +15,9 @@ variable "table_name" {
   description = "Dynamo DB table name"
   default = "eracommons"
 }
+
+variable "tags" {
+  type = map
+  description = "Map of NCI CBIIT mandatory tags"
+}
+

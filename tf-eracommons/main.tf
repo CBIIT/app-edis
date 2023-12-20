@@ -4,6 +4,7 @@ module "ddb-era-commons" {
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
   must-be-policy-arn  = local.policy-boundary-arn
+  tags = local.resource_tags
 }
 
 module "lambda-era-commons-api" {
@@ -12,7 +13,7 @@ module "lambda-era-commons-api" {
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
   must-be-policy-arn  = local.policy-boundary-arn
-  resource_tag_name   = "edis"
+  tags                = local.resource_tags
   region              = "us-east-1"
   app                 = "edis"
   lambda-name         = "era-commons-api"
@@ -38,7 +39,7 @@ module "api-gateway-era-commons" {
   api-swagger         = data.template_file.api_era-commons-swagger.rendered
   api-resource-policy = local.api_gateway_resource_policy
   api-gateway-name    = "era-commons"
-  resource_tag_name   = "edis"
+  tags                = local.resource_tags
 }
 
 module "lambda-era-commons-auth" {
@@ -46,7 +47,7 @@ module "lambda-era-commons-auth" {
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
   must-be-policy-arn  = local.policy-boundary-arn
-  resource_tag_name   = "edis"
+  tags                = local.resource_tags
   region              = "us-east-1"
   app                 = "edis"
   lambda-name         = "era-commons-auth"
