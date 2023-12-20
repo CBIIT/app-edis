@@ -7,7 +7,7 @@ module "lambda-load-from-nv-props" {
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
   must-be-policy-arn  = local.policy-boundary-arn
-  resource_tag_name   = "edis"
+  tags                = local.resource_tags
   region              = "us-east-1"
   app                 = "edis"
   lambda-name         = "load-from-nv-props"
@@ -36,7 +36,7 @@ module "lambda-nv-props-sqs-delta-to-db" {
   env                  = var.env
   must-be-role-prefix = local.power-user-prefix
   must-be-policy-arn  = local.policy-boundary-arn
-  resource_tag_name    = "edis"
+  tags                = local.resource_tags
   region               = "us-east-1"
   app                  = "edis"
   lambda-name          = "nv-props-sqs-delta-to-db"
@@ -60,10 +60,7 @@ resource "aws_sqs_queue" "edis-nv-props-sqs" {
   name                       = "edis-nv-props-delta-queue-${var.env}"
   visibility_timeout_seconds = 7200
   max_message_size           = 262144
-  tags = {
-    Tier = var.env
-    App = "edis"
-  }
+  tags                       = local.resource_tags
 }
 
 #

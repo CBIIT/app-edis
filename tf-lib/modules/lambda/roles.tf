@@ -16,10 +16,7 @@ resource "aws_iam_role" "iam_for_lambda" {
   assume_role_policy   = data.aws_iam_policy_document.assume_role_lambda_service.json
   path                 = "/"
   permissions_boundary = var.must-be-policy-arn
-  tags = {
-    Tier = var.env
-    App = var.resource_tag_name
-  }
+  tags = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "iam_for_lambda" {

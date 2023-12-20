@@ -12,11 +12,12 @@ variable "must-be-role-prefix" {
 variable "must-be-policy-arn" {
   description = "Mandatory policy to be included in any IAM role"
 }
-variable "resource_tag_name" {
-  description = "Value of tag 'App' for cost/resource tracking"
-}
 variable "region" {
   description = "AWS region"
+}
+variable "tags" {
+  type = map
+  description = "Map of NCI CBIIT mandatory tags"
 }
 
 #---------------------------------------
