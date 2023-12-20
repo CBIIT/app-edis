@@ -31,6 +31,8 @@ resource "aws_dynamodb_table" "table" {
     name            = "logingovIndex"
     projection_type = "ALL"
   }
+
+  tags = var.tags
 }
 
 output "ddb-table-arn" {

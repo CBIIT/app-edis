@@ -143,6 +143,18 @@ EOF
 
   power-user-prefix = "power-user-edis"
   policy-boundary-arn = "arn:aws:iam::${data.aws_caller_identity._.account_id}:policy/PermissionBoundary_PowerUser"
+
+  resource_tags = {
+    EnvironmentTier = upper(var.env),
+    ApplicationName = "eRACommons",
+    Project = "EADIS",
+    Backup = (var.env == "prod") ? "prod" : "nonprod",
+    ResourceName = "NCI-EADIS-${var.env}",
+    CreateDate = formatdate("MM/DD/YYYY", timestamp()),
+    CreatedBy = var.email,
+    #    ResourceFunction = "",
+    Runtime = "24/7"
+  }
 }
 
 # -----------------------------------------------------------------------------

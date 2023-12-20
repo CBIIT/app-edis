@@ -27,6 +27,7 @@ resource "aws_iam_policy" "iam_access_s3" {
   path        = "/"
   description = "Access to given S3 bucket folder"
   policy      = data.aws_iam_policy_document.iam_access_s3.json
+  tags        = local.resource_tags
 }
 
 data "aws_iam_policy_document" "assume_role_step_function" {
@@ -50,6 +51,7 @@ resource "aws_iam_role" "step_function" {
   ]
   path                 = "/"
   permissions_boundary = local.policy-boundary-arn
+  tags                 = local.resource_tags
 }
 
 data "aws_iam_policy_document" "assume_role_event_trigger" {
@@ -80,6 +82,7 @@ resource "aws_iam_policy" "iam_refresh_era_commons" {
   path        = "/"
   description = "Allow trigger event to start refresh eRA Commons data"
   policy      = data.aws_iam_policy_document.iam_refresh_era_commons.json
+  tags        = local.resource_tags
 }
 
 resource "aws_iam_role" "refresh_era_commons_trigger" {
@@ -90,5 +93,6 @@ resource "aws_iam_role" "refresh_era_commons_trigger" {
   ]
   path                 = "/"
   permissions_boundary = local.policy-boundary-arn
+  tags                 = local.resource_tags
 }
 
