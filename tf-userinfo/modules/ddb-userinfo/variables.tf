@@ -11,10 +11,6 @@ variable "must-be-policy-arn" {
   description = "Mandatory boundary policy to be included in any IAM role"
 }
 
-variable "resource_tag_name" {
-  description = "Value of tag 'App' for cost/resource tracking"
-}
-
 variable "tags" {
   type = map
   description = "Map of NCI CBIIT mandatory tags"
