@@ -14,3 +14,8 @@ variable "must-be-policy-arn" {
 variable "resource_tag_name" {
   description = "Value of tag 'App' for cost/resource tracking"
 }
+
+variable "tags" {
+  type = map
+  description = "Map of NCI CBIIT mandatory tags"
+}

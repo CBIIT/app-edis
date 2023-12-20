@@ -31,6 +31,9 @@ on:
       vpcsg:
         description: 'VPC Security Group id'
         required: true
+      email:
+        description: "Email of the user that triggered run"
+        required: true
       host-runner:
         type: string
         required: false

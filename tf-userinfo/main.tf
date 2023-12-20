@@ -5,6 +5,7 @@ module "ddb-userinfo" {
   must-be-role-prefix = local.power-user-prefix
   must-be-policy-arn  = local.policy-boundary-arn
   resource_tag_name   = "edis"
+  tags                = local.resource_tags
 }
 
 module "lambda-userinfo-api" {

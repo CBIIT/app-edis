@@ -24,11 +24,8 @@ resource "aws_dynamodb_table" "table" {
   lifecycle {
     ignore_changes = [read_capacity, write_capacity]
   }
-  
-  tags = {
-    Tier = var.env
-    App = var.resource_tag_name
-  }
+
+  tags = var.tags
 }
 
 output "ddb-arn" {
