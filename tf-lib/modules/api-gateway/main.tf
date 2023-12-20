@@ -12,10 +12,7 @@ resource "aws_api_gateway_rest_api" "api_gateway" {
     types = ["REGIONAL"]
   }
   body = var.api-swagger
-  tags = {
-    Tier = var.env
-    App = var.resource_tag_name
-  }
+  tags = var.tags
 }
 
 resource "aws_api_gateway_deployment" "api_gateway" {
@@ -39,10 +36,7 @@ resource "aws_api_gateway_rest_api_policy" "api_gateway" {
 resource "aws_cloudwatch_log_group" "api_gateway" {
   name              = "${var.app}-${var.api-gateway-name}-apigateway-accesslogs-${var.env}"
   retention_in_days = 90
-  tags = {
-    Tier = var.env
-    App = var.resource_tag_name
-  }
+  tags = var.tags
 }
 
 resource "aws_api_gateway_stage" "api_gateway" {
@@ -56,10 +50,7 @@ resource "aws_api_gateway_stage" "api_gateway" {
     format          = "{ \"requestTime\":  \"$context.requestTime\", \"requestId\": \"$context.requestId\", \"httpMethod\": \"$context.httpMethod\", \"path\": \"$context.path\", \"resourcePath\": \"$context.resourcePath\", \"status\": $context.status, \"responseLatency\": $context.responseLatency, \"xrayTraceId\": \"$context.xrayTraceId\", \"integrationRequestId\": \"$context.integration.requestId\", \"functionResponseStatus\": \"$context.integration.status\", \"integrationLatency\": \"$context.integration.latency\", \"integrationServiceStatus\": \"$context.integration.integrationStatus\", \"authorizeResultStatus\": \"$context.authorize.status\", \"authorizerServiceStatus\": \"$context.authorizer.status\", \"authorizerLatency\": \"$context.authorizer.latency\", \"authorizerRequestId\": \"$context.authorizer.requestId\", \"ip\": \"$context.identity.sourceIp\", \"userAgent\": \"$context.identity.userAgent\", \"principalId\": \"$context.authorizer.principalId\", \"user\": \"$context.identity.user\" }"
   }
   xray_tracing_enabled = true
-  tags = {
-    Tier = var.env
-    App = var.resource_tag_name
-  }
+  tags = var.tags
 }
 
 resource "aws_api_gateway_method_settings" "api_gateway" {

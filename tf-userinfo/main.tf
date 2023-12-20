@@ -12,7 +12,7 @@ module "lambda-userinfo-api" {
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
   must-be-policy-arn  = local.policy-boundary-arn
-  resource_tag_name   = "edis"
+  tags                = local.resource_tags
   region              = "us-east-1"
   app                 = "edis"
   lambda-name         = "userinfo-api"
@@ -34,6 +34,7 @@ resource "aws_iam_role" "invocation_role" {
   assume_role_policy = data.aws_iam_policy_document.assume_role_api_gateway_service.json
   path = "/"
   permissions_boundary = local.policy-boundary-arn
+  tags                = local.resource_tags
 }
 module "api-gateway-userinfo" {
   depends_on = [ module.lambda-userinfo-auth ]
@@ -46,7 +47,7 @@ module "api-gateway-userinfo" {
   api-swagger         = data.template_file.api_userinfo_swagger.rendered
   api-resource-policy = local.api_gateway_resource_policy
   api-gateway-name    = "userinfo"
-  resource_tag_name   = "edis"
+  tags                = local.resource_tags
 }
 
 module "lambda-userinfo-auth" {
@@ -54,7 +55,7 @@ module "lambda-userinfo-auth" {
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
   must-be-policy-arn  = local.policy-boundary-arn
-  resource_tag_name   = "edis"
+  tags                = local.resource_tags
   region              = "us-east-1"
   app                 = "edis"
   lambda-name         = "userinfo-auth"
@@ -90,7 +91,7 @@ module "lambda-vds-users-delta" {
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
   must-be-policy-arn  = local.policy-boundary-arn
-  resource_tag_name   = "edis"
+  tags                = local.resource_tags
   region              = "us-east-1"
   app                 = "edis"
   lambda-name         = "vds-users-delta"
@@ -112,7 +113,7 @@ module "lambda-load-from-vds" {
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
   must-be-policy-arn  = local.policy-boundary-arn
-  resource_tag_name   = "edis"
+  tags                = local.resource_tags
   region              = "us-east-1"
   app                 = "edis"
   lambda-name         = "load-from-vds"
@@ -137,7 +138,7 @@ module "lambda-prepare-s3-for-vds" {
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
   must-be-policy-arn  = local.policy-boundary-arn
-  resource_tag_name   = "edis"
+  tags                = local.resource_tags
   region              = "us-east-1"
   app                 = "edis"
   lambda-name         = "prepare-s3-for-vds"
@@ -157,7 +158,7 @@ module "lambda-prepare-s3-for-vds" {
     env                 = var.env
     must-be-role-prefix = local.power-user-prefix
     must-be-policy-arn  = local.policy-boundary-arn
-    resource_tag_name   = "edis"
+    tags                = local.resource_tags
     region              = "us-east-1"
     app                 = "edis"
     lambda-name         = "vds-delta-to-sqs"
@@ -177,7 +178,7 @@ module "lambda-prepare-s3-for-vds" {
     env                 = var.env
     must-be-role-prefix = local.power-user-prefix
     must-be-policy-arn  = local.policy-boundary-arn
-    resource_tag_name   = "edis"
+    tags                = local.resource_tags
     region              = "us-east-1"
     app                 = "edis"
     lambda-name         = "delta-to-sqs"
@@ -197,7 +198,7 @@ module "lambda-sqs-delta-to-db" {
   env                 = var.env
   must-be-role-prefix = local.power-user-prefix
   must-be-policy-arn  = local.policy-boundary-arn
-  resource_tag_name    = "edis"
+  tags                 = local.resource_tags
   region               = "us-east-1"
   app                  = "edis"
   lambda-name          = "sqs-delta-to-db"
@@ -218,10 +219,7 @@ resource "aws_sqs_queue" "edis-sqs" {
   name                       = "edis-vds-delta-queue-${var.env}"
   visibility_timeout_seconds = 7200
   max_message_size           = 262144
-  tags = {
-    Tier = var.env
-    App = "edis"
-  }
+  tags                       = local.resource_tags
 }
 
 resource "aws_sqs_queue_policy" "edis-sqs" {

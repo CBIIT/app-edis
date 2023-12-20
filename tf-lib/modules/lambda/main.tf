@@ -25,10 +25,7 @@ resource "aws_lambda_function" "lambda" {
   environment {
     variables = var.lambda-env-variables
   }
-  tags = {
-    Tier = var.env
-    App = var.resource_tag_name
-  }
+  tags = var.tags
   filename = var.file-name
   source_code_hash = filebase64sha256("${var.file-name}")
   vpc_config {
