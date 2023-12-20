@@ -150,7 +150,7 @@ EOF
   resource_tags = {
     EnvironmentTier = upper(var.env),
     ApplicationName = "UserInfo",
-    Project = EADIS,
+    Project = "EADIS",
     Backup = (var.env == "prod") ? "prod" : "nonprod",
     ResourceName = "NCI-EADIS-${var.env}",
     CreateDate = formatdate("MM/DD/YYYY", timestamp()),
