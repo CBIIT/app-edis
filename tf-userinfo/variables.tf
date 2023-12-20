@@ -25,7 +25,13 @@ variable "s3bucket-for-vds-users" {
 }
 
 variable "oracle-db-layer-arn" {
-  type = string
+  type        = string
   description = "ARN of the latest version of oracle db lambda layer"
-  default = null
+  default     = null
+}
+
+variable "email" {
+  type = string
+  description = "Email of the user that triggered run"
+  default = ""
 }
