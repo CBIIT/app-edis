@@ -3,7 +3,7 @@
 const readline = require('readline')
 const AWS = require('aws-sdk'),
       region = 'us-east-1'
-const { formatDate } = require('./util')
+const { formatTimestamp, formatDay } = require('./util')
 
 // Environment variables
 const logLevel = process.env['LOG_LEVEL'];
@@ -43,15 +43,16 @@ module.exports.handler = async (event, context) => {
   }
 
 // Create a refresh mark as YYYYMMddHH
-  const marker = '' + formatDate(new Date());
+  const marker = '' + formatTimestamp(new Date());
+  const last_updated_day = '' + formatDay(new Date());
 
   // Step 1 - send to SQS chunks with new or updated records from S3 delta csv file 
-  await processRecords(sqsQueueUrl, deltaS3path, marker, 'update');
+  await processRecords(sqsQueueUrl, deltaS3path, marker, last_updated_day, 'update');
 // Step 2 - send messages to SQS  with deleted records from S3 csv file 
-  await processRecords(sqsQueueUrl, deltaS3deleted, marker, 'delete');
+  await processRecords(sqsQueueUrl, deltaS3deleted, marker, last_updated_day, 'delete');
 }
 
-async function processRecords(sqsQueueUrl, s3url, marker, action)
+async function processRecords(sqsQueueUrl, s3url, marker, last_updated_day, action)
 {
   if (!sqsQueueUrl || !s3url) {
     console.info('delta S3 url or key is not defined - update is skipped', sqsQueueUrl, s3url);
@@ -92,6 +93,7 @@ async function processRecords(sqsQueueUrl, s3url, marker, action)
           row = processLine(rec, counter);
           // Enhance record with timestamp
           row['tsImport'] = marker;
+          row['LAST_UPDATED_DAY'] = last_updated_day;
           sRow = JSON.stringify(row);
         } catch (e) {
           console.error('Parsing error', e);
