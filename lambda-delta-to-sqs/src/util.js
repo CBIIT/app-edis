@@ -10,7 +10,7 @@ function padTo2Digits(num) {
  * @param date  Date object
  * @returns {string} formatted string
  */
-function formatDate(date) {
+function formatTimestamp(date) {
     return (
         [
             date.getFullYear(),
@@ -23,8 +23,25 @@ function formatDate(date) {
     );
 }
 
+/**
+ * Format a refresh date as "YYYY-MM-dd"
+ * @param date  Date object
+ * @returns {string} formatted string
+ */
+function formatDay(date) {
+    return (
+        [
+            date.getFullYear(),
+            '-',
+            padTo2Digits(date.getMonth() + 1),
+            '-',
+            padTo2Digits(date.getDate())
+        ].join('')
+    );
+}
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-module.exports = { formatDate, sleep };
+module.exports = { formatTimestamp, formatDay, sleep };

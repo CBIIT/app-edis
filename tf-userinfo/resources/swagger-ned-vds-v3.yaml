@@ -147,6 +147,7 @@ paths:
               "TableName": "${users_table_name}",
               "IndexName": "icIndex",
               "KeyConditionExpression": "NIHORGACRONYM = :ic",
+              "FilterExpression": "attribute_not_exists(vdsDelete)",
               "ExpressionAttributeValues": {
                 ":ic": { "S": "$ic" }
               }
