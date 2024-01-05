@@ -179,7 +179,7 @@ paths:
                       "NIHPRIMARYSMTP": "$elem.NIHPRIMARYSMTP.S",
                       "MAIL": "$elem.MAIL.S",
                       "proxyAddresses": "$elem.proxyAddresses.SS",
-                      "displayName": "$elem.displayName.S",
+                      "displayName": "$util.escapeJavaScript($elem.displayName.S)",
                       "PERSONALTITLE": "$elem.PERSONALTITLE.S",
                       "GIVENNAME": "$elem.GIVENNAME.S",
                       "NIHCOMMONGIVENNAME": "$elem.NIHCOMMONGIVENNAME.S",
