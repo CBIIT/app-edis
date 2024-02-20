@@ -22,10 +22,6 @@ on:
         description: 'Unsecure parameters'
         required: false
         default: ''
-      s3bucket:
-        description: 'S3 bucket with Oracle Lambda layer file'
-        required: true
-        default: cf-templates-woyzwinjenjf-us-east-1
       host-runner:
         type: string
         required: false
@@ -63,7 +59,7 @@ jobs:
 
       - name: Init Terraform
         id: initUserInfo
-        run: terraform init -backend-config="bucket=${{ inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/parameters-store-${{ inputs.tier }}" -backend-config="region=us-east-1"
+        run: terraform init
         working-directory: tf-parameters/
 
       - name: Validate Terraform

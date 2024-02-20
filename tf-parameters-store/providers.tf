@@ -10,8 +10,8 @@ terraform {
 
   # define s3 configuration parameters in init cli command options
   # like: terraform init -backend-config="bucket=<s3bucket>" -backend-config="key=api-edis-tf-state/api-edis-dev2" -backend-config="region=us-east-1"
-  backend "s3" {
-  }
+  #  backend "local" {
+  #  }
 }
 
 provider "aws" {
