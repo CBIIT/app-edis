@@ -60,19 +60,19 @@ jobs:
       - name: Init Terraform
         id: initUserInfo
         run: terraform init
-        working-directory: tf-parameters/
+        working-directory: tf-parameters-store/
 
       - name: Validate Terraform
         id: validate
         run: terraform validate
-        working-directory: tf-parameters/
+        working-directory: tf-parameters-store/
 
       - name: Planning Terraform
         id: plan
         run: terraform plan -var 'env=${{ inputs.tier }}' -var 'parameters=${{ inputs.unsecure }}' -var 'secure_parameters=${{ inputs.secure }}'
-        working-directory: tf-parameters/
+        working-directory: tf-parameters-store/
 
       - name: Terraform Deployment
         id: apply
         run: terraform apply -auto-approve -input=false -lock=false -var 'env=${{ inputs.tier }}' -var 'parameters=${{ inputs.unsecure }}' -var 'secure_parameters=${{ inputs.secure }}'
-        working-directory: tf-parameters/
+        working-directory: tf-parameters-store/
