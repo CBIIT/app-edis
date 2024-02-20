@@ -39,7 +39,7 @@ const SQL_STATEMENT =
             ext.city_name          AS CITY_NAME,
             ext.state_code         AS STATE_CODE,
             ext.phone_num          AS PHONE_NUM,
-            ext.email_addr         AS EMAIL_ADDR,
+            ext.email_addr         AS EMAIL_ADDR,lambda
             ua.EXT_SYS_USER_ID     AS LOGINGOV_USER_ID,
             ua.descrip             AS ALIAS_DESCRIP,
             'ERA'                  AS SOURCE
@@ -51,7 +51,7 @@ const SQL_STATEMENT =
         WHERE     ua.ext_sys_name = 'LOGIN.GOV'
         AND ua.IMPACII_USER_ID = a.user_id
         AND a.account_type = 'EXT'
-        AND a.primary_org_id = exo.external_org_id(+)
+        AND a.primary_org_id = TO_CHAR(exo.external_org_id(+))
         AND a.person_id = p.person_id(+)
         AND exo.external_org_id = ext.external_org_id(+)
         AND ext.addr_type_code(+) = 'MLG'`
