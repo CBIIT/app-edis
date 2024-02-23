@@ -43,6 +43,11 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Hide sensitive input values to keep them private in the logs
+        uses: levibostian/action-hide-sensitive-inputs@v1
+        with:
+          exclude_inputs: envt,tier,unsecure,host-runner
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Repository Checkout
         uses: actions/checkout@v3
