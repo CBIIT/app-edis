@@ -85,7 +85,7 @@ module.exports.handler = async (event, context) => {
 
 async function populateToS3Bucket(s3Entry, rows) {
     if (process.env.TEST) {
-        console.debug('Finished in test retrieval mode');
+        console.info('Finished in test retrieval mode');
         return;
     }
 

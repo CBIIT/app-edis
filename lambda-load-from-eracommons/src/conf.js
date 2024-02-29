@@ -39,7 +39,7 @@ const SQL_STATEMENT =
             ext.city_name          AS CITY_NAME,
             ext.state_code         AS STATE_CODE,
             ext.phone_num          AS PHONE_NUM,
-            ext.email_addr         AS EMAIL_ADDR,lambda
+            ext.email_addr         AS EMAIL_ADDR,
             ua.EXT_SYS_USER_ID     AS LOGINGOV_USER_ID,
             ua.descrip             AS ALIAS_DESCRIP,
             'ERA'                  AS SOURCE
