@@ -72,10 +72,10 @@ jobs:
 
       - name: Planning Terraform
         id: plan
-        run: terraform plan -var 's3bucket=${{ inputs.s3bucket }}' -var 'layer-file=${{ inputs.layer-file }}
+        run: terraform plan -var 's3bucket=${{ inputs.s3bucket }}' -var 'layer-file=${{ inputs.layer-file }}'
         working-directory: tf-global/
 
       - name: Terraform Deployment
         id: apply
-        run: terraform apply -auto-approve -input=false -lock=false -var 's3bucket=${{ inputs.s3bucket }}' -var 'layer-file=${{ inputs.layer-file }}
+        run: terraform apply -auto-approve -input=false -lock=false -var 's3bucket=${{ inputs.s3bucket }}' -var 'layer-file=${{ inputs.layer-file }}'
         working-directory: tf-global/
