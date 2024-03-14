@@ -15,6 +15,10 @@ on:
         description: 'S3 bucket with Oracle Lambda layer file'
         required: true
         default: cf-templates-woyzwinjenjf-us-east-1
+      layer-file:
+        description: 'Oracle DB layer file'
+        required: true
+        default: oracledb-layer.zip
       host-runner:
         type: string
         required: false
@@ -68,10 +72,10 @@ jobs:
 
       - name: Planning Terraform
         id: plan
-        run: terraform plan -var 's3bucket=${{ inputs.s3bucket }}'
+        run: terraform plan -var 's3bucket=${{ inputs.s3bucket }}' -var 'layer-file=${{ inputs.layer-file }}
         working-directory: tf-global/
 
       - name: Terraform Deployment
         id: apply
-        run: terraform apply -auto-approve -input=false -lock=false -var 's3bucket=${{ inputs.s3bucket }}'
+        run: terraform apply -auto-approve -input=false -lock=false -var 's3bucket=${{ inputs.s3bucket }}' -var 'layer-file=${{ inputs.layer-file }}
         working-directory: tf-global/
