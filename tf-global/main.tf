@@ -17,7 +17,7 @@ resource "aws_api_gateway_account" "api_gateway" {
 resource "aws_lambda_layer_version" "oracledb" {
   layer_name = "edis-oracle-db-layer"
   s3_bucket = var.s3bucket
-  s3_key = "api-edis-tf-state/oracledb-layer.zip"
+  s3_key = "api-edis-tf-state/${var.layer-file}"
   compatible_runtimes = ["nodejs10.x","nodejs12.x","nodejs14.x"]
   description = "OracleDB lambda layer to connect to Oracle database"
 }
