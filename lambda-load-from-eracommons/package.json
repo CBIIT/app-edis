@@ -17,7 +17,6 @@
   "devDependencies": {
     "aws-sdk": "latest",
     "aws-xray-sdk-core": "^3.3.3",
-    "oracledb": "^5.3.0",
-    "oracledb-prebuilt-for-lambda": "^5.3.0"
+    "oracledb": "^6.3.0"
   }
 }
