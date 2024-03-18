@@ -16,7 +16,7 @@ resource "aws_lambda_function" "lambda" {
   role          = aws_iam_role.iam_for_lambda.arn
   description   = var.lambda-description
   handler       = "src/lambda.handler"
-  runtime       = "nodejs14.x"
+  runtime       = "nodejs16.x"
   memory_size   = 2048
   timeout       = var.lambda_timeout
   tracing_config {

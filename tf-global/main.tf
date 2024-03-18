@@ -18,8 +18,9 @@ resource "aws_lambda_layer_version" "oracledb" {
   layer_name = "edis-oracle-db-layer"
   s3_bucket = var.s3bucket
   s3_key = "api-edis-tf-state/${var.layer-file}"
-  compatible_runtimes = ["nodejs10.x","nodejs12.x","nodejs14.x"]
+  compatible_runtimes = ["nodejs16.x","nodejs18.x","nodejs20.x"]
   description = "OracleDB lambda layer to connect to Oracle database"
+  skip_destroy = true
 }
 
 

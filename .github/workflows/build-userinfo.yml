@@ -40,10 +40,10 @@ jobs:
         with: 
           repository: CBIIT/app-edis
 
-      - name: setup node 14
-        uses: actions/setup-node@v3
+      - name: setup node 16
+        uses: actions/setup-node@v4
         with:
-          node-version: 14.15.4
+          node-version: 16.20.2
           registry-url: 'https://npm.pkg.github.com'
           scope: '@cbiit'
 

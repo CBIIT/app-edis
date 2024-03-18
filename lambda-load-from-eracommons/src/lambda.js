@@ -1,11 +1,12 @@
 'use strict'
 
 // require('console-stamp')(console);
-const parquet = require('parquetjs')
+const parquet = require('parquetjs');
 const stream = require("stream");
 const { initConfiguration, conf, SQL_STATEMENT } = require("./conf");
-const { dbExec }  = require('./dbActions')
-const { convertForDynamoDB, sleep } = require("./util")
+const { dbExec }  = require('./dbActions');
+const { convertForDynamoDB, sleep } = require("./util");
+const oracledb = require('oracledb');
 
 const AWS = require('aws-sdk'),
     region = 'us-east-1'
@@ -63,6 +64,7 @@ module.exports.handler = async (event, context) => {
         initConfiguration(configuration, 'era_user', 'era_pwd', 'era_connect');
 
         console.debug('Starting and waiting for dbExec...')
+        oracledb.initOracleClient({ libDir: '/opt/lib', configDir: '/opt/lib/network/adm' });
         const result = await dbExec({
             user: conf.user,
             pwd: conf.pwd,
