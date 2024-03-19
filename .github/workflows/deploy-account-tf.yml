@@ -1,6 +1,7 @@
 # This is a basic workflow to help you get started with Actions
 
 name: 0.1 - AWS account wide - Deploy
+run-name: AWS account wide - Deploy - ${{ inputs.envt }}
 
 # Controls when the workflow will run
 on:
