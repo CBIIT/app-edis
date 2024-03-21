@@ -464,7 +464,7 @@ EOF
 resource "aws_cloudwatch_event_rule" "edis_refresh_vds" {
   name = "edis-vds-refresh-${var.env}"
   description = "Start Step Function to refresh VDS user data"
-  schedule_expression = lookup(local.tier_conf, var.env).step_cron
+  schedule_expression = lookup(local.tier_conf, var.env).step_vds_users_cron
   tags                = local.resource_tags
 }
 

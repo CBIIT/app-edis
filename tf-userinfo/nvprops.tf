@@ -29,6 +29,30 @@ module "lambda-load-from-nv-props" {
 }
 
 #
+# Lambda - Calculate delta of property records for refresh
+#
+module "lambda-nv-props-delta" {
+  source              = "../tf-lib/modules/lambda"
+  env                 = var.env
+  must-be-role-prefix = local.power-user-prefix
+  must-be-policy-arn  = local.policy-boundary-arn
+  tags                = local.resource_tags
+  region              = "us-east-1"
+  app                 = "edis"
+  lambda-name         = "nv-props-delta"
+  file-name           = abspath("../built-artifacts/lambda-vds-users-delta/out/lambda-vds-users-delta.zip")
+  lambda-description  = "Lambda function to run Athena query to get NV properties delta for refresh."
+  lambda-env-variables = tomap({
+    LOG_LEVEL = "info"
+    S3BUCKET  = var.s3bucket-for-vds-users
+    S3FOLDER  = "app-edis-data-${var.env}"
+    DB_NAME   = "nvprops_${var.env}"
+  })
+  lambda-managed-policies        = { for idx, val in local.lambda_vds_users_delta_role_policies: idx => val }
+  create_api_gateway_integration = false
+}
+
+#
 # Lambda - Update nVision Properties Dynamo DB with update/delete records from SQS
 #
 module "lambda-nv-props-sqs-delta-to-db" {
