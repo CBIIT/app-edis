@@ -104,6 +104,7 @@ async function processVdsUsers(users, counter, s3Entry) {
 
 async function batchUpload(queue, counter, s3Entry) {
     if (process.env.TEST) {
+        queue.splice(0, queue.length);
         // console.debug('Finished in test retrieval mode');
         return;
     }

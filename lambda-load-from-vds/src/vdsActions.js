@@ -216,12 +216,12 @@ function _getTlsOptions() {
     return tlsOptions;
 }
 
-async function waitForChunkEmpty(chunk) {
-    console.debug('Wait for chunk empty', chunk.length);
-    while (chunk.length > 0) {
+async function waitForChunkEmpty(arr) {
+    console.debug('Wait for empty chunk - chunk lenth=', arr.length);
+    while (arr.length > 0) {
         await sleep(1000);
     }
-    console.debug('Wait for chunk empty...done', chunk.length);
+    console.debug('Wait for chunk empty...done', arr.length);
 }
 
 module.exports = {getUsers}

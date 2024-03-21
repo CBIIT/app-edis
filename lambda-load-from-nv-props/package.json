@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "zip": "rm -rf node_modules && rm -rf ../lambda-zip/lambda-load-from-nv-props.zip && npm install --only='prod' && zip -r ../lambda-zip/lambda-load-from-nv-props.zip node_modules src/*",
-    "build-prod": "rm -rf node_modules && npm install --only='prod'",
+    "build-prod": "rm -rf node_modules && npm install --only='prod' --omit=dev --no-optional",
     "zip-prod": "mkdir -p out && rm -rf out/lambda-load-from-nv-props.zip && zip -r -q out/lambda-load-from-nv-props.zip node_modules src/*"
   },
   "keywords": [],
