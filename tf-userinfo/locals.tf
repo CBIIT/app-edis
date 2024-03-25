@@ -149,7 +149,7 @@ EOF
 
   resource_tags = {
     EnvironmentTier = upper(var.env),
-    ApplicationName = "UserInfo",
+    ApplicationName = "Enterprise Administrative Data and Integration Services",
     Project = "EADIS",
     Backup = (var.env == "prod") ? "prod" : "nonprod",
     ResourceName = "NCI-EADIS-${var.env}",
