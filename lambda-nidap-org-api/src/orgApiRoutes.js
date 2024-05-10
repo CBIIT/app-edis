@@ -6,7 +6,7 @@ const axios = require('axios');
 function orgRoutes(app, opts) {
 
     app.get('/orgs', async (req, res) => {
-        console.info(opts.prefix + 'orgs', req.params);
+        console.info(opts.prefix + '/orgs', req.params);
         try {
             if (req.query.Testing) {
                 console.info(`Return in Testing mode`);

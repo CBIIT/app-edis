@@ -20,7 +20,8 @@ const client = new AWS.SSM();
 async function getConfigurationParameters() {
   const data = await client.getParametersByPath({
     Path: PARAMETER_PATH,
-    Recursive: true}).promise();
+    Recursive: true,
+    WithDecryption: true }).promise();
   const result = {};
   data.Parameters.forEach((p) => {
     result[p.Name.slice(PARAMETER_PATH.length)] = p.Value;
