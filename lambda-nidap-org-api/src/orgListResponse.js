@@ -30,4 +30,4 @@ class Organization {
     }
 }
 
-export { Organization, OrgListResponse }
+module.exports = { Organization, OrgListResponse }

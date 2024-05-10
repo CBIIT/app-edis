@@ -7,4 +7,4 @@ function initConfiguration(configuration) {
     Object.assign(conf.nidap, configuration);
 }
 
-export {conf, initConfiguration};
+module.exports = {conf, initConfiguration};

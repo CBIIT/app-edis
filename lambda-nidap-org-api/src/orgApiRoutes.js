@@ -1,7 +1,7 @@
 
-import { conf } from "./conf.js"
-import fetch from "node-fetch";
-import {Organization, OrgListResponse} from "./orgListResponse.js"
+const { conf } = require("./conf");
+const {Organization, OrgListResponse}  = require("./orgListResponse");
+const axios = require('axios');
 
 function orgRoutes(app, opts) {
 
@@ -84,13 +84,12 @@ async function listAllOrgs(nextPageToken) {
     if (nextPageToken) {
         URL += `?nextPageToken=${nextPageToken}`;
     }
-    const resp = await fetch(URL, {
-        method: 'GET',
+    const resp = await axios.get(URL, {
         headers: {
             'Authorization': `Bearer ${conf.nidap.auth_token}`
         }
-    })
-    const nidapResp = await resp.json();
+    });
+    const nidapResp = resp.data;
     const result = new OrgListResponse();
     result.count =nidapResp.data.length;
     if (nidapResp.nextPageToken) {
@@ -111,4 +110,4 @@ async function listAllOrgs(nextPageToken) {
     return result;
 }
 
-export { orgRoutes, listAllOrgs}
+module.exports = { orgRoutes, listAllOrgs};
