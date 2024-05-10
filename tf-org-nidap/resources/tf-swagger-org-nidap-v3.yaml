@@ -1,0 +1,133 @@
+openapi: 3.0.0
+info:
+  description: Enterprise Data & Integration Services Web Services - **Organization Service (NIDAP version)**
+  version: "0.1.0"
+  title: Organization API (NIDAP data)
+  # put the contact info for your development or API team
+  contact:
+    email: NCICBIITBizAppsSupportLowTier@mail.nih.gov
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+x-amazon-apigateway-request-validators:
+  all:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params:
+    validateRequestBody: true
+    validateRequestParameters: true
+  body:
+    validateRequestBody: true
+    validateRequestParameters: false
+
+# tags are used for organizing operations
+tags:
+  - name: clients
+    description: Operations available to clients - service to service
+
+paths:
+  /orgapi/nidap/v1/orgs:
+    get:
+      tags:
+        - clients
+      summary: Get all NIH organizations
+      operationId: getAllOrganizations
+      description: |
+        Get all Organization records from NIDAP.  Records are enhanced with DOC information
+      x-amazon-apigateway-request-validator: params
+      parameters:
+        - name: lastEvaluatedKey
+          in: query
+          description: Last Evaluated Key returned from previous request
+          required: false
+          schema:
+            type: string
+            example: '1234567890'
+      responses:
+        '200':
+          description: JSON formatted records of the organizations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationsResponse'
+        '400':
+          description: bad input parameter
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn}
+        httpMethod: POST
+        timeoutInMillis: 10000
+        type: "aws_proxy"
+        cacheKeyParameters:
+          - method.request.querystring.lastEvaluatedKey
+      security:
+        - request-authorizer: []
+
+components:
+  schemas:
+    OrganizationsResponse:
+      type: object
+      properties:
+        count:
+            type: integer
+        error:
+          type: string
+          description: Error message if not empty - rest of the fields are zeros
+        lastEvaluatedKey:
+          type: string
+          description: If present, the result is incomplete, pass this value as "lastEvaluatedKey" query parameter to get the next chunk of results
+        items:
+            type: array
+            items:
+              $ref: '#/components/schemas/Organization'
+
+    Organization:
+      type: object
+      required:
+        - NIHSAC
+        - NIHORGACRONYM
+        - NIHORGNAME
+        - NIHORGPATH
+        - NIHOUACRONYM
+        - NIHOUNAME
+      properties:
+        NIHSAC:
+          type: string
+          format: string
+          example: HNC177
+        NIHORGACRONYM:
+          type: string
+          example: NCI
+        NIHORGNAME:
+          type: string
+          example: National Cancer Institute
+        NIHORGPATH:
+          type: string
+          example: NCI OD OM SO
+        NIHOUACRONYM:
+          type: string
+          example: SO
+        NIHOUNAME:
+          type: string
+          example: Some Office
+        NIHPARENTSAC:
+          type: string
+          example: HNC177
+        DOCSAC:
+          type: integer
+          example: HNC177
+        DOCORGPATH:
+          type: string
+          example: NCI OD OM SO
+
+  securitySchemes:
+    request-authorizer:
+      type: apiKey
+      name: Authorization
+      in: header
+      x-amazon-apigateway-authtype: custom
+      x-amazon-apigateway-authorizer:
+        type: token
+        authorizerUri: ${auth_lambda_invoke_arn}
+        authorizerResultTtlInSeconds: 300
