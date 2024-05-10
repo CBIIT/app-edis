@@ -1,9 +1,11 @@
-const app = require('lambda-api')({version: 'v1.0', logger: {level: 'debug'}})
-const AWS = require('aws-sdk'),
-    region = 'us-east-1';
+import createAPI from "lambda-api";
+import AWS from "aws-sdk";
 
-const { orgRoutes } = require('./orgApiRoutes');
-const {initConfiguration} = require("./conf");
+const app = createAPI({version: 'v1.0', logger: {level: 'debug'}});
+const region = 'us-east-1';
+
+import { orgRoutes }  from "./orgApiRoutes.js";
+import { initConfiguration } from "./conf.js";
 
 // Set the console log level
 const logLevel = process.env['LOG_LEVEL'];
@@ -35,7 +37,7 @@ console.debug('The application has been registered');
 
 let configuration;
 
-module.exports.handler = async (event, context, callback) => {
+export const handler = async (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false
   console.debug('Event:', JSON.stringify(event), configuration);
 
