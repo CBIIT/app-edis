@@ -49,9 +49,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OrganizationsResponse'
+                $ref: '#/components/schemas/OrganizationsResponse'
         '400':
           description: bad input parameter
       x-amazon-apigateway-integration:
@@ -60,6 +58,92 @@ paths:
         timeoutInMillis: 10000
         type: "aws_proxy"
         cacheKeyParameters:
+          - method.request.querystring.lastEvaluatedKey
+      security:
+        - request-authorizer: []
+
+  /orgapi/nidap/v1/orgs/{nihsac}:
+    get:
+      tags:
+        - clients
+      summary: Get NIH organization by NIH SAC code
+      operationId: searchOrganizationBySac
+      description: |
+        Get Organization record for the given NIH SAC from NIDAP.  Record is enhanced with DOC information
+      x-amazon-apigateway-request-validator: params
+      parameters:
+        - name: nihsac
+          in: path
+          description: NIH SAC code to search for
+          required: true
+          schema:
+            type: string
+            example: 'ABC123'
+      responses:
+        '200':
+          description: JSON formatted records of the organizations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          description: bad input parameter
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn}
+        httpMethod: POST
+        timeoutInMillis: 10000
+        type: "aws_proxy"
+        cacheKeyParameters:
+          - method.request.path.nihsac
+      security:
+        - request-authorizer: []
+
+  /orgapi/nidap/v1/orgtree/{nihsac}:
+    get:
+      tags:
+        - clients
+      summary: Get NIH organization subtree by NIH SAC code
+      operationId: getOrganizationTreeBySac
+      description: |
+        Get organization records starting withthe given NIH SAC from NIDAP.  Records are enhanced with DOC information
+      x-amazon-apigateway-request-validator: params
+      parameters:
+        - name: nihsac
+          in: path
+          description: NIH SAC code to search for
+          required: true
+          schema:
+            type: string
+            example: 'ABC123'
+        - name: lastEvaluatedKey
+          in: query
+          description: Last Evaluated Key returned from previous request
+          required: false
+          schema:
+            type: string
+            example: '1234567890'
+      responses:
+        '200':
+          description: JSON formatted records of the organizations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationsResponse'
+        '400':
+          description: bad input parameter
+        '422':
+          description: invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationsSearchError'
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn}
+        httpMethod: POST
+        timeoutInMillis: 10000
+        type: "aws_proxy"
+        cacheKeyParameters:
+          - method.request.path.nihsac
           - method.request.querystring.lastEvaluatedKey
       security:
         - request-authorizer: []
@@ -121,6 +205,20 @@ components:
           type: string
           example: NCI OD OM SO
 
+    OrganizationsSearchError:
+      properties:
+        errorCode:
+          type: string
+          example: INVALID ARGUMENT
+        errorName:
+          type: string
+          example: Processing Error
+        errorInstanceId:
+          type: string
+          example: 1234567qws
+        parameters:
+          type: object
+          example: {}
   securitySchemes:
     request-authorizer:
       type: apiKey
