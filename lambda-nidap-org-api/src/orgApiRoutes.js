@@ -14,6 +14,7 @@ function orgRoutes(app, opts) {
             }
             res.json(await listAllOrgs(req.query.lastEvaluatedKey));
         } catch (error) {
+            console.error('ERROR:', error);
             res.status(500).send(error);
         }
     });
@@ -24,7 +25,7 @@ function orgRoutes(app, opts) {
                 console.info(`Return in Testing mode`);
                 return { 'Success': true};
             }
-            const result = await searchOrgBySac(rec.params.nihsac);
+            const result = await searchOrgBySac(req.params.nihsac);
             if (result.status) {
                 res.status(result.status).send(result.error);
             }
@@ -32,6 +33,7 @@ function orgRoutes(app, opts) {
                 res.json(result);
             }
         } catch (error) {
+            console.error('ERROR:', error);
             res.status(500).send(error);
         }
     });
@@ -42,70 +44,12 @@ function orgRoutes(app, opts) {
                 console.info(`Return in Testing mode`);
                 return { 'Success': true};
             }
-            res.json(await searchOrgTreeBySac(req.params.nihsac));
+            res.json(await searchOrgTreeBySac(req.params.nihsac, req.query.lastEvaluatedKey));
         } catch (error) {
+            console.error('ERROR:', error);
             res.status(error.response.status).send(error.data);
         }
     });
-    // app.get('/userByNIHid/:id', async (req, res) => {
-    //     console.info('/userapi/ned/userByNIHid', req.params);
-    //     try {
-    //         const nihId = req.params.id;
-    //
-    //         if (nihId === undefined) {
-    //             res.status(400).send('nihid is not defined.');
-    //         }
-    //         else if (!isNum.test(nihId)) {
-    //             res.status(400).send('nihid is not numeric.');
-    //         }
-    //         else if (req.query.Testing) {
-    //             console.info(`Return in Testing mode`);
-    //             res.json({ 'Success': true});
-    //         }
-    //         else {
-    //             res.json(await getByNIHid(nihid));
-    //         }
-    //     } catch (error) {
-    //         res.status(500).send(error);
-    //     }
-    // });
-    // app.get('/userByIDAccount/:id', async (req, res) => {
-    //     console.info('/userapi/ned/userByIDAccount', req.params);
-    //     try {
-    //         if (req.query.Testing) {
-    //             console.info(`Return in Testing mode`);
-    //             return { 'Success': true};
-    //         }
-    //         res.json(await getByADAccount(req.params.id));
-    //     } catch (error) {
-    //         res.status(500).send(error);
-    //     }
-    // });
-    // app.get('/usersByIc/:ic', async (req, res) => {
-    //     console.info('/userapi/ned/usersByIc', req.params);
-    //     try {
-    //         if (req.query.Testing) {
-    //             console.info(`Return in Testing mode`);
-    //             return { 'Success': true};
-    //         }
-    //         res.json(await getByIc(req.params.ic));
-    //     } catch (error) {
-    //         res.status(500).send(error);
-    //     }
-    // });
-    // app.get('/changesByIc/:ic', async (req, res) => {
-    //     console.info('/userapi/ned/changesByIc', req.params);
-    //     try {
-    //         if (req.query.Testing) {
-    //             console.info(`Return in Testing mode - no actual call is performed`);
-    //             return { 'Success': true};
-    //         }
-    //         res.json(await getChangesByIc(req.params.ic,
-    //             req.query.From_Date, req.query.From_Time, req.query.To_Date, req.query.To_Time));
-    //     } catch (error) {
-    //         res.status(500).send(error);
-    //     }
-    // });
 }
 
 async function listAllOrgs(nextPageToken) {
