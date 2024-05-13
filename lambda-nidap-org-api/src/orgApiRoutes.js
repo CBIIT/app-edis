@@ -37,7 +37,7 @@ function orgRoutes(app, opts) {
             res.status(500).send(error);
         }
     });
-    app.get('/orgTree/:nihsac', async (req, res) => {
+    app.get('/orgtree/:nihsac', async (req, res) => {
         console.info(opts.prefix + '/orgs', req.params);
         try {
             if (req.query.Testing) {
