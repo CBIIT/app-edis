@@ -74,7 +74,7 @@ jobs:
           echo ${{ steps.secret-string.outputs.ss }} | jq '.'
 
       - name: Get the secret all key/values into variable
-        id: secret-string
+        id: secret-content
         if: "${{ inputs.key == '' }}"
         run: |
           JSONCONTENT="$(aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString')"
