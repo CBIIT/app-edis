@@ -58,38 +58,22 @@ async function listAllOrgs(nextPageToken) {
     if (nextPageToken) {
         URL += `&nextPageToken=${nextPageToken}`;
     }
+    const auth = getAuthorizationHeader();
     const resp = await axios.get(URL, {
         headers: {
-            'Authorization': `Bearer ${conf.nidap.auth_token}`
+            'Authorization': auth
         }
     });
-    const nidapResp = resp.data;
-    const result = new OrgListResponse();
-    result.count =nidapResp.data.length;
-    if (nidapResp.nextPageToken) {
-        result.lastEvaluatedKey = nidapResp.nextPageToken;
-    }
-    nidapResp.data.forEach((r) => {
-        const p = r.properties;
-        result.items.push(new Organization(p.sac, p.organizationAcronym, p.organization, p.organizationPath,
-            p.instituteAcronym, p.instiute, p.parentSac, p.docSac, p.docOrganizationPath));
-    })
-    // Post-process NIDAP response
-
-
-    console.debug(`Got result `);
-    console.debug(result);
-    // console.debug(JSON.stringify(result));
-
-    return result;
+    return _processPaginatedResult(resp.data);
 }
 
 async function searchOrgBySac(sac) {
     console.info(`Search Organizations by SAC code`);
     let URL = `${conf.nidap.url_v1}objects/${conf.nidap.ontology_org}/${sac}`;
+    const auth = getAuthorizationHeader();
     const resp = await axios.get(URL, {
         headers: {
-            'Authorization': `Bearer ${conf.nidap.auth_token}`
+            'Authorization': auth
         }
     });
     if (resp.status === 200) { //Not found
@@ -136,14 +120,18 @@ async function searchOrgTreeBySac(sac, nextPageToken) {
     if (nextPageToken) {
         data['pageToken'] = nextPageToken;
     }
+    const auth = getAuthorizationHeader();
     const resp = await axios.post(URL, data, {
             headers: {
-                'Authorization': `Bearer ${conf.nidap.auth_token}`
+                'Authorization': auth
             },
     });
 
-    const nidapResp = resp.data;
-    // console.debug(nidapResp);
+    // console.debug(resp.data);
+    return _processPaginatedResult(resp.data);
+}
+
+function _processPaginatedResult(nidapResp) {
     const result = new OrgListResponse();
     result.count = nidapResp.data.length;
     if (nidapResp.nextPageToken) {
@@ -154,10 +142,27 @@ async function searchOrgTreeBySac(sac, nextPageToken) {
         result.items.push(new Organization(p.sac, p.organizationAcronym, p.organization, p.organizationPath,
             p.instituteAcronym, p.instiute, p.parentSac, p.docSac, p.docOrganizationPath));
     })
-    // Post-process NIDAP response
-    // console.debug(`Got result `);
-    // console.debug(result);
     return result;
+}
+
+async function getAuthorizationHeader() {
+    if (conf.nidap.auth_type != 'prod') {
+        return 'Bearer ' + conf.nidap.auth_token;
+    }
+
+    //Auth2 token implementation
+    const data = {
+        grant_type: 'client_credentials',
+        client_id: conf.nidap.auth_client_id,
+        client_secret: conf.nidap.auth_client_secret
+    };
+    const resp = await axios.post(conf.nidap.url_token, data, {
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    });
+    console.debug('Token response', resp.data);
+    return 'Bearer ' + resp.data.access_token;
 }
 
 module.exports = { orgRoutes, listAllOrgs, searchOrgBySac, searchOrgTreeBySac};
