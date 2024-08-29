@@ -182,7 +182,7 @@ paths:
                          #foreach($paddr in $elem.proxyAddresses.L)
                          "$paddr.S"#if($foreach.hasNext),#end
 
-#end
+                         #end
                       ],
                       "displayName": "$util.escapeJavaScript($elem.displayName.S)",
                       "PERSONALTITLE": "$elem.PERSONALTITLE.S",
@@ -236,7 +236,7 @@ paths:
                          #foreach($grp in $elem.memberOf.L)
                          "$grp.S"#if($foreach.hasNext),#end
 
-#end
+                         #end
                       ],
                       "NIHCREATETIMESTAMP": "$elem.NIHCREATETIMESTAMP.S",
                       "NIHMODIFYTIMESTAMP": "$elem.NIHMODIFYTIMESTAMP.S",
