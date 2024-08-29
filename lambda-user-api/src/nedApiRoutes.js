@@ -66,7 +66,7 @@ function nedRoutes(app, opts) {
                 console.info(`Return in Testing mode`);
                 return { 'Success': true};
             }
-            res.json(await getByIc(req.params.ic));
+            res.json(await getByIc(req.params.ic, req.query.idOnly | false));
         } catch (error) {
             res.status(500).send(error);
         }
@@ -125,11 +125,11 @@ async function getByADAccount(idAccount) {
     return (Array.isArray(result) && result.length > 0) ? result[0] : result;
 }
 
-async function getByIc(ic) {
+async function getByIc(ic, idOnly) {
     console.info(`Getting NED users by IC`, ic);
     const args = {
         IC_or_SAC: ic,
-        ReturnNIHIDOnly: true
+        ReturnNIHIDOnly: idOnly | false
     };
     console.debug(`Continue in real mode `, args);
     const client = await _getSoapClient();
@@ -185,4 +185,4 @@ function _getWsSecurity_v7() {
     return wsSecurity_v7
 }
 
-module.exports = {nedRoutes, getByName}
+module.exports = {nedRoutes, getByName, getByNIHid, getByIc}
