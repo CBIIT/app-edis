@@ -58,7 +58,8 @@ async function listAllOrgs(nextPageToken) {
     if (nextPageToken) {
         URL += `&nextPageToken=${nextPageToken}`;
     }
-    const auth = getAuthorizationHeader();
+    console.info(`URL: ${URL}`);
+    const auth = await getAuthorizationHeader();
     const resp = await axios.get(URL, {
         headers: {
             'Authorization': auth
@@ -70,7 +71,8 @@ async function listAllOrgs(nextPageToken) {
 async function searchOrgBySac(sac) {
     console.info(`Search Organizations by SAC code`);
     let URL = `${conf.nidap.url_v1}objects/${conf.nidap.ontology_org}/${sac}`;
-    const auth = getAuthorizationHeader();
+    console.info(`URL: ${URL}`);
+    const auth = await getAuthorizationHeader();
     const resp = await axios.get(URL, {
         headers: {
             'Authorization': auth
@@ -120,7 +122,7 @@ async function searchOrgTreeBySac(sac, nextPageToken) {
     if (nextPageToken) {
         data['pageToken'] = nextPageToken;
     }
-    const auth = getAuthorizationHeader();
+    const auth = await getAuthorizationHeader();
     const resp = await axios.post(URL, data, {
             headers: {
                 'Authorization': auth
