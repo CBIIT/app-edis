@@ -232,7 +232,12 @@ paths:
                       "NIHADMAILBOXREQ": "$elem.NIHADMAILBOXREQ.S",
                       "NIHPRIMARYSMTP": "$elem.NIHPRIMARYSMTP.S",
                       "MAIL": "$elem.MAIL.S",
-                      "proxyAddresses": "$elem.proxyAddresses.SS",
+                      "proxyAddresses": [
+                         #foreach($paddr in $elem.proxyAddresses.L)
+                         "$paddr.S"#if($foreach.hasNext),#end
+
+                         #end
+                      ],
                       "displayName": "$util.escapeJavaScript($elem.displayName.S)",
                       "PERSONALTITLE": "$elem.PERSONALTITLE.S",
                       "GIVENNAME": "$elem.GIVENNAME.S",
@@ -281,7 +286,12 @@ paths:
                       "POSTALADDRESS": "$elem.POSTALADDRESS.S",
                       "NIHIDBADGELESS6MOS": "$elem.NIHIDBADGELESS6MOS.S",
                       "managedObjects": "$elem.managedObjects.S",
-                      "memberOf": "$elem.memberOf.SS",
+                      "memberOf": [
+                         #foreach($grp in $elem.memberOf.L)
+                         "$grp.S"#if($foreach.hasNext),#end
+
+                         #end
+                      ],
                       "NIHCREATETIMESTAMP": "$elem.NIHCREATETIMESTAMP.S",
                       "NIHMODIFYTIMESTAMP": "$elem.NIHMODIFYTIMESTAMP.S",
                       "NIHMODIFIERSNAME": "$elem.NIHMODIFIERSNAME.S",
