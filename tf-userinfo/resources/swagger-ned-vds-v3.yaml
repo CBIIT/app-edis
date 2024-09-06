@@ -77,6 +77,60 @@ paths:
       security:
         - request-authorizer: []
 
+  /userapi/ned/userByNIHid/{id}:
+    get:
+      tags:
+        - clients
+      summary: Get NED Person for the given NIH ID
+      operationId: getNEDUserByNIHid
+      description: |
+        Get NED Person for the given NIH ID
+      parameters:
+        - name: id
+          in: path
+          description: NIH ID
+          required: true
+          schema:
+            type: string
+            example: '0123456789'
+      responses:
+        '200':
+          $ref: '#/components/responses/nedPersonResponse'
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn  }
+        httpMethod: POST
+        timeoutInMillis: 29000
+        type: aws_proxy
+      security:
+        - request-authorizer: []
+
+  /userapi/ned/usersByIc/{ic}:
+    get:
+      tags:
+        - clients
+      summary: Get NED Person list for the given IC
+      operationId: getNEDUsersByIC
+      description: |
+        Get NED Person list for the given IC
+      parameters:
+        - name: ic
+          in: path
+          description: IC
+          required: true
+          schema:
+            type: string
+            example: 'NCI'
+      responses:
+        '200':
+          $ref: '#/components/responses/nedPersonListResponse'
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn  }
+        httpMethod: POST
+        timeoutInMillis: 29000
+        type: aws_proxy
+      security:
+        - request-authorizer: []
+
   /userapi/vds/userById/{id}:
     get:
       tags:
@@ -594,6 +648,36 @@ components:
                 items:
                   $ref: '#/components/schemas/nVProperty'
 
+    nedPersonResponse:
+      description: Response with a list of NEDPerson objects
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              NumberOfRecords:
+                type: string
+              NEDPerson:
+                oneOf:
+                  - $ref: "#/components/schemas/NEDPerson"
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/NEDPerson"
+
+    nedPersonListResponse:
+      description: Response with a list of NEDPerson objects
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              NumberOfRecords:
+                type: string
+              NEDPerson:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NEDPerson"
+
   schemas:
 
     NEDChangeRecord:
@@ -1083,16 +1167,11 @@ components:
           type: object
           properties:
             EmailAddress:
-              type: array
-              items:
-                type: object
-                properties:
-                  attributes:
-                    type: object
-                    properties:
-                      "ns0:EmailAddressType":
-                        type: string
-                        enum: ["Preferred", "Unique", "HHSUnique", "Home", "Primary"]
+              oneOf:
+                - type: array
+                  items:
+                    $ref: "#/components/schemas/EmailAddress"
+                - $ref: "#/components/schemas/EmailAddress"
         EmployeeType:
           type: string
           description: Person's category of employment (e.g., 'employee','contractor','fellow','guest researcher','volunteer','tenant')..
@@ -1199,14 +1278,11 @@ components:
               type: object
               properties:
                 PhoneNumber:
-                  type: object
-                  properties:
-                    attributes:
-                      type: object
-                      properties:
-                        "ns0:PhoneNumberType":
-                          type: string
-                          enum: ["Mobile", "Office", "Fax", "Pager", "TTY", "HomeFax", "Home", "PersonalMobile", "Company"]
+                  oneOf:
+                    - type: array
+                      items:
+                        $ref: "#/components/schemas/PhoneNumber"
+                    - $ref: "#/components/schemas/PhoneNumber"
             SubEmployeeType:
               type: string
               description: Individual sub-category of employment. For example, an individual whose category is 'Employee' will have one of the following sub-category 'GS, SES, Title 42, etc.', 'Special Government Employee', 'Commissioned Corps'.
@@ -1216,24 +1292,64 @@ components:
               type: object
               properties:
                 CreateTimeStamp:
+                  type: string
                 CreatorsName:
+                  type: string
                 DirectoryEntryEffectiveDate:
-                DirectoryEntryExpirationDate" minOccurs="0">
-                <annotation>
-                <documentation>The expected NIH separation date of a person.</documentation>
-                </annotation>
-                </element>
+                  type: string
+                DirectoryEntryExpirationDate:
+                  type: string
+                  description: The expected NIH separation date of a person.
                 ModifiersName:
+                  type: string
                 ModifyTimeStamp:
-                
+                  type: string
             Uniqueidentifier:
               type: string
             administrativeContactsInformation:
-              type: string
+              type: object
               description: Contains information of the person Administrative Contacts.
-        
+              properties:
+                administrativeContact:
+                  type: array
+                  description: Element to contain the Administrative Contact type for the person
+                  items:
+                    type: object
+                    properties:
+                      HHSID:
+                        type: string
+                        description: HHS ID of the person
+                      attributes:
+                        type: object
+                        properties:
+                          "ns0:administrativeContactType":
+                            type: string
+                            enum: ["Supervisor", "ProjectOfficer", "ServicingAO", "PointOfContact"]
 
-          
+    EmailAddress:
+      type: object
+      properties:
+        attributes:
+          type: object
+          properties:
+            "ns0:EmailAddressType":
+              type: string
+              enum: ["Preferred", "Unique", "HHSUnique", "Home", "Primary"]
+            $value:
+              type: string
+
+    PhoneNumber:
+      type: object
+      properties:
+        attributes:
+          type: object
+          properties:
+            "ns0:PhoneNumberType":
+              type: string
+              enum: ["Mobile", "Office", "Fax", "Pager", "TTY", "HomeFax", "Home", "PersonalMobile", "Company"]
+        $value:
+          type: string
+
   securitySchemes:
     request-authorizer:
       type: apiKey
