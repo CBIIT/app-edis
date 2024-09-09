@@ -104,6 +104,33 @@ paths:
       security:
         - request-authorizer: []
 
+  /userapi/ned/usersByIc/{ic}:
+    get:
+      tags:
+        - clients
+      summary: Get NED Person list for the given IC
+      operationId: getNEDUsersByIC
+      description: |
+        Get NED Person list for the given IC
+      parameters:
+        - name: ic
+          in: path
+          description: IC
+          required: true
+          schema:
+            type: string
+            example: 'NCI'
+      responses:
+        '200':
+          $ref: '#/components/responses/nedPersonListResponse'
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn  }
+        httpMethod: POST
+        timeoutInMillis: 29000
+        type: aws_proxy
+      security:
+        - request-authorizer: []
+
   /userapi/vds/userById/{id}:
     get:
       tags:
@@ -646,6 +673,20 @@ components:
                   - type: array
                     items:
                       $ref: "#/components/schemas/NEDPerson"
+
+    nedPersonListResponse:
+      description: Response with a list of NEDPerson objects
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              NumberOfRecords:
+                type: string
+              NEDPerson:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NEDPerson"
 
   schemas:
 
