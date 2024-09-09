@@ -41,7 +41,7 @@ function nedRoutes(app, opts) {
                 res.json({ 'Success': true});
             }
             else {
-                res.json(await getByNIHid(nihid));
+                res.json(await getByNIHid(nihId));
             }
         } catch (error) {
             res.status(500).send(error);
