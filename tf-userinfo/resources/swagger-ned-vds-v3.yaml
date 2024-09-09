@@ -77,60 +77,6 @@ paths:
       security:
         - request-authorizer: []
 
-  /userapi/ned/userByNIHid/{id}:
-    get:
-      tags:
-        - clients
-      summary: Get NED Person for the given NIH ID
-      operationId: getNEDUserByNIHid
-      description: |
-        Get NED Person for the given NIH ID
-      parameters:
-        - name: id
-          in: path
-          description: NIH ID
-          required: true
-          schema:
-            type: string
-            example: '0123456789'
-      responses:
-        '200':
-          $ref: '#/components/responses/nedPersonResponse'
-      x-amazon-apigateway-integration:
-        uri: ${lambda_invoke_arn  }
-        httpMethod: POST
-        timeoutInMillis: 29000
-        type: aws_proxy
-      security:
-        - request-authorizer: []
-
-  /userapi/ned/usersByIc/{ic}:
-    get:
-      tags:
-        - clients
-      summary: Get NED Person list for the given IC
-      operationId: getNEDUsersByIC
-      description: |
-        Get NED Person list for the given IC
-      parameters:
-        - name: ic
-          in: path
-          description: IC
-          required: true
-          schema:
-            type: string
-            example: 'NCI'
-      responses:
-        '200':
-          $ref: '#/components/responses/nedPersonListResponse'
-      x-amazon-apigateway-integration:
-        uri: ${lambda_invoke_arn  }
-        httpMethod: POST
-        timeoutInMillis: 29000
-        type: aws_proxy
-      security:
-        - request-authorizer: []
-
   /userapi/vds/userById/{id}:
     get:
       tags:
@@ -165,7 +111,7 @@ paths:
       operationId: listVDSUsersByIC
       description: |
         Get VDS user records that satisfied IC criteria
-      parameters: 
+      parameters:
         - name: ic
           in: path
           description: IC
@@ -599,7 +545,7 @@ paths:
         - request-authorizer: []
 
 components:
-  responses: 
+  responses:
     vdsresponse:
       description: Response with a list of VDS User objects
       content:
@@ -657,36 +603,6 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/nVProperty'
-
-    nedPersonResponse:
-      description: Response with a list of NEDPerson objects
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              NumberOfRecords:
-                type: string
-              NEDPerson:
-                oneOf:
-                  - $ref: "#/components/schemas/NEDPerson"
-                  - type: array
-                    items:
-                      $ref: "#/components/schemas/NEDPerson"
-
-    nedPersonListResponse:
-      description: Response with a list of NEDPerson objects
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              NumberOfRecords:
-                type: string
-              NEDPerson:
-                type: array
-                items:
-                  $ref: "#/components/schemas/NEDPerson"
 
   schemas:
 
@@ -929,7 +845,7 @@ components:
           type: string
           example: 123
         providedEmail:
-          description: Email calculated based on three fields (by priority) - proxyAddresses, MAIL, NIHPRIMARYSMTP 
+          description: Email calculated based on three fields (by priority) - proxyAddresses, MAIL, NIHPRIMARYSMTP
           type: string
           example: smithj@mail.gov
         DOC:
@@ -1133,232 +1049,6 @@ components:
         FLAG_1:
           type: string
           example:
-
-    NEDPerson:
-      type: object
-      properties:
-        Addresses:
-          type: object
-          properties:
-            Address:
-              type: array
-              items:
-                type: object
-                properties:
-                  BuildingName:
-                    type: string
-                  Country:
-                    type: string
-                  FormattedAddress:
-                    type: string
-                  Locality:
-                    type: string
-                  MailStop:
-                    type: string
-                  PostalCode:
-                    type: string
-                  RoomNumber:
-                    type: string
-                  Site:
-                    type: string
-                  State:
-                    type: string
-                  Street:
-                    type: string
-                  attributes:
-                    type: object
-                    properties:
-                      "ns0:AddressType":
-                        type: string
-                        enum: [ "Delivery", "Office", "Work", "Home" ]
-        Description:
-          type: string
-        EmailAddresses:
-          type: object
-          properties:
-            EmailAddress:
-              oneOf:
-                - type: array
-                  items:
-                    $ref: "#/components/schemas/EmailAddress"
-                - $ref: "#/components/schemas/EmailAddress"
-        EmployeeType:
-          type: string
-          description: Person's category of employment (e.g., 'employee','contractor','fellow','guest researcher','volunteer','tenant')..
-        NIHADACCTREQ:
-          type: string
-          description: NIH Active Directory Account Authorized
-        NIHADMAILBOXREQ:
-          type: string
-          description: NIH Active Directory Email Box Authorized
-        NIHBadge:
-          type: object
-          properties:
-            BadgeExpirationDate:
-              type: string
-            BadgeIssueReason:
-              type: string
-            BadgeRequestDate:
-              type: string
-            BadgeRequestExpirationDate:
-              type: string
-              description: Requested expiration date of a person's ID badge.
-            BadgeRequestType:
-              type: string
-            BadgeShortTerm:
-              type: string
-              description: Indicates whether a person is a short-term (6 months or less) or long-term worker. (Y = short-term, null = long-term)
-            BadgeStatus:
-              type: string
-              description: active/ inactive badge for the individual.
-            BadgeTitle:
-              type: string
-            BadgeType:
-              type: string
-              description: Type of the badge issued to the individual (RLA, PIV, NIH...).
-        NIHDUPUID:
-          type: string
-        NIHDirEntryNoPrint:
-          type: string
-        NIHIPD:
-          type: string
-        NIHLibraryAuth:
-          type: string
-        NIHREDPARKINGAUTH:
-          type: string
-          description: Indicates whether NED has authorized a person for red parking privileges (not null indicates authorized).
-        NIHSSO:
-          type: string
-        NIHSummerStatus:
-          type: string
-          description: Summer Student at the NIH?
-        NIHVPNAUTH:
-          type: string
-          description: Authorized for VPN (Y) or not (N)
-        Names:
-          type: object
-          properties: 
-            Name:
-              type: array
-              items:
-                type: object
-                properties:
-                  FormattedName:
-                    type: string
-                  GenerationQualifier:
-                    type: string
-                  GivenName:
-                    type: string
-                  MiddleName:
-                    type: string
-                  MixCaseSurname:
-                    type: string
-                  NoMiddleName:
-                    type: string
-                    description: Indicates a person does not have a legal middle name ('Y' indicates a person does not have a legal middle name; null indicates they do).
-                  PersonalTitle:
-                    type: string
-                  SuffixQualifier:
-                    type: string
-                  Surname:
-                    type: string
-                  attributes:
-                    type: object
-                    properties:
-                      "ns0:NameType":
-                        type: string
-                        enum: ["Legal", "Common", "Professional", "Initials"]
-            OrganizationInformation:
-              type: object
-              description: Contains information for the Organization.
-              properties:
-                NIHSAC:
-                  type: string
-                NIHOrgAcronym:
-                  type: string
-                NIHOrgName:
-                  type: string
-                NIHOrgPath:
-                  type: string
-                NIHOUAcronym:
-                  type: string
-                NIHOUName:
-                  type: string
-            PhoneNumbers:
-              type: object
-              properties:
-                PhoneNumber:
-                  oneOf:
-                    - type: array
-                      items:
-                        $ref: "#/components/schemas/PhoneNumber"
-                    - $ref: "#/components/schemas/PhoneNumber"
-            SubEmployeeType:
-              type: string
-              description: Individual sub-category of employment. For example, an individual whose category is 'Employee' will have one of the following sub-category 'GS, SES, Title 42, etc.', 'Special Government Employee', 'Commissioned Corps'.
-            Title:
-              type: string
-            TrackingData:
-              type: object
-              properties:
-                CreateTimeStamp:
-                  type: string
-                CreatorsName:
-                  type: string
-                DirectoryEntryEffectiveDate:
-                  type: string
-                DirectoryEntryExpirationDate:
-                  type: string
-                  description: The expected NIH separation date of a person.
-                ModifiersName:
-                  type: string
-                ModifyTimeStamp:
-                  type: string
-            Uniqueidentifier:
-              type: string
-            administrativeContactsInformation:
-              type: object
-              description: Contains information of the person Administrative Contacts.
-              properties:
-                administrativeContact:
-                  type: array
-                  description: Element to contain the Administrative Contact type for the person
-                  items:
-                    type: object
-                    properties:
-                      HHSID:
-                        type: string
-                        description: HHS ID of the person
-                      attributes:
-                        type: object
-                        properties:
-                          "ns0:administrativeContactType":
-                            type: string
-                            enum: ["Supervisor", "ProjectOfficer", "ServicingAO", "PointOfContact"]
-
-    EmailAddress:
-      type: object
-      properties:
-        attributes:
-          type: object
-          properties:
-            "ns0:EmailAddressType":
-              type: string
-              enum: ["Preferred", "Unique", "HHSUnique", "Home", "Primary"]
-            $value:
-              type: string
-
-    PhoneNumber:
-      type: object
-      properties:
-        attributes:
-          type: object
-          properties:
-            "ns0:PhoneNumberType":
-              type: string
-              enum: ["Mobile", "Office", "Fax", "Pager", "TTY", "HomeFax", "Home", "PersonalMobile", "Company"]
-        $value:
-          type: string
 
   securitySchemes:
     request-authorizer:
