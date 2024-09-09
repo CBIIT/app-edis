@@ -114,6 +114,17 @@ async function getByNIHid(nihid) {
     return (Array.isArray(result) && result.length > 0) ? result[0] : result;
 }
 
+async function getByNIHidMultiple(nihids) {
+    console.info(`Getting multiple NED users by NIH ID (${nihids.length} ids`);
+    const args = {
+        NIHID: nihids
+    };
+    console.debug(`Continue in real mode `, args);
+    const client = await _getSoapClient();
+    const result = await client.ByNIHidMultipleAsync(args);
+    return (Array.isArray(result) && result.length > 0) ? result[0] : result;
+}
+
 async function getByADAccount(idAccount) {
     console.info(`Getting NED user by ID Account`, idAccount);
     const args = {
@@ -134,6 +145,27 @@ async function getByIc(ic, idOnly) {
     console.debug(`Continue in real mode `, args);
     const client = await _getSoapClient();
     const result = await client.ByICAsync(args);
+    return (Array.isArray(result) && result.length > 0) ? result[0] : result;
+}
+
+async function getByIcPaginated(ic) {
+    console.info(`Getting NED users by IC`, ic);
+    const args = {
+        IC_or_SAC: ic,
+        ReturnNIHIDOnly: true
+    };
+    console.debug(`Continue in real mode `);
+    const client = await _getSoapClient();
+    const result0 = await client.ByICAsync(args);
+    const part1 = [];
+    const max = Math.min(1000, result0[0].NumberOfRecords);
+    console.debug(`Returned ${result0[0].NumberOfRecords} record ids, will retrieve ${max} records`);
+    for (let i=0; i < max; i++) {
+        // part1.push({ NIHID: result0[0].NEDPerson[i].Uniqueidentifier });
+        part1.push(result0[0].NEDPerson[i].Uniqueidentifier);
+    }
+    console.debug('Call get by NIH Id multiple...');
+    const result = await getByNIHidMultiple(part1);
     return (Array.isArray(result) && result.length > 0) ? result[0] : result;
 }
 
@@ -185,4 +217,4 @@ function _getWsSecurity_v7() {
     return wsSecurity_v7
 }
 
-module.exports = {nedRoutes, getByName, getByNIHid, getByIc}
+module.exports = {nedRoutes, getByName, getByNIHid, getByIc, getByIcPaginated}
