@@ -77,6 +77,33 @@ paths:
       security:
         - request-authorizer: []
 
+  /userapi/ned/userByNIHid/{id}:
+    get:
+      tags:
+        - clients
+      summary: Get NED Person for the given NIH ID
+      operationId: getNEDUserByNIHid
+      description: |
+        Get NED Person for the given NIH ID
+      parameters:
+        - name: id
+          in: path
+          description: NIH ID
+          required: true
+          schema:
+            type: string
+            example: '0123456789'
+      responses:
+        '200':
+          $ref: '#/components/responses/nedPersonResponse'
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn  }
+        httpMethod: POST
+        timeoutInMillis: 29000
+        type: aws_proxy
+      security:
+        - request-authorizer: []
+
   /userapi/vds/userById/{id}:
     get:
       tags:
@@ -604,6 +631,22 @@ components:
                 items:
                   $ref: '#/components/schemas/nVProperty'
 
+    nedPersonResponse:
+      description: Response with a list of NEDPerson objects
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              NumberOfRecords:
+                type: string
+              NEDPerson:
+                oneOf:
+                  - $ref: "#/components/schemas/NEDPerson"
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/NEDPerson"
+
   schemas:
 
     NEDChangeRecord:
@@ -1049,6 +1092,44 @@ components:
         FLAG_1:
           type: string
           example:
+
+    NEDPerson:
+      type: object
+      properties:
+        Addresses:
+          type: object
+          properties:
+            Address:
+              type: array
+              items:
+                type: object
+                properties:
+                  BuildingName:
+                    type: string
+                  Country:
+                    type: string
+                  FormattedAddress:
+                    type: string
+                  Locality:
+                    type: string
+                  MailStop:
+                    type: string
+                  PostalCode:
+                    type: string
+                  RoomNumber:
+                    type: string
+                  Site:
+                    type: string
+                  State:
+                    type: string
+                  Street:
+                    type: string
+                  attributes:
+                    type: object
+                    properties:
+                      "ns0:AddressType":
+                        type: string
+                        enum: [ "Delivery", "Office", "Work", "Home" ]
 
   securitySchemes:
     request-authorizer:
