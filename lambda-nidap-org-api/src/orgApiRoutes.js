@@ -81,7 +81,7 @@ async function searchOrgBySac(sac) {
     if (resp.status === 200) { //Not found
         const p = resp.data.properties;
         const result = new Organization(p.sac, p.organizationAcronym, p.organization, p.organizationPath,
-            p.instituteAcronym, p.instiute, p.parentSac, p.docSac, p.docOrganizationPath);
+            p.instituteAcronym, p.institute, p.parentSac, p.docSac, p.docOrganizationPath);
         console.debug(`Got result `);
         console.debug(result);
         return result;
