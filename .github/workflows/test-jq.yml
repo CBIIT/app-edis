@@ -1,7 +1,7 @@
 # This is a basic workflow to help you get started with Actions
 
-name: _Test Secrets Manager update
-run-name: _Test Secrets Manager update - ${{ inputs.tier }}
+name: _Test Secrets Manager get
+run-name: _Test Secrets Manager get - ${{ inputs.tier }}
 
 # Controls when the workflow will run
 on:
@@ -19,11 +19,13 @@ on:
 
           key:
             description: 'Secret key'
-            required: true
+            required: false
+            default: ''
 
           val:
             description: 'Secret value'
-            required: true
+            required: false
+            default: ''
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -54,8 +56,9 @@ jobs:
           role-session-name: TestSessionWithOIDC
           aws-region: us-east-1
           
-      - name: Get the secret value into variable
+      - name: Get the secret key/value into variable
         id: secret-string
+        if: "${{ inputs.key != '' }}"
         run: |
           IKEY=${{inputs.key}}
           IVALUE=${{inputs.val}}
@@ -66,7 +69,18 @@ jobs:
           echo "Next command..."
 
       - name: Print the variable
+        if: "${{ inputs.key != '' }}"
         run: |
           echo ${{ steps.secret-string.outputs.ss }} | jq '.'
+
+      - name: Get the secret all key/values into variable
+        id: secret-content
+        if: "${{ inputs.key == '' }}"
+        run: |
+          JSONCONTENT="$(aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString')"
+          echo "$JSONCONTENT"
+          echo "ss_out=$JSONCONTENT" >> $GITHUB_OUTPUT
+#          echo "Next command..."
+
 # echo "ss=$(aws secretsmanager get-secret-value --secret-id ${{ inputs.secret }} | jq '.SecretString')" >> $GITHUB_OUTPUT
 
