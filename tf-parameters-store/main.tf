@@ -9,7 +9,7 @@ resource "aws_ssm_parameter" "eadis" {
 
 resource "aws_ssm_parameter" "secure_eadis" {
   for_each = local.secure_parameter_pairs
-  name  = "/${var.pspath}${each.key}"
+  name  = "${var.pspath}${each.key}"
   type  = "SecureString"
   value = each.value
   overwrite = true
