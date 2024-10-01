@@ -12,7 +12,7 @@ if (logLevel && logLevel === 'info') {
 }
 
 AWS.config.update({ region: region });
-const PARAMETER_PATH = process.env.PARAMETER_PATH || '/dev/app/eadis/';
+const PARAMETER_PATH = process.env.PARAMETER_PATH || '/dev/app/eadis/nidap/';
 
 // Create a Secrets Manager client
 const client = new AWS.SSM();

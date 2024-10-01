@@ -12,6 +12,7 @@ module "lambda-org-nidap-api" {
   lambda-description  = "Lambda function contains Organization REST APIs implementation with NIDAP as a data feedback."
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
+    PARAMETER_PATH = "/dev/app/eadis/nidap/"
   })
   lambda-managed-policies        = { for idx, val in local.lambda_org_nidap_api_role_policies: idx => val }
   create_api_gateway_integration = true
