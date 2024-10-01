@@ -1,7 +1,7 @@
 # This is a basic workflow to help you get started with Actions
 
 name: 3.0 - Update Parameters
-run-name: 3.0 - Update Parameters - ${{ inputs.tier }}
+run-name: 3.0 - Update Parameters - ${{ inputs.pspath }}
 
 # Controls when the workflow will run
 on:
@@ -12,9 +12,10 @@ on:
         description: 'Environment'
         required: true
         default: dev
-      tier:
-        description: 'Deployment tier'
+      pspath:
+        description: 'Parameters Store Path'
         required: true
+        default: '/dev/app/eadis/'
       secure:
         description: 'Secure parameters'
         required: false
@@ -46,7 +47,7 @@ jobs:
       - name: Hide sensitive input values to keep them private in the logs
         uses: levibostian/action-hide-sensitive-inputs@v1
         with:
-          exclude_inputs: envt,tier,unsecure,host-runner
+          exclude_inputs: envt,pspath,unsecure,host-runner
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Repository Checkout
@@ -75,10 +76,10 @@ jobs:
 
       - name: Planning Terraform
         id: plan
-        run: terraform plan -var 'env=${{ inputs.tier }}' -var 'parameters=${{ inputs.unsecure }}' -var 'secure_parameters=${{ inputs.secure }}'
+        run: terraform plan -var 'pspath=${{ inputs.pspath }}' -var 'parameters=${{ inputs.unsecure }}' -var 'secure_parameters=${{ inputs.secure }}'
         working-directory: tf-parameters-store/
 
       - name: Terraform Deployment
         id: apply
-        run: terraform apply -auto-approve -input=false -lock=false -var 'env=${{ inputs.tier }}' -var 'parameters=${{ inputs.unsecure }}' -var 'secure_parameters=${{ inputs.secure }}'
+        run: terraform apply -auto-approve -input=false -lock=false -var 'pspath=${{ inputs.pspath }}' -var 'parameters=${{ inputs.unsecure }}' -var 'secure_parameters=${{ inputs.secure }}'
         working-directory: tf-parameters-store/
