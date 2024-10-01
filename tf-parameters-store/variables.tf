@@ -1,7 +1,7 @@
-variable "env" {
+variable "pspath" {
   type        = string
-  default     = "dev"
-  description = "Environment tier"
+  default     = "/dev/app/eadis"
+  description = "Parameter Store prefix path"
 }
 
 variable "parameters" {
