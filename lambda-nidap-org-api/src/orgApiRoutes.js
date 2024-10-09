@@ -52,11 +52,11 @@ function orgRoutes(app, opts) {
     });
 }
 
-async function listAllOrgs(nextPageToken) {
+async function listAllOrgs(pageToken) {
     console.info(`List All Organizations from NIDAP`);
     let URL = `${conf.nidap.url_v1}objects/${conf.nidap.ontology_org}?orderBy=properties.sac:asc`;
-    if (nextPageToken) {
-        URL += `&nextPageToken=${nextPageToken}`;
+    if (pageToken) {
+        URL += `&pageToken=${pageToken}`;
     }
     console.info(`URL: ${URL}`);
     const auth = await getAuthorizationHeader();
@@ -100,7 +100,7 @@ async function searchOrgBySac(sac) {
     return err_resp;
 }
 
-async function searchOrgTreeBySac(sac, nextPageToken) {
+async function searchOrgTreeBySac(sac, pageToken) {
     console.info(`Search Organizations Subtree from NIDAP for the givan SAC Code ${sac}`);
     let URL = `${conf.nidap.url_v1}objects/${conf.nidap.ontology_org}/search`;
 
@@ -119,8 +119,8 @@ async function searchOrgTreeBySac(sac, nextPageToken) {
             ]
         }
     }
-    if (nextPageToken) {
-        data['pageToken'] = nextPageToken;
+    if (pageToken) {
+        data['pageToken'] = pageToken;
     }
     const auth = await getAuthorizationHeader();
     const resp = await axios.post(URL, data, {
