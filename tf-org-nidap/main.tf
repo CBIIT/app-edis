@@ -1,4 +1,27 @@
 
+module "lambda-test-fred-props" {
+  source              = "../tf-lib/modules/lambda"
+  env                 = var.env
+  must-be-role-prefix = local.power-user-prefix
+  must-be-policy-arn  = local.policy-boundary-arn
+  tags                = local.resource_tags
+  region              = "us-east-1"
+  app                 = "testtodelete"
+  lambda-name         = "fred-props"
+  file-name           = abspath("../built-artifacts/lambda-nidap-org-api/out/lambda-nidap-org-api.zip")
+  lambda-description  = "Lambda function to test fred props"
+  lambda-env-variables = tomap({
+    LOG_LEVEL = "debug"
+    PARAMETER_PATH = "/${var.env}/app/eadis/fred/"
+  })
+  lambda-managed-policies        = { for idx, val in local.lambda_org_nidap_api_role_policies: idx => val }
+  create_api_gateway_integration = false
+  subnet_ids = [ var.subnet1, var.subnet2 ]
+  security_group_ids = [ var.vpcsg ]
+  lambda_timeout = 900
+  max-retry = 1
+}
+
 module "lambda-org-nidap-api" {
   source              = "../tf-lib/modules/lambda"
   env                 = var.env
