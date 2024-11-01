@@ -84,22 +84,17 @@ module.exports.handler = async (event, context) => {
         initConfiguration(configuration);
 
         console.debug('Starting and waiting for getUsers...')
-        const usersCounter = await getUsers(ic, divisions, includeDivisions, processVdsUsers, s3Entry);
-        console.debug("getUsers...done. Records retrieved", usersCounter, );
+        const users = await getUsers(ic, divisions, includeDivisions);
+        const counter = users.length
+        console.debug("getUsers...done. Records retrieved", counter );
 
-
+        await batchUpload(users, counter, s3Entry);
         await closeWriteStreams(s3Entry);
-        console.info("Completed - imported " + usersCounter + " data records into S3 bucket ");
+        console.info("Completed - imported " + counter + " data records into S3 bucket ");
     } catch (error) {
         console.error('Lambda handler',error);
         throw error;
     }
-}
-
-async function processVdsUsers(users, counter, s3Entry) {
-    const prefix = 'processVdsUsers(' + counter + ') - ';
-    console.debug(prefix + 'Processing ' + users.length + ' users' );
-    await batchUpload(users, counter, s3Entry);
 }
 
 async function batchUpload(queue, counter, s3Entry) {
@@ -126,14 +121,14 @@ async function batchUpload(queue, counter, s3Entry) {
                 if (user.UNIQUEIDENTIFIER === undefined) {
                     user.UNIQUEIDENTIFIER = 'UNKNOWN';
                 }
-                console.debug('Append row...', user.UNIQUEIDENTIFIER, queue.length)
+                console.trace('Append row...', user.UNIQUEIDENTIFIER, queue.length)
                 await s3Entry.writer.appendRow({
                     id: user.UNIQUEIDENTIFIER,
                     NIHORGPATH: (user.NIHORGPATH) ? user.NIHORGPATH : 'unknown',
                     // Locality: (user.L) ? user.L : 'unknown',
                     Division: getDivision(user),
                     content: JSON.stringify(user)});
-                console.debug('Append row... done', user.UNIQUEIDENTIFIER, queue.length)
+                console.trace('Append row... done', user.UNIQUEIDENTIFIER, queue.length)
 
                 user = queue.shift();
             }
