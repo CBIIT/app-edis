@@ -139,7 +139,7 @@ const conf = {
             // 'L',
             // 'NIHORGPATH'
         ],
-        searchBase: 'ou=Users,ou=NIH,ou=NIHInternalview,ou=NIHViews',
+        searchVdsUsersBase: 'ou=Users,ou=NIH,ou=NIHInternalview,ou=NIHViews',
         base64LdapFields: [
             'objectGUID',
             'mS-DS-ConsistencyGuid',

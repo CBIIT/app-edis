@@ -15,7 +15,7 @@ let tlsOptions;
  * @param s3Entry
  * @returns {Promise<unknown>}
  */
-const getUsers = async (ic, divisions, includeDivs, pageCallBack, s3Entry) => {
+const getUsers = async (ic, divisions, includeDivs) => {
 
     return new Promise(async function (resolve, reject) {
 
@@ -83,10 +83,10 @@ const getUsers = async (ic, divisions, includeDivs, pageCallBack, s3Entry) => {
             }
             let users = [];
             let counter = 0;
-            let chunk = [];
+            // let chunk = [];
             let processingPage = false; 
             console.info('starting search');
-            ldapClient.search(conf.vds.searchBase, userSearchOptions, function (err, ldapRes) {
+            ldapClient.search(conf.vds.searchVdsUsersBase, userSearchOptions, function (err, ldapRes) {
                 if (err) {
                     console.error('Ldap client search error',err);
                     return reject(Error(err.message));
@@ -131,17 +131,17 @@ const getUsers = async (ic, divisions, includeDivs, pageCallBack, s3Entry) => {
                     console.debug('ldap searchReference - ', reference);
                 });
                 ldapRes.on('page', async function () {
-                    processingPage = true;
+                    // processingPage = true;
                     console.info('ldap page - records fetched', counter);
-                    if (pageCallBack) {
-                        await waitForChunkEmpty(chunk);
-                        chunk = [];
-                        users.forEach(user => chunk.push(user));
-                        users = [];
-                        await pageCallBack(chunk, counter, s3Entry);
-                    }
-                    console.debug('ldap page...done - record fetched', counter);
-                    processingPage = false;
+                    // if (pageCallBack) {
+                    //     await waitForChunkEmpty(chunk);
+                    //     chunk = [];
+                    //     users.forEach(user => chunk.push(user));
+                    //     users = [];
+                    //     await pageCallBack(chunk, counter, s3Entry);
+                    // }
+                    // console.debug('ldap page...done - record fetched', counter);
+                    // processingPage = false;
                 });
                 ldapRes.on('error', function (err) {
                     console.error('ldap error - records fetched', counter, err);
@@ -156,12 +156,12 @@ const getUsers = async (ic, divisions, includeDivs, pageCallBack, s3Entry) => {
                 });
                 ldapRes.on('end', async function () {
                     console.info('ldap end - destroy client');
-                    while (processingPage) {
-                        await waitForChunkEmpty(chunk);
-                    }
+                    // while (processingPage) {
+                    //     await waitForChunkEmpty(chunk);
+                    // }
                     ldapClient.destroy();
                     console.info('ldap end...done', counter);
-                    resolve(counter);
+                    resolve(users);
                 });
             });
 
@@ -216,12 +216,12 @@ function _getTlsOptions() {
     return tlsOptions;
 }
 
-async function waitForChunkEmpty(arr) {
-    console.debug('Wait for empty chunk - chunk lenth=', arr.length);
-    while (arr.length > 0) {
-        await sleep(1000);
-    }
-    console.debug('Wait for chunk empty...done', arr.length);
-}
+// async function waitForChunkEmpty(arr) {
+//     console.debug('Wait for empty chunk - chunk lenth=', arr.length);
+//     while (arr.length > 0) {
+//         await sleep(1000);
+//     }
+//     console.debug('Wait for chunk empty...done', arr.length);
+// }
 
 module.exports = {getUsers}
