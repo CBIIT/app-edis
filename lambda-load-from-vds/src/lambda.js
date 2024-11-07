@@ -4,7 +4,7 @@
 const parquet = require('parquetjs')
 const stream = require("stream");
 const { initConfiguration, conf } = require("./conf");
-const { getUsers }  = require('./vdsActions')
+const { getUsers, enhanceUserList }  = require('./vdsActions')
 const { sleep, getDivision} = require("./util")
 
 const AWS = require('aws-sdk'),
@@ -26,6 +26,10 @@ const folder   = process.env['S3FOLDER'];
 // Set the console log level
 if (logLevel && logLevel === 'info') {
     console.debug = function () {}
+    console.trace = function () {}
+}
+else if (logLevel && logLevel === 'debug') {
+    console.trace = function () {}
 }
 
 async function getSecretParameters() {
@@ -84,9 +88,16 @@ module.exports.handler = async (event, context) => {
         initConfiguration(configuration);
 
         console.debug('Starting and waiting for getUsers...')
-        const users = await getUsers(ic, divisions, includeDivisions);
+        const users = await getUsers(ic, divisions, includeDivisions, conf.vds, conf.vds.NIHInternalView, false);
         const counter = users.length
         console.debug("getUsers...done. Records retrieved", counter );
+
+        console.debug('Starting and waiting for getUsers map from nvision branch ...')
+        const userMap = await getUsers(ic, divisions, includeDivisions, conf.vds, conf.vds.nvision, true);
+        const mapSize = usersMap.size;
+        console.debug("getUsers from nvision...done. Records retrieved", mapSize );
+
+        enhanceUserList(users, userMap);
 
         await batchUpload(users, counter, s3Entry);
         await closeWriteStreams(s3Entry);

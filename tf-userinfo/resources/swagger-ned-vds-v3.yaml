@@ -201,6 +201,7 @@ paths:
                       "TITLE": "$elem.TITLE.S",
                       "NIHIPD": "$elem.NIHIPD.S",
                       "NIHBADGETITLE": "$elem.NIHBADGETITLE.S",
+                      "NIHBADGESTATUS": "$elem.BADGESTATUS.S",
                       "NIHIDBADGEEXPDATE": "$elem.NIHIDBADGEEXPDATE.S",
                       "NIHSAC": "$elem.NIHSAC.S",
                       "NIHPrivacyAwarenessCompDate": "$elem.NIHPrivacyAwarenessCompDate.S",
@@ -729,6 +730,9 @@ components:
         NIHBADGETITLE:
           type: string
           example: Physician
+        NIHBADGESTATUS:
+          type: string
+          example: Deactivated
         NIHIDBADGEEXPDATE:
           type: string
           example: 2026-11-12 00:00:00.0

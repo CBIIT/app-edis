@@ -1,21 +1,21 @@
 'use strict'
 
-const {conf} = require("./conf");
 const ldap = require('ldapjs');
-const {convertBase64Fields, sleep, getProvidedEmail, getDivision, getEmail, getBuilding, getDOC} = require("./util")
+const {convertBase64Fields, getProvidedEmail, getDivision, getEmail, getBuilding, getDOC} = require("./util");
 const {AndFilter, EqualityFilter, SubstringFilter, NotFilter, OrFilter} = require("ldapjs/lib/filters");
 
 let tlsOptions;
 /**
  * 
- * @param ic - NIHORGACRONYM to include
- * @param divisions - list of strings NIHORGACRONYM starts with - to include / exclude 
- * @param includeDivs - true to include divisions, false to exclude divisions if any 
- * @param pageCallBack
- * @param s3Entry
+ * @param ic - NIH IC to include
+ * @param divisions - list of strings NIH Org path starts with - to include / exclude
+ * @param includeDivs - true to include divisions, false to exclude divisions if any
+ * @param credentials - credentials section from conf.js
+ * @param config - configuration section from conf.js
+ * @param isMap - true if the returned class is Map (otherwise - array)
  * @returns {Promise<unknown>}
  */
-const getUsers = async (ic, divisions, includeDivs) => {
+const getUsers = async (ic, divisions, includeDivs, credentials, config, isMap) => {
 
     return new Promise(async function (resolve, reject) {
 
@@ -25,18 +25,18 @@ const getUsers = async (ic, divisions, includeDivs) => {
             paged: true,
             sizeLimit: 501
         };
-        if (conf.vds.includedAttributes && conf.vds.includedAttributes.length > 0) {
-            userSearchOptions.attributes = conf.vds.includedAttributes;
+        if (config.includedAttributes && config.includedAttributes.length > 0) {
+            userSearchOptions.attributes = config.includedAttributes;
         }
         if (ic && ic.length > 0) {
             let filter = new EqualityFilter({
-                attribute: 'NIHORGACRONYM',
+                attribute: config.icAttribute,
                 value: ic
             });
 
             if (divisions && divisions.length === 1) {
                 const divFilter = new SubstringFilter({
-                    attribute: 'NIHORGPATH',
+                    attribute: config.orgpathAttribute,
                     initial: divisions[0]
                 });
                 filter = new AndFilter({
@@ -50,7 +50,7 @@ const getUsers = async (ic, divisions, includeDivs) => {
                 const divFilters = [];
                 for (const division of divisions) {
                     const divFilter = new SubstringFilter({
-                        attribute: 'NIHORGPATH',
+                        attribute: config.orgpathAttribute,
                         initial: division
                     });
                     divFilters.push(divFilter); 
@@ -72,21 +72,22 @@ const getUsers = async (ic, divisions, includeDivs) => {
 
         console.debug('User Search Options', userSearchOptions);
         
-        const ldapClient = await getLdapClient();
+        const ldapClient = await getLdapClient(credentials);
 
-        ldapClient.bind(conf.vds.dn, conf.vds.pwd, function (err) {
+        ldapClient.bind(credentials.dn, credentials.pwd, function (err) {
 
             if (err) {
                 console.error('Ldap client bind error' + err);
                 ldapClient.destroy();
                 return reject(Error(err.message));
             }
-            let users = [];
+            let userList = [];
+            let userMap = new Map();
             let counter = 0;
             // let chunk = [];
             let processingPage = false; 
             console.info('starting search');
-            ldapClient.search(conf.vds.searchVdsUsersBase, userSearchOptions, function (err, ldapRes) {
+            ldapClient.search(config.searchBase, userSearchOptions, function (err, ldapRes) {
                 if (err) {
                     console.error('Ldap client search error',err);
                     return reject(Error(err.message));
@@ -101,47 +102,25 @@ const getUsers = async (ic, divisions, includeDivs) => {
                         console.info(counter + ' records found and counting...');
                     }
                     let obj = convertBase64Fields(entry);
-                    // Enhance user record with additional fields
-                    obj['NEDId'] = '' + obj.UNIQUEIDENTIFIER;
-                    obj['FirstName'] = obj.GIVENNAME;
-                    obj['MiddleName'] = obj.MIDDLENAME;
-                    obj['LastName'] = obj.NIHMIXCASESN;
-                    obj['Email'] = getEmail(obj);
-                    obj['Phone'] = obj.TELEPHONENUMBER;
-                    obj['Classification'] = obj.ORGANIZATIONALSTAT;
-                    obj['SAC'] = obj.NIHSAC;
-                    obj['AdministrativeOfficerId'] = obj.NIHSERVAO;
-                    obj['COTRId'] = obj.NIHCOTRID;
-                    obj['ManagerId'] = obj.MANAGER;
-                    obj['Locality'] = obj.L;
-                    obj['PointOfContactId'] = obj.NIHPOC;
-                    obj['Division'] = getDivision(obj);
-                    obj['Locality'] = obj.L;
-                    obj['Site'] = obj.NIHSITE;
-                    obj['Building'] = getBuilding(obj);
-                    obj['Room'] = obj.ROOMNUMBER;
-                    obj['providedEmail'] = getProvidedEmail(obj);
-                    obj['DOC'] = getDOC(obj);
-                    for (const attr of conf.vds.excludedAttributes) {
+
+                    // Remove excluded fields
+                    for (const attr of config.excludedAttributes) {
                         delete obj[attr];
                     }
-                    users.push(obj);
+                    if (isMap) {
+                        let key = obj[config.primaryAttribute];
+                        delete obj[config.primaryAttribute];
+                        userMap.set(key, obj);
+                    }
+                    else {
+                        userList.push(obj);
+                    }
                 });
                 ldapRes.on('searchReference', function (reference) {
                     console.debug('ldap searchReference - ', reference);
                 });
                 ldapRes.on('page', async function () {
-                    // processingPage = true;
-                    console.info('ldap page - records fetched', counter);
-                    // if (pageCallBack) {
-                    //     await waitForChunkEmpty(chunk);
-                    //     chunk = [];
-                    //     users.forEach(user => chunk.push(user));
-                    //     users = [];
-                    //     await pageCallBack(chunk, counter, s3Entry);
-                    // }
-                    // console.debug('ldap page...done - record fetched', counter);
-                    // processingPage = false;
+                    console.debug('ldap page - records fetched', counter);
                 });
                 ldapRes.on('error', function (err) {
                     console.error('ldap error - records fetched', counter, err);
@@ -156,26 +135,21 @@ const getUsers = async (ic, divisions, includeDivs) => {
                 });
                 ldapRes.on('end', async function () {
                     console.info('ldap end - destroy client');
-                    // while (processingPage) {
-                    //     await waitForChunkEmpty(chunk);
-                    // }
                     ldapClient.destroy();
                     console.info('ldap end...done', counter);
-                    resolve(users);
+                    resolve(isMap ? userMap : userList);
                 });
             });
-
         });
-
     });
 };
 
-const getLdapClient = async () => {
+const getLdapClient = async (credentials) => {
 
     try {
         const ldapClient = await ldap.createClient({
-            url: conf.vds.host,
-            tlsOptions: _getTlsOptions(),
+            url: credentials.host,
+            tlsOptions: _getTlsOptions(credentials),
             idleTimeout: 15 * 60 * 1000,
             timeout: 15 * 60 * 1000,
             connectTimeout: 15 * 60 * 1000 // 15 minutes
@@ -206,22 +180,47 @@ const getLdapClient = async () => {
     }
 };
 
-
-function _getTlsOptions() {
+function _getTlsOptions(credentials) {
     if (!tlsOptions) {
         tlsOptions = {
-            ca: [conf.vds.cert]
+            ca: [credentials.cert]
         };
     }
     return tlsOptions;
 }
 
-// async function waitForChunkEmpty(arr) {
-//     console.debug('Wait for empty chunk - chunk lenth=', arr.length);
-//     while (arr.length > 0) {
-//         await sleep(1000);
-//     }
-//     console.debug('Wait for chunk empty...done', arr.length);
-// }
+function enhanceUserList(userList, userMap) {
+    for (let obj of userList) {
+        // Enhance user record with additional fields
+        obj['NEDId'] = '' + obj.UNIQUEIDENTIFIER;
+        obj['FirstName'] = obj.GIVENNAME;
+        obj['MiddleName'] = obj.MIDDLENAME;
+        obj['LastName'] = obj.NIHMIXCASESN;
+        obj['Email'] = getEmail(obj);
+        obj['Phone'] = obj.TELEPHONENUMBER;
+        obj['Classification'] = obj.ORGANIZATIONALSTAT;
+        obj['SAC'] = obj.NIHSAC;
+        obj['AdministrativeOfficerId'] = obj.NIHSERVAO;
+        obj['COTRId'] = obj.NIHCOTRID;
+        obj['ManagerId'] = obj.MANAGER;
+        obj['Locality'] = obj.L;
+        obj['PointOfContactId'] = obj.NIHPOC;
+        obj['Division'] = getDivision(obj);
+        obj['Locality'] = obj.L;
+        obj['Site'] = obj.NIHSITE;
+        obj['Building'] = getBuilding(obj);
+        obj['Room'] = obj.ROOMNUMBER;
+        obj['providedEmail'] = getProvidedEmail(obj);
+        obj['DOC'] = getDOC(obj);
 
-module.exports = {getUsers}
+        // Enhance user record from userMap
+        let additionalObj = userMap.get(obj['NEDId']);
+        if (additionalObj) {
+            for (let prop in additionalObj) {
+                obj[prop] = additionalObj[prop];
+            }
+        }
+    }
+}
+
+module.exports = {getUsers, enhanceUserList}
