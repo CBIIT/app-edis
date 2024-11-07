@@ -1,10 +1,34 @@
 'use strict'
 
+const {conf} = require('./conf');
 const ldap = require('ldapjs');
 const {convertBase64Fields, getProvidedEmail, getDivision, getEmail, getBuilding, getDOC} = require("./util");
 const {AndFilter, EqualityFilter, SubstringFilter, NotFilter, OrFilter} = require("ldapjs/lib/filters");
 
 let tlsOptions;
+
+/**
+ * @param ic - NIH IC to include
+ * @param divisions - list of strings NIH Org path starts with - to include / exclude
+ * @param includeDivs - true to include divisions, false to exclude divisions if any
+ * @returns {Promise<unknown>}
+ */
+const getUsersEnhanced = async (ic, divisions, includeDivisions) => {
+
+    console.debug('Starting and waiting for getUsers from VDS...')
+    const users = await getUsers(ic, divisions, includeDivisions, conf.vds, conf.vds.NIHInternalView, false);
+    const counter = users.length;
+    console.debug("getUsers from VDS ...done. Records retrieved", counter );
+
+    console.debug('Starting and waiting for getUsers from nVision VDS ...')
+    const userMap = await getUsers(ic, divisions, includeDivisions, conf.vds, conf.vds.nvision, true);
+    const mapSize = userMap.size;
+    console.debug("getUsers from nVision VDS ...done. Records retrieved", mapSize );
+
+    enhanceUserList(users, userMap);
+    return users;
+}
+
 /**
  * 
  * @param ic - NIH IC to include
@@ -223,4 +247,4 @@ function enhanceUserList(userList, userMap) {
     }
 }
 
-module.exports = {getUsers, enhanceUserList}
+module.exports = { getUsersEnhanced }

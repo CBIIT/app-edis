@@ -4,7 +4,7 @@
 const parquet = require('parquetjs')
 const stream = require("stream");
 const { initConfiguration, conf } = require("./conf");
-const { getUsers, enhanceUserList }  = require('./vdsActions')
+const { getUsersEnhanced }  = require('./vdsActions')
 const { sleep, getDivision} = require("./util")
 
 const AWS = require('aws-sdk'),
@@ -87,19 +87,12 @@ module.exports.handler = async (event, context) => {
         configuration.vds_cert = Buffer.from(configuration.vds_cert.replace(/\\n/g, '\n'), 'utf-8');
         initConfiguration(configuration);
 
-        console.debug('Starting and waiting for getUsers...')
-        const users = await getUsers(ic, divisions, includeDivisions, conf.vds, conf.vds.NIHInternalView, false);
+        console.debug('Starting and waiting for getUsersEnhanced...')
+        const users = await getUsersEnhanced(ic, divisions, includeDivisions);
         const counter = users.length
-        console.debug("getUsers...done. Records retrieved", counter );
+        console.debug("getUsersEnhanced...done. Records retrieved", counter );
 
-        console.debug('Starting and waiting for getUsers map from nvision branch ...')
-        const userMap = await getUsers(ic, divisions, includeDivisions, conf.vds, conf.vds.nvision, true);
-        const mapSize = usersMap.size;
-        console.debug("getUsers from nvision...done. Records retrieved", mapSize );
-
-        enhanceUserList(users, userMap);
-
-        await batchUpload(users, counter, s3Entry);
+        await uploadToS3(users, counter, s3Entry);
         await closeWriteStreams(s3Entry);
         console.info("Completed - imported " + counter + " data records into S3 bucket ");
     } catch (error) {
@@ -108,17 +101,17 @@ module.exports.handler = async (event, context) => {
     }
 }
 
-async function batchUpload(queue, counter, s3Entry) {
+async function uploadToS3(records, counter, s3Entry) {
     if (process.env.TEST) {
-        queue.splice(0, queue.length);
+        records.splice(0, records.length);
         // console.debug('Finished in test retrieval mode');
         return;
     }
 
     try {
         //prepare single s3 bucket
-        while (queue.length > 0) {
-            let user = queue.shift();
+        while (records.length > 0) {
+            let user = records.shift();
             while (typeof (user) !== 'undefined') {
                 if (!s3Entry.writeStream) {
                     const {writeStream, uploadPromise} = createWriteStream(bucket, s3Entry.key);
@@ -132,16 +125,16 @@ async function batchUpload(queue, counter, s3Entry) {
                 if (user.UNIQUEIDENTIFIER === undefined) {
                     user.UNIQUEIDENTIFIER = 'UNKNOWN';
                 }
-                console.trace('Append row...', user.UNIQUEIDENTIFIER, queue.length)
+                console.trace('Append row...', user.UNIQUEIDENTIFIER, records.length)
                 await s3Entry.writer.appendRow({
                     id: user.UNIQUEIDENTIFIER,
                     NIHORGPATH: (user.NIHORGPATH) ? user.NIHORGPATH : 'unknown',
                     // Locality: (user.L) ? user.L : 'unknown',
                     Division: getDivision(user),
                     content: JSON.stringify(user)});
-                console.trace('Append row... done', user.UNIQUEIDENTIFIER, queue.length)
+                console.trace('Append row... done', user.UNIQUEIDENTIFIER, records.length)
 
-                user = queue.shift();
+                user = records.shift();
             }
             console.info('Batch upload...done', counter);
         }
