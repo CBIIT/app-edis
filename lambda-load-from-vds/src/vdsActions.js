@@ -125,7 +125,7 @@ const getUsers = async (ic, divisions, includeDivs, credentials, config, isMap) 
                     if (++counter % 10000 === 0) {
                         console.info(counter + ' records found and counting...');
                     }
-                    let obj = convertBase64Fields(entry);
+                    let obj = convertBase64Fields(entry, config.base64LdapFields);
 
                     // Remove excluded fields
                     for (const attr of config.excludedAttributes) {
