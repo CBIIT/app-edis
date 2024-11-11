@@ -72,7 +72,7 @@ const conf = {
                 'NIHDIRENTRYEXPIRATIONDATE',
                 'userAccountControl' // Ming added 2021-06-09 for usersLocal GraphQL query
             ],
-            searchBase: 'ou=Users,ou=NIH,ou=NIHInternalview,ou=NIHViews',
+            searchBase: 'ou=Users,ou=NIH,ou=NIHInternalView,ou=NIHViews',
             base64LdapFields: [
                 'objectGUID',
                 'mS-DS-ConsistencyGuid',

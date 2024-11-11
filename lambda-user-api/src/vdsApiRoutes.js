@@ -3,7 +3,7 @@
 const {conf} = require("./conf");
 const ldap = require('ldapjs');
 const {convertBase64Fields, getProvidedEmail, getDOC} = require("./util");
-const {AndFilter, EqualityFilter} = require("ldapjs/lib/filters");
+const {AndFilter, EqualityFilter, PresenceFilter} = require("ldapjs/lib/filters");
 
 let tlsOptions;
 
@@ -68,22 +68,40 @@ const getUsers = async (userId, ic, credentials, config, isMap) => {
 
     return new Promise(async function (resolve, reject) {
 
-        console.info('getUsersEnhanced()', userId, ic);
-        const icSubFilter = ic ? new EqualityFilter({
-                attribute: config.icAttribute,
-                value: ic
-            }) : null;
+        console.info('getUsers()', userId, ic);
+        let icSubFilter = null;
+        if (ic) {
+            if (ic === '*') {
+                icSubFilter = new PresenceFilter({
+                    attribute: config.icAttribute
+                });
+            }
+            else {
+                icSubFilter = new EqualityFilter({
+                    attribute: config.icAttribute,
+                    value: ic
+                });
+            }
+        }
+        let userIdFilter = null;
+        if (userId) {
+            if (userId === '*') {
+                userIdFilter = new PresenceFilter({
+                    attribute: config.primaryAttribute
+                });
+            } else {
+                userIdFilter = new EqualityFilter({
+                    attribute: config.primaryAttribute,
+                    value: userId
+                });
+            }
+        }
 
-        const userIdFilter = userId ? new EqualityFilter({
-                attribute: config.primaryAttribute,
-                value: userId
-            }) : null;
-
-        const filter = (icSubFilter && userIdFilter) ? new AndFilter({
-            filters: [ icSubFilter, userIdFilter]
+        const filter = (userIdFilter && icSubFilter) ? new AndFilter({
+            filters: [ userIdFilter, icSubFilter ]
             }) :
             (icSubFilter ? icSubFilter : userIdFilter);
-        console.debug('created filter', filter);
+        console.debug('created filter', filter.toString());
 
         const userSearchOptions = {
             scope: 'sub',
@@ -104,7 +122,7 @@ const getUsers = async (userId, ic, credentials, config, isMap) => {
             let userList = [];
             let userMap = new Map();
             let counter = 0;
-            console.info('starting search');
+            console.info('starting search', config.searchBase);
             ldapClient.search(config.searchBase, userSearchOptions, function (err, ldapRes) {
                 if (err) {
                     console.error('Ldap client search error', err);
@@ -207,7 +225,7 @@ function enhanceUserList(userList, userMap) {
         obj['DOC'] = getDOC(obj);
 
         // Enhance user record from userMap
-        let additionalObj = userMap.get(obj['NEDId']);
+        let additionalObj = userMap.get(obj['UNIQUEIDENTIFIER']);
         if (additionalObj) {
             for (let prop in additionalObj) {
                 obj[prop] = additionalObj[prop];
