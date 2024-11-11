@@ -108,12 +108,10 @@ const getUsers = async (ic, divisions, includeDivs, credentials, config, isMap) 
             let userList = [];
             let userMap = new Map();
             let counter = 0;
-            // let chunk = [];
-            let processingPage = false; 
             console.info('starting search');
             ldapClient.search(config.searchBase, userSearchOptions, function (err, ldapRes) {
                 if (err) {
-                    console.error('Ldap client search error',err);
+                    console.error('Ldap client search error', err);
                     return reject(Error(err.message));
                 }
                 if (!ldapRes) {
