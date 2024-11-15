@@ -164,11 +164,11 @@ paths:
                 #set ($lastEvaluatedKey = $inputRoot.LastEvaluatedKey.NEDId.S)
                 {
                   "count": $inputRoot.Count,
-                  #if($lastEvaluatedKey != "")
+                #if($lastEvaluatedKey != "")
                   "lastEvaluatedKey": "$lastEvaluatedKey",
-                  #end
+                #end
                   "items": [
-                    #foreach($elem in $inputRoot.Items)
+                #foreach($elem in $inputRoot.Items)
                     {
                       "UNIQUEIDENTIFIER": "$elem.UNIQUEIDENTIFIER.S",
                       "NIHDUPUID": "$elem.NIHDUPUID.S",
@@ -275,7 +275,7 @@ paths:
                       "DOC": "$elem.DOC.S"
                     }#if($foreach.hasNext),#end
                     
-                    #end
+                #end
                   ]
                 }
       security:
