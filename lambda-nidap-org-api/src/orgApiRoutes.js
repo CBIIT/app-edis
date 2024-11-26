@@ -1,7 +1,8 @@
 
 const { conf } = require("./conf");
-const {Organization, OrgListResponse}  = require("./orgListResponse");
+const { Organization }  = require("./orgListResponse");
 const axios = require('axios');
+const { getAuthorizationHeader, processPaginatedResult } = require("./util");
 
 function orgRoutes(app, opts) {
 
@@ -10,7 +11,7 @@ function orgRoutes(app, opts) {
         try {
             if (req.query.Testing) {
                 console.info(`Return in Testing mode`);
-                return { 'Success': true};
+                res.json({ 'Success': true});
             }
             res.json(await listAllOrgs(req.query.lastEvaluatedKey));
         } catch (error) {
@@ -59,20 +60,28 @@ async function listAllOrgs(pageToken) {
         URL += `&pageToken=${pageToken}`;
     }
     console.info(`URL: ${URL}`);
-    const auth = await getAuthorizationHeader();
+    const auth = await getAuthorizationHeader(conf.nidap.auth_type, conf.nidap.auth_token, conf.nidap.auth_client_id,
+        conf.nidap.auth_client_secret, conf.nidap.url_token);
     const resp = await axios.get(URL, {
         headers: {
             'Authorization': auth
         }
     });
-    return _processPaginatedResult(resp.data);
+    const items = [];
+    resp.data.data.forEach((r) => {
+        const p = r.properties;
+        items.push(new Organization(p.sac, p.organizationAcronym, p.organization, p.organizationPath,
+            p.instituteAcronym, p.institute, p.parentSac, p.docSac, p.docOrganizationPath));
+    });
+    return processPaginatedResult(resp.data, items);
 }
 
 async function searchOrgBySac(sac) {
     console.info(`Search Organizations by SAC code`);
     let URL = `${conf.nidap.url_v1}objects/${conf.nidap.ontology_org}/${sac}`;
     console.info(`URL: ${URL}`);
-    const auth = await getAuthorizationHeader();
+    const auth = await getAuthorizationHeader(conf.nidap.auth_type, conf.nidap.auth_token, conf.nidap.auth_client_id,
+        conf.nidap.auth_client_secret, conf.nidap.url_token);
     const resp = await axios.get(URL, {
         headers: {
             'Authorization': auth
@@ -122,7 +131,8 @@ async function searchOrgTreeBySac(sac, pageToken) {
     if (pageToken) {
         data['pageToken'] = pageToken;
     }
-    const auth = await getAuthorizationHeader();
+    const auth = await getAuthorizationHeader(conf.nidap.auth_type, conf.nidap.auth_token, conf.nidap.auth_client_id,
+        conf.nidap.auth_client_secret, conf.nidap.url_token);
     const resp = await axios.post(URL, data, {
             headers: {
                 'Authorization': auth
@@ -130,41 +140,13 @@ async function searchOrgTreeBySac(sac, pageToken) {
     });
 
     // console.debug(resp.data);
-    return _processPaginatedResult(resp.data);
-}
-
-function _processPaginatedResult(nidapResp) {
-    const result = new OrgListResponse();
-    result.count = nidapResp.data.length;
-    if (nidapResp.nextPageToken) {
-        result.lastEvaluatedKey = nidapResp.nextPageToken;
-    }
-    nidapResp.data.forEach((r) => {
+    const items = [];
+    resp.data.data.forEach((r) => {
         const p = r.properties;
-        result.items.push(new Organization(p.sac, p.organizationAcronym, p.organization, p.organizationPath,
-            p.instituteAcronym, p.instiute, p.parentSac, p.docSac, p.docOrganizationPath));
-    })
-    return result;
-}
-
-async function getAuthorizationHeader() {
-    if (conf.nidap.auth_type != 'prod') {
-        return 'Bearer ' + conf.nidap.auth_token;
-    }
-
-    //Auth2 token implementation
-    const data = {
-        grant_type: 'client_credentials',
-        client_id: conf.nidap.auth_client_id,
-        client_secret: conf.nidap.auth_client_secret
-    };
-    const resp = await axios.post(conf.nidap.url_token, data, {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        items.push(new Organization(p.sac, p.organizationAcronym, p.organization, p.organizationPath,
+            p.instituteAcronym, p.institute, p.parentSac, p.docSac, p.docOrganizationPath));
     });
-    console.debug('Token response', resp.data);
-    return 'Bearer ' + resp.data.access_token;
+    return processPaginatedResult(resp.data, items);
 }
 
 module.exports = { orgRoutes, listAllOrgs, searchOrgBySac, searchOrgTreeBySac};

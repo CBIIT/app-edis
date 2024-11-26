@@ -8,7 +8,6 @@
     "build": "sam build -t sam-template.yaml && cp sam-template.yaml .aws-sam/build/NedOrgsLambdaFunction/.",
     "deploy_toml": "cd .aws-sam/build/NedOrgsLambdaFunction && sam deploy -t sam-template.yaml --parameter-overrides ParameterKey=LambdaNedorgRoleArn,ParameterValue=$npm_config_arn ParameterKey=VpcEndpointId,ParameterValue=$npm_config_vpce && cd ../../../",
     "deploy": "cd .aws-sam/build/NedOrgsLambdaFunction && sam deploy -t sam-template.yaml --stack-name $npm_config_sname --s3-bucket $npm_config_s3bucket --s3-prefix $npm_config_s3prefix --region $npm_config_region --no-confirm-changeset --capabilities $npm_config_capb --parameter-overrides ParameterKey=LambdaNedorgRoleArn,ParameterValue=$npm_config_arn ParameterKey=VpcEndpointId,ParameterValue=$npm_config_vpce && cd ../../../",
-    "zip": "rm -rf node_modules && rm -rf ../lambda-zip/lambda-auth.zip && npm install --only='prod' && zip -r ../lambda-zip/lambda-auth.zip node_modules src/*",
     "ziplocal": "rm -rf node_modules && rm -rf lambda-auth.zip && npm install --only='prod' && zip -r lambda-auth.zip node_modules src/*",
     "build-prod": "rm -rf node_modules && npm install --only='prod'",
     "zip-prod": "mkdir -p out && rm -rf out/lambda-auth.zip && zip -r -q out/lambda-auth.zip node_modules src/*"
