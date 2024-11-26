@@ -4,11 +4,17 @@ const AWS = require('aws-sdk'),
 
 const { orgRoutes } = require("./orgApiRoutes");
 const { initConfiguration } = require("./conf");
+const { nidapApiRoutesV2} = require("./nidapApiRoutesV2");
+const { convertParametersToJson } = require("./util");
 
 // Set the console log level
 const logLevel = process.env['LOG_LEVEL'];
 if (logLevel && logLevel === 'info') {
   console.debug = function () {}
+  console.trace = function () {}
+}
+if (logLevel && logLevel === 'debug') {
+  console.trace = function () {}
 }
 
 AWS.config.update({ region: region });
@@ -22,16 +28,11 @@ async function getConfigurationParameters() {
     Path: PARAMETER_PATH,
     Recursive: true,
     WithDecryption: true }).promise();
-  const result = {};
-  data.Parameters.forEach((p) => {
-    result[p.Name.slice(PARAMETER_PATH.length)] = p.Value;
-  });
-  console.debug('Parameters', result);
-  return result;
+  return convertParametersToJson(data, PARAMETER_PATH);
 }
 
-
-app.register(orgRoutes, { prefix: '/orgapi/nidap/v1'})
+app.register(orgRoutes, { prefix: '/orgapi/nidap/v1'});
+app.register(nidapApiRoutesV2, { prefix: '/dataapi/nidap/v2'});
 console.debug('The application has been registered');
 
 let configuration;

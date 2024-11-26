@@ -148,6 +148,94 @@ paths:
       security:
         - request-authorizer: []
 
+  /dataapi/nidap/v2/{objectType}:
+    get:
+      tags:
+        - clients
+      summary: Get all records for a given data object
+      operationId: getAllDataRecords
+      description: |
+        Get all records for a given data object from NIDAP.
+      x-amazon-apigateway-request-validator: params
+      parameters:
+        - name: objectType
+          in: path
+          description: Data Object name (plural)
+          required: true
+          schema:
+            type: string
+            example: 'orgs'
+        - name: lastEvaluatedKey
+          in: query
+          description: Last Evaluated Key returned from previous request
+          required: false
+          schema:
+            type: string
+            example: '1234567890'
+      responses:
+        '200':
+          description: JSON formatted records of the organizations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataObjectsResponse'
+        '400':
+          description: bad input parameter
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn}
+        httpMethod: POST
+        timeoutInMillis: 10000
+        type: "aws_proxy"
+        cacheKeyParameters:
+          - method.request.path.objectType
+          - method.request.querystring.lastEvaluatedKey
+      security:
+        - request-authorizer: []
+
+  /dataapi/nidap/v2/{objectType}/{primary}:
+    get:
+      tags:
+        - clients
+      summary: Get record for a given data object and primary key
+      operationId: searchDataRecordsByPrimary
+      description: |
+        Get Data record for the given data object and primary key from NIDAP.
+      x-amazon-apigateway-request-validator: params
+      parameters:
+        - name: objectType
+          in: path
+          description: Data Object name (plural)
+          required: true
+          schema:
+            type: string
+            example: 'orgs'
+        - name: primary
+          in: path
+          description: Primary Key value to search for
+          required: true
+          schema:
+            type: string
+            example: 'ABC123'
+      responses:
+        '200':
+          description: JSON formatted records of the organizations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataObject'
+        '400':
+          description: bad input parameter
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn}
+        httpMethod: POST
+        timeoutInMillis: 10000
+        type: "aws_proxy"
+        cacheKeyParameters:
+          - method.request.path.objectType
+          - method.request.path.primary
+      security:
+        - request-authorizer: []
+
 components:
   schemas:
     OrganizationsResponse:
@@ -219,6 +307,32 @@ components:
         parameters:
           type: object
           example: {}
+
+    DataObjectsResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+        error:
+          type: string
+          description: Error message if not empty - rest of the fields are zeros
+        lastEvaluatedKey:
+          type: string
+          description: If present, the result is incomplete, pass this value as "lastEvaluatedKey" query parameter to get the next chunk of results
+        items:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/Organization'
+              - $ref: '#/components/schemas/AnyValue'
+
+    DataObject:
+      oneOf:
+        - $ref: '#/components/schemas/Organization'
+        - $ref: '#/components/schemas/AnyValue'
+
+    AnyValue: {}
+
   securitySchemes:
     request-authorizer:
       type: apiKey
