@@ -1,6 +1,7 @@
 # Workflow to build artifacts for FPS users API
 
 name: 4.1 - FPS - Build
+run-name: FPS - Build - ${{ github.run_id }}
 
 # Controls when the workflow will run
 on:
