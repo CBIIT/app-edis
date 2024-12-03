@@ -76,7 +76,7 @@ EOF
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
-    "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
+    "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
   ]
 
   lambda_fps_api_role_policies = [
