@@ -106,7 +106,7 @@ jobs:
           repository: CBIIT/app-edis
 
       - name: download pre-built resources
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         with:
           workflow_conclusion: success
           repo: ${{ inputs.artifact_repo }}
