@@ -1,0 +1,140 @@
+openapi: 3.0.0
+info:
+  description: Enterprise Data & Integration Services Web Services - **FPS User Service**
+  version: "0.0.1"
+  title: FPS User API
+  # put the contact info for your development or API team
+  contact:
+    email: NCICBIITBizAppsSupportLowTier@mail.nih.gov
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+x-amazon-apigateway-request-validators:
+  all:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params:
+    validateRequestBody: true
+    validateRequestParameters: true
+  body:
+    validateRequestBody: true
+    validateRequestParameters: false
+
+# tags are used for organizing operations
+tags:
+  - name: clients
+    description: Operations available to clients - service to service
+
+paths:
+  /fpsapi/v1/users:
+    get:
+      tags:
+        - clients
+      summary: Get FPS users
+      operationId: getAllFpsUsers
+      description: |
+        Get FPS user records from nVision
+      x-amazon-apigateway-request-validator: params
+      parameters:
+        - name: lastEvaluatedKey
+          in: query
+          description: Last Evaluated Key returned from previous request
+          required: false
+          schema:
+            type: string
+            example: '1234567890'
+      responses:
+        '200':
+          description: JSON formatted records of the FPS user information
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FpsUsersResponse'
+        '400':
+          description: bad input parameter
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn}
+        httpMethod: POST
+        timeoutInMillis: 10000
+        type: "aws_proxy"
+        cacheKeyParameters:
+          - method.request.querystring.lastEvaluatedKey
+      security:
+        - request-authorizer: []
+
+components:
+  schemas:
+    FpsUsersResponse:
+      type: object
+      properties:
+        count:
+            type: integer
+        error:
+          type: string
+          description: Error message if not empty - rest of the fields are zeros
+        lastEvaluatedKey:
+          type: string
+          description: If present, the result is incomplete, pass this value as "lastEvaluatedKey" query parameter to get the next chunk of results
+        items:
+            type: array
+            items:
+              $ref: '#/components/schemas/FpsUser'
+
+    FpsUser:
+      type: object
+      required:
+        - NED_ID
+      properties:
+        NED_ID:
+          type: string
+          format: string
+          example: 1234567890
+            ,
+            ,
+            ,
+            ,
+            ,
+            ,
+            ,
+            ,
+
+        GENDER_CD:
+          type: string
+          example: 01
+        GENDER_DESC:
+          type: string
+          example: Male
+        FULL_NAME:
+          type: string
+          example: Smith, John
+        STAFF_TYP_CD:
+          type: string
+          example: F
+        STAFF_TYP_DESC:
+          type: string
+          example: FELLOW
+        EFFECTIVE_FROM_DT:
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        EFFECTIVE_TO_DT:
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        NED_ACTIVE_FLG:
+          type: string
+          example: Y
+        ORG_CD:
+          type: string
+          example: HNC123
+
+  securitySchemes:
+    request-authorizer:
+      type: apiKey
+      name: Authorization
+      in: header
+      x-amazon-apigateway-authtype: custom
+      x-amazon-apigateway-authorizer:
+        type: token
+        authorizerUri: ${auth_lambda_invoke_arn}
+        authorizerResultTtlInSeconds: 300
