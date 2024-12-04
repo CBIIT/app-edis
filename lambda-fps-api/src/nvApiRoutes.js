@@ -5,7 +5,7 @@ const repl = require("node:repl");
 
 function nvRoutes(app, opts) {
     app.get('/users', async (req, res) => {
-        console.info(opts.prefix + '/users', req.params);
+        console.info('Route: ' + opts.prefix + '/users', req.params);
         try {
             if (req.query.Testing) {
                 console.info(`Return in Testing mode`);
@@ -13,7 +13,9 @@ function nvRoutes(app, opts) {
             }
             const sql = (conf.fps.sql || SQL_STATEMENT) + (conf.fps.sql_cont1 || '') + (conf.fps.sql_cont2 || '');
             oracledb.initOracleClient({ libDir: '/opt/lib', configDir: '/opt/lib/network/adm' });
-            res.json(await listFpsUsers(sql, req.query.lastEvaluatedKey));
+            const result = await listFpsUsers(sql, req.query.lastEvaluatedKey);
+            console.debug('*** Retrieved ', result.items.length, ' FPS records ***');
+            res.json(result);
         } catch (error) {
             console.error('ERROR:', error);
             res.status(500).send(error);

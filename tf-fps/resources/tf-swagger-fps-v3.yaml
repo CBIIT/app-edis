@@ -57,7 +57,7 @@ paths:
       x-amazon-apigateway-integration:
         uri: ${lambda_invoke_arn}
         httpMethod: POST
-        timeoutInMillis: 10000
+        timeoutInMillis: 29000
         type: "aws_proxy"
         cacheKeyParameters:
           - method.request.querystring.lastEvaluatedKey

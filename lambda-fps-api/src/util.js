@@ -12,7 +12,7 @@ function convertParametersToJson(data, prefix) {
         }
         tempResult[paths[paths.length - 1]] = p.Value;
     });
-    console.debug('Parameters:', result);
+    console.trace('Parameters:', result);
     return result;
 }
 
