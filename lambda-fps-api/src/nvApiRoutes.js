@@ -11,8 +11,9 @@ function nvRoutes(app, opts) {
                 console.info(`Return in Testing mode`);
                 return { 'Success': true};
             }
+            const sql = (conf.fps.sql || SQL_STATEMENT) + (conf.fps.sql_cont1 || '') + (conf.fps.sql_cont2 || '');
             oracledb.initOracleClient({ libDir: '/opt/lib', configDir: '/opt/lib/network/adm' });
-            res.json(await listFpsUsers(SQL_STATEMENT, req.query.lastEvaluatedKey));
+            res.json(await listFpsUsers(sql, req.query.lastEvaluatedKey));
         } catch (error) {
             console.error('ERROR:', error);
             res.status(500).send(error);
@@ -38,7 +39,7 @@ async function listFpsUsers(sql, pageToken) {
             password: conf.fps.pwd,
             connectString: conf.fps.connectString
         });
-        console.debug('Connection has been established.  Executing retrieval of updated records...');
+        console.debug('Connection has been established.  Executing retrieval of FPS records...');
         const result = await connection.execute(curr_sql);
         console.debug('*** Retrieved ', result.rows.length, ' records ***');
         return _processPaginatedResult(result.rows, offset);
