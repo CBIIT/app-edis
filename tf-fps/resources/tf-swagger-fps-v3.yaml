@@ -91,42 +91,122 @@ components:
           type: string
           format: string
           example: 1234567890
-            ,
-            ,
-            ,
-            ,
-            ,
-            ,
-            ,
-            ,
-
+        FIRST_NAME:
+          type: string
+          format: string
+          example: JOHN
+        MIDDLE_NAME:
+          type: string
+          format: string
+          example: B
+        LAST_NAME:
+          type: string
+          format: string
+          example: SMITH
         GENDER_CD:
           type: string
-          example: 01
+          example: F
         GENDER_DESC:
           type: string
-          example: Male
-        FULL_NAME:
+          example: FEMALE
+        HI_EDUCATION_CD:
           type: string
-          example: Smith, John
-        STAFF_TYP_CD:
+          example: G
+        HI_EDUCATION_DESC:
           type: string
-          example: F
-        STAFF_TYP_DESC:
+          example: Graduate
+        CITIZENSHIP_DESC:
+          type: string
+          example: UNITED STATES
+        NIH_EOD:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        NIHSERVAO:
+          type: string
+          example: 0123456789
+        NIHSAC:
+          type: string
+          example: HNC111
+        AWD_PRD_FROM_DT:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        AWD_PRD_TO_DT:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        TRAIN_PROG_CD:
+          type: string
+          example: TA
+        TRAIN_PROG_DESC:
+          type: string
+          example: POST DOCTORAL-IRTA
+        VISA_TYPE:
+          type: string
+          example: null
+        AWARD_LINE_TYPE:
+          type: string
+          example: STIPEND
+        ACTIVATION_DT:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        TRAIN_PROG_START_DT:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        MIXCASE_FIRST_NAME:
+          type: string
+          example: John
+        MIXCASE_MIDDLE_NAME:
+          type: string
+          example: B
+        MIXCASE_LAST_NAME:
+          type: string
+          example: Smith
+        ORGANIZATIONALSTAT:
           type: string
           example: FELLOW
-        EFFECTIVE_FROM_DT:
+        NIHORGPATH:
+          type: string
+          example: NCI CBIIT
+        NIHORGACRONYM:
+          type: string
+          example: NCI
+        LOAD_DATE:
+          type: string
           format: date-time
           example: '2016-08-29T09:12:33.001Z'
-        EFFECTIVE_TO_DT:
+        PREFERRED_FIRST_NAME:
+          type: string
+          example: John
+        PREFERRED_MIDDLE_NAME:
+          type: string
+          example: B
+        PREFERRED_LAST_NAME:
+          type: string
+          example: Smith
+        ACTION_TYPE:
+          type: string
+          example: REN
+        ACTION_TYPE_DESC:
+          type: string
+          example: RENEWAL EXTENSION
+        EMAIL_ADDRESS:
+          type: string
+          example: smithj@site.com
+        TERMINATION_DT:
+          type: string
           format: date-time
           example: '2016-08-29T09:12:33.001Z'
-        NED_ACTIVE_FLG:
+        ACT_EFF_DT:
           type: string
-          example: Y
-        ORG_CD:
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        TERMINATION_FLG:
           type: string
-          example: HNC123
+          example: " "
 
   securitySchemes:
     request-authorizer:
