@@ -22,6 +22,7 @@ on:
       descr:
         description: 'Description'
         required: true
+        default: '"eadis-userinfo-dev auto deployment"'
       host-runner:
         type: string
         required: false
@@ -55,4 +56,4 @@ jobs:
 
       - name: Create API Gateway deployment
         run: |
-          aws apigateway create-deployment --rest-api-id ${{ inputs.apiid }} --stage-name ${{ inputs.stage }} --description ${{ inputs.descr }} --debug
+          aws apigateway create-deployment --rest-api-id ${{ inputs.apiid }} --stage-name ${{ inputs.stage }} --description ${{ inputs.descr }}
