@@ -1,13 +1,9 @@
 'use strict'
 
-const { conf } = require('./conf');
-const base64LdapFields = conf.vds.base64LdapFields;
-
-
 /** Converts specific fields in an LDAP result entry to  to base64.
  * @input entry
  */
-function convertBase64Fields(entry) {
+function convertBase64Fields(entry, base64LdapFields) {
     let obj = entry.object;
     const raw = entry.raw;
 

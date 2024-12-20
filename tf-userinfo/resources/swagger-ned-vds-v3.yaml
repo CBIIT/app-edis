@@ -179,12 +179,12 @@ paths:
                       "NIHPRIMARYSMTP": "$elem.NIHPRIMARYSMTP.S",
                       "MAIL": "$elem.MAIL.S",
                       "proxyAddresses": [
-                         #foreach($paddr in $elem.proxyAddresses.L)
-                         "$paddr.S"#if($foreach.hasNext),#end
-
-                         #end
+                        #foreach($paddr in $elem.proxyAddresses.L)
+                        "$paddr.S"#if($foreach.hasNext),#end
+                        
+                        #end
                       ],
-                      "displayName": "$util.escapeJavaScript($elem.displayName.S)",
+                      "displayName": "$util.escapeJavaScript($elem.displayName.S).replaceAll("\\'","'")",
                       "PERSONALTITLE": "$elem.PERSONALTITLE.S",
                       "GIVENNAME": "$elem.GIVENNAME.S",
                       "NIHCOMMONGIVENNAME": "$elem.NIHCOMMONGIVENNAME.S",
@@ -201,13 +201,14 @@ paths:
                       "TITLE": "$elem.TITLE.S",
                       "NIHIPD": "$elem.NIHIPD.S",
                       "NIHBADGETITLE": "$elem.NIHBADGETITLE.S",
+                      "BADGESTATUS": "$elem.BADGESTATUS.S",
                       "NIHIDBADGEEXPDATE": "$elem.NIHIDBADGEEXPDATE.S",
                       "NIHSAC": "$elem.NIHSAC.S",
                       "NIHPrivacyAwarenessCompDate": "$elem.NIHPrivacyAwarenessCompDate.S",
                       "PrivacyAwarenessRefresherCompDate": "$elem.PrivacyAwarenessRefresherCompDate.S",
                       "NIHInformationSecurityAwarenessCompDate": "$elem.NIHInformationSecurityAwarenessCompDate.S",
                       "InformationSecurityRefresherCompDate": "$elem.InformationSecurityRefresherCompDate.S",
-                      "description": "$util.escapeJavaScript($elem.description.S)",
+                      "description": "$util.escapeJavaScript($elem.description.S).replaceAll("\\'","'")",
                       "ORGANIZATIONALSTAT": "$elem.ORGANIZATIONALSTAT.S",
                       "NIHSUBORGSTATUS": "$elem.NIHSUBORGSTATUS.S",
                       "NIHSUMMERSTATUS": "$elem.NIHSUMMERSTATUS.S",
@@ -218,7 +219,7 @@ paths:
                       "MANAGER": "$elem.MANAGER.S",
                       "NIHCOTRID": "$elem.NIHCOTRID.S",
                       "NIHPOC": "$elem.NIHPOC.S",
-                      "NIHCOMPANYNAME": "$elem.NIHCOMPANYNAME.S",
+                      "NIHCOMPANYNAME": "$util.escapeJavaScript($elem.NIHCOMPANYNAME.S).replaceAll("\\'","'")",
                       "NIHCOMPANYPHONE": "$elem.NIHCOMPANYPHONE.S",
                       "countryCode": "$elem.countryCode.S",
                       "TELEPHONENUMBER": "$elem.TELEPHONENUMBER.S",
@@ -233,10 +234,10 @@ paths:
                       "NIHIDBADGELESS6MOS": "$elem.NIHIDBADGELESS6MOS.S",
                       "managedObjects": "$elem.managedObjects.S",
                       "memberOf": [
-                         #foreach($grp in $elem.memberOf.L)
-                         "$grp.S"#if($foreach.hasNext),#end
-
-                         #end
+                        #foreach($grp in $elem.memberOf.L)
+                        "$util.escapeJavaScript($grp.S).replaceAll("\\'","'")"#if($foreach.hasNext),#end
+                        
+                        #end
                       ],
                       "NIHCREATETIMESTAMP": "$elem.NIHCREATETIMESTAMP.S",
                       "NIHMODIFYTIMESTAMP": "$elem.NIHMODIFYTIMESTAMP.S",
@@ -273,7 +274,7 @@ paths:
                       "providedEmail": "$elem.providedEmail.S",
                       "DOC": "$elem.DOC.S"
                     }#if($foreach.hasNext),#end
-
+                    
                 #end
                   ]
                 }
@@ -729,6 +730,9 @@ components:
         NIHBADGETITLE:
           type: string
           example: Physician
+        BADGESTATUS:
+          type: string
+          example: Deactivated
         NIHIDBADGEEXPDATE:
           type: string
           example: 2026-11-12 00:00:00.0
