@@ -2,8 +2,8 @@
 
 const {conf} = require("./conf");
 const ldap = require('ldapjs');
-const {convertBase64Fields, getProvidedEmail, getDOC} = require("./util")
-
+const {convertBase64Fields, getProvidedEmail, getDOC} = require("./util");
+const {AndFilter, EqualityFilter, PresenceFilter} = require("ldapjs/lib/filters");
 
 let tlsOptions;
 
@@ -19,7 +19,7 @@ function vdsRoutes(app, opts) {
             }
             else
             {
-                res.json(await getUsers(id, '*'));
+                res.json(await getUsersEnhanced(id, '*'));
             }
         } catch (error) {
             console.error(error);
@@ -39,7 +39,7 @@ function vdsRoutes(app, opts) {
                 res.json({ 'Success': true});
             }
             else {
-                res.json(await getUsers(null, ic));
+                res.json(await getUsersEnhanced(null, ic));
             }
         } catch (error) {
             res.status(500).send(error);
@@ -47,38 +47,89 @@ function vdsRoutes(app, opts) {
     });
 }
 
-const getUsers = async (userId, ic) => {
+const getUsersEnhanced = async (userId, ic) => {
+
+    console.debug('Starting and waiting for getUsers from VDS...');
+    const users = await getUsers(userId, ic, conf.vds, conf.vds.NIHInternalView, false);
+    const counter = users.length;
+    console.debug("getUsers from VDS ...done. Records retrieved", counter );
+
+    console.debug('Starting and waiting for getUsers from nVision VDS ...')
+    const userMap = await getUsers(userId, ic, conf.vds, conf.vds.nvision, true);
+    const mapSize = userMap.size;
+    console.debug("getUsers from nVision VDS ...done. Records retrieved", mapSize );
+
+    enhanceUserList(users, userMap);
+    return users;
+};
+
+
+const getUsers = async (userId, ic, credentials, config, isMap) => {
 
     return new Promise(async function (resolve, reject) {
 
-        const nciSubFilter = '(NIHORGACRONYM=' + ic + ')';
-        const filter = userId ? ('(&(UNIQUEIDENTIFIER=' + userId + ')' + nciSubFilter + ')') : nciSubFilter;
-        console.info('getUsers()', userId, ic, nciSubFilter, filter);
-        var userSearchOptions = {
+        console.info('getUsers()', userId, ic);
+        let icSubFilter = null;
+        if (ic) {
+            if (ic === '*') {
+                icSubFilter = new PresenceFilter({
+                    attribute: config.icAttribute
+                });
+            }
+            else {
+                icSubFilter = new EqualityFilter({
+                    attribute: config.icAttribute,
+                    value: ic
+                });
+            }
+        }
+        let userIdFilter = null;
+        if (userId) {
+            if (userId === '*') {
+                userIdFilter = new PresenceFilter({
+                    attribute: config.primaryAttribute
+                });
+            } else {
+                userIdFilter = new EqualityFilter({
+                    attribute: config.primaryAttribute,
+                    value: userId
+                });
+            }
+        }
+
+        const filter = (userIdFilter && icSubFilter) ? new AndFilter({
+            filters: [ userIdFilter, icSubFilter ]
+            }) :
+            (icSubFilter ? icSubFilter : userIdFilter);
+        console.debug('created filter', filter.toString());
+
+        const userSearchOptions = {
             scope: 'sub',
-            attributes: conf.vds.userAttributes,
+            attributes: config.userAttributes,
             filter: filter,
             paged: true
         };
-        var counter = 0;
-        const ldapClient = await getLdapClient();
 
-        ldapClient.bind(conf.vds.dn, conf.vds.pwd, function (err) {
+        const ldapClient = await getLdapClient(credentials);
+
+        ldapClient.bind(credentials.dn, credentials.pwd, function (err) {
 
             if (err) {
-                console.error('Bind error: ' + err);
+                console.error('Ldap client bind error: ' + err);
                 ldapClient.destroy();
                 return reject(Error(err.message));
             }
-            var users = [];
-            console.info('starting search', filter);
-            ldapClient.search(conf.vds.searchBase, userSearchOptions, function (err, ldapRes) {
+            let userList = [];
+            let userMap = new Map();
+            let counter = 0;
+            console.info('starting search', config.searchBase);
+            ldapClient.search(config.searchBase, userSearchOptions, function (err, ldapRes) {
                 if (err) {
-                    console.error(err);
+                    console.error('Ldap client search error', err);
                     return reject(Error(err.message));
                 }
                 if (!ldapRes) {
-                    const message = 'Could not get LDAP result!';
+                    const message = 'Ldap client search result event error';
                     console.error(message);
                     return reject(message);
                 }
@@ -86,10 +137,15 @@ const getUsers = async (userId, ic) => {
                     if (++counter % 10000 === 0) {
                         console.info(counter + ' records found and counting...');
                     }
-                    let obj = convertBase64Fields(entry);
-                    obj['providedEmail'] = getProvidedEmail(obj);
-                    obj['DOC'] = getDOC(obj);
-                    users.push(obj);
+                    let obj = convertBase64Fields(entry, config.base64LdapFields);
+                    if (isMap) {
+                        let key = obj[config.primaryAttribute];
+                        delete obj[config.primaryAttribute];
+                        userMap.set(key, obj);
+                    }
+                    else {
+                        userList.push(obj);
+                    }
                 });
                 ldapRes.on('searchReference', function () { });
                 ldapRes.on('page', function () {
@@ -101,29 +157,27 @@ const getUsers = async (userId, ic) => {
                         // Object doesn't exist. The user DN is most likely not fully provisioned yet.
                         resolve({});
                     } else {
-                        console.error('err');
+                        console.error('ldap err', err);
                         reject(Error(err.message));
                     }
                 });
                 ldapRes.on('end', function () {
-                    console.info('destroy client');
-                    console.info(counter + ' records found');
+                    console.info('ldap end - destroy client');
                     ldapClient.destroy();
-                    resolve(users);
+                    console.info('ldap end...done', counter);
+                    resolve(isMap ? userMap : userList);
                 });
             });
-
         });
-
     });
 };
 
-const getLdapClient = async () => {
+const getLdapClient = async (credentials) => {
 
     try {
         const ldapClient = await ldap.createClient({
-            url: conf.vds.host,
-            tlsOptions: _getTlsOptions(),
+            url: credentials.host,
+            tlsOptions: _getTlsOptions(credentials),
             idleTimeout: 15 * 60 * 1000,
             timeout: 15 * 60 * 1000,
             connectTimeout: 15 * 60 * 1000 // 15 mins
@@ -155,14 +209,29 @@ const getLdapClient = async () => {
 };
 
 
-function _getTlsOptions() {
+function _getTlsOptions(credentials) {
     if (!tlsOptions) {
         // console.log('cert', conf.vds.cert)
         tlsOptions = {
-            ca: [conf.vds.cert]
+            ca: [credentials.cert]
         };
     }
     return tlsOptions;
 }
 
-module.exports = {vdsRoutes, getUsers}
+function enhanceUserList(userList, userMap) {
+    for (let obj of userList) {
+        obj['providedEmail'] = getProvidedEmail(obj);
+        obj['DOC'] = getDOC(obj);
+
+        // Enhance user record from userMap
+        let additionalObj = userMap.get(obj['UNIQUEIDENTIFIER']);
+        if (additionalObj) {
+            for (let prop in additionalObj) {
+                obj[prop] = additionalObj[prop];
+            }
+        }
+    }
+}
+
+module.exports = {vdsRoutes, getUsersEnhanced};
