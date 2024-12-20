@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-prod": "rm -rf node_modules && npm install --only='prod' --omit=dev --no-optional",
-    "zip-prod": "mkdir -p out && rm -rf out/lambda-load-from-eracommons.zip && zip -r -q out/lambda-load-from-eracommons.zip node_modules src/*"
+    "zip-prod": "mkdir -p out && rm -rf out/lambda-load-from-fred-props.zip && zip -r -q out/lambda-load-from-fred-props.zip node_modules src/*"
   },
   "keywords": [],
   "author": "",
