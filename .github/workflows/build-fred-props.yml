@@ -1,7 +1,7 @@
 # Workflow to build artifacts for EADIS API
 
 name: 5.1 - Fred Properties - Build
-run_name: 5.1 - Fred Properties - Build- ${{ github.run_id }}
+run-name: 5.1 - Fred Properties - Build- ${{ github.run_id }}
 
 # Controls when the workflow will run
 on:
