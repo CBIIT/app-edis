@@ -100,10 +100,10 @@ jobs:
 
       - name: Planning Terraform
         id: plan
-        run: terraform plan -var 'env=${{ inputs.tier }}' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 's3bucket-for-fred-props-users=${{ inputs.s3bucket }}' -var 'email=${{ inputs.email }}'
+        run: terraform plan -var 'env=${{ inputs.tier }}' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 's3bucket-for-fred-props=${{ inputs.s3bucket }}' -var 'email=${{ inputs.email }}'
         working-directory: tf-fred-props/
 
       - name: Terraform Deployment
         id: apply
-        run: terraform apply -auto-approve -input=false -lock=false -var 'env=${{ inputs.tier }}' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 's3bucket-for-fred-props-users=${{ inputs.s3bucket }}' -var 'email=${{ inputs.email }}'
+        run: terraform apply -auto-approve -input=false -lock=false -var 'env=${{ inputs.tier }}' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 's3bucket-for-fred-props=${{ inputs.s3bucket }}' -var 'email=${{ inputs.email }}'
         working-directory: tf-fred-props/
