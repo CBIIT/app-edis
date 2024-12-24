@@ -1,3 +1,5 @@
+const parquet = require('parquetjs');
+
 const AWS = require('aws-sdk'),
     region = 'us-east-1'
 

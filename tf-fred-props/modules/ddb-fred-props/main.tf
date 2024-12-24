@@ -28,7 +28,7 @@ resource "aws_dynamodb_table" "table" {
   global_secondary_index {
     hash_key        = "CustodianNedId"
     range_key       = "PropertyNumber"
-    name            = "cutodianIndex"
+    name            = "custodianIndex"
     projection_type = "ALL"
   }
 
