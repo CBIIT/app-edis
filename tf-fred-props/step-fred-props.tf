@@ -1,5 +1,5 @@
-resource "aws_sfn_state_machine" "edis_sfn_refresh_fred-props" {
-  name       = "edis-refresh-fred-props-${var.env}"
+resource "aws_sfn_state_machine" "edis_sfn_refresh_fred_props" {
+  name       = "edis-refresh-fred_props-${var.env}"
   role_arn   = aws_iam_role.step_function.arn
   tags       = local.resource_tags
   definition = <<EOF
@@ -255,7 +255,7 @@ resource "aws_cloudwatch_event_rule" "edis_refresh_fred_props" {
 }
 
 resource "aws_cloudwatch_event_target" "edis_refresh_fred_props" {
-  arn  = aws_sfn_state_machine.edis_sfn_refresh_fred-props.arn
+  arn  = aws_sfn_state_machine.edis_sfn_refresh_fred_props.arn
   rule = aws_cloudwatch_event_rule.edis_refresh_fred_props.name
   role_arn = aws_iam_role.refresh_fred_props_trigger.arn
 }
