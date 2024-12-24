@@ -42,7 +42,7 @@ jobs:
           echo S3 Bucket - ${{ github.event.inputs.s3bucket }}
       
       - name: Download built Lambda functions
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         with: 
           workflow: lambda-build.yml
           workflow_conclusion: success
