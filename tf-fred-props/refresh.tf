@@ -188,7 +188,7 @@ resource "aws_athena_database" "edis-athena" {
 #
 resource "aws_glue_catalog_table" "edis-athena-fred-props-prev" {
   database_name = aws_athena_database.edis-athena.name
-  name          = "fred-props_prev_t"
+  name          = "fred_props_prev_t"
   table_type = "EXTERNAL_TABLE"
   parameters = {
     EXTERNAL = "TRUE"
@@ -220,7 +220,7 @@ resource "aws_glue_catalog_table" "edis-athena-fred-props-prev" {
 #
 resource "aws_glue_catalog_table" "edis-athena-fred-props-current" {
   database_name = aws_athena_database.edis-athena.name
-  name          = "fred-props_current_t"
+  name          = "fred_props_current_t"
   table_type = "EXTERNAL_TABLE"
   parameters = {
     EXTERNAL = "TRUE"
