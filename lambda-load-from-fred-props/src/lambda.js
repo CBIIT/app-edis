@@ -63,7 +63,7 @@ module.exports.handler = async (event, context, callback) => {
 
         console.debug('About to run event...');
         result = await getAllProperties()
-        console.debug("dbExec...done. Records retrieved", result.rows.length);
+        console.debug("dbExec...done. Records retrieved", result.GetAllPropertyResult.Property.length);
         const s3Entry =
             {
                 bucket: s3bucket,
