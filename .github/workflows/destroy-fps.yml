@@ -68,7 +68,7 @@ jobs:
           echo Security Group - ${{ inputs.vpcsg }}
 
       - name: Download built Lambda functions into built-artifacts folder
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         with:
           workflow_conclusion: success
           run_id: ${{ inputs.build_id }}

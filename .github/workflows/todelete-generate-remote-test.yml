@@ -40,7 +40,7 @@ jobs:
     steps:
 
       - name: download pre-built resources by run id
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         if: (inputs.run_id != '')
         with:
           workflow_conclusion: success
@@ -48,7 +48,7 @@ jobs:
           run_id: ${{ inputs.run_id }}
           
       - name: download pre-built resources by build number
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         if: (inputs.run_number != '')
         with:
           workflow_conclusion: success
@@ -58,7 +58,7 @@ jobs:
           
       - name: download pre-built resources
         if: (inputs.run_number == '') && (inputs.run_id == '')
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         with:
           workflow: build-remote-test.yml
           workflow_conclusion: success
