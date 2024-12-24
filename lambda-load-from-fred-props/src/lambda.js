@@ -1,4 +1,5 @@
 const parquet = require('parquetjs');
+const stream = require("stream");
 
 const AWS = require('aws-sdk'),
     region = 'us-east-1'
