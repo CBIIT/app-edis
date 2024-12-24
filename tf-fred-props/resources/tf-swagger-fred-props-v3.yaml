@@ -1,0 +1,231 @@
+openapi: 3.0.0
+info:
+  description: Enterprise Data & Integration Services Web Services - **Frederick Properties Service**
+  version: "1.0.0"
+  title: Frederick Properties API
+  # put the contact info for your development or API team
+  contact:
+    email: NCICBIITBizAppsSupportLowTier@mail.nih.gov
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+x-amazon-apigateway-request-validators:
+  all:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params:
+    validateRequestBody: true
+    validateRequestParameters: true
+  body:
+    validateRequestBody: true
+    validateRequestParameters: false
+
+# tags are used for organizing operations
+tags:
+  - name: clients
+    description: Operations available to clients - service to service
+
+paths:
+  /fredpropsapi/v1/props:
+    get:
+      tags:
+        - clients
+      summary: Return all Frederick properties
+      operationId: getFredPropsFromDdb
+      description: |
+        Return all Frederick properties  
+        You have to check the result for existence of LastEvaluatedKey property and  
+        loop your request passing it's value (```?lastEvaluatedKey=xxx```) as query parameter  
+        until the final result does not contain LastEvaluatedKey property
+      parameters:
+        - name: lastEvaluatedKey
+          in: query
+          description: Last Evaluated Key from previous request
+          required: false
+          schema:
+            type: string
+            example: '12345678'
+      responses:
+        '200':
+          description: JSON formatted records of Frederick properties data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FredPropsChunk'
+        '400':
+          description: bad input parameter
+      x-amazon-apigateway-integration:
+        type: aws
+        httpMethod: POST
+        uri: ${ddb_action_scan}
+        credentials: ${ddb_role_arn}
+        passthroughBehavior: when_no_templates
+        timeoutInMillis: 29000
+        cacheKeyParameters:
+          - method.request.querystring.lastEvaluatedKey
+        requestTemplates:
+          application/json: |-
+            #set($lastEvaluatedKey = $input.params('lastEvaluatedKey'))
+            {
+              "TableName": "${table_name}"
+              #if($lastEvaluatedKey != "")
+                , "ExclusiveStartKey": { "PropertyNumber": { "S": "$lastEvaluatedKey" } }
+              #end
+            }
+        responses:
+          2\d{2}:
+            statusCode: 200
+            responseTemplates:
+              application/json: |-
+                #set ($inputRoot = $input.path('$'))
+                #set ($lastEvaluatedKey = $inputRoot.LastEvaluatedKey.PropertyNumber.S)
+                {
+                  "count": $inputRoot.Count,
+                #if($lastEvaluatedKey != "")
+                  "lastEvaluatedKey": "$lastEvaluatedKey",
+                #end
+                  "items": [
+                #foreach($elem in $inputRoot.Items)
+                    {
+                
+                      "PropertyNumber": "$elem.PropertyNumber.S",
+                      "Acquired": $elem.Acquired.S,
+                      "Building": "$elem.Building.S",
+                      "CenterNumber": "$elem.CenterNumber.S",
+                      "Comment1": "$elem.Comment1.S",
+                      "Condition": "$elem.Condition.S",
+                      "ContractId": "$elem.ContractId.S",
+                      "Cost": "$elem.Cost.N",
+                      "Description": "$elem.Description.S",
+                      "Division": "$elem.Division.S",
+                      "InvoiceNumber": "$elem.InvoiceNumber.S",
+                      "Item": "$elem.Item.S",
+                      "Make": "$elem.Make.S",
+                      "Model": "$elem.Model.S",
+                      "POLineNumber": "$elem.POLineNumber.S",
+                      "PONumber": "$elem.PONumber.S",
+                      "PropertyOfficerEmployeeNumber": "$elem.PropertyOfficerEmployeeNumber.S",
+                      "PropertyOfficerFirstName": "$elem.PropertyOfficerFirstName.S",
+                      "PropertyOfficerLastName": "$elem.PropertyOfficerLastName.S",
+                      "PropertyOfficerNedId": "$elem.PropertyOfficerNedId.S",
+                      "PropertyType": $elem.PropertyType.S,
+                      "Room": "$elem.Room.S",
+                      "SerialNumber": "$elem.SerialNumber.S",
+                      "Status": "$elem.Status.S"
+                    }#if($foreach.hasNext),#end
+
+                #end
+                  ]
+                }
+      security:
+        - request-authorizer: []
+
+
+components:
+  schemas:
+    FredPropsChunk:
+      type: object
+      properties:
+        count:
+            type: integer
+            example: 1
+        error:
+          type: string
+          description: Error message if not empty - rest of the fields are zeros
+        lastEvaluatedKey:
+          type: string
+          description: If present, the result is incomplete, pass this value as "lastEvaluatedKey" query parameter to get the next chunk of results
+        items:
+            type: array
+            items:
+              $ref: '#/components/schemas/FredProperty'
+
+    FredProperty:
+      type: object
+      required:
+        - PropertyNumber
+      properties:
+        Acquired:
+          type: string
+          format: date-time
+          example: '2024-05-31T04:00:00.000Z'
+        Building:
+          type: string
+          example: 1234
+        CenterNumber:
+          type: string
+          example: 700.400.16.01.002.001.0001.032
+        Comment1:
+          type: string
+          example: ON SHELF
+        Condition:
+          type: string
+          example: USED-GOOD
+        ContractId:
+          type: string
+          example: LDOS
+        Cost:
+          type: string
+          example: 3900
+        Description:
+          type: string
+          example: Computer
+        Division:
+          type: string
+          example: CCR
+        InvoiceNumber:
+          type: string
+          example: 100
+        Item:
+          type: string
+          example: Laptop
+        Make:
+          type: string
+          example: Dell
+        Model:
+          type: string
+          example: XPS15
+        POLineNumber:
+          type: string
+          example: 1
+        PONumber:
+          type: string
+          example: 210000
+        PropertyNumber:
+          type: string
+          example: C100000
+        PropertyOfficerEmployeeNumber:
+          type: string
+          example: GVRG000001
+        PropertyOfficerFirstName:
+          type: string
+          example: John
+        PropertyOfficerLastName:
+          type: string
+          example: Smith
+        PropertyOfficerNedId:
+          type: string
+          example: 2004567890
+        PropertyType:
+          type: string
+          example: X
+        Room:
+          type: string
+          example: 3256A
+        SerialNumber:
+          type: string
+          example: MA0000406M
+        Status:
+          type: string
+          example: Active
+
+  securitySchemes:
+    request-authorizer:
+      type: apiKey
+      name: Authorization
+      in: header
+      x-amazon-apigateway-authtype: custom
+      x-amazon-apigateway-authorizer:
+        type: token
+        authorizerUri: ${auth_lambda_invoke_arn}
+        authorizerResultTtlInSeconds: 300
