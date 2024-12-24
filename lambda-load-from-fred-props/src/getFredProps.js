@@ -37,4 +37,4 @@ async function getAllProperties(){
     return (Array.isArray(result) && result.length > 0) ? result[0] : result;
 }
 
-module.exports = {getProperties: getAllProperties}
+module.exports = {getAllProperties}

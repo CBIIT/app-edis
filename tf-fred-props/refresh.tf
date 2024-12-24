@@ -16,7 +16,7 @@ module "lambda-load-from-fred-props" {
   lambda-description  = "Lambda function to load Frederick properties from the web service into S3 bucket"
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
-    PARAMETER_PATH = "/${var.env}/app/eadis/fred-props/"
+    PARAMETER_PATH = "/${var.env}/app/eadis/fred/"
     S3BUCKET  = var.s3bucket-for-fred-props
     S3FOLDER  = "app-edis-data-${var.env}/fred-props/current"
     S3FILE  = "storage.parquet"
