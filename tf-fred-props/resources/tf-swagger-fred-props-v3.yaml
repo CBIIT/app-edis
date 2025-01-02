@@ -200,7 +200,8 @@ paths:
                     "Status": "$elem.Status.S"
                   }
                 #end
-
+      security:
+        - request-authorizer: []
 
 components:
   schemas:
