@@ -120,7 +120,7 @@ paths:
       security:
         - request-authorizer: []
 
-  /fredpropsapi/v1/props/{propertyNumber}:
+  /fredpropsapi/v1/prop/propertyNumber}:
     get:
       tags:
         - clients
@@ -137,7 +137,7 @@ paths:
             type: string
       responses:
         '200':
-          description: JSON formatted record of the user information
+          description: JSON formatted record of the Frederick Property
           content:
             application/json:
               schema:
