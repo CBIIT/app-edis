@@ -120,7 +120,7 @@ paths:
       security:
         - request-authorizer: []
 
-  /fredpropsapi/v1/prop/{propertyNumber}:
+  /fredpropsapi/v1/props/{propertyNumber}:
     get:
       tags:
         - clients
