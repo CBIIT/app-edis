@@ -89,7 +89,7 @@ paths:
                     {
                 
                       "PropertyNumber": "$elem.PropertyNumber.S",
-                      "Acquired": $elem.Acquired.S,
+                      "Acquired": "$elem.Acquired.S",
                       "Building": "$elem.Building.S",
                       "CenterNumber": "$elem.CenterNumber.S",
                       "Comment1": "$elem.Comment1.S",
@@ -108,7 +108,7 @@ paths:
                       "PropertyOfficerFirstName": "$elem.PropertyOfficerFirstName.S",
                       "PropertyOfficerLastName": "$elem.PropertyOfficerLastName.S",
                       "PropertyOfficerNedId": "$elem.PropertyOfficerNedId.S",
-                      "PropertyType": $elem.PropertyType.S,
+                      "PropertyType": "$elem.PropertyType.S",
                       "Room": "$elem.Room.S",
                       "SerialNumber": "$elem.SerialNumber.S",
                       "Status": "$elem.Status.S"
@@ -119,6 +119,87 @@ paths:
                 }
       security:
         - request-authorizer: []
+
+  /fredpropsapi/v1/prop/{propertyNumber}:
+    get:
+      tags:
+        - clients
+      summary: Return Frederick property using a property number
+      operationId: getFredPropbyNumberFromDdb
+      description: |
+        Get a Frederick property record by a property number from Dynamo DB
+      parameters:
+        - name: propertyNumber
+          in: path
+          required: true
+          description: Property Number
+          schema:
+            type: string
+      responses:
+        '200':
+          description: JSON formatted record of the user information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FredProperty'
+        '400':
+          description: bad input parameter
+      x-amazon-apigateway-integration:
+        type: aws
+        httpMethod: POST
+        uri: ${ddb_action_get_item}
+        credentials: ${ddb_role_arn}
+        passthroughBehavior: when_no_templates
+        timeoutInMillis: 29000
+        cacheKeyParameters:
+          - method.request.path.userID
+        requestTemplates:
+          application/json: |-
+            {
+                "TableName": "${table_name}",
+                "Key": {
+                    "PropertyNumber": {
+                        "S": "$input.params('propertyNumber')"
+                    }
+                },
+                "ConsistentRead": true
+            }
+        responses:
+          2\d{2}:
+            statusCode: 200
+            responseTemplates:
+              application/json: |-
+                #if($elem == "")
+                  {
+                  }
+                #else
+                  {
+                    "PropertyNumber": "$elem.PropertyNumber.S",
+                    "Acquired": "$elem.Acquired.S",
+                    "Building": "$elem.Building.S",
+                    "CenterNumber": "$elem.CenterNumber.S",
+                    "Comment1": "$elem.Comment1.S",
+                    "Condition": "$elem.Condition.S",
+                    "ContractId": "$elem.ContractId.S",
+                    "Cost": "$elem.Cost.N",
+                    "Description": "$elem.Description.S",
+                    "Division": "$elem.Division.S",
+                    "InvoiceNumber": "$elem.InvoiceNumber.S",
+                    "Item": "$elem.Item.S",
+                    "Make": "$elem.Make.S",
+                    "Model": "$elem.Model.S",
+                    "POLineNumber": "$elem.POLineNumber.S",
+                    "PONumber": "$elem.PONumber.S",
+                    "PropertyOfficerEmployeeNumber": "$elem.PropertyOfficerEmployeeNumber.S",
+                    "PropertyOfficerFirstName": "$elem.PropertyOfficerFirstName.S",
+                    "PropertyOfficerLastName": "$elem.PropertyOfficerLastName.S",
+                    "PropertyOfficerNedId": "$elem.PropertyOfficerNedId.S",
+                    "PropertyType": "$elem.PropertyType.S",
+                    "Room": "$elem.Room.S",
+                    "SerialNumber": "$elem.SerialNumber.S",
+                    "Status": "$elem.Status.S"
+                  }
+                #end
 
 
 components:
