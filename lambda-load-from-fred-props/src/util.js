@@ -16,7 +16,7 @@ function convertForDynamoDB(row) {
             res[newProp] = cleanString(row[p]);
         }
     }
-    res['USER_ID'] = '' + ((res['USER_ID'] === undefined) ? 'UNKNOWN' : res['USER_ID']) //convert to string
+    // res['PropertyNumber'] = '' + ((res['PropertyNumber'] === undefined) ? 'UNKNOWN' : res['PropertyNumber']) //convert to string
 
     return res;
 }
