@@ -152,7 +152,7 @@ paths:
         passthroughBehavior: when_no_templates
         timeoutInMillis: 29000
         cacheKeyParameters:
-          - method.request.path.userID
+          - method.request.path.propertyNumber
         requestTemplates:
           application/json: |-
             {
