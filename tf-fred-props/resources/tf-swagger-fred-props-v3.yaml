@@ -169,6 +169,7 @@ paths:
             statusCode: 200
             responseTemplates:
               application/json: |-
+                #set ($elem = $input.path('$.Item'))
                 #if($elem == "")
                   {
                   }
