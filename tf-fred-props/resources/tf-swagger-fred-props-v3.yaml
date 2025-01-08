@@ -263,7 +263,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set ($inputRoot = $input.path('$'))
-                #set ($lastEvaluatedKey = $inputRoot.LastEvaluatedKey.propertyOfficerNedId.S)
+                #set ($lastEvaluatedKey = $inputRoot.LastEvaluatedKey.PropertyNumber.S)
                 {
                   "count": $inputRoot.Count,
                 #if($lastEvaluatedKey != "")
