@@ -243,12 +243,13 @@ paths:
           - method.request.querystring.lastEvaluatedKey
         requestTemplates:
           application/json: |-
-            #set($ic = $input.params('propertyOfficerNedId'))
+            #set($propertyOfficerNedId = $input.params('propertyOfficerNedId'))
             #set($lastEvaluatedKey = $input.params('lastEvaluatedKey'))
             {
               "TableName": "${table_name}",
               "IndexName": "officerIndex",
               "KeyConditionExpression": "PropertyOfficerNedId = :propertyOfficerNedId",
+              "FilterExpression": "attribute_not_exists(vdsDelete)",
               "ExpressionAttributeValues": {
                 ":propertyOfficerNedId": { "S": "$propertyOfficerNedId" }
               }
