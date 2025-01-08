@@ -114,7 +114,7 @@ paths:
                       "PropertyType": "$elem.PropertyType.S",
                       "Room": "$elem.Room.S",
                       "SerialNumber": "$elem.SerialNumber.S",
-                      "Status": "$elem.Status.S"
+                      "Status": "$elem.Status.S",
                       "WarrantyDate": "$elem.WarrantyDate.S",
                       "WarrantyStatus": "$elem.WarrantyStatus.S"
                     }#if($foreach.hasNext),#end
@@ -207,7 +207,7 @@ paths:
                       "PropertyType": "$elem.PropertyType.S",
                       "Room": "$elem.Room.S",
                       "SerialNumber": "$elem.SerialNumber.S",
-                      "Status": "$elem.Status.S"
+                      "Status": "$elem.Status.S",
                       "WarrantyDate": "$elem.WarrantyDate.S",
                       "WarrantyStatus": "$elem.WarrantyStatus.S"
                   }
@@ -319,7 +319,7 @@ paths:
                       "PropertyType": "$elem.PropertyType.S",
                       "Room": "$elem.Room.S",
                       "SerialNumber": "$elem.SerialNumber.S",
-                      "Status": "$elem.Status.S"
+                      "Status": "$elem.Status.S",
                       "WarrantyDate": "$elem.WarrantyDate.S",
                       "WarrantyStatus": "$elem.WarrantyStatus.S"
                     }#if($foreach.hasNext),#end
@@ -329,6 +329,121 @@ paths:
                 }
       security:
         - request-authorizer: [ ]
+
+  /fredpropsapi/v1/props/custodian/{custodianNedId}:
+    get:
+      tags:
+        - clients
+      summary: List property records for a given Custodian by their NED ID
+      operationId: listFredPropertyByCustodian
+      description: |
+        Get Frederick property records by the NED ID of a Custodian
+      parameters:
+        - name: custodianNedId
+          in: path
+          description: Property
+          required: true
+          schema:
+            type: string
+            example: '001896589'
+        - name: lastEvaluatedKey
+          in: query
+          description: Last Evaluated Key from previous request
+          required: false
+          schema:
+            type: string
+            example: '12345'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FredPropsChunk'
+          description: Property data element
+      x-amazon-apigateway-integration:
+        type: aws
+        httpMethod: POST
+        uri: ${ddb_action_query}
+        credentials: ${ddb_role_arn}
+        timeoutInMillis: 29000
+        passthroughBehavior: when_no_templates
+        cacheKeyParameters:
+          - method.request.path.custodianNedId
+          - method.request.querystring.lastEvaluatedKey
+        requestTemplates:
+          application/json: |-
+            #set($custodianNedId = $input.params('custodianNedId'))
+            #set($lastEvaluatedKey = $input.params('lastEvaluatedKey'))
+            {
+              "TableName": "${table_name}",
+              "IndexName": "custodianIndex",
+              "KeyConditionExpression": "CustodianNedId = :custodianNedId",
+              "FilterExpression": "attribute_not_exists(vdsDelete)",
+              "ExpressionAttributeValues": {
+                ":custodianNedId": { "S": "$custodianNedId" }
+              }
+            #if($lastEvaluatedKey != "")
+              , "ExclusiveStartKey": { "PropertyNumber": { "S": "$lastEvaluatedKey" }, "CustodianNedId": { "S": "$custodianNedId" } }
+            #end
+            }
+        responses:
+          2\d{2}:
+            statusCode: 200
+            responseTemplates:
+              application/json: |-
+                #set ($inputRoot = $input.path('$'))
+                #set ($lastEvaluatedKey = $inputRoot.LastEvaluatedKey.PropertyNumber.S)
+                {
+                  "count": $inputRoot.Count,
+                #if($lastEvaluatedKey != "")
+                  "lastEvaluatedKey": "$lastEvaluatedKey",
+                #end
+                  "items": [
+                  "count": $inputRoot.Count,
+                #if($lastEvaluatedKey != "")
+                  "lastEvaluatedKey": "$lastEvaluatedKey",
+                #end
+                  "items": [
+                #foreach($elem in $inputRoot.Items)
+                    {
+                      "PropertyNumber": "$elem.PropertyNumber.S",
+                      "Acquired": "$elem.Acquired.S",
+                      "Building": "$elem.Building.S",
+                      "CenterNumber": "$elem.CenterNumber.S",
+                      "Comment1": "$elem.Comment1.S",
+                      "Condition": "$elem.Condition.S",
+                      "ContractId": "$elem.ContractId.S",
+                      "CustodianEmployeeNumber": "$elem.CustodianEmployeeNumber.S",
+                      "CustodianFirstName": "$elem.CustodianFirstName.S",
+                      "CustodianLastName": "$elem.CustodianLastName.S",
+                      "CustodianNedId": "$elem.CustodianNedId.S",
+                      "Cost": "$elem.Cost.N",
+                      "Description": "$elem.Description.S",
+                      "Division": "$elem.Division.S",
+                      "InvoiceNumber": "$elem.InvoiceNumber.S",
+                      "Item": "$elem.Item.S",
+                      "Make": "$elem.Make.S",
+                      "Model": "$elem.Model.S",
+                      "POLineNumber": "$elem.POLineNumber.S",
+                      "PONumber": "$elem.PONumber.S",
+                      "PropertyOfficerEmployeeNumber": "$elem.PropertyOfficerEmployeeNumber.S",
+                      "PropertyOfficerFirstName": "$elem.PropertyOfficerFirstName.S",
+                      "PropertyOfficerLastName": "$elem.PropertyOfficerLastName.S",
+                      "PropertyOfficerNedId": "$elem.PropertyOfficerNedId.S",
+                      "PropertyType": "$elem.PropertyType.S",
+                      "Room": "$elem.Room.S",
+                      "SerialNumber": "$elem.SerialNumber.S",
+                      "Status": "$elem.Status.S",
+                      "WarrantyDate": "$elem.WarrantyDate.S",
+                      "WarrantyStatus": "$elem.WarrantyStatus.S"
+                    }#if($foreach.hasNext),#end
+
+                #end
+                  ]
+                }
+      security:
+        - request-authorizer: [ ]
+
 
 components:
   schemas:
