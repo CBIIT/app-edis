@@ -8,7 +8,7 @@ info:
     email: NCICBIITBizAppsSupportLowTier@mail.nih.gov
   license:
     name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
 x-amazon-apigateway-request-validators:
   all:
     validateRequestBody: true
@@ -118,14 +118,14 @@ paths:
                   ]
                 }
       security:
-        - request-authorizer: []
+        - request-authorizer: [ ]
 
   /fredpropsapi/v1/props/{propertyNumber}:
     get:
       tags:
         - clients
       summary: Return Frederick property using a property number
-      operationId: getFredPropbyNumberFromDdb
+      operationId: getFredPropertyNumberFromDdb
       description: |
         Get a Frederick property record by a property number from Dynamo DB
       parameters:
@@ -141,7 +141,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FredPropertyItem'
+                $ref: '#/components/schemas/FredProperty'
         '400':
           description: bad input parameter
       x-amazon-apigateway-integration:
@@ -202,7 +202,7 @@ paths:
                   }
                 #end
       security:
-        - request-authorizer: []
+        - request-authorizer: [ ]
 
 
   /fredpropsapi/v1/props/officer/{propertyOfficerNedId}:
@@ -212,7 +212,7 @@ paths:
       summary: List property records for a given Property Officer by their NED ID
       operationId: listFredPropertyByProjectOfficer
       description: |
-        Get Federick property records by the NED ID of a  Property Officer
+        Get Frederick property records by the NED ID of a  Property Officer
       parameters:
         - name: propertyOfficerNedId
           in: path
@@ -234,6 +234,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FredPropsChunk'
+          description: Property data element
       x-amazon-apigateway-integration:
         type: aws
         httpMethod: POST
@@ -278,11 +279,39 @@ paths:
                   "lastEvaluatedKey": "$lastEvaluatedKey",
                 #end
                   "items": [
-                     $util.render('FredPropertyItem', $inputRoot.items)
+                #foreach($elem in $inputRoot.Items)
+                    {
+                      "PropertyNumber": "$elem.PropertyNumber.S",
+                      "Acquired": "$elem.Acquired.S",
+                      "Building": "$elem.Building.S",
+                      "CenterNumber": "$elem.CenterNumber.S",
+                      "Comment1": "$elem.Comment1.S",
+                      "Condition": "$elem.Condition.S",
+                      "ContractId": "$elem.ContractId.S",
+                      "Cost": "$elem.Cost.N",
+                      "Description": "$elem.Description.S",
+                      "Division": "$elem.Division.S",
+                      "InvoiceNumber": "$elem.InvoiceNumber.S",
+                      "Item": "$elem.Item.S",
+                      "Make": "$elem.Make.S",
+                      "Model": "$elem.Model.S",
+                      "POLineNumber": "$elem.POLineNumber.S",
+                      "PONumber": "$elem.PONumber.S",
+                      "PropertyOfficerEmployeeNumber": "$elem.PropertyOfficerEmployeeNumber.S",
+                      "PropertyOfficerFirstName": "$elem.PropertyOfficerFirstName.S",
+                      "PropertyOfficerLastName": "$elem.PropertyOfficerLastName.S",
+                      "PropertyOfficerNedId": "$elem.PropertyOfficerNedId.S",
+                      "PropertyType": "$elem.PropertyType.S",
+                      "Room": "$elem.Room.S",
+                      "SerialNumber": "$elem.SerialNumber.S",
+                      "Status": "$elem.Status.S"
+                    }#if($foreach.hasNext),#end
+
+                #end
                   ]
                 }
       security:
-        - request-authorizer: []
+        - request-authorizer: [ ]
 
 components:
   schemas:
@@ -301,9 +330,9 @@ components:
         items:
             type: array
             items:
-              $ref: '#/components/schemas/FredPropertyItem'
+              $ref: '#/components/schemas/FredProperty'
 
-    FredPropertyItem:
+    FredProperty:
       type: object
       required:
         - PropertyNumber
@@ -330,6 +359,18 @@ components:
         Cost:
           type: string
           example: 3900
+        CustodianEmployeeNumber:
+          type: string
+          example: GVRG000001
+        CustodianFirstName:
+          type: string
+          example: Jane
+        CustodianLastName:
+          type: string
+          example: Smith
+        CustodianNedId:
+          type: string
+          example: 2004567890
         Description:
           type: string
           example: Computer
@@ -381,6 +422,13 @@ components:
         Status:
           type: string
           example: Active
+        WarrantyDate:
+          type: string
+          format: date-time
+          example: '2023-05-31T04:00:00.000Z'
+        WarrantyStatus:
+          type: string
+          example: EXPIRED
 
   securitySchemes:
     request-authorizer:
