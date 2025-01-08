@@ -120,7 +120,7 @@ paths:
       security:
         - request-authorizer: []
 
-  /fredpropsapi/v1/prop/byPropNum/{propertyNumber}:
+  /fredpropsapi/v1/props/{propertyNumber}:
     get:
       tags:
         - clients
@@ -201,6 +201,110 @@ paths:
                     "Status": "$elem.Status.S"
                   }
                 #end
+      security:
+        - request-authorizer: []
+
+
+  /fredpropsapi/v1/props/officer/{propertyOfficerNedId}:
+    get:
+      tags:
+        - clients
+      summary: List property records for a given Property Officer by their NED ID
+      operationId: listFredPropertyByProjectOfficer
+      description: |
+        Get Federick property records by the NED ID of a  Property Officer
+      parameters:
+        - name: propertyOfficerNedId
+          in: path
+          description: Property
+          required: true
+          schema:
+            type: string
+            example: '001896589'
+        - name: lastEvaluatedKey
+          in: query
+          description: Last Evaluated Key from previous request
+          required: false
+          schema:
+            type: string
+            example: '12345'
+      responses:
+        '200':
+          $ref: '#/components/schemas/FredPropsChunk'
+      x-amazon-apigateway-integration:
+        type: aws
+        httpMethod: POST
+        uri: ${ddb_action_query}
+        credentials: ${ddb_role_arn}
+        timeoutInMillis: 29000
+        passthroughBehavior: when_no_templates
+        cacheKeyParameters:
+          - method.request.path.propertyOfficerNedId
+          - method.request.querystring.lastEvaluatedKey
+        requestTemplates:
+          application/json: |-
+            #set($ic = $input.params('propertyOfficerNedId'))
+            #set($lastEvaluatedKey = $input.params('lastEvaluatedKey'))
+            {
+              "TableName": "${table_name}",
+              "IndexName": "officerIndex",
+              "KeyConditionExpression": "PropertyOfficerNedId = :propertyOfficerNedId",
+              "ExpressionAttributeValues": {
+                ":propertyOfficerNedId": { "S": "$propertyOfficerNedId" }
+              }
+            #if($lastEvaluatedKey != "")
+              , "ExclusiveStartKey": { "PropertyNumber": { "S": "$lastEvaluatedKey" }, "PropertyOfficerNedId": { "S": "$propertyOfficerNedId" } }
+            #end
+            }
+        responses:
+          2\d{2}:
+            statusCode: 200
+            responseTemplates:
+              application/json: |-
+                #set ($inputRoot = $input.path('$'))
+                #set ($lastEvaluatedKey = $inputRoot.LastEvaluatedKey.propertyOfficerNedId.S)
+                {
+                  "count": $inputRoot.Count,
+                #if($lastEvaluatedKey != "")
+                  "lastEvaluatedKey": "$lastEvaluatedKey",
+                #end
+                  "items": [
+                  "count": $inputRoot.Count,
+                #if($lastEvaluatedKey != "")
+                  "lastEvaluatedKey": "$lastEvaluatedKey",
+                #end
+                  "items": [
+                #foreach($elem in $inputRoot.Items)
+                    {
+                      "PropertyNumber": "$elem.PropertyNumber.S",
+                      "Acquired": "$elem.Acquired.S",
+                      "Building": "$elem.Building.S",
+                      "CenterNumber": "$elem.CenterNumber.S",
+                      "Comment1": "$elem.Comment1.S",
+                      "Condition": "$elem.Condition.S",
+                      "ContractId": "$elem.ContractId.S",
+                      "Cost": "$elem.Cost.N",
+                      "Description": "$elem.Description.S",
+                      "Division": "$elem.Division.S",
+                      "InvoiceNumber": "$elem.InvoiceNumber.S",
+                      "Item": "$elem.Item.S",
+                      "Make": "$elem.Make.S",
+                      "Model": "$elem.Model.S",
+                      "POLineNumber": "$elem.POLineNumber.S",
+                      "PONumber": "$elem.PONumber.S",
+                      "PropertyOfficerEmployeeNumber": "$elem.PropertyOfficerEmployeeNumber.S",
+                      "PropertyOfficerFirstName": "$elem.PropertyOfficerFirstName.S",
+                      "PropertyOfficerLastName": "$elem.PropertyOfficerLastName.S",
+                      "PropertyOfficerNedId": "$elem.PropertyOfficerNedId.S",
+                      "PropertyType": "$elem.PropertyType.S",
+                      "Room": "$elem.Room.S",
+                      "SerialNumber": "$elem.SerialNumber.S",
+                      "Status": "$elem.Status.S"
+                    }#if($foreach.hasNext),#end
+
+                #end
+                  ]
+                }
       security:
         - request-authorizer: []
 

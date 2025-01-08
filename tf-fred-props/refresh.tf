@@ -103,7 +103,7 @@ module "lambda-fred-props-sqs-delta-to-db" {
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
     TABLE     = module.ddb-fred-props.ddb-table-name
-    TABLE_KEY = "USER_ID"
+    TABLE_KEY = "PropertyNumber"
     SQS_URL     = "https://sqs.us-east-1.amazonaws.com/${data.aws_caller_identity._.account_id}/edis-fred-props-delta-queue-${var.env}"
     PURGE_DELETED = "true"
   })
