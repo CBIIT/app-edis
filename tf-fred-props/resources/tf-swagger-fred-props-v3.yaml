@@ -278,7 +278,7 @@ paths:
                   "lastEvaluatedKey": "$lastEvaluatedKey",
                 #end
                   "items": [
-                     $util.render('FredPropertyItem', $inputRoot.Items)
+                     $util.render('FredPropertyItem', $inputRoot.items)
                   ]
                 }
       security:
