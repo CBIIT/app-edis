@@ -119,7 +119,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_fred_props" {
         "FunctionName": "${module.lambda-fred-props-delta.arn}:$LATEST",
         "Payload": {
           "DB_NAME": "fred_props_db_${var.env}",
-          "S3SUBFOLDER": "fred_props",
+          "S3SUBFOLDER": "fred-props",
           "DB_CURRENT_T": "fred_props_current_t",
           "DB_PREV_T": "fred_props_prev_t"
         }
@@ -171,7 +171,7 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_fred_props" {
       "Parameters": {
         "FunctionName": "${module.lambda-prepare-s3-for-fred-props.arn}:$LATEST",
         "Payload": {
-          "src": "fred_props/current"
+          "src": "fred-props/current"
         }
       },
       "Retry": [
@@ -195,8 +195,8 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_fred_props" {
       "Parameters": {
         "FunctionName": "${module.lambda-prepare-s3-for-fred-props.arn}:$LATEST",
         "Payload": {
-          "src": "fred_props/prev",
-          "dst": "fred_props/current"
+          "src": "fred-props/prev",
+          "dst": "fred-props/current"
         }
       },
       "Retry": [
@@ -220,8 +220,8 @@ resource "aws_sfn_state_machine" "edis_sfn_refresh_fred_props" {
       "Parameters": {
         "FunctionName": "${module.lambda-prepare-s3-for-fred-props.arn}:$LATEST",
         "Payload": {
-          "src": "fred_props/prev_tmp",
-          "dst": "fred_props/prev"
+          "src": "fred-props/prev_tmp",
+          "dst": "fred-props/prev"
         }
       },
       "Retry": [
