@@ -230,7 +230,10 @@ paths:
             example: '12345'
       responses:
         '200':
-          $ref: '#/components/schemas/FredPropsChunk'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FredPropsChunk'
       x-amazon-apigateway-integration:
         type: aws
         httpMethod: POST
