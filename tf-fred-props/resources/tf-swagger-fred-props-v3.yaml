@@ -87,7 +87,6 @@ paths:
                   "items": [
                 #foreach($elem in $inputRoot.Items)
                     {
-                
                       "PropertyNumber": "$elem.PropertyNumber.S",
                       "Acquired": "$elem.Acquired.S",
                       "Building": "$elem.Building.S",
@@ -95,6 +94,10 @@ paths:
                       "Comment1": "$elem.Comment1.S",
                       "Condition": "$elem.Condition.S",
                       "ContractId": "$elem.ContractId.S",
+                      "CustodianEmployeeNumber": "$elem.CustodianEmployeeNumber.S",
+                      "CustodianFirstName": "$elem.CustodianFirstName.S",
+                      "CustodianLastName": "$elem.CustodianLastName.S",
+                      "CustodianNedId": "$elem.CustodianNedId.S",
                       "Cost": "$elem.Cost.N",
                       "Description": "$elem.Description.S",
                       "Division": "$elem.Division.S",
@@ -112,6 +115,8 @@ paths:
                       "Room": "$elem.Room.S",
                       "SerialNumber": "$elem.SerialNumber.S",
                       "Status": "$elem.Status.S"
+                      "WarrantyDate": "$elem.WarrantyDate.S",
+                      "WarrantyStatus": "$elem.WarrantyStatus.S"
                     }#if($foreach.hasNext),#end
 
                 #end
@@ -175,30 +180,36 @@ paths:
                   }
                 #else
                   {
-                    "PropertyNumber": "$elem.PropertyNumber.S",
-                    "Acquired": "$elem.Acquired.S",
-                    "Building": "$elem.Building.S",
-                    "CenterNumber": "$elem.CenterNumber.S",
-                    "Comment1": "$elem.Comment1.S",
-                    "Condition": "$elem.Condition.S",
-                    "ContractId": "$elem.ContractId.S",
-                    "Cost": "$elem.Cost.N",
-                    "Description": "$elem.Description.S",
-                    "Division": "$elem.Division.S",
-                    "InvoiceNumber": "$elem.InvoiceNumber.S",
-                    "Item": "$elem.Item.S",
-                    "Make": "$elem.Make.S",
-                    "Model": "$elem.Model.S",
-                    "POLineNumber": "$elem.POLineNumber.S",
-                    "PONumber": "$elem.PONumber.S",
-                    "PropertyOfficerEmployeeNumber": "$elem.PropertyOfficerEmployeeNumber.S",
-                    "PropertyOfficerFirstName": "$elem.PropertyOfficerFirstName.S",
-                    "PropertyOfficerLastName": "$elem.PropertyOfficerLastName.S",
-                    "PropertyOfficerNedId": "$elem.PropertyOfficerNedId.S",
-                    "PropertyType": "$elem.PropertyType.S",
-                    "Room": "$elem.Room.S",
-                    "SerialNumber": "$elem.SerialNumber.S",
-                    "Status": "$elem.Status.S"
+                      "PropertyNumber": "$elem.PropertyNumber.S",
+                      "Acquired": "$elem.Acquired.S",
+                      "Building": "$elem.Building.S",
+                      "CenterNumber": "$elem.CenterNumber.S",
+                      "Comment1": "$elem.Comment1.S",
+                      "Condition": "$elem.Condition.S",
+                      "ContractId": "$elem.ContractId.S",
+                      "CustodianEmployeeNumber": "$elem.CustodianEmployeeNumber.S",
+                      "CustodianFirstName": "$elem.CustodianFirstName.S",
+                      "CustodianLastName": "$elem.CustodianLastName.S",
+                      "CustodianNedId": "$elem.CustodianNedId.S",
+                      "Cost": "$elem.Cost.N",
+                      "Description": "$elem.Description.S",
+                      "Division": "$elem.Division.S",
+                      "InvoiceNumber": "$elem.InvoiceNumber.S",
+                      "Item": "$elem.Item.S",
+                      "Make": "$elem.Make.S",
+                      "Model": "$elem.Model.S",
+                      "POLineNumber": "$elem.POLineNumber.S",
+                      "PONumber": "$elem.PONumber.S",
+                      "PropertyOfficerEmployeeNumber": "$elem.PropertyOfficerEmployeeNumber.S",
+                      "PropertyOfficerFirstName": "$elem.PropertyOfficerFirstName.S",
+                      "PropertyOfficerLastName": "$elem.PropertyOfficerLastName.S",
+                      "PropertyOfficerNedId": "$elem.PropertyOfficerNedId.S",
+                      "PropertyType": "$elem.PropertyType.S",
+                      "Room": "$elem.Room.S",
+                      "SerialNumber": "$elem.SerialNumber.S",
+                      "Status": "$elem.Status.S"
+                      "WarrantyDate": "$elem.WarrantyDate.S",
+                      "WarrantyStatus": "$elem.WarrantyStatus.S"
                   }
                 #end
       security:
@@ -288,6 +299,10 @@ paths:
                       "Comment1": "$elem.Comment1.S",
                       "Condition": "$elem.Condition.S",
                       "ContractId": "$elem.ContractId.S",
+                      "CustodianEmployeeNumber": "$elem.CustodianEmployeeNumber.S",
+                      "CustodianFirstName": "$elem.CustodianFirstName.S",
+                      "CustodianLastName": "$elem.CustodianLastName.S",
+                      "CustodianNedId": "$elem.CustodianNedId.S",
                       "Cost": "$elem.Cost.N",
                       "Description": "$elem.Description.S",
                       "Division": "$elem.Division.S",
@@ -305,6 +320,8 @@ paths:
                       "Room": "$elem.Room.S",
                       "SerialNumber": "$elem.SerialNumber.S",
                       "Status": "$elem.Status.S"
+                      "WarrantyDate": "$elem.WarrantyDate.S",
+                      "WarrantyStatus": "$elem.WarrantyStatus.S"
                     }#if($foreach.hasNext),#end
 
                 #end
