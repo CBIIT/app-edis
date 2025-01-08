@@ -18,7 +18,7 @@ module "lambda-load-from-fred-props" {
     LOG_LEVEL = "info"
     PARAMETER_PATH = "/${var.env}/app/eadis/fred/"
     S3BUCKET  = var.s3bucket-for-fred-props
-    S3FOLDER  = "app-edis-data-${var.env}/fred_props/current"
+    S3FOLDER  = "app-edis-data-${var.env}/fred-props/current"
     S3FILE  = "storage.parquet"
   })
   lambda-managed-policies        = { for idx, val in local.lambda_load_from_fred_props_role_policies: idx => val }
