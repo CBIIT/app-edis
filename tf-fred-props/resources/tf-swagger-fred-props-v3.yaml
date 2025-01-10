@@ -285,11 +285,6 @@ paths:
                   "lastEvaluatedKey": "$lastEvaluatedKey",
                 #end
                   "items": [
-                  "count": $inputRoot.Count,
-                #if($lastEvaluatedKey != "")
-                  "lastEvaluatedKey": "$lastEvaluatedKey",
-                #end
-                  "items": [
                 #foreach($elem in $inputRoot.Items)
                     {
                       "PropertyNumber": "$elem.PropertyNumber.S",
@@ -394,11 +389,6 @@ paths:
                 #set ($inputRoot = $input.path('$'))
                 #set ($lastEvaluatedKey = $inputRoot.LastEvaluatedKey.PropertyNumber.S)
                 {
-                  "count": $inputRoot.Count,
-                #if($lastEvaluatedKey != "")
-                  "lastEvaluatedKey": "$lastEvaluatedKey",
-                #end
-                  "items": [
                   "count": $inputRoot.Count,
                 #if($lastEvaluatedKey != "")
                   "lastEvaluatedKey": "$lastEvaluatedKey",
