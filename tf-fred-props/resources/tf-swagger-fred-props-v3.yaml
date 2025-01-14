@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  description: Enterprise Data & Integration Services Web Services - **Frederick Properties Service**
+  description: Enterprise Adminstrative Data & Integration Services (EADIS) Web Services - **Frederick Properties Service**
   version: "1.0.0"
   title: Frederick Properties API
   # put the contact info for your development or API team
@@ -31,12 +31,12 @@ paths:
       tags:
         - clients
       summary: Return all Frederick properties
-      operationId: getFredPropsFromDdb
+      operationId: getAllFredProps
       description: |
         Return all Frederick properties  
-        You have to check the result for existence of LastEvaluatedKey property and  
-        loop your request passing it's value (```?lastEvaluatedKey=xxx```) as query parameter  
-        until the final result does not contain LastEvaluatedKey property
+        To handle pagination, check if the LastEvaluatedKey property exists in the result. If it is present, make additional 
+        requests by passing its value as a query parameter (e.g., ?lastEvaluatedKey=xxx). Continue this process until the 
+        final result no longer contains the LastEvaluatedKey property.
       parameters:
         - name: lastEvaluatedKey
           in: query
@@ -130,9 +130,9 @@ paths:
       tags:
         - clients
       summary: Return Frederick property using a property number
-      operationId: getFredPropertyNumberFromDdb
+      operationId: getByFredPropertyNumber
       description: |
-        Get a Frederick property record by a property number from Dynamo DB
+        Get a Frederick property record by a property number
       parameters:
         - name: propertyNumber
           in: path
@@ -221,7 +221,7 @@ paths:
       tags:
         - clients
       summary: List property records for a given Property Officer by their NED ID
-      operationId: listFredPropertyByProjectOfficer
+      operationId: listFredPropertyByProjectOfficerNedId
       description: |
         Get Frederick property records by the NED ID of a  Property Officer
       parameters:
@@ -330,7 +330,7 @@ paths:
       tags:
         - clients
       summary: List property records for a given Custodian by their NED ID
-      operationId: listFredPropertyByCustodian
+      operationId: listFredPropertyByCustodianNedId
       description: |
         Get Frederick property records by the NED ID of a Custodian
       parameters:
