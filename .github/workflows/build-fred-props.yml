@@ -1,0 +1,104 @@
+# Workflow to build artifacts for EADIS API
+
+name: 5.1 - Fred Properties - Build
+run-name: 5.1 - Fred Properties - Build- ${{ github.run_id }}
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      host-runner:
+        description: 'Selected self hosted (nci-self-hosted) of github hosted () runner'
+        required: true
+        type: string
+        default: 'ubuntu-latest'
+
+  workflow_call: 
+    inputs:
+      host-runner:
+        description: 'Selected self hosted (nci-self-hosted) of github hosted () runner'
+        required: true
+        type: string
+        default: 'ubuntu-latest'
+
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ${{ inputs.host-runner }}
+    
+    permissions:
+      packages: write
+      id-token: write
+      contents: write
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Repository Checkout
+        uses: actions/checkout@v4
+        with: 
+          repository: CBIIT/app-edis
+
+      - name: setup node 16
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16.20.2
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@cbiit'
+
+      - name: build lambda-auth
+        working-directory: lambda-auth
+        run: |
+          npm run build-prod
+          npm run zip-prod
+          ls -la out
+
+      - name: build lambda-prepare-s3-for-fred-props
+        working-directory: lambda-prepare-s3-for-vds
+        run: |
+          npm run build-prod
+          npm run zip-prod
+          ls -la out
+
+      - name: build lambda-load-from-fred-props
+        working-directory: lambda-load-from-fred-props
+        run: |
+          npm run build-prod
+          npm run zip-prod
+          ls -la out
+
+      - name: build lambda-vds-users-delta
+        working-directory: lambda-vds-users-delta
+        run: |
+          npm run build-prod
+          npm run zip-prod
+          ls -la out
+
+      - name: build lambda-delta-to-sqs
+        working-directory: lambda-delta-to-sqs
+        run: |
+          npm run build-prod
+          npm run zip-prod
+          ls -la out
+
+      - name: build lambda-sqs-batch-to-db
+        working-directory: lambda-sqs-batch-to-db
+        run: |
+          npm run build-prod
+          npm run zip-prod
+          ls -la out
+
+      #Store the created zip files as artifacts
+      - name: store-artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-artifacts
+          path: |
+            lambda-auth/out/*.zip
+            lambda-prepare-s3-for-vds/out/*.zip
+            lambda-load-from-fred-props/out/*.zip
+            lambda-vds-users-delta/out/*.zip
+            lambda-delta-to-sqs/out/*.zip
+            lambda-sqs-batch-to-db/out/*.zip
