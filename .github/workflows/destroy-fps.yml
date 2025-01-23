@@ -1,0 +1,99 @@
+# This is a basic workflow to help you get started with Actions
+
+name: 4.3 - FPS - Destroy
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      envt:
+        description: 'Environment'
+        required: true
+        default: dev
+      tier:
+        description: 'Deployment tier'
+        required: true
+      build_id:
+        description: 'FPS Build Run ID'
+        required: true
+        type: string
+      s3bucket:
+        description: 'S3 bucket to use for deployment'
+        required: true
+        default: cf-templates-woyzwinjenjf-us-east-1
+      subnet1:
+        description: 'VPC Subnet 1 id'
+        required: true
+      subnet2:
+        description: 'VPC Subnet 2 id'
+        required: true
+      vpcsg:
+        description: 'VPC Security Group id'
+        required: true
+      host-runner:
+        type: string
+        required: false
+        description: 'Selected self hosted (nci-self-hosted) of github hosted () runner'
+        default: 'ubuntu-latest'
+
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: ${{ inputs.host-runner }}
+    
+    environment: ${{ inputs.envt }}
+
+
+    permissions:
+      packages: write
+      id-token: write
+      contents: write
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Repository Checkout
+        uses: actions/checkout@v4
+
+      # Runs a set of commands using the runners shell
+      - name: Workflow Parameters
+        run: |
+          echo Environment - ${{ inputs.envt }}
+          echo Deployment Tier - ${{ inputs.tier }}
+          echo Build Run Id - ${{ inputs.build_id }}
+          echo S3 Bucket - ${{ inputs.s3bucket }}
+          echo Subnet 1 - ${{ inputs.subnet1 }}
+          echo Subnet 2 - ${{ inputs.subnet2 }}
+          echo Security Group - ${{ inputs.vpcsg }}
+
+      - name: Download built Lambda functions into built-artifacts folder
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow_conclusion: success
+          run_id: ${{ inputs.build_id }}
+          github_token: ${{ secrets.PUBLISH_TOKEN }}
+
+      - name: Setup AWS configuration
+        env:
+          OIDC_ROLE: ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
+        if: "${{ env.OIDC_ROLE != '' }}"
+        uses: aws-actions/configure-aws-credentials@master
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_PROVIDER_ROLE }}
+          role-session-name: TestSessionWithOIDC
+          aws-region: us-east-1
+
+      - name: Get Oracle Lambda Layer ARN
+        id: dblayer
+        run: echo "name=$(aws lambda list-layer-versions --layer-name edis-oracle-db-layer --region us-east-1 --query 'LayerVersions[0].LayerVersionArn' | sed -e 's/^"//' -e 's/"$//')" >> $GITHUB_OUTPUT
+        
+      - name: Init Terraform
+        id: initFps
+        run: terraform init -backend-config="bucket=${{ inputs.s3bucket }}" -backend-config="key=api-edis-tf-state/fps-${{ inputs.tier }}" -backend-config="region=us-east-1"
+        working-directory: tf-fps/
+
+      - name: Terraform Deployment
+        id: apply
+        run: terraform destroy -auto-approve -input=false -lock=false -var 'env=${{ inputs.tier }}' -var 'subnet1=${{ inputs.subnet1 }}' -var 'subnet2=${{ inputs.subnet2 }}' -var 'vpcsg=${{ inputs.vpcsg }}' -var 'oracle-db-layer-arn=${{ steps.dblayer.outputs.name }}' -var 'email= '
+        working-directory: tf-fps/
