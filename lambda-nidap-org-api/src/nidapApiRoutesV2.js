@@ -33,7 +33,7 @@ function nidapApiRoutesV2(app, opts) {
 
 async function listAllData(dataType, lastEvaluatedKey) {
     console.debug(`List All ${dataType} from NIDAP`);
-    confData = conf.nidap[dataType];
+    confData = conf.nidap.api[dataType];
     if ('undefined' === typeof confData) {
         throw new Error('The object type ' + dataType + ' is not configured')
     }
@@ -64,7 +64,7 @@ async function listAllData(dataType, lastEvaluatedKey) {
 
 async function searchDataByPrimaryKey(dataType, primaryKey) {
     console.debug(`Search ${dataType} from NIDAP by ${primaryKey}`);
-    confData = conf.nidap[dataType];
+    confData = conf.nidap.api[dataType];
     if ('undefined' === typeof confData) {
         throw new Error('The object type ' + dataType + ' is not configured')
     }
