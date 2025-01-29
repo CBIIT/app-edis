@@ -169,7 +169,8 @@ const conf = {
             excludedAttributes: [],
             includedAttributes: [
                 'NEDID',
-                'BADGESTATUS'
+                'BADGESTATUS',
+                'NIHIDBADGEREQDATE'
             ],
             searchBase: 'ou=users,ou=nvision,ou=NIHViews',
             base64LdapFields: []
