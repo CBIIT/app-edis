@@ -1,6 +1,7 @@
 # Workflow to build artifacts for userinfo API
 
 name: 1.1 - eRACommons - Build
+run-name: 1.1 - eRACommons - Build - ${{ github.run_id }}
 
 # Controls when the workflow will run
 on:
