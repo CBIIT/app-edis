@@ -43,10 +43,10 @@ jobs:
 
       - name: Workflow Inputs
         run: |
-          echo ${{ github.event.client_payload.body }}
+          printf "${{ join(inputs.*, '\n') }}"
 
       - name: download pre-built resources by run id
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v8
         with:
           workflow_conclusion: success
           run_id: ${{ inputs.build_id }}
