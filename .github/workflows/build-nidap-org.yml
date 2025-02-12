@@ -1,6 +1,7 @@
 # Workflow to build artifacts for organizations API using NIDAP as a source
 
 name: 3.1 - Organizations(NIDAP) - Build
+run-name: 3.1 - Organizations(NIDAP) - Build - ${{ github.run_id }}
 
 # Controls when the workflow will run
 on:

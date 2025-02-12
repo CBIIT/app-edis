@@ -1,6 +1,7 @@
 # Workflow to build artifacts for userinfo API
 
 name: 2.1 - UserInfo - Build
+run-name: 2.1 - UserInfo - Build - ${{ github.run_id }}
 
 # Controls when the workflow will run
 on:
