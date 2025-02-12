@@ -46,7 +46,7 @@ jobs:
           printf "${{ join(inputs.*, '\n') }}"
 
       - name: download pre-built resources by run id
-        uses: dawidd6/action-download-artifact@latest
+        uses: dawidd6/action-download-artifact@v8
         with:
           workflow_conclusion: success
           run_id: ${{ inputs.build_id }}
