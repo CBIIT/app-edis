@@ -53,7 +53,8 @@ async function listAllData(dataType, lastEvaluatedKey) {
         }
     });
     const items = [];
-    const propertiesMap = (confData['propertiesMap']) ? JSON.parse(confData['propertiesMap']) : null;
+    let propertiesMap = convertPropertiesToMap(confData['propertiesMap']);
+    console.info(propertiesMap);
     resp.data.data.forEach((r) => {
         items.push(migrateProperties(r, propertiesMap));
     });
@@ -79,12 +80,25 @@ async function searchDataByPrimaryKey(dataType, primaryKey) {
             'Authorization': auth
         }
     });
-    const propertiesMap = (confData['propertiesMap']) ? JSON.parse(confData['propertiesMap']) : null;
+    let propertiesMap = convertPropertiesToMap(confData['propertiesMap']);
     return migrateProperties(resp.data, propertiesMap);
 }
 
+// Convert comma separated key=value string to map
+function convertPropertiesToMap(sMap) {
+    if (sMap === undefined || sMap === null) {
+        return null;
+    }
+    let map = {};
+    sMap.split(",").forEach(function(keyValue) {
+       let pair = keyValue.split("=");
+       map[pair[0]] = pair[1];
+    });
+    return map;
+}
+
 function migrateProperties(r, map) {
-    if (map === null) {
+    if (map === undefined || map === null) {
         return r;
     }
     const ret = {};
