@@ -1,6 +1,7 @@
 # Workflow to build artifacts for userinfo API
 
 name: 1.1 - eRACommons - Build
+run-name: 1.1 - eRACommons - Build - ${{ github.run_id }}
 
 # Controls when the workflow will run
 on:
@@ -98,7 +99,7 @@ jobs:
 
       #Store the created zip files as artifacts
       - name: store-artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: built-artifacts
           path: |
