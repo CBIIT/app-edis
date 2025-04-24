@@ -32,7 +32,7 @@ async function getConfigurationParameters() {
 }
 
 app.register(orgRoutes, { prefix: '/orgapi/nidap/v1'});
-app.register(nidapApiRoutesV2, { prefix: '/dataapi/nidap/v2'});
+app.register(nidapApiRoutesV2, { prefix: '/dataapi/v2'});
 console.debug('The application has been registered');
 
 let configuration;

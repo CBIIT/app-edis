@@ -148,7 +148,7 @@ paths:
       security:
         - request-authorizer: []
 
-  /dataapi/nidap/v2/{objectType}:
+  /dataapi/v2/{objectType}:
     get:
       tags:
         - clients
@@ -192,7 +192,7 @@ paths:
       security:
         - request-authorizer: []
 
-  /dataapi/nidap/v2/{objectType}/{primary}:
+  /dataapi/v2/{objectType}/{primary}:
     get:
       tags:
         - clients
