@@ -54,7 +54,7 @@ async function listAllData(dataType, lastEvaluatedKey) {
     });
     const items = [];
     let propertiesMap = convertPropertiesToMap(confData['propertiesMap']);
-    console.info(propertiesMap);
+    console.debug(propertiesMap);
     resp.data.data.forEach((r) => {
         items.push(migrateProperties(r, propertiesMap));
     });
