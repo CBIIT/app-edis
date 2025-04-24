@@ -1,29 +1,25 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Remote Repo - Test
+name: _Test Download artifacts
 
 # Controls when the workflow will run
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
+      envt:
+        description: 'Environment'
+        required: true
+        default: dev
+      build_id:
+        description: 'Build Run ID'
+        required: true
+        type: string
       host-runner:
         description: 'Selected self hosted (nci-self-hosted) of github hosted () runner'
         required: true
         type: string
         default: 'ubuntu-latest'
-      run_id:
-        description: 'Run ID'
-        required: false
-        type: string
-        default: ''
-      run_number:
-        description: 'Run Number'
-        required: false
-        type: string
-        default: ''
-        
-
 
 jobs:
   # This workflow contains a single job called "build"
@@ -31,6 +27,8 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ${{ inputs.host-runner }}
     
+    environment: ${{ inputs.envt }}
+
     permissions:
       packages: write
       id-token: write
@@ -39,32 +37,20 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
 
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#      - name: Repository Checkout
+#        uses: actions/checkout@v4
+
+      - name: Workflow Inputs
+        run: |
+          printf "${{ join(inputs.*, '\n') }}"
+
       - name: download pre-built resources by run id
-        uses: dawidd6/action-download-artifact@v2
-        if: (inputs.run_id != '')
+        uses: dawidd6/action-download-artifact@v8
         with:
           workflow_conclusion: success
-          repo: CBIIT/app-edis
-          run_id: ${{ inputs.run_id }}
-          
-      - name: download pre-built resources by build number
-        uses: dawidd6/action-download-artifact@v2
-        if: (inputs.run_number != '')
-        with:
-          workflow_conclusion: success
-          repo: CBIIT/app-edis
-          workflow: build-remote-test.yml
-          run_number: ${{ inputs.run_number }}
-          
-      - name: download pre-built resources
-        if: (inputs.run_number == '') && (inputs.run_id == '')
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          workflow: build-remote-test.yml
-          workflow_conclusion: success
-          repo: CBIIT/app-edis
-          run_number: 4
-          name: generate-ts-swagger
+          run_id: ${{ inputs.build_id }}
+          github_token: ${{ secrets.PUBLISH_TOKEN }}
 
       - name: Display artifacts
         run: ls -R

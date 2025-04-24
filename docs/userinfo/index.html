@@ -692,6 +692,21 @@
             defs["inline_response_200"] = {
   "type" : "object",
   "properties" : {
+    "NUMBER_OF_RECORDS" : {
+      "type" : "integer",
+      "description" : "number of NED Changes records in response"
+    },
+    "NED_CHANGES_RECORD" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/NEDChangeRecord"
+      }
+    }
+  }
+};
+            defs["inline_response_200_1"] = {
+  "type" : "object",
+  "properties" : {
     "NumberOfRecords" : {
       "type" : "integer",
       "description" : "number of VDS User objects in response"
@@ -708,19 +723,23 @@
     "wrapped" : true
   }
 };
-            defs["inline_response_200_1"] = {
+            defs["inline_response_200_2"] = {
   "type" : "object",
   "properties" : {
-    "NUMBER_OF_RECORDS" : {
+    "NumberOfRecords" : {
       "type" : "integer",
-      "description" : "number of NED Changes records in response"
+      "description" : "number of nVision Properties objects in response"
     },
-    "NED_CHANGES_RECORD" : {
+    "Property" : {
       "type" : "array",
       "items" : {
-        "$ref" : "#/components/schemas/NEDChangeRecord"
+        "$ref" : "#/components/schemas/nVProperty"
       }
     }
+  },
+  "xml" : {
+    "name" : "nvprop",
+    "wrapped" : true
   }
 };
             defs["NEDChangeRecord"] = {
@@ -748,6 +767,209 @@
       "type" : "string"
     },
     "GIVENNAME" : {
+      "type" : "string"
+    }
+  }
+};
+            defs["nVProperty"] = {
+  "type" : "object",
+  "properties" : {
+    "PRIMARY_CONTACT_FULL_NM" : {
+      "type" : "string",
+      "example" : "SMITH, JOHN ANDREW"
+    },
+    "LOCATION_FULL_STR" : {
+      "type" : "string",
+      "example" : "CAMPUS /BUILDING 10 - CLINICAL CENTER /6A10"
+    },
+    "SUPERVISOR_FULL_NAME" : {
+      "type" : "string",
+      "example" : "LAST, FIST"
+    },
+    "PATIENT_CARE_FLG" : {
+      "type" : "string",
+      "example" : "Y"
+    },
+    "PRIMARY_CONTACT_LOCATION" : {
+      "type" : "string",
+      "example" : "9609 MEDICAL CENTER, ADDRESS"
+    },
+    "ACCTBLE_USER_FULL_LOCATION" : {
+      "type" : "string"
+    },
+    "SUPERVISOR_FULL_LOCATION" : {
+      "type" : "string"
+    },
+    "OFFICIAL_NM" : {
+      "type" : "string"
+    },
+    "WRKF_KEY" : {
+      "type" : "string"
+    },
+    "SUPERVISOR_WRKF_KEY" : {
+      "type" : "string"
+    },
+    "CURRENT_FLG" : {
+      "type" : "string"
+    },
+    "ASSET_VALUE_KEY" : {
+      "type" : "string"
+    },
+    "ASSET_KEY" : {
+      "type" : "string"
+    },
+    "INTEREST_ASSET_KEY" : {
+      "type" : "string"
+    },
+    "INITIAL_EVENT_KEY" : {
+      "type" : "string"
+    },
+    "EVENT_KEY" : {
+      "type" : "string"
+    },
+    "ACTIVITY_STATUS_DESC" : {
+      "type" : "string"
+    },
+    "ASSET_TYP_CD" : {
+      "type" : "string"
+    },
+    "IC_CD" : {
+      "type" : "string"
+    },
+    "ORG_CD" : {
+      "type" : "string"
+    },
+    "MANUFACTURER_NM" : {
+      "type" : "string"
+    },
+    "MODEL_NBR" : {
+      "type" : "string"
+    },
+    "SERIAL_NBR" : {
+      "type" : "string"
+    },
+    "FULL_NAME" : {
+      "type" : "string"
+    },
+    "CURR_NED_ID" : {
+      "type" : "string"
+    },
+    "ORIG_NED_ID" : {
+      "type" : "string"
+    },
+    "PO_NBR" : {
+      "type" : "string"
+    },
+    "ACQUISITION_DT" : {
+      "type" : "string"
+    },
+    "LAST_INVENTORY_DT" : {
+      "type" : "string"
+    },
+    "SENSITIVE_FLG" : {
+      "type" : "string"
+    },
+    "ASSET_TYP_DESC" : {
+      "type" : "string"
+    },
+    "ACQUISITION_COST" : {
+      "type" : "string"
+    },
+    "AGRMNT_ID" : {
+      "type" : "string"
+    },
+    "LAST_INVENTORY_RESOLUTION" : {
+      "type" : "string"
+    },
+    "UNCAPITALIZED_REASON_CD" : {
+      "type" : "string"
+    },
+    "UNCAPITALIZED_REASON_DESC" : {
+      "type" : "string"
+    },
+    "CONDITION_DESC" : {
+      "type" : "string"
+    },
+    "EVENT_DT" : {
+      "type" : "string"
+    },
+    "EVENT_TYP_DESC" : {
+      "type" : "string"
+    },
+    "PERSONAL_CUSTODY_FLG" : {
+      "type" : "string"
+    },
+    "SERVICE_LIFE" : {
+      "type" : "string"
+    },
+    "ASSET_DECAL_NBR" : {
+      "type" : "string"
+    },
+    "CAPITAL_FLG" : {
+      "type" : "string"
+    },
+    "APPROPRIATION_CD" : {
+      "type" : "string"
+    },
+    "ACCUMULATED_DEPRECIATION" : {
+      "type" : "string"
+    },
+    "MONTHLY_DEPRECIATION" : {
+      "type" : "string"
+    },
+    "YTD_DEPRECIATION" : {
+      "type" : "string"
+    },
+    "ASSET_VALUE" : {
+      "type" : "string"
+    },
+    "OTHER_USER" : {
+      "type" : "string"
+    },
+    "OLD_ASSET_ID" : {
+      "type" : "string"
+    },
+    "RESPONSIBILITY_BEGIN_DT" : {
+      "type" : "string"
+    },
+    "NON_STANDARD_DESC" : {
+      "type" : "string"
+    },
+    "WARRANTY_EXPIRATION_DT" : {
+      "type" : "string"
+    },
+    "LOCATION_OFFSITE_DESC" : {
+      "type" : "string",
+      "description" : "choices are null, GENERAL OFF SITE FOR HVS, OFFSITE, HOME USE, OFF SITE LOCATION"
+    },
+    "LOCATION_ADDRESS_LINE_1" : {
+      "type" : "string"
+    },
+    "LOCATION_ADDRESS_LINE_2" : {
+      "type" : "string"
+    },
+    "LOCATION_ADDRESS_LINE_3" : {
+      "type" : "string"
+    },
+    "LOCATION_CITY_NM" : {
+      "type" : "string"
+    },
+    "LOCATION_STATE_CD" : {
+      "type" : "string"
+    },
+    "LOCATION_STATE_NM" : {
+      "type" : "string"
+    },
+    "LOCATION_COUNTRY_NM" : {
+      "type" : "string"
+    },
+    "LOCATION_COUNTY_NM" : {
+      "type" : "string"
+    },
+    "LOCATION_POSTAL_CD" : {
+      "type" : "string"
+    },
+    "FLAG_1" : {
       "type" : "string"
     }
   }
@@ -861,6 +1083,14 @@
     "NIHBADGETITLE" : {
       "type" : "string",
       "example" : "Physician"
+    },
+    "BADGESTATUS" : {
+      "type" : "string",
+      "example" : "Deactivated"
+    },
+    "NIHIDBADGEREQDATE" : {
+      "type" : "string",
+      "example" : "2026-01-12T00:00:00.000Z"
     },
     "NIHIDBADGEEXPDATE" : {
       "type" : "string",
@@ -1012,6 +1242,16 @@
     "userAccountControl" : {
       "type" : "string",
       "example" : "123"
+    },
+    "providedEmail" : {
+      "type" : "string",
+      "description" : "Email calculated based on three fields (by priority) - proxyAddresses, MAIL, NIHPRIMARYSMTP",
+      "example" : "smithj@mail.gov"
+    },
+    "DOC" : {
+      "type" : "string",
+      "description" : "Calculated DOC value based on NIHSAC and NIHORGPATH",
+      "example" : "CBIIT"
     }
   }
 };
@@ -1059,6 +1299,12 @@
                     </li>
                     <li data-group="Clients" data-name="getVDSUserByNIHId" class="">
                       <a href="#api-Clients-getVDSUserByNIHId">getVDSUserByNIHId</a>
+                    </li>
+                    <li data-group="Clients" data-name="listNVProperties" class="">
+                      <a href="#api-Clients-listNVProperties">listNVProperties</a>
+                    </li>
+                    <li data-group="Clients" data-name="listNVPropertiesByUserId" class="">
+                      <a href="#api-Clients-listNVPropertiesByUserId">listNVPropertiesByUserId</a>
                     </li>
                     <li data-group="Clients" data-name="listVDSUsersByIC" class="">
                       <a href="#api-Clients-listVDSUsersByIC">listVDSUsersByIC</a>
@@ -1118,6 +1364,7 @@
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Clients-getNEDChangesByIC-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Authorization: [[apiKey]]"\
 -H "Accept: application/json"\
 "//userapi/ned/changesByIc/{ic}?From_Date=&From_Time=&To_Date=&To_Time="</code></pre>
                           </div>
@@ -1133,7 +1380,14 @@ import java.util.*;
 public class ClientsApiExample {
 
     public static void main(String[] args) {
-        
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+        // Configure API key authorization: request-authorizer
+        ApiKeyAuth request-authorizer = (ApiKeyAuth) defaultClient.getAuthentication("request-authorizer");
+        request-authorizer.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //request-authorizer.setApiKeyPrefix("Token");
+
         ClientsApi apiInstance = new ClientsApi();
         String ic = ic_example; // String | IC
         String fromDate = fromDate_example; // String | 
@@ -1141,7 +1395,7 @@ public class ClientsApiExample {
         String toDate = toDate_example; // String | 
         String toTime = toTime_example; // String | 
         try {
-            inline_response_200_1 result = apiInstance.getNEDChangesByIC(ic, fromDate, fromTime, toDate, toTime);
+            inline_response_200 result = apiInstance.getNEDChangesByIC(ic, fromDate, fromTime, toDate, toTime);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ClientsApi#getNEDChangesByIC");
@@ -1164,7 +1418,7 @@ public class ClientsApiExample {
         String toDate = toDate_example; // String | 
         String toTime = toTime_example; // String | 
         try {
-            inline_response_200_1 result = apiInstance.getNEDChangesByIC(ic, fromDate, fromTime, toDate, toTime);
+            inline_response_200 result = apiInstance.getNEDChangesByIC(ic, fromDate, fromTime, toDate, toTime);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ClientsApi#getNEDChangesByIC");
@@ -1178,7 +1432,12 @@ public class ClientsApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *ic = ic_example; // IC
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+// Configure API key authorization: (authentication scheme: request-authorizer)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+String *ic = ic_example; // IC
 String *fromDate = fromDate_example; //  (optional)
 String *fromTime = fromTime_example; //  (optional)
 String *toDate = toDate_example; //  (optional)
@@ -1192,7 +1451,7 @@ ClientsApi *apiInstance = [[ClientsApi alloc] init];
     fromTime:fromTime
     toDate:toDate
     toTime:toTime
-              completionHandler: ^(inline_response_200_1 output, NSError* error) {
+              completionHandler: ^(inline_response_200 output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -1205,6 +1464,13 @@ ClientsApi *apiInstance = [[ClientsApi alloc] init];
 
                             <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var UserRestWebServiceApi = require('user_rest_web_service_api');
+var defaultClient = UserRestWebServiceApi.ApiClient.instance;
+
+// Configure API key authorization: request-authorizer
+var request-authorizer = defaultClient.authentications['request-authorizer'];
+request-authorizer.apiKey = "YOUR API KEY"
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//request-authorizer.apiKeyPrefix['Authorization'] = "Token"
 
 var api = new UserRestWebServiceApi.ClientsApi()
 var ic = ic_example; // {{String}} IC
@@ -1242,6 +1508,11 @@ namespace Example
         public void main()
         {
 
+            // Configure API key authorization: request-authorizer
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
             var apiInstance = new ClientsApi();
             var ic = ic_example;  // String | IC
             var fromDate = fromDate_example;  // String |  (optional) 
@@ -1252,7 +1523,7 @@ namespace Example
             try
             {
                 // List NED Changes for the given IC
-                inline_response_200_1 result = apiInstance.getNEDChangesByIC(ic, fromDate, fromTime, toDate, toTime);
+                inline_response_200 result = apiInstance.getNEDChangesByIC(ic, fromDate, fromTime, toDate, toTime);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -1268,6 +1539,11 @@ namespace Example
                             <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
+
+// Configure API key authorization: request-authorizer
+Swagger\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// Swagger\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
 
 $api_instance = new Swagger\Client\ApiClientsApi();
 $ic = ic_example; // String | IC
@@ -1289,6 +1565,11 @@ try {
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ClientsApi;
+
+# Configure API key authorization: request-authorizer
+$WWW::SwaggerClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::SwaggerClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
 
 my $api_instance = WWW::SwaggerClient::ClientsApi->new();
 my $ic = ic_example; # String | IC
@@ -1312,6 +1593,11 @@ import time
 import swagger_client
 from swagger_client.rest import ApiException
 from pprint import pprint
+
+# Configure API key authorization: request-authorizer
+swagger_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# swagger_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
 
 # create an instance of the API class
 api_instance = swagger_client.ClientsApi()
@@ -1457,7 +1743,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/inline_response_200_1"
+        "$ref" : "#/components/schemas/inline_response_200"
       }
     }
   }
@@ -1523,6 +1809,7 @@ except ApiException as e:
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Clients-getVDSUserByNIHId-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Authorization: [[apiKey]]"\
 -H "Accept: application/json"\
 "//userapi/vds/userById/{id}"</code></pre>
                           </div>
@@ -1538,11 +1825,18 @@ import java.util.*;
 public class ClientsApiExample {
 
     public static void main(String[] args) {
-        
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+        // Configure API key authorization: request-authorizer
+        ApiKeyAuth request-authorizer = (ApiKeyAuth) defaultClient.getAuthentication("request-authorizer");
+        request-authorizer.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //request-authorizer.setApiKeyPrefix("Token");
+
         ClientsApi apiInstance = new ClientsApi();
         String id = id_example; // String | user NIH ID
         try {
-            inline_response_200 result = apiInstance.getVDSUserByNIHId(id);
+            inline_response_200_1 result = apiInstance.getVDSUserByNIHId(id);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ClientsApi#getVDSUserByNIHId");
@@ -1561,7 +1855,7 @@ public class ClientsApiExample {
         ClientsApi apiInstance = new ClientsApi();
         String id = id_example; // String | user NIH ID
         try {
-            inline_response_200 result = apiInstance.getVDSUserByNIHId(id);
+            inline_response_200_1 result = apiInstance.getVDSUserByNIHId(id);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling ClientsApi#getVDSUserByNIHId");
@@ -1575,13 +1869,18 @@ public class ClientsApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *id = id_example; // user NIH ID
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+// Configure API key authorization: (authentication scheme: request-authorizer)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+String *id = id_example; // user NIH ID
 
 ClientsApi *apiInstance = [[ClientsApi alloc] init];
 
 // Get VDS User record by the given NIH id (UNIQUEIDENTIFIER)
 [apiInstance getVDSUserByNIHIdWith:id
-              completionHandler: ^(inline_response_200 output, NSError* error) {
+              completionHandler: ^(inline_response_200_1 output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -1594,6 +1893,13 @@ ClientsApi *apiInstance = [[ClientsApi alloc] init];
 
                             <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var UserRestWebServiceApi = require('user_rest_web_service_api');
+var defaultClient = UserRestWebServiceApi.ApiClient.instance;
+
+// Configure API key authorization: request-authorizer
+var request-authorizer = defaultClient.authentications['request-authorizer'];
+request-authorizer.apiKey = "YOUR API KEY"
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//request-authorizer.apiKeyPrefix['Authorization'] = "Token"
 
 var api = new UserRestWebServiceApi.ClientsApi()
 var id = id_example; // {{String}} user NIH ID
@@ -1626,13 +1932,18 @@ namespace Example
         public void main()
         {
 
+            // Configure API key authorization: request-authorizer
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
             var apiInstance = new ClientsApi();
             var id = id_example;  // String | user NIH ID
 
             try
             {
                 // Get VDS User record by the given NIH id (UNIQUEIDENTIFIER)
-                inline_response_200 result = apiInstance.getVDSUserByNIHId(id);
+                inline_response_200_1 result = apiInstance.getVDSUserByNIHId(id);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -1648,6 +1959,11 @@ namespace Example
                             <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
+
+// Configure API key authorization: request-authorizer
+Swagger\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// Swagger\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
 
 $api_instance = new Swagger\Client\ApiClientsApi();
 $id = id_example; // String | user NIH ID
@@ -1665,6 +1981,11 @@ try {
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ClientsApi;
+
+# Configure API key authorization: request-authorizer
+$WWW::SwaggerClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::SwaggerClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
 
 my $api_instance = WWW::SwaggerClient::ClientsApi->new();
 my $id = id_example; # String | user NIH ID
@@ -1685,13 +2006,18 @@ import swagger_client
 from swagger_client.rest import ApiException
 from pprint import pprint
 
+# Configure API key authorization: request-authorizer
+swagger_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# swagger_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+
 # create an instance of the API class
 api_instance = swagger_client.ClientsApi()
 id = id_example # String | user NIH ID
 
 try: 
     # Get VDS User record by the given NIH id (UNIQUEIDENTIFIER)
-    api_response = api_instance.get_vds_user_by_nih_id(id)
+    api_response = api_instance.get_vds_user_by_nihid(id)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ClientsApi->getVDSUserByNIHId: %s\n" % e)</code></pre>
@@ -1754,7 +2080,7 @@ except ApiException as e:
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/inline_response_200"
+        "$ref" : "#/components/schemas/inline_response_200_1"
       }
     }
   }
@@ -1780,6 +2106,714 @@ except ApiException as e:
                                     </script>
                                   </div>
                                   <input id='responses-getVDSUserByNIHId-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Clients-listNVProperties">
+                      <article id="api-Clients-listNVProperties-0" data-group="User" data-name="listNVProperties" data-version="0">
+                        <div class="pull-left">
+                          <h1>listNVProperties</h1>
+                          <p>List all nVision user properties</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Get all nVision property records
+</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/userapi/nv/props</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Clients-listNVProperties-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Clients-listNVProperties-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Clients-listNVProperties-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Clients-listNVProperties-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Clients-listNVProperties-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Clients-listNVProperties-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Clients-listNVProperties-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Clients-listNVProperties-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Clients-listNVProperties-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Clients-listNVProperties-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Clients-listNVProperties-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Clients-listNVProperties-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Authorization: [[apiKey]]"\
+-H "Accept: application/json"\
+"//userapi/nv/props?lastEvaluatedKey="</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Clients-listNVProperties-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.ClientsApi;
+
+import java.io.File;
+import java.util.*;
+
+public class ClientsApiExample {
+
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+        // Configure API key authorization: request-authorizer
+        ApiKeyAuth request-authorizer = (ApiKeyAuth) defaultClient.getAuthentication("request-authorizer");
+        request-authorizer.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //request-authorizer.setApiKeyPrefix("Token");
+
+        ClientsApi apiInstance = new ClientsApi();
+        String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
+        try {
+            inline_response_200_2 result = apiInstance.listNVProperties(lastEvaluatedKey);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ClientsApi#listNVProperties");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Clients-listNVProperties-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ClientsApi;
+
+public class ClientsApiExample {
+
+    public static void main(String[] args) {
+        ClientsApi apiInstance = new ClientsApi();
+        String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
+        try {
+            inline_response_200_2 result = apiInstance.listNVProperties(lastEvaluatedKey);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ClientsApi#listNVProperties");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Clients-listNVProperties-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Clients-listNVProperties-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+// Configure API key authorization: (authentication scheme: request-authorizer)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+String *lastEvaluatedKey = lastEvaluatedKey_example; // Last Evaluated Key from previous request (optional)
+
+ClientsApi *apiInstance = [[ClientsApi alloc] init];
+
+// List all nVision user properties
+[apiInstance listNVPropertiesWith:lastEvaluatedKey
+              completionHandler: ^(inline_response_200_2 output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-listNVProperties-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var UserRestWebServiceApi = require('user_rest_web_service_api');
+var defaultClient = UserRestWebServiceApi.ApiClient.instance;
+
+// Configure API key authorization: request-authorizer
+var request-authorizer = defaultClient.authentications['request-authorizer'];
+request-authorizer.apiKey = "YOUR API KEY"
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//request-authorizer.apiKeyPrefix['Authorization'] = "Token"
+
+var api = new UserRestWebServiceApi.ClientsApi()
+var opts = { 
+  'lastEvaluatedKey': lastEvaluatedKey_example // {{String}} Last Evaluated Key from previous request
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.listNVProperties(opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Clients-listNVProperties-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Clients-listNVProperties-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class listNVPropertiesExample
+    {
+        public void main()
+        {
+
+            // Configure API key authorization: request-authorizer
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
+            var apiInstance = new ClientsApi();
+            var lastEvaluatedKey = lastEvaluatedKey_example;  // String | Last Evaluated Key from previous request (optional) 
+
+            try
+            {
+                // List all nVision user properties
+                inline_response_200_2 result = apiInstance.listNVProperties(lastEvaluatedKey);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling ClientsApi.listNVProperties: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-listNVProperties-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Configure API key authorization: request-authorizer
+Swagger\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// Swagger\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
+$api_instance = new Swagger\Client\ApiClientsApi();
+$lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
+
+try {
+    $result = $api_instance->listNVProperties($lastEvaluatedKey);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling ClientsApi->listNVProperties: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-listNVProperties-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::ClientsApi;
+
+# Configure API key authorization: request-authorizer
+$WWW::SwaggerClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::SwaggerClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
+
+my $api_instance = WWW::SwaggerClient::ClientsApi->new();
+my $lastEvaluatedKey = lastEvaluatedKey_example; # String | Last Evaluated Key from previous request
+
+eval { 
+    my $result = $api_instance->listNVProperties(lastEvaluatedKey => $lastEvaluatedKey);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling ClientsApi->listNVProperties: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-listNVProperties-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# Configure API key authorization: request-authorizer
+swagger_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# swagger_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# create an instance of the API class
+api_instance = swagger_client.ClientsApi()
+lastEvaluatedKey = lastEvaluatedKey_example # String | Last Evaluated Key from previous request (optional)
+
+try: 
+    # List all nVision user properties
+    api_response = api_instance.list_nv_properties(lastEvaluatedKey=lastEvaluatedKey)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ClientsApi->listNVProperties: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+
+
+
+
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">lastEvaluatedKey</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_listNVProperties_lastEvaluatedKey">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                                    <div class="inner description">
+                                                        Last Evaluated Key from previous request
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                            </table>
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - Response with a list of nVision Properties objects </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-listNVProperties-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-listNVProperties-200-schema">
+                                  <div id='responses-listNVProperties-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "Response with a list of nVision Properties objects",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/inline_response_200_2"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-listNVProperties-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-listNVProperties-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-listNVProperties-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Clients-listNVPropertiesByUserId">
+                      <article id="api-Clients-listNVPropertiesByUserId-0" data-group="User" data-name="listNVPropertiesByUserId" data-version="0">
+                        <div class="pull-left">
+                          <h1>listNVPropertiesByUserId</h1>
+                          <p>List all nVision properties for given user</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Get all nVision property records for given user NIH ID
+</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/userapi/nv/props/user/{nihId}</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Clients-listNVPropertiesByUserId-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-python">Python</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Clients-listNVPropertiesByUserId-0-curl">
+                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Authorization: [[apiKey]]"\
+-H "Accept: application/json"\
+"//userapi/nv/props/user/{nihId}?lastEvaluatedKey="</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-java">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.ClientsApi;
+
+import java.io.File;
+import java.util.*;
+
+public class ClientsApiExample {
+
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+        // Configure API key authorization: request-authorizer
+        ApiKeyAuth request-authorizer = (ApiKeyAuth) defaultClient.getAuthentication("request-authorizer");
+        request-authorizer.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //request-authorizer.setApiKeyPrefix("Token");
+
+        ClientsApi apiInstance = new ClientsApi();
+        String nihId = nihId_example; // String | User NIH ID
+        String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
+        try {
+            inline_response_200_2 result = apiInstance.listNVPropertiesByUserId(nihId, lastEvaluatedKey);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ClientsApi#listNVPropertiesByUserId");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-android">
+                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ClientsApi;
+
+public class ClientsApiExample {
+
+    public static void main(String[] args) {
+        ClientsApi apiInstance = new ClientsApi();
+        String nihId = nihId_example; // String | User NIH ID
+        String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
+        try {
+            inline_response_200_2 result = apiInstance.listNVPropertiesByUserId(nihId, lastEvaluatedKey);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling ClientsApi#listNVPropertiesByUserId");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+// Configure API key authorization: (authentication scheme: request-authorizer)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+String *nihId = nihId_example; // User NIH ID
+String *lastEvaluatedKey = lastEvaluatedKey_example; // Last Evaluated Key from previous request (optional)
+
+ClientsApi *apiInstance = [[ClientsApi alloc] init];
+
+// List all nVision properties for given user
+[apiInstance listNVPropertiesByUserIdWith:nihId
+    lastEvaluatedKey:lastEvaluatedKey
+              completionHandler: ^(inline_response_200_2 output, NSError* error) {
+                            if (output) {
+                                NSLog(@"%@", output);
+                            }
+                            if (error) {
+                                NSLog(@"Error: %@", error);
+                            }
+                        }];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var UserRestWebServiceApi = require('user_rest_web_service_api');
+var defaultClient = UserRestWebServiceApi.ApiClient.instance;
+
+// Configure API key authorization: request-authorizer
+var request-authorizer = defaultClient.authentications['request-authorizer'];
+request-authorizer.apiKey = "YOUR API KEY"
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//request-authorizer.apiKeyPrefix['Authorization'] = "Token"
+
+var api = new UserRestWebServiceApi.ClientsApi()
+var nihId = nihId_example; // {{String}} User NIH ID
+var opts = { 
+  'lastEvaluatedKey': lastEvaluatedKey_example // {{String}} Last Evaluated Key from previous request
+};
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.listNVPropertiesByUserId(nihId, opts, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+
+namespace Example
+{
+    public class listNVPropertiesByUserIdExample
+    {
+        public void main()
+        {
+
+            // Configure API key authorization: request-authorizer
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
+            var apiInstance = new ClientsApi();
+            var nihId = nihId_example;  // String | User NIH ID
+            var lastEvaluatedKey = lastEvaluatedKey_example;  // String | Last Evaluated Key from previous request (optional) 
+
+            try
+            {
+                // List all nVision properties for given user
+                inline_response_200_2 result = apiInstance.listNVPropertiesByUserId(nihId, lastEvaluatedKey);
+                Debug.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("Exception when calling ClientsApi.listNVPropertiesByUserId: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Configure API key authorization: request-authorizer
+Swagger\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// Swagger\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
+$api_instance = new Swagger\Client\ApiClientsApi();
+$nihId = nihId_example; // String | User NIH ID
+$lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
+
+try {
+    $result = $api_instance->listNVPropertiesByUserId($nihId, $lastEvaluatedKey);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling ClientsApi->listNVPropertiesByUserId: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::SwaggerClient::Configuration;
+use WWW::SwaggerClient::ClientsApi;
+
+# Configure API key authorization: request-authorizer
+$WWW::SwaggerClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::SwaggerClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
+
+my $api_instance = WWW::SwaggerClient::ClientsApi->new();
+my $nihId = nihId_example; # String | User NIH ID
+my $lastEvaluatedKey = lastEvaluatedKey_example; # String | Last Evaluated Key from previous request
+
+eval { 
+    my $result = $api_instance->listNVPropertiesByUserId(nihId => $nihId, lastEvaluatedKey => $lastEvaluatedKey);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling ClientsApi->listNVPropertiesByUserId: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import swagger_client
+from swagger_client.rest import ApiException
+from pprint import pprint
+
+# Configure API key authorization: request-authorizer
+swagger_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# swagger_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# create an instance of the API class
+api_instance = swagger_client.ClientsApi()
+nihId = nihId_example # String | User NIH ID
+lastEvaluatedKey = lastEvaluatedKey_example # String | Last Evaluated Key from previous request (optional)
+
+try: 
+    # List all nVision properties for given user
+    api_response = api_instance.list_nv_properties_by_user_id(nihId, lastEvaluatedKey=lastEvaluatedKey)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ClientsApi->listNVPropertiesByUserId: %s\n" % e)</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">nihId*</td>
+                                  <td>
+                                  
+                                  
+                                      <div id="d2e199_listNVPropertiesByUserId_nihId">
+                                          <div class="json-schema-view">
+                                              <div class="primitive">
+                                                  <span class="type">
+                                                      String
+                                                  </span>
+                                  
+                                                      <div class="inner description">
+                                                          User NIH ID
+                                                      </div>
+                                              </div>
+                                                  <div class="inner required">
+                                                      Required
+                                                  </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  </tr>
+                            </table>
+
+
+
+
+                            <div class="methodsubtabletitle">Query parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">lastEvaluatedKey</td>
+                                <td>
+                                
+                                
+                                    <div id="d2e199_listNVPropertiesByUserId_lastEvaluatedKey">
+                                        <div class="json-schema-view">
+                                            <div class="primitive">
+                                                <span class="type">
+                                                    String
+                                                </span>
+                                
+                                                    <div class="inner description">
+                                                        Last Evaluated Key from previous request
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                            </table>
+
+                          <h2>Responses</h2>
+                            <h3> Status: 200 - Response with a list of nVision Properties objects </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-listNVPropertiesByUserId-200-schema">Schema</a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-listNVPropertiesByUserId-200-schema">
+                                  <div id='responses-listNVPropertiesByUserId-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "Response with a list of nVision Properties objects",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/inline_response_200_2"
+      }
+    }
+  }
+};
+                                        var schema = schemaWrapper.content["application/json"].schema;
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else {
+                                          schemaWrapper.components = {};
+                                          schemaWrapper.components.schemas = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        //console.log(JSON.stringify(schema));
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-listNVPropertiesByUserId-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-listNVPropertiesByUserId-200-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-listNVPropertiesByUserId-200-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
@@ -1820,6 +2854,7 @@ except ApiException as e:
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Clients-listVDSUsersByIC-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
+-H "Authorization: [[apiKey]]"\
 -H "Accept: application/json"\
 "//userapi/vds/usersByIc/{ic}?lastEvaluatedKey="</code></pre>
                           </div>
@@ -1835,7 +2870,14 @@ import java.util.*;
 public class ClientsApiExample {
 
     public static void main(String[] args) {
-        
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+        // Configure API key authorization: request-authorizer
+        ApiKeyAuth request-authorizer = (ApiKeyAuth) defaultClient.getAuthentication("request-authorizer");
+        request-authorizer.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //request-authorizer.setApiKeyPrefix("Token");
+
         ClientsApi apiInstance = new ClientsApi();
         String ic = ic_example; // String | IC
         String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
@@ -1874,7 +2916,12 @@ public class ClientsApiExample {
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
                             <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">String *ic = ic_example; // IC
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+// Configure API key authorization: (authentication scheme: request-authorizer)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+String *ic = ic_example; // IC
 String *lastEvaluatedKey = lastEvaluatedKey_example; // Last Evaluated Key from previous request (optional)
 
 ClientsApi *apiInstance = [[ClientsApi alloc] init];
@@ -1895,6 +2942,13 @@ ClientsApi *apiInstance = [[ClientsApi alloc] init];
 
                             <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-javascript">
                               <pre class="prettyprint"><code class="language-js">var UserRestWebServiceApi = require('user_rest_web_service_api');
+var defaultClient = UserRestWebServiceApi.ApiClient.instance;
+
+// Configure API key authorization: request-authorizer
+var request-authorizer = defaultClient.authentications['request-authorizer'];
+request-authorizer.apiKey = "YOUR API KEY"
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//request-authorizer.apiKeyPrefix['Authorization'] = "Token"
 
 var api = new UserRestWebServiceApi.ClientsApi()
 var ic = ic_example; // {{String}} IC
@@ -1929,6 +2983,11 @@ namespace Example
         public void main()
         {
 
+            // Configure API key authorization: request-authorizer
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
             var apiInstance = new ClientsApi();
             var ic = ic_example;  // String | IC
             var lastEvaluatedKey = lastEvaluatedKey_example;  // String | Last Evaluated Key from previous request (optional) 
@@ -1953,6 +3012,11 @@ namespace Example
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Configure API key authorization: request-authorizer
+Swagger\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// Swagger\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
 $api_instance = new Swagger\Client\ApiClientsApi();
 $ic = ic_example; // String | IC
 $lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
@@ -1970,6 +3034,11 @@ try {
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ClientsApi;
+
+# Configure API key authorization: request-authorizer
+$WWW::SwaggerClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::SwaggerClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
 
 my $api_instance = WWW::SwaggerClient::ClientsApi->new();
 my $ic = ic_example; # String | IC
@@ -1990,6 +3059,11 @@ import time
 import swagger_client
 from swagger_client.rest import ApiException
 from pprint import pprint
+
+# Configure API key authorization: request-authorizer
+swagger_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# swagger_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
 
 # create an instance of the API class
 api_instance = swagger_client.ClientsApi()
@@ -3240,7 +4314,7 @@ except ApiException as e:
       this.isPrimitive = !this.isAny && !this.isArray && !this.isObject;
   
       //
-      this.showToggle = this.schema.description || this.schema.title || this.isPrimitive && (this.schema.minimum || this.schema.maximum || this.schema.exclusiveMinimum || this.schema.exclusiveMaximum);
+      this.showToggle = this.schema.description || this.schema.title || this.isPrimitive && (this.schema.minimum || this.schema.maximum || this.schema.exclusiveMinimum || this.schema.exclusiveMaximum || this.schema.maxLength || this.schema.minLength || this.schema.pattern || this.schema.format);
   
       // populate isRequired property down to properties
       if (this.schema && Array.isArray(this.schema.required)) {

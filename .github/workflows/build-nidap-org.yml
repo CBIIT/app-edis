@@ -1,6 +1,7 @@
 # Workflow to build artifacts for organizations API using NIDAP as a source
 
 name: 3.1 - Organizations(NIDAP) - Build
+run-name: 3.1 - Organizations(NIDAP) - Build - ${{ github.run_id }}
 
 # Controls when the workflow will run
 on:
@@ -63,7 +64,7 @@ jobs:
 
       #Store the created zip files as artifacts
       - name: store-artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: built-artifacts
           path: |

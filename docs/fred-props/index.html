@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>User REST Web Service API</title>
+  <title>Frederick Properties API</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="UTF-8" />
@@ -689,573 +689,140 @@
   <script>
     // Script section to load models into a JS Var
     var defs = {}
-            defs["inline_response_200"] = {
+            defs["FredProperty"] = {
+  "required" : [ "PropertyNumber" ],
   "type" : "object",
   "properties" : {
-    "NUMBER_OF_RECORDS" : {
-      "type" : "integer",
-      "description" : "number of NED Changes records in response"
-    },
-    "NED_CHANGES_RECORD" : {
-      "type" : "array",
-      "items" : {
-        "$ref" : "#/components/schemas/NEDChangeRecord"
-      }
-    }
-  }
-};
-            defs["inline_response_200_1"] = {
-  "type" : "object",
-  "properties" : {
-    "NumberOfRecords" : {
-      "type" : "integer",
-      "description" : "number of VDS User objects in response"
-    },
-    "User" : {
-      "type" : "array",
-      "items" : {
-        "$ref" : "#/components/schemas/VDSUser"
-      }
-    }
-  },
-  "xml" : {
-    "name" : "vdsuser",
-    "wrapped" : true
-  }
-};
-            defs["inline_response_200_2"] = {
-  "type" : "object",
-  "properties" : {
-    "NumberOfRecords" : {
-      "type" : "integer",
-      "description" : "number of nVision Properties objects in response"
-    },
-    "Property" : {
-      "type" : "array",
-      "items" : {
-        "$ref" : "#/components/schemas/nVProperty"
-      }
-    }
-  },
-  "xml" : {
-    "name" : "nvprop",
-    "wrapped" : true
-  }
-};
-            defs["NEDChangeRecord"] = {
-  "type" : "object",
-  "properties" : {
-    "NIHSITE" : {
-      "type" : "string"
-    },
-    "ACTION_DATE" : {
-      "type" : "string"
-    },
-    "ACTION" : {
-      "type" : "string"
-    },
-    "UNIQUEIDENTIFIER" : {
-      "type" : "string"
-    },
-    "ACTION_TIME" : {
-      "type" : "string"
-    },
-    "SN" : {
-      "type" : "string"
-    },
-    "NIHORGACRONYM" : {
-      "type" : "string"
-    },
-    "GIVENNAME" : {
-      "type" : "string"
-    }
-  }
-};
-            defs["nVProperty"] = {
-  "type" : "object",
-  "properties" : {
-    "PRIMARY_CONTACT_FULL_NM" : {
+    "Acquired" : {
       "type" : "string",
-      "example" : "SMITH, JOHN ANDREW"
+      "format" : "date-time",
+      "example" : "2024-05-31T04:00:00Z"
     },
-    "LOCATION_FULL_STR" : {
+    "Building" : {
       "type" : "string",
-      "example" : "CAMPUS /BUILDING 10 - CLINICAL CENTER /6A10"
+      "example" : "1234"
     },
-    "SUPERVISOR_FULL_NAME" : {
+    "CenterNumber" : {
       "type" : "string",
-      "example" : "LAST, FIST"
+      "example" : "700.400.16.01.002.001.0001.032"
     },
-    "PATIENT_CARE_FLG" : {
+    "Comment1" : {
       "type" : "string",
-      "example" : "Y"
+      "example" : "ON SHELF"
     },
-    "PRIMARY_CONTACT_LOCATION" : {
+    "Condition" : {
       "type" : "string",
-      "example" : "9609 MEDICAL CENTER, ADDRESS"
+      "example" : "USED-GOOD"
     },
-    "ACCTBLE_USER_FULL_LOCATION" : {
-      "type" : "string"
-    },
-    "SUPERVISOR_FULL_LOCATION" : {
-      "type" : "string"
-    },
-    "OFFICIAL_NM" : {
-      "type" : "string"
-    },
-    "WRKF_KEY" : {
-      "type" : "string"
-    },
-    "SUPERVISOR_WRKF_KEY" : {
-      "type" : "string"
-    },
-    "CURRENT_FLG" : {
-      "type" : "string"
-    },
-    "ASSET_VALUE_KEY" : {
-      "type" : "string"
-    },
-    "ASSET_KEY" : {
-      "type" : "string"
-    },
-    "INTEREST_ASSET_KEY" : {
-      "type" : "string"
-    },
-    "INITIAL_EVENT_KEY" : {
-      "type" : "string"
-    },
-    "EVENT_KEY" : {
-      "type" : "string"
-    },
-    "ACTIVITY_STATUS_DESC" : {
-      "type" : "string"
-    },
-    "ASSET_TYP_CD" : {
-      "type" : "string"
-    },
-    "IC_CD" : {
-      "type" : "string"
-    },
-    "ORG_CD" : {
-      "type" : "string"
-    },
-    "MANUFACTURER_NM" : {
-      "type" : "string"
-    },
-    "MODEL_NBR" : {
-      "type" : "string"
-    },
-    "SERIAL_NBR" : {
-      "type" : "string"
-    },
-    "FULL_NAME" : {
-      "type" : "string"
-    },
-    "CURR_NED_ID" : {
-      "type" : "string"
-    },
-    "ORIG_NED_ID" : {
-      "type" : "string"
-    },
-    "PO_NBR" : {
-      "type" : "string"
-    },
-    "ACQUISITION_DT" : {
-      "type" : "string"
-    },
-    "LAST_INVENTORY_DT" : {
-      "type" : "string"
-    },
-    "SENSITIVE_FLG" : {
-      "type" : "string"
-    },
-    "ASSET_TYP_DESC" : {
-      "type" : "string"
-    },
-    "ACQUISITION_COST" : {
-      "type" : "string"
-    },
-    "AGRMNT_ID" : {
-      "type" : "string"
-    },
-    "LAST_INVENTORY_RESOLUTION" : {
-      "type" : "string"
-    },
-    "UNCAPITALIZED_REASON_CD" : {
-      "type" : "string"
-    },
-    "UNCAPITALIZED_REASON_DESC" : {
-      "type" : "string"
-    },
-    "CONDITION_DESC" : {
-      "type" : "string"
-    },
-    "EVENT_DT" : {
-      "type" : "string"
-    },
-    "EVENT_TYP_DESC" : {
-      "type" : "string"
-    },
-    "PERSONAL_CUSTODY_FLG" : {
-      "type" : "string"
-    },
-    "SERVICE_LIFE" : {
-      "type" : "string"
-    },
-    "ASSET_DECAL_NBR" : {
-      "type" : "string"
-    },
-    "CAPITAL_FLG" : {
-      "type" : "string"
-    },
-    "APPROPRIATION_CD" : {
-      "type" : "string"
-    },
-    "ACCUMULATED_DEPRECIATION" : {
-      "type" : "string"
-    },
-    "MONTHLY_DEPRECIATION" : {
-      "type" : "string"
-    },
-    "YTD_DEPRECIATION" : {
-      "type" : "string"
-    },
-    "ASSET_VALUE" : {
-      "type" : "string"
-    },
-    "OTHER_USER" : {
-      "type" : "string"
-    },
-    "OLD_ASSET_ID" : {
-      "type" : "string"
-    },
-    "RESPONSIBILITY_BEGIN_DT" : {
-      "type" : "string"
-    },
-    "NON_STANDARD_DESC" : {
-      "type" : "string"
-    },
-    "WARRANTY_EXPIRATION_DT" : {
-      "type" : "string"
-    },
-    "LOCATION_OFFSITE_DESC" : {
+    "ContractId" : {
       "type" : "string",
-      "description" : "choices are null, GENERAL OFF SITE FOR HVS, OFFSITE, HOME USE, OFF SITE LOCATION"
+      "example" : "LDOS"
     },
-    "LOCATION_ADDRESS_LINE_1" : {
-      "type" : "string"
-    },
-    "LOCATION_ADDRESS_LINE_2" : {
-      "type" : "string"
-    },
-    "LOCATION_ADDRESS_LINE_3" : {
-      "type" : "string"
-    },
-    "LOCATION_CITY_NM" : {
-      "type" : "string"
-    },
-    "LOCATION_STATE_CD" : {
-      "type" : "string"
-    },
-    "LOCATION_STATE_NM" : {
-      "type" : "string"
-    },
-    "LOCATION_COUNTRY_NM" : {
-      "type" : "string"
-    },
-    "LOCATION_COUNTY_NM" : {
-      "type" : "string"
-    },
-    "LOCATION_POSTAL_CD" : {
-      "type" : "string"
-    },
-    "FLAG_1" : {
-      "type" : "string"
-    }
-  }
-};
-            defs["VDSUser"] = {
-  "type" : "object",
-  "properties" : {
-    "UNIQUEIDENTIFIER" : {
+    "Cost" : {
       "type" : "string",
-      "example" : "11234567"
+      "example" : "3900"
     },
-    "NIHDUPUID" : {
+    "CustodianEmployeeNumber" : {
       "type" : "string",
-      "example" : "13312345"
+      "example" : "GVRG000001"
     },
-    "NIHADACCTREQ" : {
+    "CustodianFirstName" : {
       "type" : "string",
-      "example" : "Y"
+      "example" : "Jane"
     },
-    "NIHSSOUSERNAME" : {
+    "CustodianLastName" : {
       "type" : "string",
-      "example" : "smithj"
+      "example" : "Smith"
     },
-    "distinguishedName" : {
+    "CustodianNedId" : {
       "type" : "string",
-      "example" : "CN=smithj,OU=Users,OU=NCI-Frederick,OU=NIH,OU=AD,DC=nih,DC=gov"
+      "example" : "2004567890"
     },
-    "NIHADMAILBOXREQ" : {
+    "Description" : {
       "type" : "string",
-      "example" : "Y"
+      "example" : "Computer"
     },
-    "NIHPRIMARYSMTP" : {
+    "Division" : {
       "type" : "string",
-      "example" : "johnj@mail.gov"
+      "example" : "CCR"
     },
-    "MAIL" : {
+    "InvoiceNumber" : {
       "type" : "string",
-      "example" : "smithj@mail.gov"
+      "example" : "100"
     },
-    "proxyAddresses" : {
-      "type" : "array",
-      "example" : [ "smtp:smithj@nci.gov", "X500:/O=NIH/OU=NIHEXCHANGE/cn=Recipients/cn=smithj", "smtp:smithj@nih.mail.onmicrosoft.com", "smtp:smithj@nih.gov" ],
-      "items" : {
-        "type" : "string"
-      }
-    },
-    "displayName" : {
+    "Item" : {
       "type" : "string",
-      "example" : "Smith, John (NIH/NCI) [C]"
+      "example" : "Laptop"
     },
-    "PERSONALTITLE" : {
+    "Make" : {
       "type" : "string",
-      "example" : "Mr"
+      "example" : "Dell"
     },
-    "GIVENNAME" : {
+    "Model" : {
+      "type" : "string",
+      "example" : "XPS15"
+    },
+    "POLineNumber" : {
+      "type" : "string",
+      "example" : "1"
+    },
+    "PONumber" : {
+      "type" : "string",
+      "example" : "210000"
+    },
+    "PropertyNumber" : {
+      "type" : "string",
+      "example" : "C100000"
+    },
+    "PropertyOfficerEmployeeNumber" : {
+      "type" : "string",
+      "example" : "GVRG000001"
+    },
+    "PropertyOfficerFirstName" : {
       "type" : "string",
       "example" : "John"
     },
-    "NIHCOMMONGIVENNAME" : {
-      "type" : "string",
-      "example" : "John"
-    },
-    "NIHNOMIDDLENAME" : {
-      "type" : "string",
-      "example" : "N"
-    },
-    "MIDDLENAME" : {
-      "type" : "string",
-      "example" : "Joseph"
-    },
-    "NIHCOMMONMIDDLENAM" : {
-      "type" : "string",
-      "example" : "Joseph"
-    },
-    "NIHMIXCASESN" : {
-      "type" : "string",
-      "example" : "Smith Joseph"
-    },
-    "NIHMIXCASECOMMONSN" : {
+    "PropertyOfficerLastName" : {
       "type" : "string",
       "example" : "Smith"
     },
-    "SN" : {
+    "PropertyOfficerNedId" : {
       "type" : "string",
-      "example" : "Smith"
+      "example" : "2004567890"
     },
-    "NIHCOMMONSN" : {
+    "PropertyType" : {
       "type" : "string",
-      "example" : "Smith"
+      "example" : "X"
     },
-    "GENERATIONQUALIF" : {
+    "Room" : {
       "type" : "string",
-      "example" : "Jr"
+      "example" : "3256A"
     },
-    "NIHCOMMONGENQUALIF" : {
+    "SerialNumber" : {
       "type" : "string",
-      "example" : "Jr"
+      "example" : "MA0000406M"
     },
-    "NIHSUFFIXQUALIFIER" : {
+    "Status" : {
       "type" : "string",
-      "example" : "M.D., PH.D."
+      "example" : "Active"
     },
-    "TITLE" : {
+    "WarrantyDate" : {
       "type" : "string",
-      "example" : "Board of Scientific Counselor"
+      "format" : "date-time",
+      "example" : "2023-05-31T04:00:00Z"
     },
-    "NIHIPD" : {
+    "WarrantyStatus" : {
       "type" : "string",
-      "example" : "Other"
-    },
-    "NIHBADGETITLE" : {
-      "type" : "string",
-      "example" : "Physician"
-    },
-    "NIHBADGESTATUS" : {
-      "type" : "string",
-      "example" : "Deactivated"
-    },
-    "NIHIDBADGEEXPDATE" : {
-      "type" : "string",
-      "example" : "2026-11-12T00:00:00.000Z"
-    },
-    "NIHSAC" : {
-      "type" : "string",
-      "example" : "HNCB45"
-    },
-    "NIHPrivacyAwarenessCompDate" : {
-      "type" : "string"
-    },
-    "PrivacyAwarenessRefresherCompDate" : {
-      "type" : "string"
-    },
-    "NIHInformationSecurityAwarenessCompDate" : {
-      "type" : "string"
-    },
-    "InformationSecurityRefresherCompDate" : {
-      "type" : "string"
-    },
-    "description" : {
-      "type" : "string",
-      "example" : "This account is Enabled by iam.nih.gov, because the Background Investigation Adjudication is complete, or is in the process of Mailbox creation"
-    },
-    "ORGANIZATIONALSTAT" : {
-      "type" : "string",
-      "example" : "CONTRACTOR"
-    },
-    "NIHSUBORGSTATUS" : {
-      "type" : "string",
-      "example" : "CONTRACTOR"
-    },
-    "NIHSUMMERSTATUS" : {
-      "type" : "string",
-      "example" : "N"
-    },
-    "NIHORGPATH" : {
-      "type" : "string",
-      "example" : "NCI DCTD DTP NPB"
-    },
-    "NIHPHYSICALADDRESS" : {
-      "type" : "string",
-      "example" : "FDC 123 BG RM 119$431 WOOD STREET$FREDERICK MD 21702"
-    },
-    "NIHORGACRONYM" : {
-      "type" : "string",
-      "example" : "NCI"
-    },
-    "NIHSERVAO" : {
-      "type" : "string",
-      "example" : "10101234"
-    },
-    "MANAGER" : {
-      "type" : "string",
-      "example" : "987654321"
-    },
-    "NIHCOTRID" : {
-      "type" : "string",
-      "example" : "10123456"
-    },
-    "NIHPOC" : {
-      "type" : "string",
-      "example" : "10123456"
-    },
-    "NIHCOMPANYNAME" : {
-      "type" : "string",
-      "example" : "FFRDC FNLCR LBR (Leidos Biomedical Research Inc.)"
-    },
-    "NIHCOMPANYPHONE" : {
-      "type" : "string",
-      "example" : "+ 1 111 123 4567"
-    },
-    "countryCode" : {
-      "type" : "string",
-      "example" : "111"
-    },
-    "TELEPHONENUMBER" : {
-      "type" : "string",
-      "example" : "+1 301 111 1111"
-    },
-    "MOBILETELEPHONENUM" : {
-      "type" : "string",
-      "example" : "+1 301 123 4567"
-    },
-    "mobile" : {
-      "type" : "string",
-      "example" : "301.123.4567"
-    },
-    "ipPhone" : {
-      "type" : "string",
-      "example" : "(301) 111-1111"
-    },
-    "NIHSITE" : {
-      "type" : "string",
-      "example" : "MD-FCR"
-    },
-    "L" : {
-      "type" : "string",
-      "example" : "Frederick"
-    },
-    "BUILDINGNAME" : {
-      "type" : "string",
-      "example" : "FDC 123"
-    },
-    "ROOMNUMBER" : {
-      "type" : "string",
-      "example" : "123"
-    },
-    "POSTALADDRESS" : {
-      "type" : "string",
-      "example" : "BG 111 RM 119$1050 BOYLES STREET$FREDERICK MD 21702"
-    },
-    "NIHIDBADGELESS6MOS" : {
-      "type" : "string",
-      "example" : "N"
-    },
-    "managedObjects" : {
-      "type" : "string",
-      "example" : "CN=NCI-Frederick Rees alarms,OU=Distribution Lists,OU=Messaging,OU=NCI-Frederick,OU=NIH,OU=AD,DC=nih,DC=gov"
-    },
-    "memberOf" : {
-      "type" : "array",
-      "example" : [ "CN=NIH CONTRACTOR ACCOUNTS,OU=NIH WIDE GROUPS,OU=ADOG,DC=nih,DC=gov", "CN=NIH Exchange Users,OU=Groups,OU=CIT,OU=NIH,ou=ad,dc=nih,dc=gov", "CN=PrimaryUsers,OU=Accounts,OU=CES,OU=OPS,DC=nih,DC=gov" ],
-      "items" : {
-        "type" : "string"
-      }
-    },
-    "NIHCREATETIMESTAMP" : {
-      "type" : "string",
-      "example" : "2009-01-14T14:12:30.000Z"
-    },
-    "NIHMODIFYTIMESTAMP" : {
-      "type" : "string",
-      "example" : "2021-12-27T10:25:49.000Z"
-    },
-    "NIHMODIFIERSNAME" : {
-      "type" : "string",
-      "example" : "123456789"
-    },
-    "NIHDIRENTRYEFFECTIVEDATE" : {
-      "type" : "string",
-      "example" : "2009-01-14T00:00:00.000Z"
-    },
-    "NIHDIRENTRYEXPIRATIONDATE" : {
-      "type" : "string",
-      "example" : "2009-01-14T00:00:00.000Z"
-    },
-    "userAccountControl" : {
-      "type" : "string",
-      "example" : "123"
-    },
-    "providedEmail" : {
-      "type" : "string",
-      "description" : "Email calculated based on three fields (by priority) - proxyAddresses, MAIL, NIHPRIMARYSMTP",
-      "example" : "smithj@mail.gov"
-    },
-    "DOC" : {
-      "type" : "string",
-      "description" : "Calculated DOC value based on NIHSAC and NIHORGPATH",
-      "example" : "CBIIT"
+      "example" : "EXPIRED"
     }
   }
 };
-            defs["VDSUsersChunk"] = {
+            defs["FredPropsChunk"] = {
   "type" : "object",
   "properties" : {
     "count" : {
-      "type" : "integer"
+      "type" : "integer",
+      "example" : 1
     },
     "error" : {
       "type" : "string",
@@ -1268,7 +835,7 @@
     "items" : {
       "type" : "array",
       "items" : {
-        "$ref" : "#/components/schemas/VDSUser"
+        "$ref" : "#/components/schemas/FredProperty"
       }
     }
   }
@@ -1290,20 +857,17 @@
             <li class="nav-fixed nav-header active" data-group="_"><a href="#api-_">API Summary</a></li>
 
                   <li class="nav-header" data-group="Clients"><a href="#api-Clients">API Methods - Clients</a></li>
-                    <li data-group="Clients" data-name="getNEDChangesByIC" class="">
-                      <a href="#api-Clients-getNEDChangesByIC">getNEDChangesByIC</a>
+                    <li data-group="Clients" data-name="getFredPropertyNumberFromDdb" class="">
+                      <a href="#api-Clients-getFredPropertyNumberFromDdb">getFredPropertyNumberFromDdb</a>
                     </li>
-                    <li data-group="Clients" data-name="getVDSUserByNIHId" class="">
-                      <a href="#api-Clients-getVDSUserByNIHId">getVDSUserByNIHId</a>
+                    <li data-group="Clients" data-name="getFredPropsFromDdb" class="">
+                      <a href="#api-Clients-getFredPropsFromDdb">getFredPropsFromDdb</a>
                     </li>
-                    <li data-group="Clients" data-name="listNVProperties" class="">
-                      <a href="#api-Clients-listNVProperties">listNVProperties</a>
+                    <li data-group="Clients" data-name="listFredPropertyByCustodian" class="">
+                      <a href="#api-Clients-listFredPropertyByCustodian">listFredPropertyByCustodian</a>
                     </li>
-                    <li data-group="Clients" data-name="listNVPropertiesByUserId" class="">
-                      <a href="#api-Clients-listNVPropertiesByUserId">listNVPropertiesByUserId</a>
-                    </li>
-                    <li data-group="Clients" data-name="listVDSUsersByIC" class="">
-                      <a href="#api-Clients-listVDSUsersByIC">listVDSUsersByIC</a>
+                    <li data-group="Clients" data-name="listFredPropertyByProjectOfficer" class="">
+                      <a href="#api-Clients-listFredPropertyByProjectOfficer">listFredPropertyByProjectOfficer</a>
                     </li>
           </ul>
         </nav>
@@ -1311,60 +875,60 @@
       <div id="content">
         <div id="project">
           <div class="pull-left">
-            <h1>User REST Web Service API</h1>
+            <h1>Frederick Properties API</h1>
           </div>
           <div class="clearfix"></div>
         </div>
         <div id="header">
           <div id="api-_">
             <h2 id="welcome-to-apidoc">API and SDK Documentation</h2>
-              <div class="app-desc">Version: 0.1.0</div>
+              <div class="app-desc">Version: 1.0.0</div>
             <hr>
-            <div>Enterprise Data &amp; Integration Services Web Services - <strong>NED REST Web Service</strong></div>
+            <div>Enterprise Data &amp; Integration Services Web Services - <strong>Frederick Properties Service</strong></div>
           </div>
         </div>
         <div id="sections">
                 <section id="api-Clients">
                   <h1>Clients</h1>
-                    <div id="api-Clients-getNEDChangesByIC">
-                      <article id="api-Clients-getNEDChangesByIC-0" data-group="User" data-name="getNEDChangesByIC" data-version="0">
+                    <div id="api-Clients-getFredPropertyNumberFromDdb">
+                      <article id="api-Clients-getFredPropertyNumberFromDdb-0" data-group="User" data-name="getFredPropertyNumberFromDdb" data-version="0">
                         <div class="pull-left">
-                          <h1>getNEDChangesByIC</h1>
-                          <p>List NED Changes for the given IC</p>
+                          <h1>getFredPropertyNumberFromDdb</h1>
+                          <p>Return Frederick property using a property number</p>
                         </div>
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">List NED Change records that satisfy given IC criteria
+                        <p class="marked">Get a Frederick property record by a property number from Dynamo DB
 </p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/userapi/ned/changesByIc/{ic}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/fredpropsapi/v1/props/{propertyNumber}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
                         <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Clients-getNEDChangesByIC-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Clients-getNEDChangesByIC-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Clients-getNEDChangesByIC-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Clients-getNEDChangesByIC-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Clients-getNEDChangesByIC-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Clients-getNEDChangesByIC-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Clients-getNEDChangesByIC-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Clients-getNEDChangesByIC-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Clients-getNEDChangesByIC-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Clients-getNEDChangesByIC-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Clients-getNEDChangesByIC-0-python">Python</a></li>
+                          <li class="active"><a href="#examples-Clients-getFredPropertyNumberFromDdb-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Clients-getFredPropertyNumberFromDdb-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Clients-getFredPropertyNumberFromDdb-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Clients-getFredPropertyNumberFromDdb-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Clients-getFredPropertyNumberFromDdb-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Clients-getFredPropertyNumberFromDdb-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Clients-getFredPropertyNumberFromDdb-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Clients-getFredPropertyNumberFromDdb-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Clients-getFredPropertyNumberFromDdb-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Clients-getFredPropertyNumberFromDdb-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Clients-getFredPropertyNumberFromDdb-0-python">Python</a></li>
                         </ul>
 
                         <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Clients-getNEDChangesByIC-0-curl">
+                          <div class="tab-pane active" id="examples-Clients-getFredPropertyNumberFromDdb-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Authorization: [[apiKey]]"\
 -H "Accept: application/json"\
-"//userapi/ned/changesByIc/{ic}?From_Date=&From_Time=&To_Date=&To_Time="</code></pre>
+"//fredpropsapi/v1/props/{propertyNumber}"</code></pre>
                           </div>
-                          <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-java">
+                          <div class="tab-pane" id="examples-Clients-getFredPropertyNumberFromDdb-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
 import io.swagger.client.auth.*;
 import io.swagger.client.model.*;
@@ -1385,69 +949,53 @@ public class ClientsApiExample {
         //request-authorizer.setApiKeyPrefix("Token");
 
         ClientsApi apiInstance = new ClientsApi();
-        String ic = ic_example; // String | IC
-        String fromDate = fromDate_example; // String | 
-        String fromTime = fromTime_example; // String | 
-        String toDate = toDate_example; // String | 
-        String toTime = toTime_example; // String | 
+        String propertyNumber = propertyNumber_example; // String | Property Number
         try {
-            inline_response_200 result = apiInstance.getNEDChangesByIC(ic, fromDate, fromTime, toDate, toTime);
+            FredProperty result = apiInstance.getFredPropertyNumberFromDdb(propertyNumber);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#getNEDChangesByIC");
+            System.err.println("Exception when calling ClientsApi#getFredPropertyNumberFromDdb");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
 
-                          <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-android">
+                          <div class="tab-pane" id="examples-Clients-getFredPropertyNumberFromDdb-0-android">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ClientsApi;
 
 public class ClientsApiExample {
 
     public static void main(String[] args) {
         ClientsApi apiInstance = new ClientsApi();
-        String ic = ic_example; // String | IC
-        String fromDate = fromDate_example; // String | 
-        String fromTime = fromTime_example; // String | 
-        String toDate = toDate_example; // String | 
-        String toTime = toTime_example; // String | 
+        String propertyNumber = propertyNumber_example; // String | Property Number
         try {
-            inline_response_200 result = apiInstance.getNEDChangesByIC(ic, fromDate, fromTime, toDate, toTime);
+            FredProperty result = apiInstance.getFredPropertyNumberFromDdb(propertyNumber);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#getNEDChangesByIC");
+            System.err.println("Exception when calling ClientsApi#getFredPropertyNumberFromDdb");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
   <!--
-  <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-groovy">
+  <div class="tab-pane" id="examples-Clients-getFredPropertyNumberFromDdb-0-groovy">
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
-                            <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-objc">
+                            <div class="tab-pane" id="examples-Clients-getFredPropertyNumberFromDdb-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
 // Configure API key authorization: (authentication scheme: request-authorizer)
 [apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
-String *ic = ic_example; // IC
-String *fromDate = fromDate_example; //  (optional)
-String *fromTime = fromTime_example; //  (optional)
-String *toDate = toDate_example; //  (optional)
-String *toTime = toTime_example; //  (optional)
+String *propertyNumber = propertyNumber_example; // Property Number
 
 ClientsApi *apiInstance = [[ClientsApi alloc] init];
 
-// List NED Changes for the given IC
-[apiInstance getNEDChangesByICWith:ic
-    fromDate:fromDate
-    fromTime:fromTime
-    toDate:toDate
-    toTime:toTime
-              completionHandler: ^(inline_response_200 output, NSError* error) {
+// Return Frederick property using a property number
+[apiInstance getFredPropertyNumberFromDdbWith:propertyNumber
+              completionHandler: ^(FredProperty output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -1458,9 +1006,9 @@ ClientsApi *apiInstance = [[ClientsApi alloc] init];
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var UserRestWebServiceApi = require('user_rest_web_service_api');
-var defaultClient = UserRestWebServiceApi.ApiClient.instance;
+                            <div class="tab-pane" id="examples-Clients-getFredPropertyNumberFromDdb-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var FrederickPropertiesApi = require('frederick_properties_api');
+var defaultClient = FrederickPropertiesApi.ApiClient.instance;
 
 // Configure API key authorization: request-authorizer
 var request-authorizer = defaultClient.authentications['request-authorizer'];
@@ -1468,14 +1016,9 @@ request-authorizer.apiKey = "YOUR API KEY"
 // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
 //request-authorizer.apiKeyPrefix['Authorization'] = "Token"
 
-var api = new UserRestWebServiceApi.ClientsApi()
-var ic = ic_example; // {{String}} IC
-var opts = { 
-  'fromDate': fromDate_example, // {{String}} 
-  'fromTime': fromTime_example, // {{String}} 
-  'toDate': toDate_example, // {{String}} 
-  'toTime': toTime_example // {{String}} 
-};
+var api = new FrederickPropertiesApi.ClientsApi()
+var propertyNumber = propertyNumber_example; // {{String}} Property Number
+
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -1483,14 +1026,14 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.getNEDChangesByIC(ic, opts, callback);
+api.getFredPropertyNumberFromDdb(propertyNumber, callback);
 </code></pre>
                             </div>
 
-                            <!--<div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-angular">
+                            <!--<div class="tab-pane" id="examples-Clients-getFredPropertyNumberFromDdb-0-angular">
               <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
             </div>-->
-                            <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-csharp">
+                            <div class="tab-pane" id="examples-Clients-getFredPropertyNumberFromDdb-0-csharp">
                               <pre class="prettyprint"><code class="language-cs">using System;
 using System.Diagnostics;
 using IO.Swagger.Api;
@@ -1499,7 +1042,7 @@ using IO.Swagger.Model;
 
 namespace Example
 {
-    public class getNEDChangesByICExample
+    public class getFredPropertyNumberFromDdbExample
     {
         public void main()
         {
@@ -1510,21 +1053,17 @@ namespace Example
             // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
 
             var apiInstance = new ClientsApi();
-            var ic = ic_example;  // String | IC
-            var fromDate = fromDate_example;  // String |  (optional) 
-            var fromTime = fromTime_example;  // String |  (optional) 
-            var toDate = toDate_example;  // String |  (optional) 
-            var toTime = toTime_example;  // String |  (optional) 
+            var propertyNumber = propertyNumber_example;  // String | Property Number
 
             try
             {
-                // List NED Changes for the given IC
-                inline_response_200 result = apiInstance.getNEDChangesByIC(ic, fromDate, fromTime, toDate, toTime);
+                // Return Frederick property using a property number
+                FredProperty result = apiInstance.getFredPropertyNumberFromDdb(propertyNumber);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
             {
-                Debug.Print("Exception when calling ClientsApi.getNEDChangesByIC: " + e.Message );
+                Debug.Print("Exception when calling ClientsApi.getFredPropertyNumberFromDdb: " + e.Message );
             }
         }
     }
@@ -1532,7 +1071,7 @@ namespace Example
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-php">
+                            <div class="tab-pane" id="examples-Clients-getFredPropertyNumberFromDdb-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
@@ -1542,22 +1081,18 @@ Swagger\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorizatio
 // Swagger\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
 
 $api_instance = new Swagger\Client\ApiClientsApi();
-$ic = ic_example; // String | IC
-$fromDate = fromDate_example; // String | 
-$fromTime = fromTime_example; // String | 
-$toDate = toDate_example; // String | 
-$toTime = toTime_example; // String | 
+$propertyNumber = propertyNumber_example; // String | Property Number
 
 try {
-    $result = $api_instance->getNEDChangesByIC($ic, $fromDate, $fromTime, $toDate, $toTime);
+    $result = $api_instance->getFredPropertyNumberFromDdb($propertyNumber);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling ClientsApi->getNEDChangesByIC: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling ClientsApi->getFredPropertyNumberFromDdb: ', $e->getMessage(), PHP_EOL;
 }
 ?></code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-perl">
+                            <div class="tab-pane" id="examples-Clients-getFredPropertyNumberFromDdb-0-perl">
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ClientsApi;
@@ -1568,22 +1103,18 @@ $WWW::SwaggerClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 #$WWW::SwaggerClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
 
 my $api_instance = WWW::SwaggerClient::ClientsApi->new();
-my $ic = ic_example; # String | IC
-my $fromDate = fromDate_example; # String | 
-my $fromTime = fromTime_example; # String | 
-my $toDate = toDate_example; # String | 
-my $toTime = toTime_example; # String | 
+my $propertyNumber = propertyNumber_example; # String | Property Number
 
 eval { 
-    my $result = $api_instance->getNEDChangesByIC(ic => $ic, fromDate => $fromDate, fromTime => $fromTime, toDate => $toDate, toTime => $toTime);
+    my $result = $api_instance->getFredPropertyNumberFromDdb(propertyNumber => $propertyNumber);
     print Dumper($result);
 };
 if ($@) {
-    warn "Exception when calling ClientsApi->getNEDChangesByIC: $@\n";
+    warn "Exception when calling ClientsApi->getFredPropertyNumberFromDdb: $@\n";
 }</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-getNEDChangesByIC-0-python">
+                            <div class="tab-pane" id="examples-Clients-getFredPropertyNumberFromDdb-0-python">
                               <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
 import time
 import swagger_client
@@ -1597,18 +1128,14 @@ swagger_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # create an instance of the API class
 api_instance = swagger_client.ClientsApi()
-ic = ic_example # String | IC
-fromDate = fromDate_example # String |  (optional)
-fromTime = fromTime_example # String |  (optional)
-toDate = toDate_example # String |  (optional)
-toTime = toTime_example # String |  (optional)
+propertyNumber = propertyNumber_example # String | Property Number
 
 try: 
-    # List NED Changes for the given IC
-    api_response = api_instance.get_ned_changes_by_ic(ic, fromDate=fromDate, fromTime=fromTime, toDate=toDate, toTime=toTime)
+    # Return Frederick property using a property number
+    api_response = api_instance.get_fred_property_number_from_ddb(propertyNumber)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling ClientsApi->getNEDChangesByIC: %s\n" % e)</code></pre>
+    print("Exception when calling ClientsApi->getFredPropertyNumberFromDdb: %s\n" % e)</code></pre>
                             </div>
                           </div>
 
@@ -1620,11 +1147,11 @@ except ApiException as e:
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
-                                  <tr><td style="width:150px;">ic*</td>
+                                  <tr><td style="width:150px;">propertyNumber*</td>
                                   <td>
                                   
                                   
-                                      <div id="d2e199_getNEDChangesByIC_ic">
+                                      <div id="d2e199_getFredPropertyNumberFromDdb_propertyNumber">
                                           <div class="json-schema-view">
                                               <div class="primitive">
                                                   <span class="type">
@@ -1632,7 +1159,7 @@ except ApiException as e:
                                                   </span>
                                   
                                                       <div class="inner description">
-                                                          IC
+                                                          Property Number
                                                       </div>
                                               </div>
                                                   <div class="inner required">
@@ -1647,99 +1174,28 @@ except ApiException as e:
 
 
 
-                            <div class="methodsubtabletitle">Query parameters</div>
-                            <table id="methodsubtable">
-                              <tr>
-                                <th width="150px">Name</th>
-                                <th>Description</th>
-                              </tr>
-                                <tr><td style="width:150px;">From_Date</td>
-                                <td>
-                                
-                                
-                                    <div id="d2e199_getNEDChangesByIC_fromDate">
-                                        <div class="json-schema-view">
-                                            <div class="primitive">
-                                                <span class="type">
-                                                    String
-                                                </span>
-                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                </tr>
-                                <tr><td style="width:150px;">From_Time</td>
-                                <td>
-                                
-                                
-                                    <div id="d2e199_getNEDChangesByIC_fromTime">
-                                        <div class="json-schema-view">
-                                            <div class="primitive">
-                                                <span class="type">
-                                                    String
-                                                </span>
-                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                </tr>
-                                <tr><td style="width:150px;">To_Date</td>
-                                <td>
-                                
-                                
-                                    <div id="d2e199_getNEDChangesByIC_toDate">
-                                        <div class="json-schema-view">
-                                            <div class="primitive">
-                                                <span class="type">
-                                                    String
-                                                </span>
-                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                </tr>
-                                <tr><td style="width:150px;">To_Time</td>
-                                <td>
-                                
-                                
-                                    <div id="d2e199_getNEDChangesByIC_toTime">
-                                        <div class="json-schema-view">
-                                            <div class="primitive">
-                                                <span class="type">
-                                                    String
-                                                </span>
-                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                </tr>
-                            </table>
 
                           <h2>Responses</h2>
-                            <h3> Status: 200 - Response with a list of NED Changes records </h3>
+                            <h3> Status: 200 - JSON formatted record of the Frederick Property </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-getNEDChangesByIC-200-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-getFredPropertyNumberFromDdb-200-schema">Schema</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-getNEDChangesByIC-200-schema">
-                                  <div id='responses-getNEDChangesByIC-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-getFredPropertyNumberFromDdb-200-schema">
+                                  <div id='responses-getFredPropertyNumberFromDdb-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
-  "description" : "Response with a list of NED Changes records",
+  "description" : "JSON formatted record of the Frederick Property",
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/inline_response_200"
+        "$ref" : "#/components/schemas/FredProperty"
       }
     }
   }
@@ -1757,396 +1213,70 @@ except ApiException as e:
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-getNEDChangesByIC-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-getNEDChangesByIC-200-schema-200');
+                                        $('#responses-getFredPropertyNumberFromDdb-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-getFredPropertyNumberFromDdb-200-schema-200');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-getNEDChangesByIC-200-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-getFredPropertyNumberFromDdb-200-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
-                        </article>
-                      </div>
-                      <hr>
-                    <div id="api-Clients-getVDSUserByNIHId">
-                      <article id="api-Clients-getVDSUserByNIHId-0" data-group="User" data-name="getVDSUserByNIHId" data-version="0">
-                        <div class="pull-left">
-                          <h1>getVDSUserByNIHId</h1>
-                          <p>Get VDS User record by the given NIH id (UNIQUEIDENTIFIER)</p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked">Get VDS User record(s) that satisfied NIH ID criteria
-</p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/userapi/vds/userById/{id}</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Clients-getVDSUserByNIHId-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Clients-getVDSUserByNIHId-0-python">Python</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Clients-getVDSUserByNIHId-0-curl">
-                           <pre class="prettyprint"><code class="language-bsh">curl -X GET\
--H "Authorization: [[apiKey]]"\
--H "Accept: application/json"\
-"//userapi/vds/userById/{id}"</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-java">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.ClientsApi;
-
-import java.io.File;
-import java.util.*;
-
-public class ClientsApiExample {
-
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-
-        // Configure API key authorization: request-authorizer
-        ApiKeyAuth request-authorizer = (ApiKeyAuth) defaultClient.getAuthentication("request-authorizer");
-        request-authorizer.setApiKey("YOUR API KEY");
-        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-        //request-authorizer.setApiKeyPrefix("Token");
-
-        ClientsApi apiInstance = new ClientsApi();
-        String id = id_example; // String | user NIH ID
-        try {
-            inline_response_200_1 result = apiInstance.getVDSUserByNIHId(id);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#getVDSUserByNIHId");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-android">
-                            <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ClientsApi;
-
-public class ClientsApiExample {
-
-    public static void main(String[] args) {
-        ClientsApi apiInstance = new ClientsApi();
-        String id = id_example; // String | user NIH ID
-        try {
-            inline_response_200_1 result = apiInstance.getVDSUserByNIHId(id);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#getVDSUserByNIHId");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
-// Configure API key authorization: (authentication scheme: request-authorizer)
-[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
-// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
-String *id = id_example; // user NIH ID
-
-ClientsApi *apiInstance = [[ClientsApi alloc] init];
-
-// Get VDS User record by the given NIH id (UNIQUEIDENTIFIER)
-[apiInstance getVDSUserByNIHIdWith:id
-              completionHandler: ^(inline_response_200_1 output, NSError* error) {
-                            if (output) {
-                                NSLog(@"%@", output);
-                            }
-                            if (error) {
-                                NSLog(@"Error: %@", error);
-                            }
-                        }];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var UserRestWebServiceApi = require('user_rest_web_service_api');
-var defaultClient = UserRestWebServiceApi.ApiClient.instance;
-
-// Configure API key authorization: request-authorizer
-var request-authorizer = defaultClient.authentications['request-authorizer'];
-request-authorizer.apiKey = "YOUR API KEY"
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//request-authorizer.apiKeyPrefix['Authorization'] = "Token"
-
-var api = new UserRestWebServiceApi.ClientsApi()
-var id = id_example; // {{String}} user NIH ID
-
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-api.getVDSUserByNIHId(id, callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-
-namespace Example
-{
-    public class getVDSUserByNIHIdExample
-    {
-        public void main()
-        {
-
-            // Configure API key authorization: request-authorizer
-            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
-
-            var apiInstance = new ClientsApi();
-            var id = id_example;  // String | user NIH ID
-
-            try
-            {
-                // Get VDS User record by the given NIH id (UNIQUEIDENTIFIER)
-                inline_response_200_1 result = apiInstance.getVDSUserByNIHId(id);
-                Debug.WriteLine(result);
-            }
-            catch (Exception e)
-            {
-                Debug.Print("Exception when calling ClientsApi.getVDSUserByNIHId: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-// Configure API key authorization: request-authorizer
-Swagger\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
-// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-// Swagger\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
-
-$api_instance = new Swagger\Client\ApiClientsApi();
-$id = id_example; // String | user NIH ID
-
-try {
-    $result = $api_instance->getVDSUserByNIHId($id);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling ClientsApi->getVDSUserByNIHId: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::SwaggerClient::Configuration;
-use WWW::SwaggerClient::ClientsApi;
-
-# Configure API key authorization: request-authorizer
-$WWW::SwaggerClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
-# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-#$WWW::SwaggerClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
-
-my $api_instance = WWW::SwaggerClient::ClientsApi->new();
-my $id = id_example; # String | user NIH ID
-
-eval { 
-    my $result = $api_instance->getVDSUserByNIHId(id => $id);
-    print Dumper($result);
-};
-if ($@) {
-    warn "Exception when calling ClientsApi->getVDSUserByNIHId: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Clients-getVDSUserByNIHId-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import swagger_client
-from swagger_client.rest import ApiException
-from pprint import pprint
-
-# Configure API key authorization: request-authorizer
-swagger_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
-# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# swagger_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
-
-# create an instance of the API class
-api_instance = swagger_client.ClientsApi()
-id = id_example # String | user NIH ID
-
-try: 
-    # Get VDS User record by the given NIH id (UNIQUEIDENTIFIER)
-    api_response = api_instance.get_vds_user_by_nihid(id)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling ClientsApi->getVDSUserByNIHId: %s\n" % e)</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Parameters</h2>
-
-                            <div class="methodsubtabletitle">Path parameters</div>
-                            <table id="methodsubtable">
-                                <tr>
-                                  <th width="150px">Name</th>
-                                  <th>Description</th>
-                                </tr>
-                                  <tr><td style="width:150px;">id*</td>
-                                  <td>
-                                  
-                                  
-                                      <div id="d2e199_getVDSUserByNIHId_id">
-                                          <div class="json-schema-view">
-                                              <div class="primitive">
-                                                  <span class="type">
-                                                      String
-                                                  </span>
-                                  
-                                                      <div class="inner description">
-                                                          user NIH ID
-                                                      </div>
-                                              </div>
-                                                  <div class="inner required">
-                                                      Required
-                                                  </div>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  </tr>
-                            </table>
-
-
-
-
-
-                          <h2>Responses</h2>
-                            <h3> Status: 200 - Response with a list of VDS User objects </h3>
+                            <h3> Status: 400 - bad input parameter </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-getVDSUserByNIHId-200-schema">Schema</a>
-                                </li>
-
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-getVDSUserByNIHId-200-schema">
-                                  <div id='responses-getVDSUserByNIHId-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "Response with a list of VDS User objects",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/inline_response_200_1"
-      }
-    }
-  }
-};
-                                        var schema = schemaWrapper.content["application/json"].schema;
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else {
-                                          schemaWrapper.components = {};
-                                          schemaWrapper.components.schemas = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        //console.log(JSON.stringify(schema));
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-getVDSUserByNIHId-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-getVDSUserByNIHId-200-schema-200');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-getVDSUserByNIHId-200-schema-data' type='hidden' value=''></input>
-                                </div>
                             </div>
 
                         </article>
                       </div>
                       <hr>
-                    <div id="api-Clients-listNVProperties">
-                      <article id="api-Clients-listNVProperties-0" data-group="User" data-name="listNVProperties" data-version="0">
+                    <div id="api-Clients-getFredPropsFromDdb">
+                      <article id="api-Clients-getFredPropsFromDdb-0" data-group="User" data-name="getFredPropsFromDdb" data-version="0">
                         <div class="pull-left">
-                          <h1>listNVProperties</h1>
-                          <p>List all nVision user properties</p>
+                          <h1>getFredPropsFromDdb</h1>
+                          <p>Return all Frederick properties</p>
                         </div>
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Get all nVision property records
+                        <p class="marked">Return all Frederick properties  
+You have to check the result for existence of LastEvaluatedKey property and  
+loop your request passing it&#x27;s value (&#x60;&#x60;&#x60;?lastEvaluatedKey&#x3D;xxx&#x60;&#x60;&#x60;) as query parameter  
+until the final result does not contain LastEvaluatedKey property
 </p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/userapi/nv/props</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/fredpropsapi/v1/props</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
                         <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Clients-listNVProperties-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Clients-listNVProperties-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Clients-listNVProperties-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Clients-listNVProperties-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Clients-listNVProperties-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Clients-listNVProperties-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Clients-listNVProperties-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Clients-listNVProperties-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Clients-listNVProperties-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Clients-listNVProperties-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Clients-listNVProperties-0-python">Python</a></li>
+                          <li class="active"><a href="#examples-Clients-getFredPropsFromDdb-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Clients-getFredPropsFromDdb-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Clients-getFredPropsFromDdb-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Clients-getFredPropsFromDdb-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Clients-getFredPropsFromDdb-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Clients-getFredPropsFromDdb-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Clients-getFredPropsFromDdb-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Clients-getFredPropsFromDdb-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Clients-getFredPropsFromDdb-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Clients-getFredPropsFromDdb-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Clients-getFredPropsFromDdb-0-python">Python</a></li>
                         </ul>
 
                         <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Clients-listNVProperties-0-curl">
+                          <div class="tab-pane active" id="examples-Clients-getFredPropsFromDdb-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Authorization: [[apiKey]]"\
 -H "Accept: application/json"\
-"//userapi/nv/props?lastEvaluatedKey="</code></pre>
+"//fredpropsapi/v1/props?lastEvaluatedKey="</code></pre>
                           </div>
-                          <div class="tab-pane" id="examples-Clients-listNVProperties-0-java">
+                          <div class="tab-pane" id="examples-Clients-getFredPropsFromDdb-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
 import io.swagger.client.auth.*;
 import io.swagger.client.model.*;
@@ -2169,17 +1299,17 @@ public class ClientsApiExample {
         ClientsApi apiInstance = new ClientsApi();
         String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
         try {
-            inline_response_200_2 result = apiInstance.listNVProperties(lastEvaluatedKey);
+            FredPropsChunk result = apiInstance.getFredPropsFromDdb(lastEvaluatedKey);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#listNVProperties");
+            System.err.println("Exception when calling ClientsApi#getFredPropsFromDdb");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
 
-                          <div class="tab-pane" id="examples-Clients-listNVProperties-0-android">
+                          <div class="tab-pane" id="examples-Clients-getFredPropsFromDdb-0-android">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ClientsApi;
 
 public class ClientsApiExample {
@@ -2188,20 +1318,20 @@ public class ClientsApiExample {
         ClientsApi apiInstance = new ClientsApi();
         String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
         try {
-            inline_response_200_2 result = apiInstance.listNVProperties(lastEvaluatedKey);
+            FredPropsChunk result = apiInstance.getFredPropsFromDdb(lastEvaluatedKey);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#listNVProperties");
+            System.err.println("Exception when calling ClientsApi#getFredPropsFromDdb");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
   <!--
-  <div class="tab-pane" id="examples-Clients-listNVProperties-0-groovy">
+  <div class="tab-pane" id="examples-Clients-getFredPropsFromDdb-0-groovy">
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
-                            <div class="tab-pane" id="examples-Clients-listNVProperties-0-objc">
+                            <div class="tab-pane" id="examples-Clients-getFredPropsFromDdb-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
 // Configure API key authorization: (authentication scheme: request-authorizer)
 [apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
@@ -2211,9 +1341,9 @@ String *lastEvaluatedKey = lastEvaluatedKey_example; // Last Evaluated Key from 
 
 ClientsApi *apiInstance = [[ClientsApi alloc] init];
 
-// List all nVision user properties
-[apiInstance listNVPropertiesWith:lastEvaluatedKey
-              completionHandler: ^(inline_response_200_2 output, NSError* error) {
+// Return all Frederick properties
+[apiInstance getFredPropsFromDdbWith:lastEvaluatedKey
+              completionHandler: ^(FredPropsChunk output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -2224,9 +1354,9 @@ ClientsApi *apiInstance = [[ClientsApi alloc] init];
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-listNVProperties-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var UserRestWebServiceApi = require('user_rest_web_service_api');
-var defaultClient = UserRestWebServiceApi.ApiClient.instance;
+                            <div class="tab-pane" id="examples-Clients-getFredPropsFromDdb-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var FrederickPropertiesApi = require('frederick_properties_api');
+var defaultClient = FrederickPropertiesApi.ApiClient.instance;
 
 // Configure API key authorization: request-authorizer
 var request-authorizer = defaultClient.authentications['request-authorizer'];
@@ -2234,7 +1364,7 @@ request-authorizer.apiKey = "YOUR API KEY"
 // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
 //request-authorizer.apiKeyPrefix['Authorization'] = "Token"
 
-var api = new UserRestWebServiceApi.ClientsApi()
+var api = new FrederickPropertiesApi.ClientsApi()
 var opts = { 
   'lastEvaluatedKey': lastEvaluatedKey_example // {{String}} Last Evaluated Key from previous request
 };
@@ -2245,14 +1375,14 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.listNVProperties(opts, callback);
+api.getFredPropsFromDdb(opts, callback);
 </code></pre>
                             </div>
 
-                            <!--<div class="tab-pane" id="examples-Clients-listNVProperties-0-angular">
+                            <!--<div class="tab-pane" id="examples-Clients-getFredPropsFromDdb-0-angular">
               <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
             </div>-->
-                            <div class="tab-pane" id="examples-Clients-listNVProperties-0-csharp">
+                            <div class="tab-pane" id="examples-Clients-getFredPropsFromDdb-0-csharp">
                               <pre class="prettyprint"><code class="language-cs">using System;
 using System.Diagnostics;
 using IO.Swagger.Api;
@@ -2261,7 +1391,7 @@ using IO.Swagger.Model;
 
 namespace Example
 {
-    public class listNVPropertiesExample
+    public class getFredPropsFromDdbExample
     {
         public void main()
         {
@@ -2276,13 +1406,13 @@ namespace Example
 
             try
             {
-                // List all nVision user properties
-                inline_response_200_2 result = apiInstance.listNVProperties(lastEvaluatedKey);
+                // Return all Frederick properties
+                FredPropsChunk result = apiInstance.getFredPropsFromDdb(lastEvaluatedKey);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
             {
-                Debug.Print("Exception when calling ClientsApi.listNVProperties: " + e.Message );
+                Debug.Print("Exception when calling ClientsApi.getFredPropsFromDdb: " + e.Message );
             }
         }
     }
@@ -2290,7 +1420,7 @@ namespace Example
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-listNVProperties-0-php">
+                            <div class="tab-pane" id="examples-Clients-getFredPropsFromDdb-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
@@ -2303,15 +1433,15 @@ $api_instance = new Swagger\Client\ApiClientsApi();
 $lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
 
 try {
-    $result = $api_instance->listNVProperties($lastEvaluatedKey);
+    $result = $api_instance->getFredPropsFromDdb($lastEvaluatedKey);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling ClientsApi->listNVProperties: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling ClientsApi->getFredPropsFromDdb: ', $e->getMessage(), PHP_EOL;
 }
 ?></code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-listNVProperties-0-perl">
+                            <div class="tab-pane" id="examples-Clients-getFredPropsFromDdb-0-perl">
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ClientsApi;
@@ -2325,15 +1455,15 @@ my $api_instance = WWW::SwaggerClient::ClientsApi->new();
 my $lastEvaluatedKey = lastEvaluatedKey_example; # String | Last Evaluated Key from previous request
 
 eval { 
-    my $result = $api_instance->listNVProperties(lastEvaluatedKey => $lastEvaluatedKey);
+    my $result = $api_instance->getFredPropsFromDdb(lastEvaluatedKey => $lastEvaluatedKey);
     print Dumper($result);
 };
 if ($@) {
-    warn "Exception when calling ClientsApi->listNVProperties: $@\n";
+    warn "Exception when calling ClientsApi->getFredPropsFromDdb: $@\n";
 }</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-listNVProperties-0-python">
+                            <div class="tab-pane" id="examples-Clients-getFredPropsFromDdb-0-python">
                               <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
 import time
 import swagger_client
@@ -2350,11 +1480,11 @@ api_instance = swagger_client.ClientsApi()
 lastEvaluatedKey = lastEvaluatedKey_example # String | Last Evaluated Key from previous request (optional)
 
 try: 
-    # List all nVision user properties
-    api_response = api_instance.list_nv_properties(lastEvaluatedKey=lastEvaluatedKey)
+    # Return all Frederick properties
+    api_response = api_instance.get_fred_props_from_ddb(lastEvaluatedKey=lastEvaluatedKey)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling ClientsApi->listNVProperties: %s\n" % e)</code></pre>
+    print("Exception when calling ClientsApi->getFredPropsFromDdb: %s\n" % e)</code></pre>
                             </div>
                           </div>
 
@@ -2374,7 +1504,7 @@ except ApiException as e:
                                 <td>
                                 
                                 
-                                    <div id="d2e199_listNVProperties_lastEvaluatedKey">
+                                    <div id="d2e199_getFredPropsFromDdb_lastEvaluatedKey">
                                         <div class="json-schema-view">
                                             <div class="primitive">
                                                 <span class="type">
@@ -2392,26 +1522,26 @@ except ApiException as e:
                             </table>
 
                           <h2>Responses</h2>
-                            <h3> Status: 200 - Response with a list of nVision Properties objects </h3>
+                            <h3> Status: 200 - JSON formatted records of Frederick properties data </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-listNVProperties-200-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-getFredPropsFromDdb-200-schema">Schema</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-listNVProperties-200-schema">
-                                  <div id='responses-listNVProperties-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-getFredPropsFromDdb-200-schema">
+                                  <div id='responses-getFredPropsFromDdb-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
-  "description" : "Response with a list of nVision Properties objects",
+  "description" : "JSON formatted records of Frederick properties data",
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/inline_response_200_2"
+        "$ref" : "#/components/schemas/FredPropsChunk"
       }
     }
   }
@@ -2429,59 +1559,67 @@ except ApiException as e:
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-listNVProperties-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-listNVProperties-200-schema-200');
+                                        $('#responses-getFredPropsFromDdb-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-getFredPropsFromDdb-200-schema-200');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-listNVProperties-200-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-getFredPropsFromDdb-200-schema-data' type='hidden' value=''></input>
                                 </div>
+                            </div>
+
+                            <h3> Status: 400 - bad input parameter </h3>
+
+                            <ul class="nav nav-tabs nav-tabs-examples" >
+                            </ul>
+
+                            <div class="tab-content" style='margin-bottom: 10px;'>
                             </div>
 
                         </article>
                       </div>
                       <hr>
-                    <div id="api-Clients-listNVPropertiesByUserId">
-                      <article id="api-Clients-listNVPropertiesByUserId-0" data-group="User" data-name="listNVPropertiesByUserId" data-version="0">
+                    <div id="api-Clients-listFredPropertyByCustodian">
+                      <article id="api-Clients-listFredPropertyByCustodian-0" data-group="User" data-name="listFredPropertyByCustodian" data-version="0">
                         <div class="pull-left">
-                          <h1>listNVPropertiesByUserId</h1>
-                          <p>List all nVision properties for given user</p>
+                          <h1>listFredPropertyByCustodian</h1>
+                          <p>List property records for a given Custodian by their NED ID</p>
                         </div>
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Get all nVision property records for given user NIH ID
+                        <p class="marked">Get Frederick property records by the NED ID of a Custodian
 </p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/userapi/nv/props/user/{nihId}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/fredpropsapi/v1/props/custodian/{custodianNedId}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
                         <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Clients-listNVPropertiesByUserId-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Clients-listNVPropertiesByUserId-0-python">Python</a></li>
+                          <li class="active"><a href="#examples-Clients-listFredPropertyByCustodian-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Clients-listFredPropertyByCustodian-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Clients-listFredPropertyByCustodian-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Clients-listFredPropertyByCustodian-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Clients-listFredPropertyByCustodian-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Clients-listFredPropertyByCustodian-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Clients-listFredPropertyByCustodian-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Clients-listFredPropertyByCustodian-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Clients-listFredPropertyByCustodian-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Clients-listFredPropertyByCustodian-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Clients-listFredPropertyByCustodian-0-python">Python</a></li>
                         </ul>
 
                         <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Clients-listNVPropertiesByUserId-0-curl">
+                          <div class="tab-pane active" id="examples-Clients-listFredPropertyByCustodian-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Authorization: [[apiKey]]"\
 -H "Accept: application/json"\
-"//userapi/nv/props/user/{nihId}?lastEvaluatedKey="</code></pre>
+"//fredpropsapi/v1/props/custodian/{custodianNedId}?lastEvaluatedKey="</code></pre>
                           </div>
-                          <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-java">
+                          <div class="tab-pane" id="examples-Clients-listFredPropertyByCustodian-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
 import io.swagger.client.auth.*;
 import io.swagger.client.model.*;
@@ -2502,57 +1640,57 @@ public class ClientsApiExample {
         //request-authorizer.setApiKeyPrefix("Token");
 
         ClientsApi apiInstance = new ClientsApi();
-        String nihId = nihId_example; // String | User NIH ID
+        String custodianNedId = custodianNedId_example; // String | Property
         String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
         try {
-            inline_response_200_2 result = apiInstance.listNVPropertiesByUserId(nihId, lastEvaluatedKey);
+            FredPropsChunk result = apiInstance.listFredPropertyByCustodian(custodianNedId, lastEvaluatedKey);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#listNVPropertiesByUserId");
+            System.err.println("Exception when calling ClientsApi#listFredPropertyByCustodian");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
 
-                          <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-android">
+                          <div class="tab-pane" id="examples-Clients-listFredPropertyByCustodian-0-android">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ClientsApi;
 
 public class ClientsApiExample {
 
     public static void main(String[] args) {
         ClientsApi apiInstance = new ClientsApi();
-        String nihId = nihId_example; // String | User NIH ID
+        String custodianNedId = custodianNedId_example; // String | Property
         String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
         try {
-            inline_response_200_2 result = apiInstance.listNVPropertiesByUserId(nihId, lastEvaluatedKey);
+            FredPropsChunk result = apiInstance.listFredPropertyByCustodian(custodianNedId, lastEvaluatedKey);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#listNVPropertiesByUserId");
+            System.err.println("Exception when calling ClientsApi#listFredPropertyByCustodian");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
   <!--
-  <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-groovy">
+  <div class="tab-pane" id="examples-Clients-listFredPropertyByCustodian-0-groovy">
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
-                            <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-objc">
+                            <div class="tab-pane" id="examples-Clients-listFredPropertyByCustodian-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
 // Configure API key authorization: (authentication scheme: request-authorizer)
 [apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
-String *nihId = nihId_example; // User NIH ID
+String *custodianNedId = custodianNedId_example; // Property
 String *lastEvaluatedKey = lastEvaluatedKey_example; // Last Evaluated Key from previous request (optional)
 
 ClientsApi *apiInstance = [[ClientsApi alloc] init];
 
-// List all nVision properties for given user
-[apiInstance listNVPropertiesByUserIdWith:nihId
+// List property records for a given Custodian by their NED ID
+[apiInstance listFredPropertyByCustodianWith:custodianNedId
     lastEvaluatedKey:lastEvaluatedKey
-              completionHandler: ^(inline_response_200_2 output, NSError* error) {
+              completionHandler: ^(FredPropsChunk output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -2563,9 +1701,9 @@ ClientsApi *apiInstance = [[ClientsApi alloc] init];
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var UserRestWebServiceApi = require('user_rest_web_service_api');
-var defaultClient = UserRestWebServiceApi.ApiClient.instance;
+                            <div class="tab-pane" id="examples-Clients-listFredPropertyByCustodian-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var FrederickPropertiesApi = require('frederick_properties_api');
+var defaultClient = FrederickPropertiesApi.ApiClient.instance;
 
 // Configure API key authorization: request-authorizer
 var request-authorizer = defaultClient.authentications['request-authorizer'];
@@ -2573,8 +1711,8 @@ request-authorizer.apiKey = "YOUR API KEY"
 // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
 //request-authorizer.apiKeyPrefix['Authorization'] = "Token"
 
-var api = new UserRestWebServiceApi.ClientsApi()
-var nihId = nihId_example; // {{String}} User NIH ID
+var api = new FrederickPropertiesApi.ClientsApi()
+var custodianNedId = custodianNedId_example; // {{String}} Property
 var opts = { 
   'lastEvaluatedKey': lastEvaluatedKey_example // {{String}} Last Evaluated Key from previous request
 };
@@ -2585,14 +1723,14 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.listNVPropertiesByUserId(nihId, opts, callback);
+api.listFredPropertyByCustodian(custodianNedId, opts, callback);
 </code></pre>
                             </div>
 
-                            <!--<div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-angular">
+                            <!--<div class="tab-pane" id="examples-Clients-listFredPropertyByCustodian-0-angular">
               <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
             </div>-->
-                            <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-csharp">
+                            <div class="tab-pane" id="examples-Clients-listFredPropertyByCustodian-0-csharp">
                               <pre class="prettyprint"><code class="language-cs">using System;
 using System.Diagnostics;
 using IO.Swagger.Api;
@@ -2601,7 +1739,7 @@ using IO.Swagger.Model;
 
 namespace Example
 {
-    public class listNVPropertiesByUserIdExample
+    public class listFredPropertyByCustodianExample
     {
         public void main()
         {
@@ -2612,18 +1750,18 @@ namespace Example
             // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
 
             var apiInstance = new ClientsApi();
-            var nihId = nihId_example;  // String | User NIH ID
+            var custodianNedId = custodianNedId_example;  // String | Property
             var lastEvaluatedKey = lastEvaluatedKey_example;  // String | Last Evaluated Key from previous request (optional) 
 
             try
             {
-                // List all nVision properties for given user
-                inline_response_200_2 result = apiInstance.listNVPropertiesByUserId(nihId, lastEvaluatedKey);
+                // List property records for a given Custodian by their NED ID
+                FredPropsChunk result = apiInstance.listFredPropertyByCustodian(custodianNedId, lastEvaluatedKey);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
             {
-                Debug.Print("Exception when calling ClientsApi.listNVPropertiesByUserId: " + e.Message );
+                Debug.Print("Exception when calling ClientsApi.listFredPropertyByCustodian: " + e.Message );
             }
         }
     }
@@ -2631,7 +1769,7 @@ namespace Example
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-php">
+                            <div class="tab-pane" id="examples-Clients-listFredPropertyByCustodian-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
@@ -2641,19 +1779,19 @@ Swagger\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorizatio
 // Swagger\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
 
 $api_instance = new Swagger\Client\ApiClientsApi();
-$nihId = nihId_example; // String | User NIH ID
+$custodianNedId = custodianNedId_example; // String | Property
 $lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
 
 try {
-    $result = $api_instance->listNVPropertiesByUserId($nihId, $lastEvaluatedKey);
+    $result = $api_instance->listFredPropertyByCustodian($custodianNedId, $lastEvaluatedKey);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling ClientsApi->listNVPropertiesByUserId: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling ClientsApi->listFredPropertyByCustodian: ', $e->getMessage(), PHP_EOL;
 }
 ?></code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-perl">
+                            <div class="tab-pane" id="examples-Clients-listFredPropertyByCustodian-0-perl">
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ClientsApi;
@@ -2664,19 +1802,19 @@ $WWW::SwaggerClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 #$WWW::SwaggerClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
 
 my $api_instance = WWW::SwaggerClient::ClientsApi->new();
-my $nihId = nihId_example; # String | User NIH ID
+my $custodianNedId = custodianNedId_example; # String | Property
 my $lastEvaluatedKey = lastEvaluatedKey_example; # String | Last Evaluated Key from previous request
 
 eval { 
-    my $result = $api_instance->listNVPropertiesByUserId(nihId => $nihId, lastEvaluatedKey => $lastEvaluatedKey);
+    my $result = $api_instance->listFredPropertyByCustodian(custodianNedId => $custodianNedId, lastEvaluatedKey => $lastEvaluatedKey);
     print Dumper($result);
 };
 if ($@) {
-    warn "Exception when calling ClientsApi->listNVPropertiesByUserId: $@\n";
+    warn "Exception when calling ClientsApi->listFredPropertyByCustodian: $@\n";
 }</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-listNVPropertiesByUserId-0-python">
+                            <div class="tab-pane" id="examples-Clients-listFredPropertyByCustodian-0-python">
                               <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
 import time
 import swagger_client
@@ -2690,15 +1828,15 @@ swagger_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # create an instance of the API class
 api_instance = swagger_client.ClientsApi()
-nihId = nihId_example # String | User NIH ID
+custodianNedId = custodianNedId_example # String | Property
 lastEvaluatedKey = lastEvaluatedKey_example # String | Last Evaluated Key from previous request (optional)
 
 try: 
-    # List all nVision properties for given user
-    api_response = api_instance.list_nv_properties_by_user_id(nihId, lastEvaluatedKey=lastEvaluatedKey)
+    # List property records for a given Custodian by their NED ID
+    api_response = api_instance.list_fred_property_by_custodian(custodianNedId, lastEvaluatedKey=lastEvaluatedKey)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling ClientsApi->listNVPropertiesByUserId: %s\n" % e)</code></pre>
+    print("Exception when calling ClientsApi->listFredPropertyByCustodian: %s\n" % e)</code></pre>
                             </div>
                           </div>
 
@@ -2710,11 +1848,11 @@ except ApiException as e:
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
-                                  <tr><td style="width:150px;">nihId*</td>
+                                  <tr><td style="width:150px;">custodianNedId*</td>
                                   <td>
                                   
                                   
-                                      <div id="d2e199_listNVPropertiesByUserId_nihId">
+                                      <div id="d2e199_listFredPropertyByCustodian_custodianNedId">
                                           <div class="json-schema-view">
                                               <div class="primitive">
                                                   <span class="type">
@@ -2722,7 +1860,7 @@ except ApiException as e:
                                                   </span>
                                   
                                                       <div class="inner description">
-                                                          User NIH ID
+                                                          Property
                                                       </div>
                                               </div>
                                                   <div class="inner required">
@@ -2747,7 +1885,7 @@ except ApiException as e:
                                 <td>
                                 
                                 
-                                    <div id="d2e199_listNVPropertiesByUserId_lastEvaluatedKey">
+                                    <div id="d2e199_listFredPropertyByCustodian_lastEvaluatedKey">
                                         <div class="json-schema-view">
                                             <div class="primitive">
                                                 <span class="type">
@@ -2765,26 +1903,26 @@ except ApiException as e:
                             </table>
 
                           <h2>Responses</h2>
-                            <h3> Status: 200 - Response with a list of nVision Properties objects </h3>
+                            <h3> Status: 200 - Property data element </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-listNVPropertiesByUserId-200-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-listFredPropertyByCustodian-200-schema">Schema</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-listNVPropertiesByUserId-200-schema">
-                                  <div id='responses-listNVPropertiesByUserId-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-listFredPropertyByCustodian-200-schema">
+                                  <div id='responses-listFredPropertyByCustodian-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
-  "description" : "Response with a list of nVision Properties objects",
+  "description" : "Property data element",
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/inline_response_200_2"
+        "$ref" : "#/components/schemas/FredPropsChunk"
       }
     }
   }
@@ -2802,59 +1940,59 @@ except ApiException as e:
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-listNVPropertiesByUserId-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-listNVPropertiesByUserId-200-schema-200');
+                                        $('#responses-listFredPropertyByCustodian-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-listFredPropertyByCustodian-200-schema-200');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-listNVPropertiesByUserId-200-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-listFredPropertyByCustodian-200-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
                         </article>
                       </div>
                       <hr>
-                    <div id="api-Clients-listVDSUsersByIC">
-                      <article id="api-Clients-listVDSUsersByIC-0" data-group="User" data-name="listVDSUsersByIC" data-version="0">
+                    <div id="api-Clients-listFredPropertyByProjectOfficer">
+                      <article id="api-Clients-listFredPropertyByProjectOfficer-0" data-group="User" data-name="listFredPropertyByProjectOfficer" data-version="0">
                         <div class="pull-left">
-                          <h1>listVDSUsersByIC</h1>
-                          <p>List VDS user records by the given IC</p>
+                          <h1>listFredPropertyByProjectOfficer</h1>
+                          <p>List property records for a given Property Officer by their NED ID</p>
                         </div>
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked">Get VDS user records that satisfied IC criteria
+                        <p class="marked">Get Frederick property records by the NED ID of a  Property Officer
 </p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/userapi/vds/usersByIc/{ic}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/fredpropsapi/v1/props/officer/{propertyOfficerNedId}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
                         <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Clients-listVDSUsersByIC-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Clients-listVDSUsersByIC-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Clients-listVDSUsersByIC-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Clients-listVDSUsersByIC-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Clients-listVDSUsersByIC-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Clients-listVDSUsersByIC-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Clients-listVDSUsersByIC-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Clients-listVDSUsersByIC-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Clients-listVDSUsersByIC-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Clients-listVDSUsersByIC-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Clients-listVDSUsersByIC-0-python">Python</a></li>
+                          <li class="active"><a href="#examples-Clients-listFredPropertyByProjectOfficer-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Clients-listFredPropertyByProjectOfficer-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Clients-listFredPropertyByProjectOfficer-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Clients-listFredPropertyByProjectOfficer-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Clients-listFredPropertyByProjectOfficer-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Clients-listFredPropertyByProjectOfficer-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Clients-listFredPropertyByProjectOfficer-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Clients-listFredPropertyByProjectOfficer-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Clients-listFredPropertyByProjectOfficer-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Clients-listFredPropertyByProjectOfficer-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Clients-listFredPropertyByProjectOfficer-0-python">Python</a></li>
                         </ul>
 
                         <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Clients-listVDSUsersByIC-0-curl">
+                          <div class="tab-pane active" id="examples-Clients-listFredPropertyByProjectOfficer-0-curl">
                            <pre class="prettyprint"><code class="language-bsh">curl -X GET\
 -H "Authorization: [[apiKey]]"\
 -H "Accept: application/json"\
-"//userapi/vds/usersByIc/{ic}?lastEvaluatedKey="</code></pre>
+"//fredpropsapi/v1/props/officer/{propertyOfficerNedId}?lastEvaluatedKey="</code></pre>
                           </div>
-                          <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-java">
+                          <div class="tab-pane" id="examples-Clients-listFredPropertyByProjectOfficer-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
 import io.swagger.client.auth.*;
 import io.swagger.client.model.*;
@@ -2875,57 +2013,57 @@ public class ClientsApiExample {
         //request-authorizer.setApiKeyPrefix("Token");
 
         ClientsApi apiInstance = new ClientsApi();
-        String ic = ic_example; // String | IC
+        String propertyOfficerNedId = propertyOfficerNedId_example; // String | Property
         String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
         try {
-            VDSUsersChunk result = apiInstance.listVDSUsersByIC(ic, lastEvaluatedKey);
+            FredPropsChunk result = apiInstance.listFredPropertyByProjectOfficer(propertyOfficerNedId, lastEvaluatedKey);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#listVDSUsersByIC");
+            System.err.println("Exception when calling ClientsApi#listFredPropertyByProjectOfficer");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
 
-                          <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-android">
+                          <div class="tab-pane" id="examples-Clients-listFredPropertyByProjectOfficer-0-android">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.api.ClientsApi;
 
 public class ClientsApiExample {
 
     public static void main(String[] args) {
         ClientsApi apiInstance = new ClientsApi();
-        String ic = ic_example; // String | IC
+        String propertyOfficerNedId = propertyOfficerNedId_example; // String | Property
         String lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
         try {
-            VDSUsersChunk result = apiInstance.listVDSUsersByIC(ic, lastEvaluatedKey);
+            FredPropsChunk result = apiInstance.listFredPropertyByProjectOfficer(propertyOfficerNedId, lastEvaluatedKey);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling ClientsApi#listVDSUsersByIC");
+            System.err.println("Exception when calling ClientsApi#listFredPropertyByProjectOfficer");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
   <!--
-  <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-groovy">
+  <div class="tab-pane" id="examples-Clients-listFredPropertyByProjectOfficer-0-groovy">
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
-                            <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-objc">
+                            <div class="tab-pane" id="examples-Clients-listFredPropertyByProjectOfficer-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
 // Configure API key authorization: (authentication scheme: request-authorizer)
 [apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
-String *ic = ic_example; // IC
+String *propertyOfficerNedId = propertyOfficerNedId_example; // Property
 String *lastEvaluatedKey = lastEvaluatedKey_example; // Last Evaluated Key from previous request (optional)
 
 ClientsApi *apiInstance = [[ClientsApi alloc] init];
 
-// List VDS user records by the given IC
-[apiInstance listVDSUsersByICWith:ic
+// List property records for a given Property Officer by their NED ID
+[apiInstance listFredPropertyByProjectOfficerWith:propertyOfficerNedId
     lastEvaluatedKey:lastEvaluatedKey
-              completionHandler: ^(VDSUsersChunk output, NSError* error) {
+              completionHandler: ^(FredPropsChunk output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -2936,9 +2074,9 @@ ClientsApi *apiInstance = [[ClientsApi alloc] init];
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var UserRestWebServiceApi = require('user_rest_web_service_api');
-var defaultClient = UserRestWebServiceApi.ApiClient.instance;
+                            <div class="tab-pane" id="examples-Clients-listFredPropertyByProjectOfficer-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var FrederickPropertiesApi = require('frederick_properties_api');
+var defaultClient = FrederickPropertiesApi.ApiClient.instance;
 
 // Configure API key authorization: request-authorizer
 var request-authorizer = defaultClient.authentications['request-authorizer'];
@@ -2946,8 +2084,8 @@ request-authorizer.apiKey = "YOUR API KEY"
 // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
 //request-authorizer.apiKeyPrefix['Authorization'] = "Token"
 
-var api = new UserRestWebServiceApi.ClientsApi()
-var ic = ic_example; // {{String}} IC
+var api = new FrederickPropertiesApi.ClientsApi()
+var propertyOfficerNedId = propertyOfficerNedId_example; // {{String}} Property
 var opts = { 
   'lastEvaluatedKey': lastEvaluatedKey_example // {{String}} Last Evaluated Key from previous request
 };
@@ -2958,14 +2096,14 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.listVDSUsersByIC(ic, opts, callback);
+api.listFredPropertyByProjectOfficer(propertyOfficerNedId, opts, callback);
 </code></pre>
                             </div>
 
-                            <!--<div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-angular">
+                            <!--<div class="tab-pane" id="examples-Clients-listFredPropertyByProjectOfficer-0-angular">
               <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
             </div>-->
-                            <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-csharp">
+                            <div class="tab-pane" id="examples-Clients-listFredPropertyByProjectOfficer-0-csharp">
                               <pre class="prettyprint"><code class="language-cs">using System;
 using System.Diagnostics;
 using IO.Swagger.Api;
@@ -2974,7 +2112,7 @@ using IO.Swagger.Model;
 
 namespace Example
 {
-    public class listVDSUsersByICExample
+    public class listFredPropertyByProjectOfficerExample
     {
         public void main()
         {
@@ -2985,18 +2123,18 @@ namespace Example
             // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
 
             var apiInstance = new ClientsApi();
-            var ic = ic_example;  // String | IC
+            var propertyOfficerNedId = propertyOfficerNedId_example;  // String | Property
             var lastEvaluatedKey = lastEvaluatedKey_example;  // String | Last Evaluated Key from previous request (optional) 
 
             try
             {
-                // List VDS user records by the given IC
-                VDSUsersChunk result = apiInstance.listVDSUsersByIC(ic, lastEvaluatedKey);
+                // List property records for a given Property Officer by their NED ID
+                FredPropsChunk result = apiInstance.listFredPropertyByProjectOfficer(propertyOfficerNedId, lastEvaluatedKey);
                 Debug.WriteLine(result);
             }
             catch (Exception e)
             {
-                Debug.Print("Exception when calling ClientsApi.listVDSUsersByIC: " + e.Message );
+                Debug.Print("Exception when calling ClientsApi.listFredPropertyByProjectOfficer: " + e.Message );
             }
         }
     }
@@ -3004,7 +2142,7 @@ namespace Example
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-php">
+                            <div class="tab-pane" id="examples-Clients-listFredPropertyByProjectOfficer-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
@@ -3014,19 +2152,19 @@ Swagger\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorizatio
 // Swagger\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
 
 $api_instance = new Swagger\Client\ApiClientsApi();
-$ic = ic_example; // String | IC
+$propertyOfficerNedId = propertyOfficerNedId_example; // String | Property
 $lastEvaluatedKey = lastEvaluatedKey_example; // String | Last Evaluated Key from previous request
 
 try {
-    $result = $api_instance->listVDSUsersByIC($ic, $lastEvaluatedKey);
+    $result = $api_instance->listFredPropertyByProjectOfficer($propertyOfficerNedId, $lastEvaluatedKey);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling ClientsApi->listVDSUsersByIC: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling ClientsApi->listFredPropertyByProjectOfficer: ', $e->getMessage(), PHP_EOL;
 }
 ?></code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-perl">
+                            <div class="tab-pane" id="examples-Clients-listFredPropertyByProjectOfficer-0-perl">
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::SwaggerClient::Configuration;
 use WWW::SwaggerClient::ClientsApi;
@@ -3037,19 +2175,19 @@ $WWW::SwaggerClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 #$WWW::SwaggerClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
 
 my $api_instance = WWW::SwaggerClient::ClientsApi->new();
-my $ic = ic_example; # String | IC
+my $propertyOfficerNedId = propertyOfficerNedId_example; # String | Property
 my $lastEvaluatedKey = lastEvaluatedKey_example; # String | Last Evaluated Key from previous request
 
 eval { 
-    my $result = $api_instance->listVDSUsersByIC(ic => $ic, lastEvaluatedKey => $lastEvaluatedKey);
+    my $result = $api_instance->listFredPropertyByProjectOfficer(propertyOfficerNedId => $propertyOfficerNedId, lastEvaluatedKey => $lastEvaluatedKey);
     print Dumper($result);
 };
 if ($@) {
-    warn "Exception when calling ClientsApi->listVDSUsersByIC: $@\n";
+    warn "Exception when calling ClientsApi->listFredPropertyByProjectOfficer: $@\n";
 }</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-Clients-listVDSUsersByIC-0-python">
+                            <div class="tab-pane" id="examples-Clients-listFredPropertyByProjectOfficer-0-python">
                               <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
 import time
 import swagger_client
@@ -3063,15 +2201,15 @@ swagger_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 
 # create an instance of the API class
 api_instance = swagger_client.ClientsApi()
-ic = ic_example # String | IC
+propertyOfficerNedId = propertyOfficerNedId_example # String | Property
 lastEvaluatedKey = lastEvaluatedKey_example # String | Last Evaluated Key from previous request (optional)
 
 try: 
-    # List VDS user records by the given IC
-    api_response = api_instance.list_vds_users_by_ic(ic, lastEvaluatedKey=lastEvaluatedKey)
+    # List property records for a given Property Officer by their NED ID
+    api_response = api_instance.list_fred_property_by_project_officer(propertyOfficerNedId, lastEvaluatedKey=lastEvaluatedKey)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling ClientsApi->listVDSUsersByIC: %s\n" % e)</code></pre>
+    print("Exception when calling ClientsApi->listFredPropertyByProjectOfficer: %s\n" % e)</code></pre>
                             </div>
                           </div>
 
@@ -3083,11 +2221,11 @@ except ApiException as e:
                                   <th width="150px">Name</th>
                                   <th>Description</th>
                                 </tr>
-                                  <tr><td style="width:150px;">ic*</td>
+                                  <tr><td style="width:150px;">propertyOfficerNedId*</td>
                                   <td>
                                   
                                   
-                                      <div id="d2e199_listVDSUsersByIC_ic">
+                                      <div id="d2e199_listFredPropertyByProjectOfficer_propertyOfficerNedId">
                                           <div class="json-schema-view">
                                               <div class="primitive">
                                                   <span class="type">
@@ -3095,7 +2233,7 @@ except ApiException as e:
                                                   </span>
                                   
                                                       <div class="inner description">
-                                                          IC
+                                                          Property
                                                       </div>
                                               </div>
                                                   <div class="inner required">
@@ -3120,7 +2258,7 @@ except ApiException as e:
                                 <td>
                                 
                                 
-                                    <div id="d2e199_listVDSUsersByIC_lastEvaluatedKey">
+                                    <div id="d2e199_listFredPropertyByProjectOfficer_lastEvaluatedKey">
                                         <div class="json-schema-view">
                                             <div class="primitive">
                                                 <span class="type">
@@ -3138,26 +2276,26 @@ except ApiException as e:
                             </table>
 
                           <h2>Responses</h2>
-                            <h3> Status: 200 - Response with a list of User Records for given IC </h3>
+                            <h3> Status: 200 - Property data element </h3>
 
                             <ul class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-listVDSUsersByIC-200-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-listFredPropertyByProjectOfficer-200-schema">Schema</a>
                                 </li>
 
                             </ul>
 
                             <div class="tab-content" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-listVDSUsersByIC-200-schema">
-                                  <div id='responses-listVDSUsersByIC-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
+                                <div class="tab-pane active" id="responses-listFredPropertyByProjectOfficer-200-schema">
+                                  <div id='responses-listFredPropertyByProjectOfficer-200-schema-200' style="padding: 30px; border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee;">
                                     <script>
                                       $(document).ready(function() {
                                         var schemaWrapper = {
-  "description" : "Response with a list of User Records for given IC",
+  "description" : "Property data element",
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/VDSUsersChunk"
+        "$ref" : "#/components/schemas/FredPropsChunk"
       }
     }
   }
@@ -3175,14 +2313,14 @@ except ApiException as e:
 
                                         //console.log(JSON.stringify(schema));
                                         var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-listVDSUsersByIC-200-schema-data').val(stringify(schema));
-                                        var result = $('#responses-listVDSUsersByIC-200-schema-200');
+                                        $('#responses-listFredPropertyByProjectOfficer-200-schema-data').val(stringify(schema));
+                                        var result = $('#responses-listFredPropertyByProjectOfficer-200-schema-200');
                                         result.empty();
                                         result.append(view.render());
                                       });
                                     </script>
                                   </div>
-                                  <input id='responses-listVDSUsersByIC-200-schema-data' type='hidden' value=''></input>
+                                  <input id='responses-listFredPropertyByProjectOfficer-200-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
 
