@@ -3,3 +3,6 @@ notes
 pgmSSHKey.pem
 *.iml
 scratch/
+doc/.*
+*local.js
+/**/node_modules

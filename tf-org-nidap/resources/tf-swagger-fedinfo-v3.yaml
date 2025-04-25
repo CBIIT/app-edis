@@ -1,0 +1,135 @@
+openapi: 3.0.0
+info:
+  description: Enterprise Data & Integration Services Web Services - **Federal Employees Info Service**
+  version: "1.0.0"
+  title: Federal Employees Info API
+  # put the contact info for your development or API team
+  contact:
+    email: NCICBIITBizAppsSupportLowTier@mail.nih.gov
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+
+# tags are used for organizing operations
+tags:
+  - name: system API service
+    description: Operations available to clients - system to system
+
+paths:
+  /dataapi/v2/feds:
+    get:
+      tags:
+        - system API service
+      summary: Get information for all NIH Federal Employees
+      operationId: getAllFedsInfo
+      description: |
+        Get grade, series, and title for all NIH Federal Employees from NIDAP.
+      parameters:
+        - name: lastEvaluatedKey
+          in: query
+          description: Last Evaluated Key returned from previous request
+          required: false
+          schema:
+            type: string
+            example: '1234567890'
+      responses:
+        '200':
+          description: JSON formatted records of the federal employees
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FedInfoResponse'
+        '400':
+          description: bad input parameter
+      security:
+        - request-authorizer: []
+
+  /dataapi/v2/feds/{nedid}:
+    get:
+      tags:
+        - system API service
+      summary: Get federal employee information by NED ID
+      operationId: searchFedInfoByNEDId
+      description: |
+        Get grade, series, and title for federal employee by NED ID from NIDAP.
+      parameters:
+        - name: nedid
+          in: path
+          description: NED ID of federal employee
+          required: true
+          schema:
+            type: string
+            example: '0123456789'
+      responses:
+        '200':
+          description: JSON formatted record for federal employee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FedInfo'
+        '400':
+          description: bad input parameter
+      security:
+        - request-authorizer: []
+
+components:
+  schemas:
+    FedInfoResponse:
+      type: object
+      properties:
+        count:
+            type: integer
+            description: Number of returned records
+        error:
+          type: string
+          description: Error message if not empty - rest of the fields are zeros
+        lastEvaluatedKey:
+          type: string
+          description: If present, the result is incomplete, pass this value as "lastEvaluatedKey" query parameter to get the next chunk of results
+        items:
+            type: array
+            items:
+              $ref: '#/components/schemas/FedInfo'
+
+    FedInfo:
+      type: object
+      required:
+        - NED_ID
+      properties:
+        NED_ID:
+          type: string
+          format: string
+          example: 0123456789
+        PAY_PLAN:
+          type: string
+          example: GS
+        GRADE:
+          type: string
+          example: 14
+        SERIES:
+          type: string
+          example: 1550
+        TITLE:
+          type: string
+          example: COMPUTER SCIENCE
+
+    FedInfoSearchError:
+      properties:
+        errorCode:
+          type: string
+          example: INVALID ARGUMENT
+        errorName:
+          type: string
+          example: Processing Error
+        errorInstanceId:
+          type: string
+          example: 1234567qws
+        parameters:
+          type: object
+          example: {}
+
+  securitySchemes:
+    request-authorizer:
+      type: apiKey
+      name: Authorization
+      in: header

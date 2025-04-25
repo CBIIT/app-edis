@@ -1,0 +1,152 @@
+openapi: 3.0.0
+info:
+  description: Enterprise Data & Integration Services Web Services - **Organization Service**
+  version: "1.0.0"
+  title: Organizations API
+  # put the contact info for your development or API team
+  contact:
+    email: NCICBIITBizAppsSupportLowTier@mail.nih.gov
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+
+# tags are used for organizing operations
+tags:
+  - name: system API service
+    description: Operations available to clients - system to system
+
+paths:
+  /dataapi/v2/orgs:
+    get:
+      tags:
+        - system API service
+      summary: Get all NIH Organizations
+      operationId: getAllOrganizations
+      description: |
+        Get all Organization records from NIDAP.  Records are enhanced with DOC information
+      parameters:
+        - name: lastEvaluatedKey
+          in: query
+          description: Last Evaluated Key returned from previous request
+          required: false
+          schema:
+            type: string
+            example: '1234567890'
+      responses:
+        '200':
+          description: JSON formatted records of the organizations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationsResponse'
+        '400':
+          description: bad input parameter
+      security:
+        - request-authorizer: []
+
+  /dataapi/v2/orgs/{nihsac}:
+    get:
+      tags:
+        - system API service
+      summary: Get NIH organization by NIH SAC code
+      operationId: searchOrganizationBySac
+      description: |
+        Get Organization record for the given NIH SAC from NIDAP.  Record is enhanced with DOC information
+      parameters:
+        - name: nihsac
+          in: path
+          description: NIH SAC code to search for
+          required: true
+          schema:
+            type: string
+            example: 'ABC123'
+      responses:
+        '200':
+          description: JSON formatted records of the organizations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          description: bad input parameter
+      security:
+        - request-authorizer: []
+
+components:
+  schemas:
+    OrganizationsResponse:
+      type: object
+      properties:
+        count:
+            type: integer
+            description: Number of returned records
+        error:
+          type: string
+          description: Error message if not empty - rest of the fields are zeros
+        lastEvaluatedKey:
+          type: string
+          description: If present, the result is incomplete, pass this value as "lastEvaluatedKey" query parameter to get the next chunk of results
+        items:
+            type: array
+            items:
+              $ref: '#/components/schemas/Organization'
+
+    Organization:
+      type: object
+      required:
+        - NIHSAC
+        - NIHORGACRONYM
+        - NIHORGNAME
+        - NIHORGPATH
+        - NIHOUACRONYM
+        - NIHOUNAME
+      properties:
+        NIHSAC:
+          type: string
+          format: string
+          example: HNC123
+        NIHORGACRONYM:
+          type: string
+          example: SI
+        NIHORGNAME:
+          type: string
+          example: Some Institute
+        NIHORGPATH:
+          type: string
+          example: ABC DE FG
+        NIHOUACRONYM:
+          type: string
+          example: SO
+        NIHOUNAME:
+          type: string
+          example: Some Office
+        NIHPARENTSAC:
+          type: string
+          example: HNC12
+        DOCSAC:
+          type: integer
+          example: HNC12
+        DOCORGPATH:
+          type: string
+          example: ABC DE
+
+    OrganizationsSearchError:
+      properties:
+        errorCode:
+          type: string
+          example: INVALID ARGUMENT
+        errorName:
+          type: string
+          example: Processing Error
+        errorInstanceId:
+          type: string
+          example: 1234567qws
+        parameters:
+          type: object
+          example: {}
+
+  securitySchemes:
+    request-authorizer:
+      type: apiKey
+      name: Authorization
+      in: header
