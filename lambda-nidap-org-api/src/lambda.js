@@ -36,7 +36,7 @@ async function getConfigurationParameters() {
       params.NextToken = resp.NextToken;
     }
     resp = await client.getParametersByPath(params).promise();
-    data = data.append(resp.Parameters);
+    data = data.concat(resp.Parameters);
   } while (resp.NextToken !== undefined);
   return convertParametersToJson(data, PARAMETER_PATH);
 }
