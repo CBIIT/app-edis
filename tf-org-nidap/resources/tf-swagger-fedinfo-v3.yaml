@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
-  description: Enterprise Data & Integration Services Web Services - **Federal Employees Info Service**
+  description: Enterprise Data & Integration Services Web Services - **Federal HR Info Service**
   version: "1.0.0"
-  title: Federal Employees Info API
+  title: Federal HR INFO API
   # put the contact info for your development or API team
   contact:
     email: NCICBIITBizAppsSupportLowTier@mail.nih.gov
@@ -16,12 +16,12 @@ tags:
     description: Operations available to clients - system to system
 
 paths:
-  /dataapi/v2/feds:
+  /dataapi/v2/fedhr:
     get:
       tags:
         - system API service
-      summary: Get information for all NIH Federal Employees
-      operationId: getAllFedsInfo
+      summary: Get HR information for all NIH Federal Employees
+      operationId: getAllFedHrInfo
       description: |
         Get grade, series, and title for all NIH Federal Employees from NIDAP.
       parameters:
@@ -44,11 +44,11 @@ paths:
       security:
         - request-authorizer: []
 
-  /dataapi/v2/feds/{nedid}:
+  /dataapi/v2/fedhr/{nedid}:
     get:
       tags:
         - system API service
-      summary: Get federal employee information by NED ID
+      summary: Get Federal Employee HR information by NED ID
       operationId: searchFedInfoByNEDId
       description: |
         Get grade, series, and title for federal employee by NED ID from NIDAP.
@@ -109,7 +109,7 @@ components:
         SERIES:
           type: string
           example: 1550
-        TITLE:
+        SERIES_TITLE:
           type: string
           example: COMPUTER SCIENCE
 

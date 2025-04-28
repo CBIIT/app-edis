@@ -24,10 +24,20 @@ const PARAMETER_PATH = process.env.PARAMETER_PATH || '/dev/app/eadis/nidap/';
 const client = new AWS.SSM();
 
 async function getConfigurationParameters() {
-  const data = await client.getParametersByPath({
-    Path: PARAMETER_PATH,
-    Recursive: true,
-    WithDecryption: true }).promise();
+  let data = [];
+  let resp = {};
+  do {
+    let params = {
+      Path: PARAMETER_PATH,
+      Recursive: true,
+      WithDecryption: true
+    }
+    if (resp.NextToken) {
+      params.NextToken = resp.NextToken;
+    }
+    resp = await client.getParametersByPath(params).promise();
+    data = data.append(resp.Parameters);
+  } while (resp.NextToken !== undefined);
   return convertParametersToJson(data, PARAMETER_PATH);
 }
 

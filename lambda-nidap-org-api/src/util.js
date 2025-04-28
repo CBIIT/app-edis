@@ -35,7 +35,7 @@ function processPaginatedResult(response, items) {
 
 function convertParametersToJson(data, prefix) {
     const result = {};
-    data.Parameters.forEach((p) => {
+    data.forEach((p) => {
         let paths = p.Name.slice(prefix.length).split('/');
         let tempResult = result;
         for (let i = 0; i < paths.length - 1; i++) {

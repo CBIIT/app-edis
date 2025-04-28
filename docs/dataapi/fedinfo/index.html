@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Federal Employees Info API</title>
+  <title>Federal HR INFO API</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="UTF-8" />
@@ -865,7 +865,7 @@ ul.nav-tabs {
       "type" : "string",
       "example" : "1550"
     },
-    "TITLE" : {
+    "SERIES_TITLE" : {
       "type" : "string",
       "example" : "COMPUTER SCIENCE"
     }
@@ -934,8 +934,8 @@ ul.nav-tabs {
             <li class="nav-fixed nav-header active" data-group="_"><a href="#api-_">API Summary</a></li>
 
                   <li class="nav-header" data-group="SystemAPIService"><a href="#api-SystemAPIService">API Methods - SystemAPIService</a></li>
-                    <li data-group="SystemAPIService" data-name="getAllFedsInfo" class="">
-                      <a href="#api-SystemAPIService-getAllFedsInfo">getAllFedsInfo</a>
+                    <li data-group="SystemAPIService" data-name="getAllFedHrInfo" class="">
+                      <a href="#api-SystemAPIService-getAllFedHrInfo">getAllFedHrInfo</a>
                     </li>
                     <li data-group="SystemAPIService" data-name="searchFedInfoByNEDId" class="">
                       <a href="#api-SystemAPIService-searchFedInfoByNEDId">searchFedInfoByNEDId</a>
@@ -946,7 +946,7 @@ ul.nav-tabs {
       <div id="content">
         <div id="project">
           <div class="pull-left">
-            <h1>Federal Employees Info API</h1>
+            <h1>Federal HR INFO API</h1>
           </div>
           <div class="clearfix"></div>
         </div>
@@ -956,18 +956,18 @@ ul.nav-tabs {
               <div class="app-desc">Version: 1.0.0</div>
             <hr>
             <div id="app-description" class="app-desc">
-                Enterprise Data &amp; Integration Services Web Services - <strong>Federal Employees Info Service</strong>
+                Enterprise Data &amp; Integration Services Web Services - <strong>Federal HR Info Service</strong>
             </div>
           </div>
         </div>
         <div id="sections">
                 <section id="api-SystemAPIService">
                   <h1>SystemAPIService</h1>
-                    <div id="api-SystemAPIService-getAllFedsInfo">
-                      <article id="api-SystemAPIService-getAllFedsInfo-0" data-group="User" data-name="getAllFedsInfo" data-version="0">
+                    <div id="api-SystemAPIService-getAllFedHrInfo">
+                      <article id="api-SystemAPIService-getAllFedHrInfo-0" data-group="User" data-name="getAllFedHrInfo" data-version="0">
                         <div class="pull-left">
-                          <h1>getAllFedsInfo</h1>
-                          <p>Get information for all NIH Federal Employees</p>
+                          <h1>getAllFedHrInfo</h1>
+                          <p>Get HR information for all NIH Federal Employees</p>
                         </div>
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
@@ -976,35 +976,35 @@ ul.nav-tabs {
 </p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/dataapi/v2/feds</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/dataapi/v2/fedhr</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
                         <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-SystemAPIService-getAllFedsInfo-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-SystemAPIService-getAllFedsInfo-0-java">Java</a></li>
-                          <li class=""><a href="#examples-SystemAPIService-getAllFedsInfo-0-dart">Dart</a></li>
-                          <li class=""><a href="#examples-SystemAPIService-getAllFedsInfo-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-SystemAPIService-getAllFedsInfo-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-SystemAPIService-getAllFedsInfo-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-SystemAPIService-getAllFedsInfo-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-SystemAPIService-getAllFedsInfo-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-SystemAPIService-getAllFedsInfo-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-SystemAPIService-getAllFedsInfo-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-SystemAPIService-getAllFedsInfo-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-SystemAPIService-getAllFedsInfo-0-python">Python</a></li>
-                          <li class=""><a href="#examples-SystemAPIService-getAllFedsInfo-0-rust">Rust</a></li>
+                          <li class="active"><a href="#examples-SystemAPIService-getAllFedHrInfo-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-SystemAPIService-getAllFedHrInfo-0-java">Java</a></li>
+                          <li class=""><a href="#examples-SystemAPIService-getAllFedHrInfo-0-dart">Dart</a></li>
+                          <li class=""><a href="#examples-SystemAPIService-getAllFedHrInfo-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-SystemAPIService-getAllFedHrInfo-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-SystemAPIService-getAllFedHrInfo-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-SystemAPIService-getAllFedHrInfo-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-SystemAPIService-getAllFedHrInfo-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-SystemAPIService-getAllFedHrInfo-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-SystemAPIService-getAllFedHrInfo-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-SystemAPIService-getAllFedHrInfo-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-SystemAPIService-getAllFedHrInfo-0-python">Python</a></li>
+                          <li class=""><a href="#examples-SystemAPIService-getAllFedHrInfo-0-rust">Rust</a></li>
                         </ul>
 
                         <div class="tab-content">
-                          <div class="tab-pane active" id="examples-SystemAPIService-getAllFedsInfo-0-curl">
+                          <div class="tab-pane active" id="examples-SystemAPIService-getAllFedHrInfo-0-curl">
                             <pre class="prettyprint"><code class="language-bsh">curl -X GET \
 -H "Authorization: [[apiKey]]" \
  -H "Accept: application/json" \
- "http://localhost/dataapi/v2/feds?lastEvaluatedKey=1234567890"
+ "http://localhost/dataapi/v2/fedhr?lastEvaluatedKey=1234567890"
 </code></pre>
                           </div>
-                          <div class="tab-pane" id="examples-SystemAPIService-getAllFedsInfo-0-java">
+                          <div class="tab-pane" id="examples-SystemAPIService-getAllFedHrInfo-0-java">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
 import org.openapitools.client.auth.*;
 import org.openapitools.client.model.*;
@@ -1028,10 +1028,10 @@ public class SystemAPIServiceApiExample {
         String lastEvaluatedKey = 1234567890; // String | Last Evaluated Key returned from previous request
 
         try {
-            FedInfoResponse result = apiInstance.getAllFedsInfo(lastEvaluatedKey);
+            FedInfoResponse result = apiInstance.getAllFedHrInfo(lastEvaluatedKey);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling SystemAPIServiceApi#getAllFedsInfo");
+            System.err.println("Exception when calling SystemAPIServiceApi#getAllFedHrInfo");
             e.printStackTrace();
         }
     }
@@ -1039,7 +1039,7 @@ public class SystemAPIServiceApiExample {
 </code></pre>
                           </div>
 
-                          <div class="tab-pane" id="examples-SystemAPIService-getAllFedsInfo-0-dart">
+                          <div class="tab-pane" id="examples-SystemAPIService-getAllFedHrInfo-0-dart">
                             <pre class="prettyprint"><code class="language-dart">import 'package:openapi/api.dart';
 
 final api_instance = DefaultApi();
@@ -1047,16 +1047,16 @@ final api_instance = DefaultApi();
 final String lastEvaluatedKey = new String(); // String | Last Evaluated Key returned from previous request
 
 try {
-    final result = await api_instance.getAllFedsInfo(lastEvaluatedKey);
+    final result = await api_instance.getAllFedHrInfo(lastEvaluatedKey);
     print(result);
 } catch (e) {
-    print('Exception when calling DefaultApi->getAllFedsInfo: $e\n');
+    print('Exception when calling DefaultApi->getAllFedHrInfo: $e\n');
 }
 
 </code></pre>
                           </div>
 
-                          <div class="tab-pane" id="examples-SystemAPIService-getAllFedsInfo-0-android">
+                          <div class="tab-pane" id="examples-SystemAPIService-getAllFedHrInfo-0-android">
                             <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.SystemAPIServiceApi;
 
 public class SystemAPIServiceApiExample {
@@ -1065,20 +1065,20 @@ public class SystemAPIServiceApiExample {
         String lastEvaluatedKey = 1234567890; // String | Last Evaluated Key returned from previous request
 
         try {
-            FedInfoResponse result = apiInstance.getAllFedsInfo(lastEvaluatedKey);
+            FedInfoResponse result = apiInstance.getAllFedHrInfo(lastEvaluatedKey);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling SystemAPIServiceApi#getAllFedsInfo");
+            System.err.println("Exception when calling SystemAPIServiceApi#getAllFedHrInfo");
             e.printStackTrace();
         }
     }
 }</code></pre>
                           </div>
   <!--
-  <div class="tab-pane" id="examples-SystemAPIService-getAllFedsInfo-0-groovy">
+  <div class="tab-pane" id="examples-SystemAPIService-getAllFedHrInfo-0-groovy">
   <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
   </div> -->
-                            <div class="tab-pane" id="examples-SystemAPIService-getAllFedsInfo-0-objc">
+                            <div class="tab-pane" id="examples-SystemAPIService-getAllFedHrInfo-0-objc">
                               <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
 
 // Configure API key authorization: (authentication scheme: request-authorizer)
@@ -1091,8 +1091,8 @@ public class SystemAPIServiceApiExample {
 SystemAPIServiceApi *apiInstance = [[SystemAPIServiceApi alloc] init];
 String *lastEvaluatedKey = 1234567890; // Last Evaluated Key returned from previous request (optional) (default to null)
 
-// Get information for all NIH Federal Employees
-[apiInstance getAllFedsInfoWith:lastEvaluatedKey
+// Get HR information for all NIH Federal Employees
+[apiInstance getAllFedHrInfoWith:lastEvaluatedKey
               completionHandler: ^(FedInfoResponse output, NSError* error) {
     if (output) {
         NSLog(@"%@", output);
@@ -1104,9 +1104,9 @@ String *lastEvaluatedKey = 1234567890; // Last Evaluated Key returned from previ
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-SystemAPIService-getAllFedsInfo-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FederalEmployeesInfoApi = require('federal_employees_info_api');
-var defaultClient = FederalEmployeesInfoApi.ApiClient.instance;
+                            <div class="tab-pane" id="examples-SystemAPIService-getAllFedHrInfo-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var FederalHrInfoApi = require('federal_hr_info_api');
+var defaultClient = FederalHrInfoApi.ApiClient.instance;
 
 // Configure API key authorization: request-authorizer
 var request-authorizer = defaultClient.authentications['request-authorizer'];
@@ -1115,7 +1115,7 @@ request-authorizer.apiKey = "YOUR API KEY";
 //request-authorizer.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FederalEmployeesInfoApi.SystemAPIServiceApi()
+var api = new FederalHrInfoApi.SystemAPIServiceApi()
 var opts = {
   'lastEvaluatedKey': 1234567890 // {String} Last Evaluated Key returned from previous request
 };
@@ -1127,14 +1127,14 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.getAllFedsInfo(opts, callback);
+api.getAllFedHrInfo(opts, callback);
 </code></pre>
                             </div>
 
-                            <!--<div class="tab-pane" id="examples-SystemAPIService-getAllFedsInfo-0-angular">
+                            <!--<div class="tab-pane" id="examples-SystemAPIService-getAllFedHrInfo-0-angular">
               <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
             </div>-->
-                            <div class="tab-pane" id="examples-SystemAPIService-getAllFedsInfo-0-csharp">
+                            <div class="tab-pane" id="examples-SystemAPIService-getAllFedHrInfo-0-csharp">
                               <pre class="prettyprint"><code class="language-cs">using System;
 using System.Diagnostics;
 using Org.OpenAPITools.Api;
@@ -1143,7 +1143,7 @@ using Org.OpenAPITools.Model;
 
 namespace Example
 {
-    public class getAllFedsInfoExample
+    public class getAllFedHrInfoExample
     {
         public void main()
         {
@@ -1157,11 +1157,11 @@ namespace Example
             var lastEvaluatedKey = 1234567890;  // String | Last Evaluated Key returned from previous request (optional)  (default to null)
 
             try {
-                // Get information for all NIH Federal Employees
-                FedInfoResponse result = apiInstance.getAllFedsInfo(lastEvaluatedKey);
+                // Get HR information for all NIH Federal Employees
+                FedInfoResponse result = apiInstance.getAllFedHrInfo(lastEvaluatedKey);
                 Debug.WriteLine(result);
             } catch (Exception e) {
-                Debug.Print("Exception when calling SystemAPIServiceApi.getAllFedsInfo: " + e.Message );
+                Debug.Print("Exception when calling SystemAPIServiceApi.getAllFedHrInfo: " + e.Message );
             }
         }
     }
@@ -1169,7 +1169,7 @@ namespace Example
 </code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-SystemAPIService-getAllFedsInfo-0-php">
+                            <div class="tab-pane" id="examples-SystemAPIService-getAllFedHrInfo-0-php">
                               <pre class="prettyprint"><code class="language-php"><&#63;php
 require_once(__DIR__ . '/vendor/autoload.php');
 
@@ -1183,15 +1183,15 @@ $api_instance = new OpenAPITools\Client\Api\SystemAPIServiceApi();
 $lastEvaluatedKey = 1234567890; // String | Last Evaluated Key returned from previous request
 
 try {
-    $result = $api_instance->getAllFedsInfo($lastEvaluatedKey);
+    $result = $api_instance->getAllFedHrInfo($lastEvaluatedKey);
     print_r($result);
 } catch (Exception $e) {
-    echo 'Exception when calling SystemAPIServiceApi->getAllFedsInfo: ', $e->getMessage(), PHP_EOL;
+    echo 'Exception when calling SystemAPIServiceApi->getAllFedHrInfo: ', $e->getMessage(), PHP_EOL;
 }
 ?></code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-SystemAPIService-getAllFedsInfo-0-perl">
+                            <div class="tab-pane" id="examples-SystemAPIService-getAllFedHrInfo-0-perl">
                               <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
 use WWW::OPenAPIClient::Configuration;
 use WWW::OPenAPIClient::SystemAPIServiceApi;
@@ -1206,15 +1206,15 @@ my $api_instance = WWW::OPenAPIClient::SystemAPIServiceApi->new();
 my $lastEvaluatedKey = 1234567890; # String | Last Evaluated Key returned from previous request
 
 eval {
-    my $result = $api_instance->getAllFedsInfo(lastEvaluatedKey => $lastEvaluatedKey);
+    my $result = $api_instance->getAllFedHrInfo(lastEvaluatedKey => $lastEvaluatedKey);
     print Dumper($result);
 };
 if ($@) {
-    warn "Exception when calling SystemAPIServiceApi->getAllFedsInfo: $@\n";
+    warn "Exception when calling SystemAPIServiceApi->getAllFedHrInfo: $@\n";
 }</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-SystemAPIService-getAllFedsInfo-0-python">
+                            <div class="tab-pane" id="examples-SystemAPIService-getAllFedHrInfo-0-python">
                               <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
 import time
 import openapi_client
@@ -1231,21 +1231,21 @@ api_instance = openapi_client.SystemAPIServiceApi()
 lastEvaluatedKey = 1234567890 # String | Last Evaluated Key returned from previous request (optional) (default to null)
 
 try:
-    # Get information for all NIH Federal Employees
-    api_response = api_instance.get_all_feds_info(lastEvaluatedKey=lastEvaluatedKey)
+    # Get HR information for all NIH Federal Employees
+    api_response = api_instance.get_all_fed_hr_info(lastEvaluatedKey=lastEvaluatedKey)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling SystemAPIServiceApi->getAllFedsInfo: %s\n" % e)</code></pre>
+    print("Exception when calling SystemAPIServiceApi->getAllFedHrInfo: %s\n" % e)</code></pre>
                             </div>
 
-                            <div class="tab-pane" id="examples-SystemAPIService-getAllFedsInfo-0-rust">
+                            <div class="tab-pane" id="examples-SystemAPIService-getAllFedHrInfo-0-rust">
                               <pre class="prettyprint"><code class="language-rust">extern crate SystemAPIServiceApi;
 
 pub fn main() {
     let lastEvaluatedKey = 1234567890; // String
 
     let mut context = SystemAPIServiceApi::Context::default();
-    let result = client.getAllFedsInfo(lastEvaluatedKey, &context).wait();
+    let result = client.getAllFedHrInfo(lastEvaluatedKey, &context).wait();
 
     println!("{:?}", result);
 }
@@ -1274,7 +1274,7 @@ pub fn main() {
 <td>
 
 
-    <div id="d2e199_getAllFedsInfo_lastEvaluatedKey">
+    <div id="d2e199_getAllFedHrInfo_lastEvaluatedKey">
         <div class="json-schema-view">
             <div class="primitive">
                 <span class="type">
@@ -1293,23 +1293,23 @@ Last Evaluated Key returned from previous request
                             </table>
 
                           <h2>Responses</h2>
-                            <h3 id="examples-SystemAPIService-getAllFedsInfo-title-200"></h3>
-                            <p id="examples-SystemAPIService-getAllFedsInfo-description-200" class="marked"></p>
+                            <h3 id="examples-SystemAPIService-getAllFedHrInfo-title-200"></h3>
+                            <p id="examples-SystemAPIService-getAllFedHrInfo-description-200" class="marked"></p>
                             <script>
                               var responseSystemAPIService200_description = `JSON formatted records of the federal employees`;
                               var responseSystemAPIService200_description_break = responseSystemAPIService200_description.indexOf('\n');
                               if (responseSystemAPIService200_description_break == -1) {
-                                $("#examples-SystemAPIService-getAllFedsInfo-title-200").text("Status: 200 - " + responseSystemAPIService200_description);
+                                $("#examples-SystemAPIService-getAllFedHrInfo-title-200").text("Status: 200 - " + responseSystemAPIService200_description);
                               } else {
-                                $("#examples-SystemAPIService-getAllFedsInfo-title-200").text("Status: 200 - " + responseSystemAPIService200_description.substring(0, responseSystemAPIService200_description_break));
-                                $("#examples-SystemAPIService-getAllFedsInfo-description-200").html(responseSystemAPIService200_description.substring(responseSystemAPIService200_description_break));
+                                $("#examples-SystemAPIService-getAllFedHrInfo-title-200").text("Status: 200 - " + responseSystemAPIService200_description.substring(0, responseSystemAPIService200_description_break));
+                                $("#examples-SystemAPIService-getAllFedHrInfo-description-200").html(responseSystemAPIService200_description.substring(responseSystemAPIService200_description_break));
                               }
                             </script>
 
 
-                            <ul id="responses-detail-SystemAPIService-getAllFedsInfo-200" class="nav nav-tabs nav-tabs-examples" >
+                            <ul id="responses-detail-SystemAPIService-getAllFedHrInfo-200" class="nav nav-tabs nav-tabs-examples" >
                                 <li class="active">
-                                  <a data-toggle="tab" href="#responses-SystemAPIService-getAllFedsInfo-200-schema">Schema</a>
+                                  <a data-toggle="tab" href="#responses-SystemAPIService-getAllFedHrInfo-200-schema">Schema</a>
                                 </li>
 
 
@@ -1318,9 +1318,9 @@ Last Evaluated Key returned from previous request
                             </ul>
 
 
-                            <div class="tab-content" id="responses-SystemAPIService-getAllFedsInfo-200-wrapper" style='margin-bottom: 10px;'>
-                              <div class="tab-pane active" id="responses-SystemAPIService-getAllFedsInfo-200-schema">
-                                <div id="responses-SystemAPIService-getAllFedsInfo-schema-200" class="exampleStyle">
+                            <div class="tab-content" id="responses-SystemAPIService-getAllFedHrInfo-200-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-SystemAPIService-getAllFedHrInfo-200-schema">
+                                <div id="responses-SystemAPIService-getAllFedHrInfo-schema-200" class="exampleStyle">
                                   <script>
                                     $(document).ready(function() {
                                       var schemaWrapper = {
@@ -1359,39 +1359,39 @@ Last Evaluated Key returned from previous request
                                       }
 
                                       var view = new JSONSchemaView(schema, 3);
-                                      $('#responses-SystemAPIService-getAllFedsInfo-200-schema-data').val(JSON.stringify(schema));
-                                      var result = $('#responses-SystemAPIService-getAllFedsInfo-schema-200');
+                                      $('#responses-SystemAPIService-getAllFedHrInfo-200-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-SystemAPIService-getAllFedHrInfo-schema-200');
                                       result.empty();
                                       result.append(view.render());
                                     });
                                   </script>
                                 </div>
-                                <input id='responses-SystemAPIService-getAllFedsInfo-200-schema-data' type='hidden' value=''></input>
+                                <input id='responses-SystemAPIService-getAllFedHrInfo-200-schema-data' type='hidden' value=''></input>
                               </div>
                             </div>
-                            <h3 id="examples-SystemAPIService-getAllFedsInfo-title-400"></h3>
-                            <p id="examples-SystemAPIService-getAllFedsInfo-description-400" class="marked"></p>
+                            <h3 id="examples-SystemAPIService-getAllFedHrInfo-title-400"></h3>
+                            <p id="examples-SystemAPIService-getAllFedHrInfo-description-400" class="marked"></p>
                             <script>
                               var responseSystemAPIService400_description = `bad input parameter`;
                               var responseSystemAPIService400_description_break = responseSystemAPIService400_description.indexOf('\n');
                               if (responseSystemAPIService400_description_break == -1) {
-                                $("#examples-SystemAPIService-getAllFedsInfo-title-400").text("Status: 400 - " + responseSystemAPIService400_description);
+                                $("#examples-SystemAPIService-getAllFedHrInfo-title-400").text("Status: 400 - " + responseSystemAPIService400_description);
                               } else {
-                                $("#examples-SystemAPIService-getAllFedsInfo-title-400").text("Status: 400 - " + responseSystemAPIService400_description.substring(0, responseSystemAPIService400_description_break));
-                                $("#examples-SystemAPIService-getAllFedsInfo-description-400").html(responseSystemAPIService400_description.substring(responseSystemAPIService400_description_break));
+                                $("#examples-SystemAPIService-getAllFedHrInfo-title-400").text("Status: 400 - " + responseSystemAPIService400_description.substring(0, responseSystemAPIService400_description_break));
+                                $("#examples-SystemAPIService-getAllFedHrInfo-description-400").html(responseSystemAPIService400_description.substring(responseSystemAPIService400_description_break));
                               }
                             </script>
 
 
-                            <ul id="responses-detail-SystemAPIService-getAllFedsInfo-400" class="nav nav-tabs nav-tabs-examples" >
+                            <ul id="responses-detail-SystemAPIService-getAllFedHrInfo-400" class="nav nav-tabs nav-tabs-examples" >
 
 
                             </ul>
 
 
-                            <div class="tab-content" id="responses-SystemAPIService-getAllFedsInfo-400-wrapper" style='margin-bottom: 10px;'>
-                              <div class="tab-pane active" id="responses-SystemAPIService-getAllFedsInfo-400-schema">
-                                <div id="responses-SystemAPIService-getAllFedsInfo-schema-400" class="exampleStyle">
+                            <div class="tab-content" id="responses-SystemAPIService-getAllFedHrInfo-400-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-SystemAPIService-getAllFedHrInfo-400-schema">
+                                <div id="responses-SystemAPIService-getAllFedHrInfo-schema-400" class="exampleStyle">
                                   <script>
                                     $(document).ready(function() {
                                       var schemaWrapper = {
@@ -1423,14 +1423,14 @@ Last Evaluated Key returned from previous request
                                       }
 
                                       var view = new JSONSchemaView(schema, 3);
-                                      $('#responses-SystemAPIService-getAllFedsInfo-400-schema-data').val(JSON.stringify(schema));
-                                      var result = $('#responses-SystemAPIService-getAllFedsInfo-schema-400');
+                                      $('#responses-SystemAPIService-getAllFedHrInfo-400-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-SystemAPIService-getAllFedHrInfo-schema-400');
                                       result.empty();
                                       result.append(view.render());
                                     });
                                   </script>
                                 </div>
-                                <input id='responses-SystemAPIService-getAllFedsInfo-400-schema-data' type='hidden' value=''></input>
+                                <input id='responses-SystemAPIService-getAllFedHrInfo-400-schema-data' type='hidden' value=''></input>
                               </div>
                             </div>
                         </article>
@@ -1440,7 +1440,7 @@ Last Evaluated Key returned from previous request
                       <article id="api-SystemAPIService-searchFedInfoByNEDId-0" data-group="User" data-name="searchFedInfoByNEDId" data-version="0">
                         <div class="pull-left">
                           <h1>searchFedInfoByNEDId</h1>
-                          <p>Get federal employee information by NED ID</p>
+                          <p>Get Federal Employee HR information by NED ID</p>
                         </div>
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
@@ -1449,7 +1449,7 @@ Last Evaluated Key returned from previous request
 </p>
                         <p></p>
                         <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/dataapi/v2/feds/{nedid}</span></code></pre>
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/dataapi/v2/fedhr/{nedid}</span></code></pre>
                         <p>
                           <h3>Usage and SDK Samples</h3>
                         </p>
@@ -1474,7 +1474,7 @@ Last Evaluated Key returned from previous request
                             <pre class="prettyprint"><code class="language-bsh">curl -X GET \
 -H "Authorization: [[apiKey]]" \
  -H "Accept: application/json" \
- "http://localhost/dataapi/v2/feds/{nedid}"
+ "http://localhost/dataapi/v2/fedhr/{nedid}"
 </code></pre>
                           </div>
                           <div class="tab-pane" id="examples-SystemAPIService-searchFedInfoByNEDId-0-java">
@@ -1564,7 +1564,7 @@ public class SystemAPIServiceApiExample {
 SystemAPIServiceApi *apiInstance = [[SystemAPIServiceApi alloc] init];
 String *nedid = 0123456789; // NED ID of federal employee (default to null)
 
-// Get federal employee information by NED ID
+// Get Federal Employee HR information by NED ID
 [apiInstance searchFedInfoByNEDIdWith:nedid
               completionHandler: ^(FedInfo output, NSError* error) {
     if (output) {
@@ -1578,8 +1578,8 @@ String *nedid = 0123456789; // NED ID of federal employee (default to null)
                             </div>
 
                             <div class="tab-pane" id="examples-SystemAPIService-searchFedInfoByNEDId-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FederalEmployeesInfoApi = require('federal_employees_info_api');
-var defaultClient = FederalEmployeesInfoApi.ApiClient.instance;
+                              <pre class="prettyprint"><code class="language-js">var FederalHrInfoApi = require('federal_hr_info_api');
+var defaultClient = FederalHrInfoApi.ApiClient.instance;
 
 // Configure API key authorization: request-authorizer
 var request-authorizer = defaultClient.authentications['request-authorizer'];
@@ -1588,7 +1588,7 @@ request-authorizer.apiKey = "YOUR API KEY";
 //request-authorizer.apiKeyPrefix['Authorization'] = "Token";
 
 // Create an instance of the API class
-var api = new FederalEmployeesInfoApi.SystemAPIServiceApi()
+var api = new FederalHrInfoApi.SystemAPIServiceApi()
 var nedid = 0123456789; // {String} NED ID of federal employee
 
 var callback = function(error, data, response) {
@@ -1628,7 +1628,7 @@ namespace Example
             var nedid = 0123456789;  // String | NED ID of federal employee (default to null)
 
             try {
-                // Get federal employee information by NED ID
+                // Get Federal Employee HR information by NED ID
                 FedInfo result = apiInstance.searchFedInfoByNEDId(nedid);
                 Debug.WriteLine(result);
             } catch (Exception e) {
@@ -1702,7 +1702,7 @@ api_instance = openapi_client.SystemAPIServiceApi()
 nedid = 0123456789 # String | NED ID of federal employee (default to null)
 
 try:
-    # Get federal employee information by NED ID
+    # Get Federal Employee HR information by NED ID
     api_response = api_instance.search_fed_info_by_nedid(nedid)
     pprint(api_response)
 except ApiException as e:
