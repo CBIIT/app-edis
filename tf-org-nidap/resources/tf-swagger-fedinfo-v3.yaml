@@ -69,6 +69,19 @@ paths:
                 $ref: '#/components/schemas/FedInfo'
         '400':
           description: bad input parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FedInfoSearchError'
+        '404':
+          description: object not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FedInfoSearchError'
+        default:
+          description: server error
+
       security:
         - request-authorizer: []
 

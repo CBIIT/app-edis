@@ -13,7 +13,12 @@ function nidapApiRoutesV2(app, opts) {
             res.json(await listAllData(req.params['dataObject'], req.query.lastEvaluatedKey));
         } catch (error) {
             console.error('ERROR:', error);
-            res.status(500).send(error);
+            if (error.response && error.response.status && error.response.data) {
+                res.status(error.response.status).send(error.response.data);
+            }
+            else {
+                res.status(500).send(error);
+            }
         }
     });
     app.get('/:dataObject/:primary', async (req, res) => {
@@ -26,7 +31,12 @@ function nidapApiRoutesV2(app, opts) {
             res.json(await searchDataByPrimaryKey(req.params['dataObject'], req.params['primary']));
         } catch (error) {
             console.error('ERROR:', error);
-            res.status(500).send(error);
+            if (error.response && error.response.status && error.response.data) {
+                res.status(error.response.status).send(error.response.data);
+            }
+            else {
+                res.status(500).send(error);
+            }
         }
     });
 }

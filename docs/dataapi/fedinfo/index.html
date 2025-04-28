@@ -1858,6 +1858,11 @@ NED ID of federal employee
 
 
                             <ul id="responses-detail-SystemAPIService-searchFedInfoByNEDId-400" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-SystemAPIService-searchFedInfoByNEDId-400-schema">Schema</a>
+                                </li>
+
+
 
 
                             </ul>
@@ -1869,7 +1874,14 @@ NED ID of federal employee
                                   <script>
                                     $(document).ready(function() {
                                       var schemaWrapper = {
-  "description" : "bad input parameter"
+  "description" : "bad input parameter",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/FedInfoSearchError"
+      }
+    }
+  }
 };
                                       var schema = findNode('schema',schemaWrapper).schema;
                                       if (!schema) {
@@ -1905,6 +1917,146 @@ NED ID of federal employee
                                   </script>
                                 </div>
                                 <input id='responses-SystemAPIService-searchFedInfoByNEDId-400-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                            <h3 id="examples-SystemAPIService-searchFedInfoByNEDId-title-404"></h3>
+                            <p id="examples-SystemAPIService-searchFedInfoByNEDId-description-404" class="marked"></p>
+                            <script>
+                              var responseSystemAPIService404_description = `object not found`;
+                              var responseSystemAPIService404_description_break = responseSystemAPIService404_description.indexOf('\n');
+                              if (responseSystemAPIService404_description_break == -1) {
+                                $("#examples-SystemAPIService-searchFedInfoByNEDId-title-404").text("Status: 404 - " + responseSystemAPIService404_description);
+                              } else {
+                                $("#examples-SystemAPIService-searchFedInfoByNEDId-title-404").text("Status: 404 - " + responseSystemAPIService404_description.substring(0, responseSystemAPIService404_description_break));
+                                $("#examples-SystemAPIService-searchFedInfoByNEDId-description-404").html(responseSystemAPIService404_description.substring(responseSystemAPIService404_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-SystemAPIService-searchFedInfoByNEDId-404" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-SystemAPIService-searchFedInfoByNEDId-404-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-SystemAPIService-searchFedInfoByNEDId-404-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-SystemAPIService-searchFedInfoByNEDId-404-schema">
+                                <div id="responses-SystemAPIService-searchFedInfoByNEDId-schema-404" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "object not found",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/FedInfoSearchError"
+      }
+    }
+  }
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-SystemAPIService-searchFedInfoByNEDId-404-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-SystemAPIService-searchFedInfoByNEDId-schema-404');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-SystemAPIService-searchFedInfoByNEDId-404-schema-data' type='hidden' value=''></input>
+                              </div>
+                            </div>
+                            <h3 id="examples-SystemAPIService-searchFedInfoByNEDId-title-default"></h3>
+                            <p id="examples-SystemAPIService-searchFedInfoByNEDId-description-default" class="marked"></p>
+                            <script>
+                              var responseSystemAPIServicedefault_description = `server error`;
+                              var responseSystemAPIServicedefault_description_break = responseSystemAPIServicedefault_description.indexOf('\n');
+                              if (responseSystemAPIServicedefault_description_break == -1) {
+                                $("#examples-SystemAPIService-searchFedInfoByNEDId-title-default").text("Status: default - " + responseSystemAPIServicedefault_description);
+                              } else {
+                                $("#examples-SystemAPIService-searchFedInfoByNEDId-title-default").text("Status: default - " + responseSystemAPIServicedefault_description.substring(0, responseSystemAPIServicedefault_description_break));
+                                $("#examples-SystemAPIService-searchFedInfoByNEDId-description-default").html(responseSystemAPIServicedefault_description.substring(responseSystemAPIServicedefault_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-SystemAPIService-searchFedInfoByNEDId-default" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-SystemAPIService-searchFedInfoByNEDId-default-wrapper" style='margin-bottom: 10px;'>
+                              <div class="tab-pane active" id="responses-SystemAPIService-searchFedInfoByNEDId-default-schema">
+                                <div id="responses-SystemAPIService-searchFedInfoByNEDId-schema-default" class="exampleStyle">
+                                  <script>
+                                    $(document).ready(function() {
+                                      var schemaWrapper = {
+  "description" : "server error"
+};
+                                      var schema = findNode('schema',schemaWrapper).schema;
+                                      if (!schema) {
+                                        schema = schemaWrapper.schema;
+                                      }
+                                      if (schema == null) {
+                                        return;
+                                      }
+                                      if (schema.$ref != null) {
+                                        schema = defsParser.$refs.get(schema.$ref);
+                                        if (schema.properties != null) {
+                                          Object.keys(schema.properties).forEach( (item) => {
+                                            if (schema.properties[item].$ref != null) {
+                                              schema.properties[item] = defsParser.$refs.get(schema.properties[item].$ref);
+                                            }
+                                          });
+                                        }
+                                      } else if (schema.items != null && schema.items.$ref != null) {
+                                        schema.items = defsParser.$refs.get(schema.items.$ref);
+                                      } else {
+                                        schemaWrapper.definitions = Object.assign({}, defs);
+                                        $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                          console.log(err);
+                                        });
+                                      }
+
+                                      var view = new JSONSchemaView(schema, 3);
+                                      $('#responses-SystemAPIService-searchFedInfoByNEDId-default-schema-data').val(JSON.stringify(schema));
+                                      var result = $('#responses-SystemAPIService-searchFedInfoByNEDId-schema-default');
+                                      result.empty();
+                                      result.append(view.render());
+                                    });
+                                  </script>
+                                </div>
+                                <input id='responses-SystemAPIService-searchFedInfoByNEDId-default-schema-data' type='hidden' value=''></input>
                               </div>
                             </div>
                         </article>
