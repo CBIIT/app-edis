@@ -9,7 +9,7 @@ Here is a list of APIs EADIS provides along with their current deployment state.
 | FPS User        | [API Doc](fps/index.html)             | qa            | Enterprise Data & Integration Services Web Services - **FPS User Service** |
 | Fred Properties | [API Doc](fred-props/index.html)      | qa            | Data from Frederick Properties Web Service                                 |
 | Organizations   | [API Doc](orgs/index.html)            | prod          | Organizations Data                                                         |
-| Orgs (NIDAP)    | [API Doc](dataapi/orgs/index.html)    | dev           | Organizations Data (Generic NIDAP integration)                             |
-| Federal HR Info | [API Doc](dataapi/fedinfo/index.html) | dev           | Federal employees grade, series, and title data (NIDAP)                    |
+| Orgs (NIDAP)    | [API Doc](dataapi/orgs/index.html)    | prod          | Organizations Data (Generic NIDAP integration)                             |
+| Federal HR Info | [API Doc](dataapi/fedinfo/index.html) | prod          | Federal employees grade, series, and title data (NIDAP)                    |
 
 

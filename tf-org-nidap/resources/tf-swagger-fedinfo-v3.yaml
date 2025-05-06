@@ -125,6 +125,12 @@ components:
         SERIES_TITLE:
           type: string
           example: COMPUTER SCIENCE
+        POS_TITLE:
+          type: string
+          example: SENIOR INVESTIGATOR
+        NCI_POSITION_TITLE:
+          type: string
+          example: Senior Investigator
 
     FedInfoSearchError:
       properties:
