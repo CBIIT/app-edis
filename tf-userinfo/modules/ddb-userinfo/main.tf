@@ -14,6 +14,11 @@ resource "aws_dynamodb_table" "table" {
     type = "S"
   }
 
+  attribute {
+    name = "vdsDelete"
+    type = "S"
+  }
+
   global_secondary_index {
     hash_key        = "NIHORGACRONYM"
     range_key       = "NEDId"
