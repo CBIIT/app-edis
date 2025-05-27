@@ -107,7 +107,7 @@ paths:
     get:
       tags:
         - clients
-      summary: List VDS user records by the given IC
+      summary: List VDS user records for the given IC
       operationId: listVDSUsersByIC
       description: |
         Get VDS user records that satisfied IC criteria
@@ -276,6 +276,121 @@ paths:
                       "DOC": "$elem.DOC.S"
                     }#if($foreach.hasNext),#end
                     
+                #end
+                  ]
+                }
+      security:
+        - request-authorizer: []
+
+  /userapi/vds/deletedByIc/{ic}:
+    get:
+      tags:
+        - clients
+      summary: List deleted VDS user records for the given IC
+      operationId: listVDSDeletedByIC
+      description: |
+        Get VDS deleted user records that satisfied IC criteria and date range
+      parameters:
+        - name: ic
+          in: path
+          description: IC
+          required: true
+          schema:
+            type: string
+            example: 'NCI'
+        - name: lastEvaluatedKey
+          in: query
+          description: Last Evaluated Key from previous request
+          required: false
+          schema:
+            type: string
+            example: '12345'
+        - name: fromDate
+          in: query
+          required: true
+          schema:
+            description: Format yyyyMMdd
+            type: string
+            example: 20250301
+        - name: toDate
+          in: query
+          required: false
+          schema:
+            description: Format yyyyMMdd
+            type: string
+            example: 20250325
+      responses:
+        '200':
+          $ref: '#/components/responses/vdsDeletedByIcResponse'
+      x-amazon-apigateway-integration:
+        type: aws
+        httpMethod: POST
+        uri: ${ddb_action_query}
+        credentials: ${ddb_role_arn}
+        timeoutInMillis: 29000
+        passthroughBehavior: when_no_templates
+        cacheKeyParameters:
+          - method.request.path.ic
+          - method.request.querystring.lastEvaluatedKey
+        requestTemplates:
+          application/json: |-
+            #set($ic = $input.params('ic'))
+            #set($lastEvaluatedKey = $input.params('lastEvaluatedKey'))
+            
+            #set($fromDate = $input.params('fromDate') + '000000')
+            #set($toDate = $input.params('toDate'))
+            #if($toDate != "")
+            {
+              #set($toDate = $toDate + '999999')
+            }
+            {
+              "TableName": "${users_table_name}",
+              "IndexName": "ic-vdsDelete-index",
+            #if($toDate != "")
+              "KeyConditionExpression": "NIHORGACRONYM = :ic and vdsDelete BETWEEN :fromDate AND :toDate",
+              "ExpressionAttributeValues": {
+                ":ic": { "S": "$ic" },
+                ":fromDate": { "S": "$fromDate" },
+                ":toDate": { "S": "$toDate" }
+              }
+            #else
+              "KeyConditionExpression": "NIHORGACRONYM = :ic and vdsDelete >= :fromDate",
+              "ExpressionAttributeValues": {
+                ":ic": { "S": "$ic" },
+                ":fromDate": { "S": "$fromDate" }
+              }
+            #end
+            #if($lastEvaluatedKey != "")
+              #set ($dash = $lastEvaluatedKey.indexOf('-'))
+              #set ($lastNedId = $lastEvaluatedKey.substring(0, $dash))
+              #set ($dash = $dash + 1)
+              #set ($lastVdsDelete = $lastEvaluatedKey.substring($dash))
+              , "ExclusiveStartKey": { "NEDId": { "S": "$lastNedId" }, "NIHORGACRONYM": { "S": "$ic" }, "vdsDelete": { "S": "$lastVdsDelete" } }
+            #end
+            }
+        responses:
+          2\d{2}:
+            statusCode: 200
+            responseTemplates:
+              application/json: |-
+                #set ($inputRoot = $input.path('$'))
+                #set ($lastEvaluatedKey = $inputRoot.LastEvaluatedKey.NEDId.S)
+                #if($lastEvaluatedKey != "")
+                  #set ($lastEvaluatedKey = $lastEvaluatedKey + '-' + $inputRoot.LastEvaluatedKey.vdsDelete.S)
+                #end
+                {
+                  "count": $inputRoot.Count,
+                #if($lastEvaluatedKey != "")
+                  "lastEvaluatedKey": "$lastEvaluatedKey",
+                #end
+                  "items": [
+                #foreach($elem in $inputRoot.Items)
+                    {
+                      "UNIQUEIDENTIFIER": "$elem.UNIQUEIDENTIFIER.S",
+                      "NIHORGACRONYM": "$elem.NIHORGACRONYM.S",
+                      "DELETED": "$elem.vdsDelete.S"
+                    }#if($foreach.hasNext),#end
+                
                 #end
                   ]
                 }
@@ -588,6 +703,13 @@ components:
           schema:
             $ref: '#/components/schemas/VDSUsersChunk'
 
+    vdsDeletedByIcResponse:
+      description: Response with a list of Deleted User Records for given IC
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VDSDeletedUsersChunk'
+
     nvPropsResponse:
       description: Response with a list of nVision Properties objects
       content:
@@ -860,6 +982,36 @@ components:
           description: Calculated DOC value based on NIHSAC and NIHORGPATH
           type: string
           example: CBIIT
+
+    VDSDeletedUsersChunk:
+      type: object
+      properties:
+        count:
+          type: integer
+        error:
+          type: string
+          description: Error message if not empty - rest of the fields are zeros
+        lastEvaluatedKey:
+          type: string
+          description: If present, the result is incomplete, pass this value as "lastEvaluatedKey" query parameter to get the next chunk of results
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/VDSDeletedUser'
+
+    VDSDeletedUser:
+      type: object
+      properties:
+        UNIQUEIDENTIFIER:
+          type: string
+          example: 0011234567
+        DELETED:
+          type: string
+          example: 20250324012445
+          description: Format yyyyMMddhhmmss
+        NIHORGACRONYM:
+          type: string
+          example: NCI
 
     nVProperty:
       type: object
