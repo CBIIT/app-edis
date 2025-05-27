@@ -21,6 +21,13 @@ resource "aws_dynamodb_table" "table" {
     projection_type = "ALL"
   }
 
+  global_secondary_index {
+    hash_key        = "NIHORGACRONYM"
+    range_key       = "vdsDelete"
+    name            = "ic-vdsDelete-index"
+    projection_type = "ALL"
+  }
+
   lifecycle {
     ignore_changes = [read_capacity, write_capacity]
   }
