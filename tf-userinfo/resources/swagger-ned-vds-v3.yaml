@@ -340,9 +340,8 @@ paths:
             #set($fromDate = $input.params('fromDate') + '000000')
             #set($toDate = $input.params('toDate'))
             #if($toDate != "")
-            {
               #set($toDate = $toDate + '999999')
-            }
+            #end
             {
               "TableName": "${users_table_name}",
               "IndexName": "ic-vdsDelete-index",
@@ -360,6 +359,7 @@ paths:
                 ":fromDate": { "S": "$fromDate" }
               }
             #end
+              , "ProjectionExpression": "UNIQUEIDENTIFIER,NIHORGACRONYM,vdsDelete"
             #if($lastEvaluatedKey != "")
               #set ($dash = $lastEvaluatedKey.indexOf('-'))
               #set ($lastNedId = $lastEvaluatedKey.substring(0, $dash))
