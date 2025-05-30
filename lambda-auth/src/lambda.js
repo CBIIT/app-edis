@@ -1,8 +1,9 @@
 'use strict';
 
 const OktaJwtVerifier = require('@okta/jwt-verifier');
-const {initConfiguration, conf} = require("./conf");
+const {conf, initConfiguration, initAuthConfiguration} = require("./conf");
 const { getSecretParameters } = require('./secrets');
+const { getConfigurationParameters } = require('./parameterstore');
 const { authLdap } = require("./ldap-auth");
 
 const oktaJwtVerifier = (process.env.ISSUER && process.env.AUDIENCE) ?
@@ -12,9 +13,15 @@ const oktaJwtVerifier = (process.env.ISSUER && process.env.AUDIENCE) ?
 
 // Set the console log level
 const logLevel = process.env['LOG_LEVEL'];
-if (logLevel && logLevel == 'info') {
+if (logLevel && logLevel == 'debug') {
+    console.trace = function () {}
+}
+else if (logLevel && logLevel == 'info') {
+    console.trace = function () {}
     console.debug = function () {}
 }
+
+const PARAMETER_PATH = process.env.PARAMETER_PATH || '/dev/app/eadis/auth/';
 
 module.exports.handler = async (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false
@@ -23,6 +30,10 @@ module.exports.handler = async (event, context, callback) => {
     console.debug('Authorization token :', token);
 
     if (token) {
+        // Get authorization parameters from Parameter Store
+        const authParameters = getConfigurationParameters(PARAMETER_PATH);
+        initAuthConfiguration(authParameters);
+
         // Basic Authentication with NIH Service Account
         if (token.indexOf('Basic') != -1) {
             console.debug('Analysis of Basic Authorization token');
@@ -44,7 +55,7 @@ module.exports.handler = async (event, context, callback) => {
                 console.error('Basic Authentication Error', e);
                 return callback(null, generatePolicy('user', 'Deny', event['methodArn']));
             }
-            return callback(null, generatePolicy('user', 'Allow', event['methodArn']));
+            return callback(null, generatePolicy('user', 'Allow', event['methodArn'], username));
         }
         // OAuth2 authentication
         else if (token.indexOf('Bearer') != -1) {
@@ -54,8 +65,9 @@ module.exports.handler = async (event, context, callback) => {
                 try {
                     const jwt = await oktaJwtVerifier.verifyAccessToken(bearer_token, process.env.AUDIENCE);
                     console.debug('OktaJwtVerifier verification:', jwt);
-                    console.info('Successful Auth2 Token Authentication');
-                    return callback(null, generatePolicy('user', 'Allow', event['methodArn']));
+                    const username = (jwt.claims) ? jwt.claims.sub : undefined;
+                    console.info('Successful Auth2 Token Authentication for ', username);
+                    return callback(null, generatePolicy('user', 'Allow', event['methodArn'], username));
 
                 } catch (err) {
                     console.error('OktaJwtVerifier verifyToken is failed:', err);
@@ -83,7 +95,14 @@ function generatePolicy(user, effect, methodArn, username) {
         const statementOne = {};
         statementOne.Action = 'execute-api:Invoke';
         statementOne.Effect = effect;
-        statementOne.Resource = methodArn.substring(0, methodArn.indexOf('/')) + '/*';
+        if (effect.equals("Allow") && username && conf.auth.users && conf.auth.users[username] && conf.auth.users[username].policies) {
+            const policies = conf.auth.users[username].policies.split[','];
+            statementOne.Resource = [];
+            policies.forEach((policy) => statementOne.Resource.push(policy));
+        }
+        else {
+            statementOne.Resource = methodArn.substring(0, methodArn.indexOf('/')) + '/*';
+        }
         policyDocument.Statement[0] = statementOne;
         authResponse.policyDocument = policyDocument;
     }
