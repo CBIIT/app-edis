@@ -98,7 +98,7 @@ function generatePolicy(user, effect, methodArn, username) {
         if ((effect == "Allow") && username && conf.auth.users && conf.auth.users[username] && conf.auth.users[username].policies) {
             const policies = conf.auth.users[username].policies.split[','];
             statementOne.Resource = [];
-            policies.forEach((policy) => statementOne.Resource.push(policy));
+            policies.forEach((policy) => statementOne.Resource.push('arn:aws:execute-api:us-east-1::' + policy));
         }
         else {
             statementOne.Resource = methodArn.substring(0, methodArn.indexOf('/')) + '/*';
