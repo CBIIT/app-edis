@@ -95,7 +95,7 @@ function generatePolicy(user, effect, methodArn, username) {
         const statementOne = {};
         statementOne.Action = 'execute-api:Invoke';
         statementOne.Effect = effect;
-        if (effect.equals("Allow") && username && conf.auth.users && conf.auth.users[username] && conf.auth.users[username].policies) {
+        if ((effect == "Allow") && username && conf.auth.users && conf.auth.users[username] && conf.auth.users[username].policies) {
             const policies = conf.auth.users[username].policies.split[','];
             statementOne.Resource = [];
             policies.forEach((policy) => statementOne.Resource.push(policy));
