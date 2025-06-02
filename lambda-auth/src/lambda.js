@@ -31,7 +31,7 @@ module.exports.handler = async (event, context, callback) => {
 
     if (token) {
         // Get authorization parameters from Parameter Store
-        const authParameters = getConfigurationParameters(PARAMETER_PATH);
+        const authParameters = await getConfigurationParameters(PARAMETER_PATH);
         initAuthConfiguration(authParameters);
 
         // Basic Authentication with NIH Service Account
