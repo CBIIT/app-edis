@@ -92,18 +92,33 @@ function generatePolicy(user, effect, methodArn, username) {
         const policyDocument = {};
         policyDocument.Version = '2012-10-17';
         policyDocument.Statement = [];
-        const statementOne = {};
-        statementOne.Action = 'execute-api:Invoke';
-        statementOne.Effect = effect;
         if ((effect == "Allow") && username && conf.auth.users && conf.auth.users[username] && conf.auth.users[username].policies) {
-            const policies = conf.auth.users[username].policies.split[','];
-            statementOne.Resource = [];
-            policies.forEach((policy) => statementOne.Resource.push('arn:aws:execute-api:us-east-1::' + policy));
+            if (conf.auth.users[username].policies.allow) {
+                const statement = {};
+                statement.Action = 'execute-api:Invoke';
+                statement.Effect = "Allow";
+                const policies = conf.auth.users[username].policies.allow.split[','];
+                statement.Resource = [];
+                policies.forEach((policy) => statementOne.Resource.push('arn:aws:execute-api:us-east-1::' + policy));
+                policyDocument.Statement.push(statement);
+            }
+            if (conf.auth.users[username].policies.deny) {
+                const statement = {};
+                statement.Action = 'execute-api:Invoke';
+                statement.Effect = "Deny";
+                const policies = conf.auth.users[username].policies.deny.split[','];
+                statement.Resource = [];
+                policies.forEach((policy) => statementOne.Resource.push('arn:aws:execute-api:us-east-1::' + policy));
+                policyDocument.Statement.push(statement);
+            }
         }
         else {
+            const statementOne = {};
+            statementOne.Action = 'execute-api:Invoke';
+            statementOne.Effect = effect;
             statementOne.Resource = methodArn.substring(0, methodArn.indexOf('/')) + '/*';
+            policyDocument.Statement.push(statementOne);
         }
-        policyDocument.Statement[0] = statementOne;
         authResponse.policyDocument = policyDocument;
     }
 
