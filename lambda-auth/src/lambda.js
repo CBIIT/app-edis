@@ -89,6 +89,9 @@ function generatePolicy(user, effect, methodArn, username) {
 
     authResponse.principalId = user;
     if (effect && methodArn) {
+        const firstSlash = methodArn.indexOf('/');
+        const secondSlash = methodArn.indexOf('/', firstSlash + 1); // "arn:aws:execute-api:us-east-1:<acct id>:<api id>/"
+        const resourcePrefix = methodArn.substring(0, secondSlash + 1); // "arn:aws:execute-api:us-east-1:<acct id>:<api id>/<stage>/
         const policyDocument = {};
         policyDocument.Version = '2012-10-17';
         policyDocument.Statement = [];
@@ -97,18 +100,18 @@ function generatePolicy(user, effect, methodArn, username) {
                 const statement = {};
                 statement.Action = 'execute-api:Invoke';
                 statement.Effect = "Allow";
-                const policies = conf.auth.users[username].policies.allow.split[','];
+                const policies = conf.auth.users[username].policies.allow.split(',');
                 statement.Resource = [];
-                policies.forEach((policy) => statementOne.Resource.push('arn:aws:execute-api:us-east-1::' + policy));
+                policies.forEach((policy) => statement.Resource.push(resourcePrefix + policy));
                 policyDocument.Statement.push(statement);
             }
             if (conf.auth.users[username].policies.deny) {
                 const statement = {};
                 statement.Action = 'execute-api:Invoke';
                 statement.Effect = "Deny";
-                const policies = conf.auth.users[username].policies.deny.split[','];
+                const policies = conf.auth.users[username].policies.deny.split(',');
                 statement.Resource = [];
-                policies.forEach((policy) => statementOne.Resource.push('arn:aws:execute-api:us-east-1::' + policy));
+                policies.forEach((policy) => statement.Resource.push(resourcePrefix + policy));
                 policyDocument.Statement.push(statement);
             }
         }
@@ -116,7 +119,7 @@ function generatePolicy(user, effect, methodArn, username) {
             const statementOne = {};
             statementOne.Action = 'execute-api:Invoke';
             statementOne.Effect = effect;
-            statementOne.Resource = methodArn.substring(0, methodArn.indexOf('/')) + '/*';
+            statementOne.Resource = resourcePrefix + '*';
             policyDocument.Statement.push(statementOne);
         }
         authResponse.policyDocument = policyDocument;
