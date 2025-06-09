@@ -50,7 +50,7 @@ module.exports.handler = async (event, context, callback) => {
                 initConfiguration(configuration);
                 const cnUser = `cn=${username},${conf.ad.serviceAccountsBase}`;
                 await authLdap(cnUser, password);
-                console.info('Successful Basic Authentication for ', username);
+                console.info(JSON.stringify({msg: 'Successful Authentication', user: username, method: event['methodArn'], auth: 'Basic'}));
             } catch (e) {
                 console.error('Basic Authentication Error', e);
                 return callback(null, generatePolicy('user', 'Deny', event['methodArn']));
@@ -66,7 +66,7 @@ module.exports.handler = async (event, context, callback) => {
                     const jwt = await oktaJwtVerifier.verifyAccessToken(bearer_token, process.env.AUDIENCE);
                     console.debug('OktaJwtVerifier verification:', jwt);
                     const username = (jwt.claims) ? jwt.claims.sub : undefined;
-                    console.info('Successful Auth2 Token Authentication for ', username);
+                    console.info(JSON.stringify({msg: 'Successful Authentication', user: username, method: event['methodArn'], auth: 'Auth2'}));
                     return callback(null, generatePolicy(username, 'Allow', event['methodArn']));
 
                 } catch (err) {
