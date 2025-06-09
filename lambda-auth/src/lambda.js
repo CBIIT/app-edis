@@ -118,7 +118,7 @@ function generatePolicy(username, effect, methodArn) {
         else {
             const statementOne = {};
             statementOne.Action = 'execute-api:Invoke';
-            statementOne.Effect = effect;
+            statementOne.Effect = "Deny";
             statementOne.Resource = resourcePrefix + '*';
             policyDocument.Statement.push(statementOne);
         }
