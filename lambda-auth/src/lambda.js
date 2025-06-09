@@ -55,7 +55,7 @@ module.exports.handler = async (event, context, callback) => {
                 console.error('Basic Authentication Error', e);
                 return callback(null, generatePolicy('user', 'Deny', event['methodArn']));
             }
-            return callback(null, generatePolicy('user', 'Allow', event['methodArn'], username));
+            return callback(null, generatePolicy(username, 'Allow', event['methodArn']));
         }
         // OAuth2 authentication
         else if (token.indexOf('Bearer') != -1) {
@@ -67,7 +67,7 @@ module.exports.handler = async (event, context, callback) => {
                     console.debug('OktaJwtVerifier verification:', jwt);
                     const username = (jwt.claims) ? jwt.claims.sub : undefined;
                     console.info('Successful Auth2 Token Authentication for ', username);
-                    return callback(null, generatePolicy('user', 'Allow', event['methodArn'], username));
+                    return callback(null, generatePolicy(username, 'Allow', event['methodArn']));
 
                 } catch (err) {
                     console.error('OktaJwtVerifier verifyToken is failed:', err);
@@ -84,10 +84,10 @@ module.exports.handler = async (event, context, callback) => {
     return callback(null, generatePolicy('user', 'Deny', event['methodArn']));
 }
 
-function generatePolicy(user, effect, methodArn, username) {
+function generatePolicy(username, effect, methodArn) {
     const authResponse = {};
 
-    authResponse.principalId = user;
+    authResponse.principalId = username;
     if (effect && methodArn) {
         const firstSlash = methodArn.indexOf('/');
         const secondSlash = methodArn.indexOf('/', firstSlash + 1); // "arn:aws:execute-api:us-east-1:<acct id>:<api id>/"
