@@ -60,10 +60,9 @@ resource "aws_api_gateway_method_settings" "api_gateway" {
   settings {
     metrics_enabled      = true
     logging_level        = "INFO"
-    data_trace_enabled   = true
-    cache_data_encrypted = true
+    data_trace_enabled   = var.trace_enabled
     cache_ttl_in_seconds = 300
-    caching_enabled      = true
+    caching_enabled      = var.cache_enabled
   }
 }
 

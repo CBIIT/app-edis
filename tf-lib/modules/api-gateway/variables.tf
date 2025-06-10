@@ -63,3 +63,10 @@ variable "cache_size" {
   description = "Size of API Gateway cache (not applied if cache_enabled is false)"
   default = "1.6"
 }
+
+variable "trace_enabled" {
+  type = bool
+  description = "Set to true to enable API Gateway tracing"
+  default = false
+}
+
