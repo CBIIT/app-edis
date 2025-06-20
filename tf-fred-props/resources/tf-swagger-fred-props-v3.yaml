@@ -1,0 +1,564 @@
+openapi: 3.0.0
+info:
+  description: Enterprise Adminstrative Data & Integration Services (EADIS) Web Services - **Frederick Properties Service**
+  version: "1.0.0"
+  title: Frederick Properties API
+  # put the contact info for your development or API team
+  contact:
+    email: NCICBIITBizAppsSupportLowTier@mail.nih.gov
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+x-amazon-apigateway-request-validators:
+  all:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params:
+    validateRequestBody: true
+    validateRequestParameters: true
+  body:
+    validateRequestBody: true
+    validateRequestParameters: false
+
+# tags are used for organizing operations
+tags:
+  - name: clients
+    description: Operations available to clients - service to service
+
+paths:
+  /fredpropsapi/v1/props:
+    get:
+      tags:
+        - clients
+      summary: Return all Frederick properties
+      operationId: getAllFredProps
+      description: |
+        Return all Frederick properties  
+        To handle pagination, check if the LastEvaluatedKey property exists in the result. If it is present, make additional 
+        requests by passing its value as a query parameter (e.g., ?lastEvaluatedKey=xxx). Continue this process until the 
+        final result no longer contains the LastEvaluatedKey property.
+      parameters:
+        - name: lastEvaluatedKey
+          in: query
+          description: Last Evaluated Key from previous request
+          required: false
+          schema:
+            type: string
+            example: '12345678'
+      responses:
+        '200':
+          description: JSON formatted records of Frederick properties data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FredPropsChunk'
+        '400':
+          description: bad input parameter
+      x-amazon-apigateway-integration:
+        type: aws
+        httpMethod: POST
+        uri: ${ddb_action_scan}
+        credentials: ${ddb_role_arn}
+        passthroughBehavior: when_no_templates
+        timeoutInMillis: 29000
+        cacheKeyParameters:
+          - method.request.querystring.lastEvaluatedKey
+        requestTemplates:
+          application/json: |-
+            #set($lastEvaluatedKey = $input.params('lastEvaluatedKey'))
+            {
+              "TableName": "${table_name}"
+              #if($lastEvaluatedKey != "")
+                , "ExclusiveStartKey": { "PropertyNumber": { "S": "$lastEvaluatedKey" } }
+              #end
+            }
+        responses:
+          2\d{2}:
+            statusCode: 200
+            responseTemplates:
+              application/json: |-
+                #set ($inputRoot = $input.path('$'))
+                #set ($lastEvaluatedKey = $inputRoot.LastEvaluatedKey.PropertyNumber.S)
+                {
+                  "count": $inputRoot.Count,
+                #if($lastEvaluatedKey != "")
+                  "lastEvaluatedKey": "$lastEvaluatedKey",
+                #end
+                  "items": [
+                #foreach($elem in $inputRoot.Items)
+                    {
+                      "PropertyNumber": "$elem.PropertyNumber.S",
+                      "Acquired": "$elem.Acquired.S",
+                      "Building": "$elem.Building.S",
+                      "CenterNumber": "$elem.CenterNumber.S",
+                      "Comment1": "$elem.Comment1.S",
+                      "Condition": "$elem.Condition.S",
+                      "ContractId": "$elem.ContractId.S",
+                      "CustodianEmployeeNumber": "$elem.CustodianEmployeeNumber.S",
+                      "CustodianFirstName": "$elem.CustodianFirstName.S",
+                      "CustodianLastName": "$elem.CustodianLastName.S",
+                      "CustodianNedId": "$elem.CustodianNedId.S",
+                      "Cost": "$elem.Cost.N",
+                      "Description": "$elem.Description.S",
+                      "Division": "$elem.Division.S",
+                      "InvoiceNumber": "$elem.InvoiceNumber.S",
+                      "Item": "$elem.Item.S",
+                      "Make": "$elem.Make.S",
+                      "Model": "$elem.Model.S",
+                      "POLineNumber": "$elem.POLineNumber.S",
+                      "PONumber": "$elem.PONumber.S",
+                      "PropertyOfficerEmployeeNumber": "$elem.PropertyOfficerEmployeeNumber.S",
+                      "PropertyOfficerFirstName": "$elem.PropertyOfficerFirstName.S",
+                      "PropertyOfficerLastName": "$elem.PropertyOfficerLastName.S",
+                      "PropertyOfficerNedId": "$elem.PropertyOfficerNedId.S",
+                      "PropertyType": "$elem.PropertyType.S",
+                      "Room": "$elem.Room.S",
+                      "SerialNumber": "$elem.SerialNumber.S",
+                      "Status": "$elem.Status.S",
+                      "WarrantyDate": "$elem.WarrantyDate.S",
+                      "WarrantyStatus": "$elem.WarrantyStatus.S"
+                    }#if($foreach.hasNext),#end
+
+                #end
+                  ]
+                }
+      security:
+        - request-authorizer: [ ]
+
+  /fredpropsapi/v1/props/{propertyNumber}:
+    get:
+      tags:
+        - clients
+      summary: Return Frederick property using a property number
+      operationId: getByFredPropertyNumber
+      description: |
+        Get a Frederick property record by a property number
+      parameters:
+        - name: propertyNumber
+          in: path
+          required: true
+          description: Property Number
+          schema:
+            type: string
+      responses:
+        '200':
+          description: JSON formatted record of the Frederick Property
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FredProperty'
+        '400':
+          description: bad input parameter
+      x-amazon-apigateway-integration:
+        type: aws
+        httpMethod: POST
+        uri: ${ddb_action_get_item}
+        credentials: ${ddb_role_arn}
+        passthroughBehavior: when_no_templates
+        timeoutInMillis: 29000
+        cacheKeyParameters:
+          - method.request.path.propertyNumber
+        requestTemplates:
+          application/json: |-
+            {
+                "TableName": "${table_name}",
+                "Key": {
+                    "PropertyNumber": {
+                        "S": "$input.params('propertyNumber')"
+                    }
+                },
+                "ConsistentRead": true
+            }
+        responses:
+          2\d{2}:
+            statusCode: 200
+            responseTemplates:
+              application/json: |-
+                #set ($elem = $input.path('$.Item'))
+                #if($elem == "")
+                  {
+                  }
+                #else
+                  {
+                      "PropertyNumber": "$elem.PropertyNumber.S",
+                      "Acquired": "$elem.Acquired.S",
+                      "Building": "$elem.Building.S",
+                      "CenterNumber": "$elem.CenterNumber.S",
+                      "Comment1": "$elem.Comment1.S",
+                      "Condition": "$elem.Condition.S",
+                      "ContractId": "$elem.ContractId.S",
+                      "CustodianEmployeeNumber": "$elem.CustodianEmployeeNumber.S",
+                      "CustodianFirstName": "$elem.CustodianFirstName.S",
+                      "CustodianLastName": "$elem.CustodianLastName.S",
+                      "CustodianNedId": "$elem.CustodianNedId.S",
+                      "Cost": "$elem.Cost.N",
+                      "Description": "$elem.Description.S",
+                      "Division": "$elem.Division.S",
+                      "InvoiceNumber": "$elem.InvoiceNumber.S",
+                      "Item": "$elem.Item.S",
+                      "Make": "$elem.Make.S",
+                      "Model": "$elem.Model.S",
+                      "POLineNumber": "$elem.POLineNumber.S",
+                      "PONumber": "$elem.PONumber.S",
+                      "PropertyOfficerEmployeeNumber": "$elem.PropertyOfficerEmployeeNumber.S",
+                      "PropertyOfficerFirstName": "$elem.PropertyOfficerFirstName.S",
+                      "PropertyOfficerLastName": "$elem.PropertyOfficerLastName.S",
+                      "PropertyOfficerNedId": "$elem.PropertyOfficerNedId.S",
+                      "PropertyType": "$elem.PropertyType.S",
+                      "Room": "$elem.Room.S",
+                      "SerialNumber": "$elem.SerialNumber.S",
+                      "Status": "$elem.Status.S",
+                      "WarrantyDate": "$elem.WarrantyDate.S",
+                      "WarrantyStatus": "$elem.WarrantyStatus.S"
+                  }
+                #end
+      security:
+        - request-authorizer: [ ]
+
+
+  /fredpropsapi/v1/props/officer/{propertyOfficerNedId}:
+    get:
+      tags:
+        - clients
+      summary: List property records for a given Property Officer by their NED ID
+      operationId: listFredPropertyByProjectOfficerNedId
+      description: |
+        Get Frederick property records by the NED ID of a  Property Officer
+      parameters:
+        - name: propertyOfficerNedId
+          in: path
+          description: Property
+          required: true
+          schema:
+            type: string
+            example: '001896589'
+        - name: lastEvaluatedKey
+          in: query
+          description: Last Evaluated Key from previous request
+          required: false
+          schema:
+            type: string
+            example: '12345'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FredPropsChunk'
+          description: Property data element
+      x-amazon-apigateway-integration:
+        type: aws
+        httpMethod: POST
+        uri: ${ddb_action_query}
+        credentials: ${ddb_role_arn}
+        timeoutInMillis: 29000
+        passthroughBehavior: when_no_templates
+        cacheKeyParameters:
+          - method.request.path.propertyOfficerNedId
+          - method.request.querystring.lastEvaluatedKey
+        requestTemplates:
+          application/json: |-
+            #set($propertyOfficerNedId = $input.params('propertyOfficerNedId'))
+            #set($lastEvaluatedKey = $input.params('lastEvaluatedKey'))
+            {
+              "TableName": "${table_name}",
+              "IndexName": "officerIndex",
+              "KeyConditionExpression": "PropertyOfficerNedId = :propertyOfficerNedId",
+              "FilterExpression": "attribute_not_exists(vdsDelete)",
+              "ExpressionAttributeValues": {
+                ":propertyOfficerNedId": { "S": "$propertyOfficerNedId" }
+              }
+            #if($lastEvaluatedKey != "")
+              , "ExclusiveStartKey": { "PropertyNumber": { "S": "$lastEvaluatedKey" }, "PropertyOfficerNedId": { "S": "$propertyOfficerNedId" } }
+            #end
+            }
+        responses:
+          2\d{2}:
+            statusCode: 200
+            responseTemplates:
+              application/json: |-
+                #set ($inputRoot = $input.path('$'))
+                #set ($lastEvaluatedKey = $inputRoot.LastEvaluatedKey.PropertyNumber.S)
+                {
+                  "count": $inputRoot.Count,
+                #if($lastEvaluatedKey != "")
+                  "lastEvaluatedKey": "$lastEvaluatedKey",
+                #end
+                  "items": [
+                #foreach($elem in $inputRoot.Items)
+                    {
+                      "PropertyNumber": "$elem.PropertyNumber.S",
+                      "Acquired": "$elem.Acquired.S",
+                      "Building": "$elem.Building.S",
+                      "CenterNumber": "$elem.CenterNumber.S",
+                      "Comment1": "$elem.Comment1.S",
+                      "Condition": "$elem.Condition.S",
+                      "ContractId": "$elem.ContractId.S",
+                      "CustodianEmployeeNumber": "$elem.CustodianEmployeeNumber.S",
+                      "CustodianFirstName": "$elem.CustodianFirstName.S",
+                      "CustodianLastName": "$elem.CustodianLastName.S",
+                      "CustodianNedId": "$elem.CustodianNedId.S",
+                      "Cost": "$elem.Cost.N",
+                      "Description": "$elem.Description.S",
+                      "Division": "$elem.Division.S",
+                      "InvoiceNumber": "$elem.InvoiceNumber.S",
+                      "Item": "$elem.Item.S",
+                      "Make": "$elem.Make.S",
+                      "Model": "$elem.Model.S",
+                      "POLineNumber": "$elem.POLineNumber.S",
+                      "PONumber": "$elem.PONumber.S",
+                      "PropertyOfficerEmployeeNumber": "$elem.PropertyOfficerEmployeeNumber.S",
+                      "PropertyOfficerFirstName": "$elem.PropertyOfficerFirstName.S",
+                      "PropertyOfficerLastName": "$elem.PropertyOfficerLastName.S",
+                      "PropertyOfficerNedId": "$elem.PropertyOfficerNedId.S",
+                      "PropertyType": "$elem.PropertyType.S",
+                      "Room": "$elem.Room.S",
+                      "SerialNumber": "$elem.SerialNumber.S",
+                      "Status": "$elem.Status.S",
+                      "WarrantyDate": "$elem.WarrantyDate.S",
+                      "WarrantyStatus": "$elem.WarrantyStatus.S"
+                    }#if($foreach.hasNext),#end
+
+                #end
+                  ]
+                }
+      security:
+        - request-authorizer: [ ]
+
+  /fredpropsapi/v1/props/custodian/{custodianNedId}:
+    get:
+      tags:
+        - clients
+      summary: List property records for a given Custodian by their NED ID
+      operationId: listFredPropertyByCustodianNedId
+      description: |
+        Get Frederick property records by the NED ID of a Custodian
+      parameters:
+        - name: custodianNedId
+          in: path
+          description: Property
+          required: true
+          schema:
+            type: string
+            example: '001896589'
+        - name: lastEvaluatedKey
+          in: query
+          description: Last Evaluated Key from previous request
+          required: false
+          schema:
+            type: string
+            example: '12345'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FredPropsChunk'
+          description: Property data element
+      x-amazon-apigateway-integration:
+        type: aws
+        httpMethod: POST
+        uri: ${ddb_action_query}
+        credentials: ${ddb_role_arn}
+        timeoutInMillis: 29000
+        passthroughBehavior: when_no_templates
+        cacheKeyParameters:
+          - method.request.path.custodianNedId
+          - method.request.querystring.lastEvaluatedKey
+        requestTemplates:
+          application/json: |-
+            #set($custodianNedId = $input.params('custodianNedId'))
+            #set($lastEvaluatedKey = $input.params('lastEvaluatedKey'))
+            {
+              "TableName": "${table_name}",
+              "IndexName": "custodianIndex",
+              "KeyConditionExpression": "CustodianNedId = :custodianNedId",
+              "FilterExpression": "attribute_not_exists(vdsDelete)",
+              "ExpressionAttributeValues": {
+                ":custodianNedId": { "S": "$custodianNedId" }
+              }
+            #if($lastEvaluatedKey != "")
+              , "ExclusiveStartKey": { "PropertyNumber": { "S": "$lastEvaluatedKey" }, "CustodianNedId": { "S": "$custodianNedId" } }
+            #end
+            }
+        responses:
+          2\d{2}:
+            statusCode: 200
+            responseTemplates:
+              application/json: |-
+                #set ($inputRoot = $input.path('$'))
+                #set ($lastEvaluatedKey = $inputRoot.LastEvaluatedKey.PropertyNumber.S)
+                {
+                  "count": $inputRoot.Count,
+                #if($lastEvaluatedKey != "")
+                  "lastEvaluatedKey": "$lastEvaluatedKey",
+                #end
+                  "items": [
+                #foreach($elem in $inputRoot.Items)
+                    {
+                      "PropertyNumber": "$elem.PropertyNumber.S",
+                      "Acquired": "$elem.Acquired.S",
+                      "Building": "$elem.Building.S",
+                      "CenterNumber": "$elem.CenterNumber.S",
+                      "Comment1": "$elem.Comment1.S",
+                      "Condition": "$elem.Condition.S",
+                      "ContractId": "$elem.ContractId.S",
+                      "CustodianEmployeeNumber": "$elem.CustodianEmployeeNumber.S",
+                      "CustodianFirstName": "$elem.CustodianFirstName.S",
+                      "CustodianLastName": "$elem.CustodianLastName.S",
+                      "CustodianNedId": "$elem.CustodianNedId.S",
+                      "Cost": "$elem.Cost.N",
+                      "Description": "$elem.Description.S",
+                      "Division": "$elem.Division.S",
+                      "InvoiceNumber": "$elem.InvoiceNumber.S",
+                      "Item": "$elem.Item.S",
+                      "Make": "$elem.Make.S",
+                      "Model": "$elem.Model.S",
+                      "POLineNumber": "$elem.POLineNumber.S",
+                      "PONumber": "$elem.PONumber.S",
+                      "PropertyOfficerEmployeeNumber": "$elem.PropertyOfficerEmployeeNumber.S",
+                      "PropertyOfficerFirstName": "$elem.PropertyOfficerFirstName.S",
+                      "PropertyOfficerLastName": "$elem.PropertyOfficerLastName.S",
+                      "PropertyOfficerNedId": "$elem.PropertyOfficerNedId.S",
+                      "PropertyType": "$elem.PropertyType.S",
+                      "Room": "$elem.Room.S",
+                      "SerialNumber": "$elem.SerialNumber.S",
+                      "Status": "$elem.Status.S",
+                      "WarrantyDate": "$elem.WarrantyDate.S",
+                      "WarrantyStatus": "$elem.WarrantyStatus.S"
+                    }#if($foreach.hasNext),#end
+
+                #end
+                  ]
+                }
+      security:
+        - request-authorizer: [ ]
+
+
+components:
+  schemas:
+    FredPropsChunk:
+      type: object
+      properties:
+        count:
+            type: integer
+            example: 1
+        error:
+          type: string
+          description: Error message if not empty - rest of the fields are zeros
+        lastEvaluatedKey:
+          type: string
+          description: If present, the result is incomplete, pass this value as "lastEvaluatedKey" query parameter to get the next chunk of results
+        items:
+            type: array
+            items:
+              $ref: '#/components/schemas/FredProperty'
+
+    FredProperty:
+      type: object
+      required:
+        - PropertyNumber
+      properties:
+        Acquired:
+          type: string
+          format: date-time
+          example: '2024-05-31T04:00:00.000Z'
+        Building:
+          type: string
+          example: 1234
+        CenterNumber:
+          type: string
+          example: 700.400.16.01.002.001.0001.032
+        Comment1:
+          type: string
+          example: ON SHELF
+        Condition:
+          type: string
+          example: USED-GOOD
+        ContractId:
+          type: string
+          example: LDOS
+        Cost:
+          type: string
+          example: 3900
+        CustodianEmployeeNumber:
+          type: string
+          example: GVRG000001
+        CustodianFirstName:
+          type: string
+          example: Jane
+        CustodianLastName:
+          type: string
+          example: Smith
+        CustodianNedId:
+          type: string
+          example: 2004567890
+        Description:
+          type: string
+          example: Computer
+        Division:
+          type: string
+          example: CCR
+        InvoiceNumber:
+          type: string
+          example: 100
+        Item:
+          type: string
+          example: Laptop
+        Make:
+          type: string
+          example: Dell
+        Model:
+          type: string
+          example: XPS15
+        POLineNumber:
+          type: string
+          example: 1
+        PONumber:
+          type: string
+          example: 210000
+        PropertyNumber:
+          type: string
+          example: C100000
+        PropertyOfficerEmployeeNumber:
+          type: string
+          example: GVRG000001
+        PropertyOfficerFirstName:
+          type: string
+          example: John
+        PropertyOfficerLastName:
+          type: string
+          example: Smith
+        PropertyOfficerNedId:
+          type: string
+          example: 2004567890
+        PropertyType:
+          type: string
+          example: X
+        Room:
+          type: string
+          example: 3256A
+        SerialNumber:
+          type: string
+          example: MA0000406M
+        Status:
+          type: string
+          example: Active
+        WarrantyDate:
+          type: string
+          format: date-time
+          example: '2023-05-31T04:00:00.000Z'
+        WarrantyStatus:
+          type: string
+          example: EXPIRED
+
+  securitySchemes:
+    request-authorizer:
+      type: apiKey
+      name: Authorization
+      in: header
+      x-amazon-apigateway-authtype: custom
+      x-amazon-apigateway-authorizer:
+        type: token
+        authorizerUri: ${auth_lambda_invoke_arn}
+        authorizerResultTtlInSeconds: 300

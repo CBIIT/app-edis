@@ -1,0 +1,22 @@
+{
+  "name": "lambda-load-from-fred-props",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lambda.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-prod": "rm -rf node_modules && npm install --only='prod' --omit=dev --no-optional",
+    "zip-prod": "mkdir -p out && rm -rf out/lambda-load-from-fred-props.zip && zip -r -q out/lambda-load-from-fred-props.zip node_modules src/*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "parquetjs": "^0.11.2",
+    "soap": "^0.43.0",
+    "wssecurity": "^0.2.4"
+  },
+  "devDependencies": {
+    "aws-sdk": "latest"
+  }
+}
