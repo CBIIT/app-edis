@@ -1,0 +1,220 @@
+openapi: 3.0.0
+info:
+  description: Enterprise Data & Integration Services Web Services - **FPS User Service**
+  version: "0.0.1"
+  title: FPS User API
+  # put the contact info for your development or API team
+  contact:
+    email: NCICBIITBizAppsSupportLowTier@mail.nih.gov
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+x-amazon-apigateway-request-validators:
+  all:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params:
+    validateRequestBody: true
+    validateRequestParameters: true
+  body:
+    validateRequestBody: true
+    validateRequestParameters: false
+
+# tags are used for organizing operations
+tags:
+  - name: clients
+    description: Operations available to clients - service to service
+
+paths:
+  /fpsapi/v1/users:
+    get:
+      tags:
+        - clients
+      summary: Get FPS users
+      operationId: getAllFpsUsers
+      description: |
+        Get FPS user records from nVision
+      x-amazon-apigateway-request-validator: params
+      parameters:
+        - name: lastEvaluatedKey
+          in: query
+          description: Last Evaluated Key returned from previous request
+          required: false
+          schema:
+            type: string
+            example: '1234567890'
+      responses:
+        '200':
+          description: JSON formatted records of the FPS user information
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FpsUsersResponse'
+        '400':
+          description: bad input parameter
+      x-amazon-apigateway-integration:
+        uri: ${lambda_invoke_arn}
+        httpMethod: POST
+        timeoutInMillis: 29000
+        type: "aws_proxy"
+        cacheKeyParameters:
+          - method.request.querystring.lastEvaluatedKey
+      security:
+        - request-authorizer: []
+
+components:
+  schemas:
+    FpsUsersResponse:
+      type: object
+      properties:
+        count:
+            type: integer
+        error:
+          type: string
+          description: Error message if not empty - rest of the fields are zeros
+        lastEvaluatedKey:
+          type: string
+          description: If present, the result is incomplete, pass this value as "lastEvaluatedKey" query parameter to get the next chunk of results
+        items:
+            type: array
+            items:
+              $ref: '#/components/schemas/FpsUser'
+
+    FpsUser:
+      type: object
+      required:
+        - NED_ID
+      properties:
+        NED_ID:
+          type: string
+          format: string
+          example: 1234567890
+        FIRST_NAME:
+          type: string
+          format: string
+          example: JOHN
+        MIDDLE_NAME:
+          type: string
+          format: string
+          example: B
+        LAST_NAME:
+          type: string
+          format: string
+          example: SMITH
+        GENDER_CD:
+          type: string
+          example: F
+        GENDER_DESC:
+          type: string
+          example: FEMALE
+        HI_EDUCATION_CD:
+          type: string
+          example: G
+        HI_EDUCATION_DESC:
+          type: string
+          example: Graduate
+        CITIZENSHIP_DESC:
+          type: string
+          example: UNITED STATES
+        NIH_EOD:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        NIHSERVAO:
+          type: string
+          example: 0123456789
+        NIHSAC:
+          type: string
+          example: HNC111
+        AWD_PRD_FROM_DT:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        AWD_PRD_TO_DT:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        TRAIN_PROG_CD:
+          type: string
+          example: TA
+        TRAIN_PROG_DESC:
+          type: string
+          example: POST DOCTORAL-IRTA
+        VISA_TYPE:
+          type: string
+          example: null
+        AWARD_LINE_TYPE:
+          type: string
+          example: STIPEND
+        ACTIVATION_DT:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        TRAIN_PROG_START_DT:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        MIXCASE_FIRST_NAME:
+          type: string
+          example: John
+        MIXCASE_MIDDLE_NAME:
+          type: string
+          example: B
+        MIXCASE_LAST_NAME:
+          type: string
+          example: Smith
+        ORGANIZATIONALSTAT:
+          type: string
+          example: FELLOW
+        NIHORGPATH:
+          type: string
+          example: NCI CBIIT
+        NIHORGACRONYM:
+          type: string
+          example: NCI
+        LOAD_DATE:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        PREFERRED_FIRST_NAME:
+          type: string
+          example: John
+        PREFERRED_MIDDLE_NAME:
+          type: string
+          example: B
+        PREFERRED_LAST_NAME:
+          type: string
+          example: Smith
+        ACTION_TYPE:
+          type: string
+          example: REN
+        ACTION_TYPE_DESC:
+          type: string
+          example: RENEWAL EXTENSION
+        EMAIL_ADDRESS:
+          type: string
+          example: smithj@site.com
+        TERMINATION_DT:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        ACT_EFF_DT:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        TERMINATION_FLG:
+          type: string
+          example: " "
+
+  securitySchemes:
+    request-authorizer:
+      type: apiKey
+      name: Authorization
+      in: header
+      x-amazon-apigateway-authtype: custom
+      x-amazon-apigateway-authorizer:
+        type: token
+        authorizerUri: ${auth_lambda_invoke_arn}
+        authorizerResultTtlInSeconds: 300

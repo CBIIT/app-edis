@@ -20,7 +20,7 @@ if (logLevel && logLevel === 'debug') {
 AWS.config.update({ region: region });
 const PARAMETER_PATH = process.env.PARAMETER_PATH || '/dev/app/eadis/nidap/';
 
-// Create a Secrets Manager client
+// Create AWS SystemManager client
 const client = new AWS.SSM();
 
 async function getConfigurationParameters() {
