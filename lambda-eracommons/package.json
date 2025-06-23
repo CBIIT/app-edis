@@ -13,7 +13,7 @@
     "test": "jest unit --coverage"
   },
   "devDependencies": {
-    "aws-sdk": "2.820.0",
+    "aws-sdk": "2.1692.0",
     "oracledb": "^5.3.0",
     "oracledb-prebuilt-for-lambda": "^5.3.0"
   }

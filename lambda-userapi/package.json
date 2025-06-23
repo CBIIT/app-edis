@@ -20,7 +20,7 @@
     "lambda-api": "^0.10.6"
   },
   "devDependencies": {
-    "aws-sdk": "2.820.0",
+    "aws-sdk": "2.1692.0",
     "jest": "^27.0.6"
   }
 }

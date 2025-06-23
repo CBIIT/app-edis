@@ -16,7 +16,7 @@
     "wssecurity": "^0.2.4"
   },
   "devDependencies": {
-    "aws-sdk": "2.820.0",
+    "aws-sdk": "2.1692.0",
     "jest": "^27.0.6"
   }
 }
