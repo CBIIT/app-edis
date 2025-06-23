@@ -225,7 +225,7 @@ paths:
                       "ROOMNUMBER": "$elem.ROOMNUMBER.S",
                       "POSTALADDRESS": "$elem.POSTALADDRESS.S",
                       "NIHIDBADGELESS6MOS": "$elem.NIHIDBADGELESS6MOS.S",
-                      "managedObjects": "$elem.managedObjects.S",
+                      "managedObjects": "$util.escapeJavaScript($elem.managedObjects.S).replaceAll("\\'","'")",
                       "memberOf": "$elem.memberOf.SS",
                       "NIHCREATETIMESTAMP": "$elem.NIHCREATETIMESTAMP.S",
                       "NIHMODIFYTIMESTAMP": "$elem.NIHMODIFYTIMESTAMP.S",
