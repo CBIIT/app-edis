@@ -17,6 +17,10 @@ on:
         type: string
         description: 'VPC Subnet 1 id'
         required: false
+      awsparams:
+        type: string
+        description: 'AWS Parameters'
+        required: false
       host-runner:
         type: string
         required: true
@@ -47,3 +51,13 @@ jobs:
           echo From environment - ${{ vars.subnet1 }}
           echo From inputs - ${{ inputs.subnet1 }}
           echo Calculated var - $subnet
+
+      - name: Process JSON input
+        id: awsjson
+        if: ${{ inputs.awsparams }}
+        run: |
+          echo "aws=${{fromJson(inputs.awsparams)}}" >> GITHUB_OUTPUT
+
+      - name: Use JSON input
+        run: |
+          echo "${{steps.awsjson.outputs.aws.s3bucket}}"
