@@ -56,8 +56,17 @@ jobs:
         id: awsjson
         if: ${{ inputs.awsparams }}
         run: |
+          tempObj=${{fromJson(inputs.awsparams)}}
+          echo "$tempObj"
+          echo "$tempObj.s3bucket"
+          echo "{$tempObj.s3bucket}"
           echo "aws=${{fromJson(inputs.awsparams)}}" >> GITHUB_OUTPUT
+          echo "aws1=$tempObj" >> GITHUB_OUTPUT
 
       - name: Use JSON input
         run: |
+          echo "${{steps.awsjson.outputs.aws}}"
           echo "${{steps.awsjson.outputs.aws.s3bucket}}"
+          echo "${{steps.awsjson.outputs.aws}}.s3bucket"
+          echo "${{steps.awsjson.outputs.aws1}}"
+          echo "${{steps.awsjson.outputs.aws1}}.s3bucket"
