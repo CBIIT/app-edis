@@ -67,7 +67,8 @@ paths:
           application/json: |-
             #set($lastEvaluatedKey = $input.params('lastEvaluatedKey'))
             {
-              "TableName": "${table_name}"
+              "TableName": "${table_name}",
+              "Limit": 1000
               #if($lastEvaluatedKey != "")
                 , "ExclusiveStartKey": { "PropertyNumber": { "S": "$lastEvaluatedKey" } }
               #end
@@ -91,7 +92,7 @@ paths:
                       "Acquired": "$elem.Acquired.S",
                       "Building": "$elem.Building.S",
                       "CenterNumber": "$elem.CenterNumber.S",
-                      "Comment1": "$elem.Comment1.S",
+                      "Comment1": "$util.escapeJavaScript($elem.Comment1.S).replaceAll("\\'","'")",
                       "Condition": "$elem.Condition.S",
                       "ContractId": "$elem.ContractId.S",
                       "CustodianEmployeeNumber": "$elem.CustodianEmployeeNumber.S",
@@ -184,7 +185,7 @@ paths:
                       "Acquired": "$elem.Acquired.S",
                       "Building": "$elem.Building.S",
                       "CenterNumber": "$elem.CenterNumber.S",
-                      "Comment1": "$elem.Comment1.S",
+                      "Comment1": "$util.escapeJavaScript($elem.Comment1.S).replaceAll("\\'","'")",
                       "Condition": "$elem.Condition.S",
                       "ContractId": "$elem.ContractId.S",
                       "CustodianEmployeeNumber": "$elem.CustodianEmployeeNumber.S",
@@ -267,7 +268,8 @@ paths:
               "FilterExpression": "attribute_not_exists(vdsDelete)",
               "ExpressionAttributeValues": {
                 ":propertyOfficerNedId": { "S": "$propertyOfficerNedId" }
-              }
+              },
+              "Limit": 1000
             #if($lastEvaluatedKey != "")
               , "ExclusiveStartKey": { "PropertyNumber": { "S": "$lastEvaluatedKey" }, "PropertyOfficerNedId": { "S": "$propertyOfficerNedId" } }
             #end
@@ -291,7 +293,7 @@ paths:
                       "Acquired": "$elem.Acquired.S",
                       "Building": "$elem.Building.S",
                       "CenterNumber": "$elem.CenterNumber.S",
-                      "Comment1": "$elem.Comment1.S",
+                      "Comment1": "$util.escapeJavaScript($elem.Comment1.S).replaceAll("\\'","'")",
                       "Condition": "$elem.Condition.S",
                       "ContractId": "$elem.ContractId.S",
                       "CustodianEmployeeNumber": "$elem.CustodianEmployeeNumber.S",
@@ -376,7 +378,8 @@ paths:
               "FilterExpression": "attribute_not_exists(vdsDelete)",
               "ExpressionAttributeValues": {
                 ":custodianNedId": { "S": "$custodianNedId" }
-              }
+              },
+              "Limit": 1000
             #if($lastEvaluatedKey != "")
               , "ExclusiveStartKey": { "PropertyNumber": { "S": "$lastEvaluatedKey" }, "CustodianNedId": { "S": "$custodianNedId" } }
             #end
@@ -400,7 +403,7 @@ paths:
                       "Acquired": "$elem.Acquired.S",
                       "Building": "$elem.Building.S",
                       "CenterNumber": "$elem.CenterNumber.S",
-                      "Comment1": "$elem.Comment1.S",
+                      "Comment1": "$util.escapeJavaScript($elem.Comment1.S).replaceAll("\\'","'")",
                       "Condition": "$elem.Condition.S",
                       "ContractId": "$elem.ContractId.S",
                       "CustodianEmployeeNumber": "$elem.CustodianEmployeeNumber.S",
