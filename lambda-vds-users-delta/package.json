@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "zip": "rm -rf node_modules && rm -rf ../lambda-zip/lambda-vds-users-delta.zip && npm install --only='prod' && zip -r ../lambda-zip/lambda-vds-users-delta.zip node_modules src/*",
     "build-prod": "rm -rf node_modules && npm install --only='prod'",
     "zip-prod": "mkdir -p out && rm -rf out/lambda-vds-users-delta.zip && zip -r -q out/lambda-vds-users-delta.zip node_modules src/*"
   },

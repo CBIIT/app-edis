@@ -1,13 +1,13 @@
 # Enterprise Data & Integration Services Web Services
 
-[![CI](https://github.com/CBIIT/app-edis/actions/workflows/lambda-build.yml/badge.svg)](https://github.com/CBIIT/app-edis/actions/workflows/lambda-build.yml)
+\* * * Work in Progress - to be rewritten * * *
 
 The project contains the following modules:
 * **aws-cf-scripts** - Set of cloud formation configuration templates to deploy and configure AWS resources
 * **install-scripts** - Set of shell scripts to deploy and configure AWS resources with Cloud Formation stacks
 * **load-nedorg-data** - nodejs application to load DynamoDB database with sample data from csv file
 * **lambda-auth** - nodejs based Lambda authorizer function to authenticate and authorize the client that invokes API endpoints
-* **lambda-userapi** - lightweight (*lambda-api* framework) nodejs based Lambda function to execute REST API endpoints
+* **lambda-user-api** - lightweight (*lambda-api* framework) nodejs based Lambda function to execute REST API endpoints
 * **client-ang-nedorgs** - Angular application to deploy to EC2 Apache Web Server and to test Web Service
 
 ### Prerequisites
@@ -45,11 +45,11 @@ npm run zip
 cp lambda-auth.zip ../lambda-zip/.
 cd ..
 ```
-2. Build **lambda-userapi** Lambda function
+2. Build **lambda-user-api** Lambda function
 ```shell
-cd lambda-userapi
+cd lambda-user-api
 npm run zip
-cp lambda-userapi.zip ../lambda-zip/.
+cp lambda-user-api.zip ../lambda-zip/.
 cd ..
 ```
 3. Build **lambda-eracommons** Lambda function

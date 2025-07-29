@@ -8,9 +8,7 @@
     "build": "sam build -t sam-template.yaml && cp sam-template.yaml .aws-sam/build/NedOrgsLambdaFunction/.",
     "deploy_toml": "cd .aws-sam/build/NedOrgsLambdaFunction && sam deploy -t sam-template.yaml --parameter-overrides ParameterKey=LambdaNedorgRoleArn,ParameterValue=$npm_config_arn ParameterKey=VpcEndpointId,ParameterValue=$npm_config_vpce && cd ../../../",
     "deploy": "cd .aws-sam/build/NedOrgsLambdaFunction && sam deploy -t sam-template.yaml --stack-name $npm_config_sname --s3-bucket $npm_config_s3bucket --s3-prefix $npm_config_s3prefix --region $npm_config_region --no-confirm-changeset --capabilities $npm_config_capb --parameter-overrides ParameterKey=LambdaNedorgRoleArn,ParameterValue=$npm_config_arn ParameterKey=VpcEndpointId,ParameterValue=$npm_config_vpce && cd ../../../",
-    "zip": "rm -rf node_modules && rm -rf ../lambda-zip/lambda-eracommons-api.zip && npm install --only='prod' && zip -r ../lambda-zip/lambda-eracommons-api.zip node_modules src/lambda.js src/eracommonsapi.js",
     "ziplocal": "rm -rf node_modules && rm -rf lambda-eracommons-api.zip && npm install --only='prod' && zip -r lambda-eracommons-api.zip node_modules src/lambda.js src/eracommonsapi.js",
-    "zip3": "rm -rf node_modules && rm -rf lambda-userapiV3.zip && npm install --only='prod' && zip -r lambda-userapiV3.zip node_modules src/lambda.js src/eracommonsapiV3.js",
     "build-prod": "rm -rf node_modules && npm install --only='prod'",
     "zip-prod": "mkdir -p out && rm -rf out/lambda-eracommons-api.zip && zip -r -q out/lambda-eracommons-api.zip node_modules src/lambda.js src/eracommonsapi.js",
     "test": "jest unit --coverage"

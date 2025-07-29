@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "main": "lambda.js",
   "scripts": {
-    "zip": "rm -rf node_modules && rm -rf ../lambda-zip/lambda-sqs-delta-to-db.zip && npm install --only='prod' && zip -r ../lambda-zip/lambda-sqs-delta-to-db.zip node_modules src/*",
     "build-prod": "rm -rf node_modules && npm install --only='prod'",
     "zip-prod": "mkdir -p out && rm -rf out/lambda-sqs-delta-to-db.zip && zip -r -q out/lambda-sqs-delta-to-db.zip node_modules src/*"
   },

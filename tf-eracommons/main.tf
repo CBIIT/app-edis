@@ -17,7 +17,7 @@ module "lambda-era-commons-api" {
   region              = "us-east-1"
   app                 = "edis"
   lambda-name         = "era-commons-api"
-  file-name           = abspath("../built-artifacts/lambda-userapi/out/lambda-eracommons-api.zip")
+  file-name           = abspath("../built-artifacts/lambda-eracommons-api/out/lambda-eracommons-api.zip")
   lambda-description  = "Lambda function contains eRA Commons External Users Info REST APIs implementation."
   lambda-env-variables = tomap({
     LOG_LEVEL = "info"
