@@ -13,10 +13,10 @@ const oktaJwtVerifier = (process.env.ISSUER && process.env.AUDIENCE) ?
 
 // Set the console log level
 const logLevel = process.env['LOG_LEVEL'];
-if (logLevel && logLevel == 'debug') {
+if (logLevel && logLevel === 'debug') {
     console.trace = function () {}
 }
-else if (logLevel && logLevel == 'info') {
+else if (logLevel && logLevel === 'info') {
     console.trace = function () {}
     console.debug = function () {}
 }
@@ -35,7 +35,7 @@ module.exports.handler = async (event, context, callback) => {
         initAuthConfiguration(authParameters);
 
         // Basic Authentication with NIH Service Account
-        if (token.indexOf('Basic') != -1) {
+        if (token.indexOf('Basic') !== -1) {
             console.debug('Analysis of Basic Authorization token');
             const base64credentials = token.split(' ')[1];
             console.debug('Base 64 credentials are ', base64credentials);
@@ -50,15 +50,14 @@ module.exports.handler = async (event, context, callback) => {
                 initConfiguration(configuration);
                 const cnUser = `cn=${username},${conf.ad.serviceAccountsBase}`;
                 await authLdap(cnUser, password);
-                console.info(JSON.stringify({msg: 'Successful Authentication', user: username, method: event['methodArn'], auth: 'Basic'}));
             } catch (e) {
                 console.error('Basic Authentication Error', e);
-                return callback(null, generatePolicy('user', 'Deny', event['methodArn']));
+                return callback(null, generatePolicy('user', 'Deny', event['methodArn'], 'Basic'));
             }
-            return callback(null, generatePolicy(username, 'Allow', event['methodArn']));
+            return callback(null, generatePolicy(username, 'Allow', event['methodArn'], 'Basic'));
         }
         // OAuth2 authentication
-        else if (token.indexOf('Bearer') != -1) {
+        else if (token.indexOf('Bearer') !== -1) {
             console.debug('Analysis of Bearer Authorization token');
             const bearer_token = token.split(' ')[1];
             if (oktaJwtVerifier) {
@@ -67,24 +66,25 @@ module.exports.handler = async (event, context, callback) => {
                     console.debug('OktaJwtVerifier verification:', jwt);
                     const username = (jwt.claims) ? jwt.claims.sub : undefined;
                     console.info(JSON.stringify({msg: 'Successful Authentication', user: username, method: event['methodArn'], auth: 'Auth2'}));
-                    return callback(null, generatePolicy(username, 'Allow', event['methodArn']));
+                    return callback(null, generatePolicy(username, 'Allow', event['methodArn'], 'Auth2'));
 
                 } catch (err) {
                     console.error('OktaJwtVerifier verifyToken is failed:', err);
-                    return callback(null, generatePolicy('user', 'Deny', event['methodArn']));
+                    return callback(null, generatePolicy('user', 'Deny', event['methodArn'], 'Auth2'));
                 }
             }
             else {
                 console.error('OktaJwtVerifier is not defined - check your environment variables: ISSUER and AUDIENCE');
-                return callback(null, generatePolicy('user', 'Deny', event['methodArn']));
+                return callback(null, generatePolicy('user', 'Deny', event['methodArn'], 'Auth2'));
             }
 
         }
     }
-    return callback(null, generatePolicy('user', 'Deny', event['methodArn']));
+    console.error('Authorization token is not defined - check your Authorization header');
+    return callback(null, generatePolicy('user', 'Deny', event['methodArn'], 'Unknown'));
 }
 
-function generatePolicy(username, effect, methodArn) {
+function generatePolicy(username, effect, methodArn, protocol) {
     const authResponse = {};
 
     authResponse.principalId = username;
@@ -95,7 +95,7 @@ function generatePolicy(username, effect, methodArn) {
         const policyDocument = {};
         policyDocument.Version = '2012-10-17';
         policyDocument.Statement = [];
-        if ((effect == "Allow") && username && conf.auth.users && conf.auth.users[username] && conf.auth.users[username].policies) {
+        if ((effect === "Allow") && username && conf.auth.users && conf.auth.users[username] && conf.auth.users[username].policies) {
             if (conf.auth.users[username].policies.allow) {
                 const statement = {};
                 statement.Action = 'execute-api:Invoke';
@@ -114,6 +114,12 @@ function generatePolicy(username, effect, methodArn) {
                 policies.forEach((policy) => statement.Resource.push(resourcePrefix + policy));
                 policyDocument.Statement.push(statement);
             }
+
+            // Optional output with custom properties
+            authResponse.context = {
+                "userID": username,
+                "userName": conf.auth.users[username] ? conf.auth.users[username].name : username
+            };
         }
         else {
             const statementOne = {};
@@ -125,13 +131,18 @@ function generatePolicy(username, effect, methodArn) {
         authResponse.policyDocument = policyDocument;
     }
 
-    // Optional output with custom properties
-    authResponse.context = {
-        "userID": username
+    const msgInfo = {
+        msg: 'Authentication Policy - ' + effect,
+        user: username,
+        name: conf.auth.users && conf.auth.users[username] ? conf.auth.users[username].name : '',
+        method: methodArn,
+        auth: protocol,
+        allow: conf.auth.users[username] && conf.auth.users[username].policies ? conf.auth.users[username].policies.allow : ''
     };
+    console.info(JSON.stringify(msgInfo));
 
     // Assign a usage identifier API Key if it's needed
-    // authResponse.usageIdentifierKey = "1C3uCXWZSQ8CJL2AbKyfY8B7sgekeI9F*****";
+    // authResponse.usageIdentifierKey = "*****";
     console.debug('Return policy : ', JSON.stringify(authResponse));
     return authResponse;
 }
